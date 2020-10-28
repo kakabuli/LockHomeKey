@@ -30,7 +30,7 @@ public class WifiVideoLockAlarmRecord implements Serializable {
     private String wifiSN;
     private String createTime;
     private String productSN;
-    private String eventId;//锁定报警，劫持报警，防撬报警，机械钥匙报警，门锁布防报警，门铃报警，pir徘徊报警有图片，视频信息,存在下列属性
+    private String eventId;//锁定报警，劫持报警，防撬报警，机械方式报警，门锁布防报警，门铃报警，pir徘徊报警有图片，视频信息,存在下列属性
     private String thumbUrl;
     private String fileDate;//视频地址
     private String fileName;

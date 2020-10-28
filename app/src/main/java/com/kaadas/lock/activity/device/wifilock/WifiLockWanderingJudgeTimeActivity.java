@@ -16,6 +16,7 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.BindView;
@@ -73,6 +74,12 @@ public class WifiLockWanderingJudgeTimeActivity extends BaseActivity<IWifiLockMo
                 }else if(stay_time == 60){
                     setJudgeTimeInit(R.id.rl_judge_time_6);
                 }
+                ivJudgeTime1.setClickable(false);
+                ivJudgeTime2.setClickable(false);
+                ivJudgeTime3.setClickable(false);
+                ivJudgeTime4.setClickable(false);
+                ivJudgeTime5.setClickable(false);
+                ivJudgeTime6.setClickable(false);
             }
         }
     }
@@ -84,6 +91,7 @@ public class WifiLockWanderingJudgeTimeActivity extends BaseActivity<IWifiLockMo
             case R.id.back:
                 Intent intent = new Intent();
                 intent.putExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,stay_time);
+                intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 setResult(RESULT_OK,intent);
                 finish();
                 break;
@@ -171,7 +179,37 @@ public class WifiLockWanderingJudgeTimeActivity extends BaseActivity<IWifiLockMo
         }
     }
 
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+                "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
+
     private void setJudgeTime(int id){
+        if(wifiLockInfo.getPowerSave() == 1){
+            powerStatusDialog();
+            return;
+        }
         switch (id){
             case R.id.rl_judge_time_6:
                 if(!ivJudgeTime6.isChecked()){

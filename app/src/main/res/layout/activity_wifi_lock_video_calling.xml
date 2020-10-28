@@ -21,23 +21,28 @@
             android:layout_height="match_parent"
 
             />
+        <ImageView
+            android:id="@+id/iv_cache"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
-            android:background="#17000000">
+            android:background="#00000000">
 
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/dp_8"
                 android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="@dimen/dp_16"
                 android:paddingRight="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_5"
-                android:src="@mipmap/white_back" />
+                android:src="@mipmap/video_lock_back" />
 
             <ImageView
                 android:id="@+id/iv_setting"
@@ -49,7 +54,7 @@
                 android:paddingLeft="@dimen/dp_16"
                 android:paddingRight="@dimen/dp_16"
                 android:paddingTop="@dimen/dp_5"
-                android:src="@mipmap/video_icon_setting" />
+                android:src="@mipmap/video_lock_icon_setting" />
 
             <TextView
                 android:id="@+id/head_title"
@@ -59,6 +64,7 @@
                 android:text="@string/real_time_video_function"
                 android:textColor="#ffff"
                 android:textSize="@dimen/sp_17"
+                android:visibility="gone"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/tv_video_timestamp"
@@ -67,6 +73,7 @@
                 android:layout_centerHorizontal="true"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_10"
+                android:visibility="gone"
                 android:layout_alignParentBottom="true"
                 android:text="2020-10-20 15:00:00"/>
 
@@ -96,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_87"
             android:layout_alignParentBottom="true"
-            android:background="#B2232323"
+            android:background="#17232323"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -147,17 +154,27 @@
             </LinearLayout>
 
 
-
-
-            <ImageView
-                android:id="@+id/iv_calling"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dp_34"
-                android:src="@drawable/real_time_video_calling_selector" />
+                android:layout_gravity="center_vertical">
 
+                <ImageView
+                    android:id="@+id/iv_calling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/real_time_video_calling_selector" />
 
+                <TextView
+                    android:id="@+id/tv_calling_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="@dimen/sp_11"
+                    android:layout_marginTop="@dimen/dp_38"
+                    android:text="对讲"/>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -294,6 +311,7 @@
         android:id="@+id/rl_mark_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         >
 
 
@@ -335,13 +353,25 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_doorbell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="有人按门铃啦~"
+            android:textSize="@dimen/sp_15"
+            android:layout_marginTop="@dimen/dp_150"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/view_head"
+            android:visibility="gone"
+            android:textColor="#ffffff"/>
+
+        <TextView
             android:id="@+id/tv_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/avi"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/sp_17"
-            android:text="视频连接中..."
+            android:text="正在建立安全连接，请稍后..."
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_15" />
 
@@ -433,12 +463,13 @@
                     android:id="@+id/mark_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/dp_5"
-                    android:paddingLeft="@dimen/dp_16"
-                    android:paddingRight="@dimen/dp_16"
-                    android:paddingTop="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_8"
+                         android:paddingBottom="@dimen/dp_5"
+                     android:paddingRight="@dimen/dp_16"
+                     android:paddingTop="@dimen/dp_5"
                     android:layout_centerVertical="true"
-                    android:src="@mipmap/white_back" />
+                    android:src="@mipmap/video_lock_back" />
+
             </RelativeLayout>
             <TextView
                 android:id="@+id/tv_head_pic"

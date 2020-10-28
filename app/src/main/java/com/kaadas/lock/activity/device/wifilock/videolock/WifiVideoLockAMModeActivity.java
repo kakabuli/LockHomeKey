@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -49,6 +50,8 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
     CheckBox ckAm;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -68,12 +71,12 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 
         if(wifiLockInfo != null){
-            if(wifiLockInfo.getSafeMode() == 0 ){
-                ckNormal.setChecked(true);
-                ckAm.setChecked(false);
-            }else if(wifiLockInfo.getSafeMode() == 1 ){
+            if(wifiLockInfo.getAmMode() == 0 ){
                 ckNormal.setChecked(false);
                 ckAm.setChecked(true);
+            }else if(wifiLockInfo.getAmMode() == 1 ){
+                ckNormal.setChecked(true);
+                ckAm.setChecked(false);
             }
 
             mPresenter.settingDevice(wifiLockInfo);
@@ -90,14 +93,21 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
     @Override
     protected void onResume() {
         super.onResume();
-        if(wifiLockInfo.getPowerSave() == 0){
+        mPresenter.attachView(this);
+        if(avi!=null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
+        }
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
-        }
+        }else{
+            avi.hide();
+        }*/
         registerBroadcast();
     }
 
@@ -119,13 +129,34 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
         mPresenter.release();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(wifiLockInfo.getPowerSave() == 0){
+                if(avi.isShow())
+                    setAMMode();
+            }else {
+
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+
+    }
+
     @OnClick({R.id.back,R.id.normal_layout,R.id.am_layout})
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.back:
-//                finish();
+                if(wifiLockInfo.getPowerSave() == 0){
+                    if(avi.isShow())
+                        setAMMode();
 
-                setAMMode();
+                }else{
+                    finish();
+
+                }
                 break;
             case R.id.normal_layout:
                 if(avi.isShow()){
@@ -161,13 +192,20 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
 
     private void setAMMode() {
         if(ckNormal.isChecked()){
-            amMode = 0;
-        }
-        if(ckAm.isChecked()){
             amMode = 1;
         }
+        if(ckAm.isChecked()){
+            amMode = 0;
+        }
+        if(amMode != wifiLockInfo.getAmMode()){
 
-        mPresenter.setAMMode(wifiSn,amMode);
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            tvTips.setVisibility(View.VISIBLE);
+            mPresenter.setConnectAMMode(wifiSn,amMode);
+        }else{
+            finish();
+        }
     }
 
 
@@ -210,7 +248,7 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 dialog.dismiss();
@@ -402,18 +440,19 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
     @Override
     public void onConnectFailed(int paramInt) {
         LogUtils.e("shulan ---------");
-        mPresenter.setMqttCtrl(0);
+//        mPresenter.setMqttCtrl(0);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(!WifiVideoLockAMModeActivity.this.isFinishing()){
                     if(avi != null){
                         avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -444,6 +483,7 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                 public void run() {
                     if(avi != null)
                         avi.hide();
+                    tvTips.setVisibility(View.GONE);
                 }
             });
 
@@ -453,6 +493,7 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
     @Override
     public void onSettingCallBack(boolean flag) {
         if(!WifiVideoLockAMModeActivity.this.isFinishing()){
+            mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -461,8 +502,13 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                         Intent intent = new Intent();
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_AM_MODE,amMode);
                         setResult(RESULT_OK,intent);
+                        LogUtils.e("shulan 111amMode--> " + amMode);
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
+                    }
+                    if(avi != null){
+                        avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     finish();
                 }

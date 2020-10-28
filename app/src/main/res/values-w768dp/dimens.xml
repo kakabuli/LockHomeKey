@@ -101,6 +101,7 @@
 	<dimen name="dp_155">330.67dp</dimen>
     <dimen name="dp_162">345.60dp</dimen>
     <dimen name="dp_170">362.67dp</dimen>
+	<dimen name="dp_179">381.87dp</dimen>
     <dimen name="dp_200">426.67dp</dimen>
     <dimen name="dp_225">480.00dp</dimen>
     <dimen name="dp_255">544.00dp</dimen>
@@ -116,4 +117,6 @@
 	<dimen name="sp_18">38.40sp</dimen>
     <dimen name="sp_20">42.67sp</dimen>
     <dimen name="sp_24">51.20sp</dimen>
+
+	<dimen name="dp_18_1">38.40dp</dimen>
 </resources>

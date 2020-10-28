@@ -1057,7 +1057,7 @@
     <string name="admin_open_lock">管理密码开门</string>
     <string name="visitor_opne_lock">访客密码开门</string>
     <string name="disposable_open_lock">一次性开门</string>
-    <string name="mechanical_key_open_lock">机械钥匙开门</string>
+    <string name="mechanical_key_open_lock">机械方式开门</string>
     <string name="remote_control_open_lock">遥控开门</string>
     <string name="one_key_open_lock">一键开门</string>
     <string name="not_connected">未连接</string>
@@ -1120,7 +1120,7 @@
     <string name="ri">日</string>
     <string name="warrning_open">防拆报警</string>
     <string name="warrning_lock_block">门锁堵转报警</string>
-    <string name="warrning_machine_key_open">机械钥匙开锁报警</string>
+    <string name="warrning_machine_key_open">机械方式报警</string>
     <string name="get_version_code_fail">获取版本号失败</string>
     <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
     <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
@@ -1303,7 +1303,7 @@
     <string name="is_setting_password">正在添加密码.......</string>
     <string name="is_sync_password_plan">正在同步密码计划...</string>
     <string name="synv_failed">同步失败</string>
-    <string name="notice_419_call">蓝牙SN未检索到，请拨打 \n400-11-66667</string>
+    <string name="notice_419_call">蓝牙SN未检索到，请拨打 \n400-800-5919</string>
 
 
     <string name="menu_item_about">关于App</string>
@@ -1371,7 +1371,7 @@
     <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_opens">门锁正在被机械钥匙开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_opens">门锁正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
     <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
@@ -1403,7 +1403,7 @@
     <string name="wifi_lock_alarm_2">您的家人使用劫持密码开启%1$s门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_3">您的%1$s门锁错误验证多次</string>
     <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁被撬，请联系家人或小区保安</string>
-    <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械钥匙开启，请回家或联系保安查看</string>
+    <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
     <string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
@@ -1427,7 +1427,7 @@
     <string name="no_support_no_pwd_wifi">不支持无密码Wi-Fi</string>
     <string name="ok_wifi_lock">好的</string>
     <string name="app">App</string>
-    <string name="machine_key">机械钥匙开锁</string>
+    <string name="machine_key">机械方式开锁</string>
     <string name="indoor_open">室内open键开锁</string>
     <string name="indoor_open_new_express">室内多功能键开锁</string>
     <string name="indoor_Induction">室内感应把手开锁</string>
@@ -1719,6 +1719,10 @@
     <string name="wakeup_lock_face_ota_tips">请确保门锁有充足的电量，人脸模组升级中，门锁面容识别不可用</string>
     <string name="primary_user_agreement">隐私策略</string>
 
+    <string name="video_lock_xm_connect_time_out_1">连接超时，请稍后再试</string>
+    <string name="video_lock_xm_connect_time_out">视频连接超时，请稍后再试</string>
+    <string name="video_lock_xm_connect_failed_1">网络异常，无法连接</string>
+    <string name="video_lock_xm_connect_failed">网络异常，视频无法连接</string>
     <string name="privacy_title">
                             我们的隐私政策已于2019年12月27日更新，将会于2020年1月1日生效。我们对隐私政策进行了详细修订，从该日期开始，这一隐私政策能够提供有关我们如何管理您在使用所有凯迪仕产品和服务时透露的个人信息的隐私详情，特定的凯迪仕产品或服务提供独立的隐私政策除外。
 请花一些时间熟悉我们的隐私权惯例，如果您有任何问题，请告诉我们。

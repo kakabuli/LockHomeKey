@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.presenter.wifilock;
 
 import android.os.Environment;
+import android.os.Handler;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
@@ -44,6 +45,16 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
     private static  String p2pPassword ="";//ut4D0mvz
 
     private static  String serviceString=XMP2PManager.serviceString;
+
+    public void release(){
+        XMP2PManager.getInstance().stopCodec();
+        XMP2PManager.getInstance().stopConnect();//
+    }
+
+    private Handler postHandler = new Handler();
+
+
+    private int times = 4;
 
     public void getWifiVideoLockGetAlarmList(int page, String wifiSn) {
         if (page == 1) {
@@ -100,7 +111,7 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
     }
 
     public void startRecordMP4(String filePath,String name){
-        XMP2PManager.getInstance().startRecordMP4(filePath,0,0,0,270);
+        XMP2PManager.getInstance().startRecordMP4(filePath,0,0,0,XMP2PManager.SCREEN_ROTATE);
         XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
             @Override
             public void onStartedPackaged() {
@@ -128,6 +139,51 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
         return XMP2PManager.getInstance().searchRecordFileList(0,fileDate,0);
     }
 
+    public void connectPlayDeviceRecordVideo(WifiVideoLockAlarmRecord record,String path){
+        times = 4;
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSuccessRecord(false);
+                }
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                playDeviceRecordVideo(record,path);
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+                if(isSafe()){
+                    mViewRef.get().onSuccessRecord(false);
+                }
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
     public void playDeviceRecordVideo(WifiVideoLockAlarmRecord record,String path){
         XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
         XMP2PManager.getInstance().setAudioFrame();
@@ -148,12 +204,12 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
         LogUtils.e("shulan  path-->" + path +  File.separator + record.get_id() + ".mp4");
         startRecordMP4(path +  File.separator + record.get_id() + ".mp4",record.getStartTime() + "");
         int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate(),record.getFileName(),0,0);
-        if(ret < 0){
+        /*if(ret < 0){
             connectP2P();
             if(isSafe()){
                 mViewRef.get().onSuccessRecord(false);
             }
-        }
+        }*/
         LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
         XMP2PManager.getInstance().play();
 //        XMP2PManager.getInstance().enableAudio(true);
@@ -163,6 +219,17 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
                 LogUtils.e("shulan onPlayDeviceRecordVideoProcResult--jsonObject-->" + jsonObject);
 
                 try {
+                    if(jsonObject.getInt("errno") == 116 && times>0){
+                        postHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                playDeviceRecordVideo(record,path);
+                            }
+                        },500);
+                        times--;
+                        return;
+                    }
+
                     if(jsonObject.getString("result").equals("ok")){
 //                        startRecordMP4(path +  File.separator + id + ".mp4");
                         firstTime = 0;
@@ -170,7 +237,7 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
                         if(isSafe()){
                             mViewRef.get().onSuccessRecord(true);
                         }
-                    }else if(jsonObject.getString("result").equals("false")){
+                    }else if(jsonObject.getString("result").equals("failed")){
                         firstTime = 0;
                         first = true;
                         if(isSafe()){

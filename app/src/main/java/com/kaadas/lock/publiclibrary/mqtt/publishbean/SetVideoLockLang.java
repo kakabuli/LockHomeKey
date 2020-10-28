@@ -27,15 +27,6 @@ public class SetVideoLockLang implements Serializable {
     private String func;
     private SetVideoLockLang.ParamsBean params;
     private String timestamp;
-    private int code;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
 
     public String getWfId() {
         return wfId;
@@ -118,6 +109,5 @@ public class SetVideoLockLang implements Serializable {
         this.func = func;
         this.params = params;
         this.timestamp = timestamp;
-        this.code = code;
     }
 }

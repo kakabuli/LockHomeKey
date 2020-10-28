@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiLockRealTimeActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoMorePresenter;
@@ -32,6 +33,7 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
@@ -84,7 +86,7 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     private void initData() {
         if(wifiLockInfo != null){
-            tvSerialNumber.setText(wifiSN);
+            tvSerialNumber.setText(wifiLockInfo.getDevice_sn());
             if(wifiLockInfo.getCamera_version() != null){
                 tvLockFirwareNumber.setText(wifiLockInfo.getCamera_version() + "");
             }
@@ -117,17 +119,22 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
                 finish();
                 break;
             case R.id.rl_child_system_firware_number:
-                if(avi.isShow())
-                    updateOTA(wifiSN,wifiLockInfo.getWifiVersion() + "",1);
-
+                if(avi.isShow()){
+                    if(wifiLockInfo.getWifiVersion() != null)
+                        updateOTA(wifiSN,wifiLockInfo.getWifiVersion() + "",1);
+                }
                 break;
             case R.id.rl_lock_wifi_firware_number:
-                if(avi.isShow())
-                updateOTA(wifiSN,wifiLockInfo.getMcu_version() + "",5);
+                if(avi.isShow()){
+                    if(wifiLockInfo.getMcu_version() != null)
+                        updateOTA(wifiSN,wifiLockInfo.getMcu_version() + "",5);
+                }
                 break;
             case R.id.rl_tv_lock_firware_number:
-                if(avi.isShow())
-                updateOTA(wifiSN,wifiLockInfo.getCamera_version() + "",4);
+                if(avi.isShow()){
+                    if(wifiLockInfo.getCamera_version() != null)
+                        updateOTA(wifiSN,wifiLockInfo.getCamera_version() + "",4);
+                }
                 break;
 
         }
@@ -135,20 +142,30 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
     }
 
     private void updateOTA(String wifiSN,String version,int type) {
-        mPresenter.checkOtaInfo(wifiSN,version,type);
+        if(wifiLockInfo.getPowerSave() == 0){
+            mPresenter.checkOtaInfo(wifiSN,version,type);
+        }else{
+            powerStatusDialog();
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
+        }else{
+            avi.hide();
+        }*/
+        if(avi != null){
+            avi.hide();
         }
         registerBroadcast();
     }
@@ -297,7 +314,8 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
                     @Override
                     public void right() {
                         mPresenter.uploadOta(appInfo,wifiSN);
-
+                        //升级
+                        mPresenter.connectNotifyGateWayNewVersion();
                     }
 
                     @Override
@@ -410,8 +428,7 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version,int type) {
-        //升级
-        mPresenter.notifyGateWayNewVersion();
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -439,7 +456,7 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void uploadSuccess(int type) {
-        mPresenter.release();
+//        mPresenter.release();
         updataSuccess = true;
     }
 
@@ -460,9 +477,9 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
                         avi.hide();
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -501,6 +518,21 @@ public class WifiLockVideoCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void onSettingCallBack(boolean flag) {
+        if (!WifiLockVideoCameraVersionActivity.this.isFinishing()) {
+            mPresenter.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (flag) {
 
+                    } else {
+                        ToastUtil.getInstance().showLong("升级失败");
+                    }
+                    if (avi != null) {
+                        avi.hide();
+                    }
+//                    finish();
+                }
+            });
+        }
     }
 }

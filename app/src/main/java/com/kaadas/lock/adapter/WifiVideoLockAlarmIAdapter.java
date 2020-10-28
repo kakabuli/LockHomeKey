@@ -120,7 +120,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                 tvRight.setText(mContext.getText(R.string.wifi_lock_alarm_lock_5min_1));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_error);
                 break;
-            case 0x08:// 门锁正在被机械钥匙开启，请回家或联系保安查看
+            case 0x08:// 门锁正在被机械方式开启，请回家或联系保安查看
                 tvRight.setText(mContext.getText(R.string.wifi_lock_alarm_opens));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
@@ -148,8 +148,10 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
 
         if(record.getThumbUrl()!=null && !record.getThumbUrl().isEmpty()){
             Glide.with(mContext).load(record.getThumbUrl())
-                    .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default)
+                    .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default).dontAnimate()
                             .transform(new RotateTransformation(90f))).into(ivContent);
+        }else{
+            Glide.with(mContext).load(R.mipmap.img_video_lock_default).into(ivContent);
         }
 
         if(record.isThumbState() && record.getFileName() != null){

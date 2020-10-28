@@ -45,12 +45,12 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
 
     private String time;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_real_time_period);
         ButterKnife.bind(this);
-
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         snoozeStartTime = getIntent().getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START);
@@ -59,11 +59,12 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
         if(endTime == 86400){
             endTime = endTime -1;
         }
-        LogUtils.e("shulan ------startTime- "+ startTime+ "---endTime----" +endTime);
+
         initData();
     }
 
     private void initData() {
+        time = DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime);
         tvVideoTimeSetting.setText(DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime));
     }
 
@@ -86,9 +87,23 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
         }
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
     private void setRealTimePeriod() {
-        String startStr = DateUtils.getRegEx(time,"\\d+:\\d+").get(0);
-        String endStr = DateUtils.getRegEx(time,"\\d+:\\d+").get(1);
+        String startStr = "";
+        String endStr = "";
+        try{
+            startStr = DateUtils.getRegEx(time,"\\d+:\\d+").get(0);
+            endStr = DateUtils.getRegEx(time,"\\d+:\\d+").get(1);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         startTime = DateUtils.getSecondTime(startStr);
         endTime = DateUtils.getSecondTime(endStr);
         LogUtils.e("shulan -------startStr-" + DateUtils.getSecondTime(startStr) + "--endStr-" + DateUtils.getSecondTime(endStr));
@@ -99,6 +114,7 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START, startTime);
         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END, endTime);
         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, snoozeStartTime);
+        intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
         setResult(RESULT_OK,intent);
         finish();
     }
@@ -121,9 +137,11 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
+
             switch (requestCode){
                 case KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD_CODE:
                     snoozeStartTime = data.getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
+                    wifiSn = data.getStringExtra(KeyConstants.WIFI_SN);
                     break;
             }
         }

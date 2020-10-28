@@ -32,7 +32,6 @@ public class SettingVideoLockPir implements Serializable {
     private String func;
     private ParamsBean params;
     private String timestamp;
-    private int code;
 
     public SettingVideoLockPir(String msgtype, int msgId, String userId, String wfId, String func, ParamsBean params, String timestamp,int code) {
         this.msgtype = msgtype;
@@ -42,16 +41,8 @@ public class SettingVideoLockPir implements Serializable {
         this.func = func;
         this.params = params;
         this.timestamp = timestamp;
-        this.code = code;
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
 
     public String getMsgtype() {
         return msgtype;

@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -447,6 +448,69 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
         });
     }
 
+    public void setConnectSafeMode(String wifiSN,int safeMode){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().mqttCtrl(1);
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    setSafeMode(wifiSN,safeMode);
+                                }else{
+                                    mViewRef.get().onSettingCallBack(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
     public void setSafeMode(String wifiSN,int safeMode){
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
@@ -461,14 +525,14 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
                             return false;
                         }
                     })
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockSafeMode setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeMode.class);
+                            SetVideoLockSafeModeResult setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeModeResult.class);
                             if(setVideoLockSafeMode != null){
-                                LogUtils.e("shulan setSafeMode---->" + setVideoLockSafeMode.toString());
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
                                         LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
@@ -490,7 +554,12 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
                         }
                     });
 
+        }else{
+            if(isSafe()){
+                mViewRef.get().onSettingCallBack(false);
+            }
         }
+//        setMqttCtrl(0);
     }
 
 }

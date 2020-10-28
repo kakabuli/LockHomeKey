@@ -1012,7 +1012,7 @@ public class MqttCommandFactory {
         SettingVideoLockAliveTime.ParamsBean paramsBean = new SettingVideoLockAliveTime.ParamsBean(keep_alive_status,aliveTimeBean);
         SettingVideoLockAliveTime mSettingVideoLockAliveTime = new SettingVideoLockAliveTime(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
                 wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
-        return getMessage(mSettingVideoLockAliveTime, messageId);
+        return getMessage(mSettingVideoLockAliveTime, messageId,2);
     }
 
     /**
@@ -1075,7 +1075,7 @@ public class MqttCommandFactory {
         SetVideoLockAmMode.ParamsBean paramsBean = new SetVideoLockAmMode.ParamsBean();
         paramsBean.setAmMode(amMode);
         SetVideoLockAmMode lockLang = new SetVideoLockAmMode(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
-                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
+                messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "");
         return getMessage(lockLang, messageId);
     }
 
@@ -1091,6 +1091,16 @@ public class MqttCommandFactory {
         String payload = new Gson().toJson(o);
         MqttMessage mqttMessage = new MqttMessage();
         mqttMessage.setQos(2);
+        mqttMessage.setRetained(false);
+        mqttMessage.setId(messageID);
+        mqttMessage.setPayload(payload.getBytes());
+        return mqttMessage;
+    }
+
+    public static MqttMessage getMessage(Object o, int messageID,int qos) {
+        String payload = new Gson().toJson(o);
+        MqttMessage mqttMessage = new MqttMessage();
+        mqttMessage.setQos(qos);
         mqttMessage.setRetained(false);
         mqttMessage.setId(messageID);
         mqttMessage.setPayload(payload.getBytes());

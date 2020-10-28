@@ -78,6 +78,11 @@
         android:layout_width="@dimen/dp_225"
         android:layout_height="@dimen/dp_225"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="提示：因手机屏幕尺寸不同，请移动手机在\n距离门锁摄像头10-50CM范围内扫描"/>
     <View
         android:layout_weight="1"
         android:layout_width="wrap_content"

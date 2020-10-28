@@ -121,6 +121,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private List<ProductInfo> productLists = new ArrayList<>();
     private int listService = 0;
 
+
     // 小米
     // user your appid the key.
     private static final String M_APP_ID = "2882303761517594031";

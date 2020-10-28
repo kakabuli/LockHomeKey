@@ -176,7 +176,6 @@ public class XMP2PManager extends StreamListener  {
     }
 
     public int connectDevice(DeviceInfo paramDeviceInfo){
-
         LogUtils.e("connectDevice: did=" + paramDeviceInfo.getDeviceDid());
         LogUtils.e("connectDevice: serverString=" + paramDeviceInfo.getServiceString());
         LogUtils.e("connectDevice: sn=" + paramDeviceInfo.getDeviceSn());
@@ -231,6 +230,7 @@ public class XMP2PManager extends StreamListener  {
         }else {
             //获取P2P当前信息
             sessionStatus();
+            currentDid = paramDeviceInfo.getDeviceDid();
         }
 
         return handleSession;
@@ -386,15 +386,16 @@ public class XMP2PManager extends StreamListener  {
         // 时间戳
         h264Frame.setFrameTimeStamp(paramAVStreamHeader.m_TimeStamp);
         // 封装 丢进解码库  解码+
-        if(paramAVStreamHeader.m_VideoType == 0){
+//        if(paramAVStreamHeader.m_VideoType == 0){
             getCodecInstance().InputMediaH264(h264Frame);
-        }else if(paramAVStreamHeader.m_VideoType == 1){
-            getCodecInstance().InputMP4H264(h264Frame);
-        }
+//        }else if(paramAVStreamHeader.m_VideoType == 1){
+//            getCodecInstance().InputMP4H264(h264Frame);
+//        }
 
         if(mAudioVideoStatusListener != null){
             this.mAudioVideoStatusListener.onVideoDataAVStreamHeader(paramAVStreamHeader);
         }
+
     }
 
 
@@ -436,6 +437,7 @@ public class XMP2PManager extends StreamListener  {
         }
         getCodecInstance().stop();
         releaseAudio();
+        LogUtils.e("shulan --------stopCodec");
     }
 
     /**
@@ -723,7 +725,6 @@ public class XMP2PManager extends StreamListener  {
     public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
         super.onPlayDeviceRecordVideoProcResult(jsonObject);
         //回放录像文件返回的回调,
-        LogUtils.e("shulan onPlayDeviceRecordVideoProcResult");
         if(mPlayDeviceRecordVideoListener != null){
             this.mPlayDeviceRecordVideoListener.onPlayDeviceRecordVideoProcResult(jsonObject);
         }

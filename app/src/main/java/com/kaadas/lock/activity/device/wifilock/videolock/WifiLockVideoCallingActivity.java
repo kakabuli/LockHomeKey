@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,6 +27,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -38,6 +41,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
@@ -49,6 +54,7 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiLockRealTimeVideoPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoCallingPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockRealTimeVideoView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
+import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -78,6 +84,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -156,6 +163,15 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     TextView tvBigHeadPic;
     @BindView(R.id.tv_video_timestamp)
     TextView tvVideoTimeStamp;
+    @BindView(R.id.tv_calling_tip)
+    TextView tvCallingTips;
+    @BindView(R.id.tv_doorbell)
+    TextView tvDoorbell;
+    @BindView(R.id.iv_cache)
+    ImageView ivCache;
+
+    private Bitmap myBitmap;
+
 
     private Dialog dialog;
     private Dialog openDialog;
@@ -178,10 +194,20 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     private boolean isShowAudio = false;
 
+    private boolean isFirstAudio = false;
+
     //门铃调用1次
     private boolean isDoorbelling = false;
 
+    private RequestOptions options;
+
     final RxPermissions rxPermissions = new RxPermissions(this);
+
+    private List<ProductInfo> productList = new ArrayList<>();
+
+    private boolean isStartAudio = true;
+
+    private boolean isLastPirture = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,6 +218,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
 
         isCalling = getIntent().getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
+        productList = MyApplication.getInstance().getProductInfos();
         if(isCalling == 0){
             rlCallingTime.setVisibility(View.GONE);
             rlRealTime.setVisibility(View.GONE);
@@ -200,6 +227,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             ivHeadPic.setVisibility(View.GONE);
             tvHeadPic.setVisibility(View.GONE);
             isDoorbelling = false;
+
         }else if(isCalling == 1){
             rlCallingTime.setVisibility(View.VISIBLE);
             rlRealTime.setVisibility(View.GONE);
@@ -217,8 +245,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         }
         if (wifiLockInfo != null){
             mPresenter.settingDevice(wifiLockInfo);
-            ivBigHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
-            ivHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+            changeIcon();
             String lockNickname = wifiLockInfo.getLockNickname();
             tvHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
             tvBigHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
@@ -231,6 +258,76 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
         llyTemporaryPassword.setVisibility(View.GONE);
         tvTemporaryPassword.setText("");
+
+        initLinstener();
+    }
+
+    private void changeIcon() {
+        ivBigHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+        ivHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+        if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
+            ivBigHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+            ivHeadPic.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
+            String model = wifiLockInfo.getProductModel();
+            if (model != null) {
+                //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
+                if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default) {
+                    options = new RequestOptions()
+                            .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
+                            .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
+                            .dontAnimate()                                    //直接显示图片
+                            .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
+//                            .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
+
+                    for (ProductInfo productInfo : productList) {
+                        try {
+                            if (productInfo.getDevelopmentModel().contentEquals(model)) {
+
+                                //匹配型号获取下载地址
+                                Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivHeadPic);
+                                Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivBigHeadPic);
+                            }
+                        } catch (Exception e) {
+                            LogUtils.e("--kaadas--:" + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void initLinstener() {
+        ivCalling.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    if (ContextCompat.checkSelfPermission(WifiLockVideoCallingActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions( WifiLockVideoCallingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+                        ToastUtil.showShort("请先获取麦克风权限");
+                    }else{
+
+                        if(mPresenter.isTalkback()){
+                            ivCalling.setSelected(false);
+                            mPresenter.talkback(false);
+                            mPresenter.stopTalkback();
+                            tvCallingTips.setText("对讲");
+                            tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                        }else{
+                            ivCalling.setSelected(true);
+                            mPresenter.talkback(true);
+                            mPresenter.startTalkback();
+                            showShort("已开启对讲");
+                            tvCallingTips.setText("对讲中");
+                            tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
+                        }
+
+
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -283,7 +380,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                             mPresenter.enableAudio(false);
                             isMute = true;
                             ivMute.setImageResource(R.mipmap.real_time_video_mute_seleted);
-
+                            showShort("已开启静音");
                         }
                     }
 
@@ -300,12 +397,14 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 }
                 break;
             case R.id.iv_setting:
+                isLastPirture = true;
                 Intent settingIntent = new Intent(WifiLockVideoCallingActivity.this, WifiLockRealTimeActivity.class);
                 settingIntent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 startActivity(settingIntent);
                 mPresenter.release();
                 break;
             case R.id.iv_album:
+                isLastPirture = true;
                 Intent intent = new Intent(WifiLockVideoCallingActivity.this,WifiLockVideoAlbumActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 startActivity(intent);
@@ -330,19 +429,21 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                             if(wifiLockInfo != null){
                                 String filePath = FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
                                 mPresenter.startRecordMP4(filePath);
+                                showShort("已开启录屏");
                             }
 
                         }else{
                             ivRecoring.setSelected(false);
                             llyRecord.setVisibility(View.GONE);
                             mPresenter.stopRecordMP4();
+                            showShort("已结束录屏");
                         }
                         llyRecord.setVisibility(View.VISIBLE);
 //                    }
 
                 }
                 break;
-            case R.id.iv_calling:
+            /*case R.id.iv_calling:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
                     ToastUtil.showShort("请先获取麦克风权限");
@@ -366,7 +467,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                 }
 
-                break;
+                break;*/
             case R.id.iv_screenshot:
                 LogUtils.e("shulan iv_screenshot");
                 mPresenter.snapImage();
@@ -385,9 +486,15 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         }
     }
 
+    private void showShort(String ss) {
+        ToastUtil.setGravity(Gravity.CENTER,0,0);
+        ToastUtil.showShort(ss);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        mPresenter.attachView(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -397,15 +504,32 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 //        mPresenter.startRealTimeVideo(mSufaceView);
         ivMute.setImageResource(R.mipmap.real_time_video_mute);
         isShowAudio = true;
+        isFirstAudio = false;
         registerBroadcast();
+        LogUtils.e("shulan WifiLockVideoCallingActivity --onResume--");
+        if(isLastPirture){
+            if(myBitmap != null){
+                ivCache.setVisibility(View.VISIBLE);
+                ivCache.setImageBitmap(myBitmap);
+            }
 
+        }else{
+            ivCache.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtils.e("shulan onPause---");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mPresenter.detachView();
-
+        LogUtils.e("shulan -onStop--------");
+//        myBitmap;
     }
 
     @Override
@@ -447,9 +571,9 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                     isConnect = false;
                     LogUtils.e(this + "");
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed) + "");
                     }
                 }
 
@@ -461,13 +585,16 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void onConnectSuccess() {
+        LogUtils.e("shulan ------------");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(isCalling == 1){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
-
+                    tvDoorbell.setVisibility(View.VISIBLE);
+                }else{
+                    tvDoorbell.setVisibility(View.GONE);
                 }
             }
         });
@@ -497,16 +624,17 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     public void onLastFrameRgbData(int[] ints, int width, int height, boolean b) {
         LogUtils.e("shulan ints="+ints,"--height=" +height + "--width=" + width +"--b=" +b);
         if(ints != null ){
+            Bitmap bitmap = MyBitmapFactory.createMyBitmap(ints, width, height);
+            LogUtils.e("shulan bitmap-->" + bitmap);
+            myBitmap = BitmapUtil.rotaingImageView(90,bitmap);
             if(!b){
-                Bitmap bitmap = MyBitmapFactory.createMyBitmap(ints, width, height);
-                LogUtils.e("shulan bitmap-->" + bitmap);
-                Bitmap myBitmap = BitmapUtil.rotaingImageView(90,bitmap);
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
                         Glide.with(WifiLockVideoCallingActivity.this).load(myBitmap).into(ivScreenshotBitmap);
                         ivScreenshotBitmap.setVisibility(View.VISIBLE);
+                        showShort("截图成功");
                     }
                 });
 
@@ -522,16 +650,27 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 String fileName = System.currentTimeMillis()+".png";
                 BitmapUtil.save(FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath() ,fileName,myBitmap);
 
-                // 其次把文件插入到系统图库
-                try {
-                    MediaStore.Images.Media.insertImage(WifiLockVideoCallingActivity.this.getContentResolver(),
-                            FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getAbsolutePath(), fileName, null);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                     ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.DATA, FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath());
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                }else{
+                    // 其次把文件插入到系统图库
+                    try {
+                        MediaStore.Images.Media.insertImage(WifiLockVideoCallingActivity.this.getContentResolver(),
+                                FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getAbsolutePath(), fileName, null);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
+
                 // 最后通知图库更新
                 // context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
                 WifiLockVideoCallingActivity.this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()))));
+
+
+
             }
 
         }
@@ -543,7 +682,8 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         runOnUiThread(new Runnable() {
               @Override
               public void run() {
-                  tvTime.setText("00:00:00");
+                  if(tvTime != null)
+                    tvTime.setText("00:00:00");
                   ivRecordSpot.setVisibility(View.VISIBLE);
                   startTimer();
 
@@ -553,13 +693,15 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     }
 
+
     //开始视频回调，时间戳数据...
     @Override
     public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp));
+                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp - 28800000));
+                ivCache.setVisibility(View.GONE);
                 if(isCalling == 0){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
@@ -569,14 +711,20 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 }
             }
         });
+        //
+
         if(isCalling == 0){
-            if(isShowAudio && mPresenter.startAudioStream() >= 0) {
-                if (!mPresenter.isEnableAudio()) {
-                    LogUtils.e("shulan enableAudio --> true");
-                    mPresenter.enableAudio(true);
-                    isMute = false;
-                    isShowAudio = false;
+            if(!isFirstAudio){
+
+                if(isShowAudio && mPresenter.startAudioStream() >= 0) {
+                    if (!mPresenter.isEnableAudio()) {
+                        LogUtils.e("shulan enableAudio --> true");
+                        mPresenter.enableAudio(true);
+                        isMute = false;
+                        isShowAudio = false;
+                    }
                 }
+                isFirstAudio = true;
             }
         }
 
@@ -702,7 +850,8 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tvTime.setText(DateUtils.getStringTime(cnt++));
+                            if(tvTime != null)
+                                tvTime.setText(DateUtils.getStringTime(cnt++));
                             ivRecordSpot.setVisibility(View.INVISIBLE);
                             mPresenter.handler.postDelayed(new Runnable() {
                                 @Override
@@ -801,6 +950,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                finish();
             }
         });
         tv_query.setOnClickListener(new View.OnClickListener() {
@@ -861,10 +1011,12 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
                         LogUtils.e("shulan --home");
+                        isLastPirture = true;
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
                         LogUtils.e("shulan --recent");
+                        isLastPirture = true;
                         mPresenter.release();
                     }
                 }
@@ -872,6 +1024,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
                 LogUtils.e("shulan -- screen_off");
+                isLastPirture = true;
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
                 LogUtils.e("shulan -- 解锁");

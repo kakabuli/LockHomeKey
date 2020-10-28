@@ -520,7 +520,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
                     @Override
                     public void right() {
-                        call("tel:"+"4001166667");
+                        call("tel:"+"4008005919");
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -565,7 +565,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
                     Toast.makeText(this,"请允许拨号权限后再试",Toast.LENGTH_SHORT).show();
                 } else {//成功
-                    call("tel:"+"4001166667");
+                    call("tel:"+"4008005919");
                 }
                 break;
         }

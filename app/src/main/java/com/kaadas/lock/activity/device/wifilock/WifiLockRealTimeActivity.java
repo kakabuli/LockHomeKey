@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -50,6 +51,8 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     ImageView ivVideoConnectOpen;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -103,11 +106,20 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
-                setRealTime();
+                if(wifiLockInfo.getPowerSave() == 0){
+                    if(avi.isShow())
+                    setRealTime();
+
+                }else{
+                    finish();
+                }
                 break;
             case R.id.rl_real_time_period:
                 if(avi.isShow()) {
                     if (wifiLockInfo.getPowerSave() == 0) {
+                        for (int i = 0 ;i<snoozeStartTime.length;i++){
+                            LogUtils.e("shulan -WifiLockRealTimeActivity---snoozeStartTime["+i+"]--" + snoozeStartTime[i]);
+                        }
                         Intent intent = new Intent(this,WifiLockRealTimePeriodActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START, startTime);
@@ -143,18 +155,44 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     }
 
     private void setRealTime() {
-        mPresenter.setRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime);
+        if(keepAliveStatus != wifiLockInfo.getKeep_alive_status() || startTime != wifiLockInfo.getAlive_time().getSnooze_start_time()
+                || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || snoozeStartTime != wifiLockInfo.getAlive_time().getKeep_alive_snooze()){
+            tvTips.setVisibility(View.VISIBLE);
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+        }else{
+            finish();
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(wifiLockInfo.getPowerSave() == 0){
+                if(avi.isShow())
+                    setRealTime();
+            }else {
+
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_OK){
+        if(resultCode == RESULT_OK){
             switch (requestCode){
                 case KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_CODE:
                     startTime = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START,0);
                     endTime = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END,0);
                     snoozeStartTime = data.getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
+                    wifiSn = data.getStringExtra(KeyConstants.WIFI_SN);
+                    wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
                     break;
             }
         }
@@ -169,15 +207,23 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
+        }else{
+            avi.hide();
+        }*/
+        if(avi != null){
+            tvTips.setVisibility(View.GONE);
+            avi.hide();
         }
         registerBroadcast();
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
     }
 
     @Override
@@ -237,7 +283,7 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 dialog.dismiss();
@@ -436,11 +482,12 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
                 if(!WifiLockRealTimeActivity.this.isFinishing()){
                     if(avi != null){
                         avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -469,6 +516,7 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    tvTips.setVisibility(View.GONE);
                     if(avi != null)
                         avi.hide();
                 }
@@ -480,6 +528,7 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     @Override
     public void onSettingCallBack(boolean flag) {
         if(!WifiLockRealTimeActivity.this.isFinishing()){
+            mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -487,6 +536,10 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
                         ToastUtil.getInstance().showLong("修改成功");
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
+                    }
+                    if(avi != null){
+                        tvTips.setVisibility(View.GONE);
+                        avi.hide();
                     }
                     finish();
                 }

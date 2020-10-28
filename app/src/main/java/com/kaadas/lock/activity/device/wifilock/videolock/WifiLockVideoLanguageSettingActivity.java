@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -66,6 +67,8 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
     CheckBox enImg;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
 
     private String wifiSn;
@@ -115,13 +118,19 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
+        }else{
+            avi.hide();
+        }*/
+        if(avi != null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
         }
         registerBroadcast();
     }
@@ -144,12 +153,37 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
         mPresenter.release();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(wifiLockInfo.getPowerSave() == 0){
+
+                if(avi.isShow())
+                    setLanguage();
+
+            }else {
+
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+
+    }
+
     @OnClick({R.id.back,R.id.zh_layout,R.id.en_layout})
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.back:
-//                finish();
-                setLanguage();
+                if(wifiLockInfo.getPowerSave() == 0){
+
+                        if(avi.isShow())
+                            setLanguage();
+
+                }else{
+                    finish();
+
+                }
                 break;
             case R.id.en_layout:
                 if(avi.isShow()){
@@ -189,8 +223,16 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
         if(enImg.isChecked()){
             language = "en";
         }
+        if(wifiLockInfo.getLanguage().equals(language)){
+            finish();
+        }else{
+            tvTips.setVisibility(View.VISIBLE);
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            mPresenter.setConnectLanguage(wifiSn,language);
+        }
 
-        mPresenter.setLanguage(wifiSn,language);
+
     }
 
     public void creteDialog(String content){
@@ -232,7 +274,7 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 dialog.dismiss();
@@ -430,12 +472,13 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
             public void run() {
                 if(!WifiLockVideoLanguageSettingActivity.this.isFinishing()){
                     if(avi != null){
+                        tvTips.setVisibility(View.GONE);
                         avi.hide();
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -464,6 +507,7 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    tvTips.setVisibility(View.GONE);
                     if(avi != null)
                         avi.hide();
                 }
@@ -485,6 +529,10 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
+                    }
+                    if(avi != null){
+                        tvTips.setVisibility(View.GONE);
+                        avi.hide();
                     }
                     finish();
                 }

@@ -47,23 +47,38 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:padding="2dp">
+        android:layout_height="1dp"
+        android:background="#E8E8E8"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_143"
+        android:layout_margin="@dimen/dp_10"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="方式一（手动输入添加）"
+            android:textSize="@dimen/sp_13"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginLeft="@dimen/dp_29"/>
 
         <EditText
             android:id="@+id/wifi_lock_choose_to_input"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@mipmap/bg_text_field"
-            android:drawableLeft="@mipmap/icon_search"
-            android:drawablePadding="13dp"
+            android:layout_height="@dimen/dp_38"
+            android:background="@drawable/edit_choose_background"
+            android:drawableLeft="@mipmap/video_lock_dms_icon_search"
+            android:drawablePadding="@dimen/dp_13"
             android:hint="@string/input_lock_product"
-            android:paddingLeft="10dp"
-            android:layout_marginRight="@dimen/dp_51"
+            android:paddingLeft="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:layout_marginTop="@dimen/dp_14"
             android:singleLine="true"
             android:textSize="14sp" />
 
@@ -72,46 +87,63 @@
             android:text="@string/add"
             android:textColor="#1F95F7"
             android:textSize="@dimen/dp_15"
-            android:layout_width="55dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right|center_vertical"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_25"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/choose_background"
+            android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
             />
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/wifi_lock_choose_to_scan"
         android:layout_width="match_parent"
-        android:layout_height="295.5dp"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_13"
-        android:background="#ffFFFFFF"
-        android:orientation="vertical"
-        >
+        android:layout_height="@dimen/dp_170"
+        android:layout_margin="@dimen/dp_10"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="方式二（扫码添加）"
+            android:textSize="@dimen/sp_13"
+            android:layout_marginTop="@dimen/dp_12"
+            android:layout_marginLeft="@dimen/dp_29"/>
+
+        <ImageView
+            android:src="@mipmap/video_lock_dms_img_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_26"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:text="扫码添加"
+            android:textColor="#1F95F7"
+            android:textSize="@dimen/dp_15"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_25"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/choose_background"
+            android:layout_marginTop="@dimen/dp_25"
+            android:gravity="center"
+            />
 
         <TextView
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_width="240dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="@dimen/dp_32"
-            android:text="@string/look_for_QRCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="门锁后面板上的二维码"
             android:textColor="#7D7D7D"
             android:textSize="@dimen/sp_15"
             />
-
-        <ImageView
-            android:src="@mipmap/wifi_lock_choose_to_add"
-            android:layout_margin="@dimen/dp_25"
-            android:layout_marginLeft="106dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_78"
-            android:layout_alignParentBottom="true"
-            />
-
     </LinearLayout>
+
+
 
 
 </LinearLayout>

@@ -48,6 +48,17 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <SurfaceView
+        android:id="@+id/video_surface_1"
+        android:layout_below="@id/rly_head"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/iv_cache"
+        android:layout_below="@id/rly_head"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/iv_play_start"
@@ -55,6 +66,24 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/play_start"
         android:layout_centerInParent="true"/>
+
+    <com.kaadas.lock.widget.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView.Large"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/sp_17"
+        android:text="正在建立安全连接，请稍后..."
+        android:textColor="#ffffff"
+        android:textSize="@dimen/sp_15" />
 
     <LinearLayout
         android:layout_alignParentBottom="true"

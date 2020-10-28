@@ -64,7 +64,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                     left = sNum;
                 }
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
@@ -128,7 +128,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
             case 3: //添加秘钥
                 left = mContext.getString(R.string.lock_add) + sNum;
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式
                     case 0:
                         left = left + mContext.getString(R.string.password);
                         break;
@@ -150,7 +150,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                 int pwdNum = record.getPwdNum();
                 left = mContext.getString(R.string.lock_delete) + ((pwdNum == 255) ? mContext.getString(R.string.all) : sNum + "");
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式
                     case 0:
                         left = left + mContext.getString(R.string.password);
                         break;
@@ -194,7 +194,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                 left = record.getUserNickname();
                 right = mContext.getString(R.string.modify) + sNum;
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械钥匙
+                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式
                     case 0:
                         right = right + mContext.getString(R.string.password);
                         break;

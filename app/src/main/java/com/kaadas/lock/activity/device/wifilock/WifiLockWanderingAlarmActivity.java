@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -36,9 +37,12 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
+import com.yun.software.kaadas.UI.activitys.BigImageActivity;
 
 import org.apache.commons.net.bsd.RLoginClient;
+import org.linphone.mediastream.Log;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,6 +67,8 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
     RelativeLayout rlWanderingAlarm;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -101,7 +107,12 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
 
             if(wifiLockInfo.getSetPir() != null){
                 stayTime = wifiLockInfo.getSetPir().getStay_time();
-                tvWanderingJudgeTimeRight.setText(wifiLockInfo.getSetPir().getStay_time() + "秒");
+                if(wifiLockInfo.getSetPir().getStay_time() < 10 || wifiLockInfo.getSetPir().getStay_time() > 60){
+                    tvWanderingJudgeTimeRight.setText("30秒");
+                }else {
+                    tvWanderingJudgeTimeRight.setText(wifiLockInfo.getSetPir().getStay_time() + "秒");
+                }
+
                 pirSen = wifiLockInfo.getSetPir().getPir_sen();
                 if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
                     tvWanderingPirSensitivityRight.setText("低");
@@ -121,8 +132,13 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
-//                finish();
-                setWanderingAlarm();
+                if(wifiLockInfo.getPowerSave() == 0){
+                    if(avi.isShow())
+                    setWanderingAlarm();
+                }else {
+
+                    finish();
+                }
                 break;
             case R.id.rl_wandering_pir_sensitivity:
                 if(avi.isShow()){
@@ -168,7 +184,30 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
         }else{
             stayStatus = 0;
         }
-        mPresenter.setWanderingAlarm(wifiSn,stayStatus,stayTime,pirSen);
+        if(stayTime!= wifiLockInfo.getSetPir().getStay_time() || stayStatus != wifiLockInfo.getStay_status() || pirSen != wifiLockInfo.getSetPir().getPir_sen()){
+            tvTips.setVisibility(View.VISIBLE);
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            mPresenter.setConnectWanderingAlarm(wifiSn,stayStatus,stayTime,pirSen);
+        }else {
+            finish();
+        }
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(wifiLockInfo.getPowerSave() == 0){
+                if(avi.isShow())
+                    setWanderingAlarm();
+            }else {
+
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
 
     }
 
@@ -176,16 +215,23 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
+        }else{
+            avi.hide();
+        }*/
+        if(avi != null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
         }
         registerBroadcast();
-
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 
     }
 
@@ -216,21 +262,33 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_OK){
+        if(resultCode == RESULT_OK){
+            wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
             switch (requestCode){
                 case KeyConstants.WIFI_VIDEO_LOCK_WANDERING_SENSITIVITY_CODE:
-                    pirSen = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,0);
-                    if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
-                        tvWanderingPirSensitivityRight.setText("低");
-                    }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
-                        tvWanderingPirSensitivityRight.setText("中");
-                    }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
-                        tvWanderingPirSensitivityRight.setText("高");
+                    if(data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,-1) == -1){
+
+                    }else{
+                        pirSen = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,-1);
+                        LogUtils.e("shulan -------pirSen--->" + pirSen);
+                        if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
+                            tvWanderingPirSensitivityRight.setText("低");
+                        }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
+                            tvWanderingPirSensitivityRight.setText("中");
+                        }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
+                            tvWanderingPirSensitivityRight.setText("高");
+                        }
                     }
+
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_WANDERING_STAY_TIME_CODE:
-                    stayTime = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,10);
-                    tvWanderingJudgeTimeRight.setText(stayTime + "秒");
+                    if(data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,-1) == -1){
+
+                    }else{
+                        stayTime = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,-1);
+                        tvWanderingJudgeTimeRight.setText(stayTime + "秒");
+                    }
+
                     break;
             }
         }
@@ -275,7 +333,7 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 dialog.dismiss();
@@ -474,11 +532,12 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
                 if(!WifiLockWanderingAlarmActivity.this.isFinishing()){
                     if(avi != null){
                         avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -507,6 +566,7 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    tvTips.setVisibility(View.GONE);
                     if(avi != null)
                         avi.hide();
                 }
@@ -518,6 +578,7 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
     @Override
     public void onSettingCallBack(boolean flag) {
         if(!WifiLockWanderingAlarmActivity.this.isFinishing()){
+            mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {

@@ -122,6 +122,8 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     RelativeLayout rlRealTimeVideo;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
 
     private WifiLockInfo wifiLockInfo;
@@ -167,7 +169,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
 //            ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
             setVolume = wifiLockInfo.getVolume();
-            LogUtils.e("shulan wifiLockInfo.getVolume()---" + wifiLockInfo.getVolume());
+            LogUtils.e("shulan wifiLockInfo.powersave()---" + wifiLockInfo.getPowerSave());
             if(wifiLockInfo.getVolume() == 1){
                 ivSilentMode.setSelected(true);
             }else {
@@ -254,6 +256,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             }
             wifiName.setText(wifiLockInfo.getWifiName());
             deviceNickname = wifiLockInfo.getLockNickname();
+
         }
     }
 
@@ -381,14 +384,16 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     case R.id.iv_silent_mode:  //静音模式
                         if(avi.isShow()) {
                             if (wifiLockInfo.getPowerSave() == 0) {
-//                        ToastUtil.getInstance().showLong(R.string.please_operation_in_lock);
+                                tvTips.setVisibility(View.VISIBLE);
+                                avi.setVisibility(View.VISIBLE);
+                                avi.show();
                                 if(ivSilentMode.isSelected()){
                                     setVolume = 0;
-                                    mPresenter.setVolume(wifiSn,0);
+                                    mPresenter.setConnectVolume(wifiSn,0);
 //                                    ivSilentMode.setSelected(false);
                                 }else{
                                     setVolume = 1;
-                                    mPresenter.setVolume(wifiSn,1);
+                                    mPresenter.setConnectVolume(wifiSn,1);
 //                                    ivSilentMode.setSelected(true);
 
                                 }
@@ -534,13 +539,9 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPresenter.connectP2P();
-                }
-            }).start();
+        if(avi!=null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
         }
         registerBroadcast();
     }
@@ -736,6 +737,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 case KeyConstants.WIFI_VIDEO_LOCK_AM_MODE_CODE:
                     int amMode = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_AM_MODE,0);
                     ivAm.setText(amMode == 1 ? getString(R.string.hand) + "上锁": getString(R.string.auto) + "上锁");
+                    LogUtils.e("shulan 222amMode--> " + amMode);
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE_CODE:
                     String language = data.getStringExtra(KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE);
@@ -800,7 +802,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 dialog.dismiss();
@@ -870,11 +872,12 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 if(!WifiLockVideoMoreActivity.this.isFinishing()){
                     if(avi != null){
                         avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -902,6 +905,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    tvTips.setVisibility(View.GONE);
                     if(avi != null)
                         avi.hide();
                 }
@@ -925,6 +929,10 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         }
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
+                    }
+                    if(avi!=null){
+                        tvTips.setVisibility(View.GONE);
+                        avi.hide();
                     }
                 }
             });

@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.SurfaceView;
 
+import com.blankj.ALog;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
@@ -222,15 +223,15 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
                     //frame为采集封装的数据,通过传输库发送给设备
                     int ret = XMP2PManager.getInstance().sendTalkBackAudioData(audioFrame);
-                    LogUtils.e("shulan onAudioRecordData length-->" +audioFrame.getAudioBuff().length);
-                    LogUtils.e("shulan onAudioRecordData ret-->" +ret);
-                    LogUtils.e("shulan onAudioRecordData frameType-->" +audioFrame.frameType);
-                    LogUtils.e("shulan onAudioRecordData frameRate-->" +audioFrame.frameRate);
                 }
-
+                long time=0;
                 @Override
                 public void onVideoFrameUsed(H264Frame h264Frame) {
+                    // 1000 判断是不是都是16帧
+//                    time = h264Frame.frameTimeStamp;
+//                    h264Frame.getFrameRate();
 
+                    ALog.file("xmtest","FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
                 }
 
                 @Override

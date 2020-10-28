@@ -102,6 +102,7 @@
     <dimen name="dp_155">155dp</dimen>
     <dimen name="dp_162">162dp</dimen>
     <dimen name="dp_170">170dp</dimen>
+    <dimen name="dp_179">179dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_225">225dp</dimen>
     <dimen name="dp_255">255dp</dimen>
@@ -128,4 +129,6 @@
     <dimen name="xlarge">25dp</dimen>
     <dimen name="xxlarge">30dp</dimen>
     <dimen name="text_size_15">15sp</dimen>
+
+    <dimen name="dp_18_1">18dp</dimen>
 </resources>

@@ -1,7 +1,9 @@
 package com.kaadas.lock.publiclibrary.mqtt.util;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
+import com.kaadas.lock.utils.handPwdUtil.AppUtil;
 import com.kaidishi.lock.WelcomeActivity;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -292,7 +295,6 @@ public class MqttService extends Service {
                 LogUtils.e("shulan MqttConstant.FUNC_WFEVENT-->" + MqttConstant.FUNC_WFEVENT );
                 LogUtils.e("shulan -->" + MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc()));
                 if(MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc())){
-                    LogUtils.e("shulan 进来啦");
 
                     executeDoorbellingFunction(jsonObject);
                 }
@@ -611,18 +613,29 @@ public class MqttService extends Service {
         if(mDoorbellingResult.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) && mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
             if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
                 WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(mDoorbellingResult.getWfId());
+                if(getRunningActivityName().equals(WifiLockVideoCallingActivity.class.getName())){
+                    return;
+                }
                 if(wifiLockInfoBySn.getPowerSave() == 0){
                     Intent intent = new Intent(this, WifiLockVideoCallingActivity.class);
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
                     intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    return;
                 }
 
             }
 
         }
 
+    }
+
+
+    public String getRunningActivityName() {
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        String runningActivity = activityManager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return runningActivity;
     }
 
 }

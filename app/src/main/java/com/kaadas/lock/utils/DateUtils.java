@@ -271,6 +271,9 @@ public class DateUtils {
 
     //时分转成秒
     public static int getSecondTime(String s){
+        if(s.isEmpty()){
+            return 0;
+        }
         int hour = Integer.parseInt(s.substring(0, s.indexOf(":")));
         int minute = Integer.parseInt(s.substring(s.indexOf(":") + 1));
 

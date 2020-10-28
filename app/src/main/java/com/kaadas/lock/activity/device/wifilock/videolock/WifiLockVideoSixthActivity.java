@@ -40,6 +40,7 @@ import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.utils.WifiVideoPasswordFactorManager;
 
 import butterknife.BindView;
@@ -119,6 +120,11 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
                     ToastUtil.getInstance().showShort(R.string.random_verify_error);
                     return;
                 }
+                //打开wifi
+                WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
+                if (!wifiUtils.isWifiEnable()) {
+                    ToastUtil.getInstance().showShort(getString(R.string.wifi_no_open_please_open_wifi));
+                }
                 checkAdminPassword(adminPassword);
                 break;
         }
@@ -154,7 +160,6 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     private void onSuccess(WifiVideoPasswordFactorManager.FactorResult result) {
         password = Rsa.bytesToHexString(result.password);
-
 
         runOnUiThread(new Runnable() {
             @Override
@@ -282,8 +287,14 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
         if(!TextUtils.isEmpty(randomCode)){
             WifiVideoPasswordFactorManager.FactorResult result = WifiVideoPasswordFactorManager.parsePasswordData(adminPassword,randomCode);
             if(result.result == 0){
-
+                LogUtils.e("shulan     randomcode-->  " + Rsa.bytesToHexString(result.password));
                 if(MyApplication.getInstance().getWifiLockInfoBySn(wifiLockVideoBindBean.getWfId()) == null){
+                    mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
+                            Rsa.bytesToHexString(result.password),sSsid,result.func,3,
+                        wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
+                        wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
+                );
+
                     onSuccess(result);
                 }else{
 
@@ -315,6 +326,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
     @Override
     public void onBindFailed(BaseResult baseResult) {
         LogUtils.e("six-------" + baseResult.getCode());
+        mPresenter.unBindDeviceFail(wifiLockVideoBindBean.getWfId());
         mPresenter.handler.post(new Runnable() {
             @Override
             public void run() {

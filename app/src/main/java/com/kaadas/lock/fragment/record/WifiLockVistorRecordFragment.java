@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoDeviceRecordActivity;
 import com.kaadas.lock.adapter.WifiLockRecordIAdapter;
 import com.kaadas.lock.adapter.WifiLockVistorIAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
@@ -35,11 +36,13 @@ import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -70,7 +73,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     TextView tvSynchronizedRecord;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
-    private ProgressDialog progressDialog;//创建ProgressDialog
+//    private ProgressDialog progressDialog;//创建ProgressDialog
 
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
@@ -93,16 +96,16 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         initRecycleView();
         initRefresh();
         initData();
-        createProgress();
-        mPresenter.settingDevice(wifiLockInfoBySn);
-        if(!isP2PConnect){
+//        createProgress();
+//        mPresenter.settingDevice(wifiLockInfoBySn);
+       /* if(!isP2PConnect){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
-        }
+        }*/
         return view;
     }
 
@@ -132,12 +135,16 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
             @Override
             public void onVideoRecordCallBackLinstener(WifiVideoLockAlarmRecord record) {
                 LogUtils.e("shulan onVideoRecordCallBackLinstener");
-                new Thread(new Runnable() {
+                if(wifiLockInfoBySn.getPowerSave() == 1){
+                    powerStatusDialog();
+                    return;
+                }
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 //                        int ret = mPresenter.searchRecordFileList(record.getFileDate());
 //                        LogUtils.e("shulan searchRecordFileList-- > " + ret);
-                        String path = FileTool.getVideoLockPath(getActivity(),record.getWifiSN()).getPath();
+                        String path = FileTool.getVideoCacheFolder(getActivity(),record.getWifiSN()).getPath();
                         String fileName = path +  File.separator + record.get_id() + ".mp4";
                         if (new File(fileName).exists()){
                             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
@@ -146,14 +153,33 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                             fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
                             LogUtils.e("shulan filename-->" + fileName);
                             intent.putExtra("NAME",fileName);
+                            intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+                            intent.putExtra("record",record);
                             startActivity(intent);
                         }else{
-                            LogUtils.e("shulan 时间戳开始-->" + System.currentTimeMillis());
-                            mPresenter.playDeviceRecordVideo(record,path);
+                            /*getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(progressDialog != null){
+                                        if (!progressDialog.isShowing()){
+                                            progressDialog.show();
+                                        }
+                                    }
+                                }
+                            });*/
+
+                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
+                            fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                            intent.putExtra("NAME",fileName);
+                            intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+                            intent.putExtra("record",record);
+                            startActivity(intent);
+//                            mPresenter.connectPlayDeviceRecordVideo(record,path);
                         }
 
                     }
-                }).start();
+                });
             }
         });
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -221,7 +247,13 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
-                long openTime = Long.parseLong(record.getTime());
+                long openTime = 0;
+                try {
+                    openTime = Long.parseLong(record.getTime());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
                 String timeHead = sOpenTime.substring(0, 10);
                 record.setDayTime(timeHead);
@@ -231,10 +263,21 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         lastRecord.setLast(true);
                     }
                 }
-                for(int j = 0 ;j < records.size();j++){
-                    if(record.get_id() != records.get(j).get_id()){
-                        records.add(record);
-                    }
+                records.add(record);
+
+            }
+            removeGroupData();
+        }
+    }
+
+    private void removeGroupData() {
+     /*   List<WifiVideoLockAlarmRecord> data = new ArrayList<>();
+        data.addAll(records);*/
+        for(int i = 0 ; i < records.size();i++){
+//            String id = records.get(i).get_id();
+            for(int j = records.size() - 1 ; j > i; j--){
+                if(records.get(i).get_id() == records.get(j).get_id()){
+                    records.remove(j);
                 }
             }
         }
@@ -273,8 +316,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     @Override
     public void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName) {
         if(mp4Info.isResult()){
-            LogUtils.e("shulan progressDialog11-->" +progressDialog);
-            getActivity().runOnUiThread(new Runnable() {
+           /* getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if(progressDialog!=null){
@@ -282,7 +324,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         progressDialog.dismiss();
                     }
                 }
-            });
+            });*/
             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(mp4Info.getFilePath()))));
             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,mp4Info.getFilePath());
@@ -302,22 +344,15 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
 
     @Override
     public void onStartProgress(long time) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(progressDialog != null){
-                    if (!progressDialog.isShowing()){
-                        progressDialog.show();
-                    }
-                }
-            }
-        });
-        if(time != 0)
-            progressDialog.incrementProgressBy((int) time);
+
+        /*if(time != 0)
+            progressDialog.incrementProgressBy((int) time);*/
     }
 
     @Override
     public void onSuccessRecord(boolean flag) {
+        LogUtils.e("shulan onSuccessRecord------------flag-----" + flag);
+       /* mPresenter.release();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -329,14 +364,14 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
 
                 }
                 if(!flag){
-                    ToastUtil.getInstance().showLong("下载失败!");
+                    ToastUtil.getInstance().showShort("下载失败!");
                 }
             }
-        });
+        });*/
     }
 
 
-    public void createProgress(){
+    /*public void createProgress(){
         if (null == progressDialog) {
 //            synchronized (ProgressDialog.class) {
 //                if (null == progressDialog) {
@@ -349,7 +384,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         progressDialog.setMax(9000);
         progressDialog.incrementProgressBy(0);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    }
+    }*/
 
 
     @Override
@@ -372,5 +407,30 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     @Override
     public void onErrorMessage(String message) {
 
+    }
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+                "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 }

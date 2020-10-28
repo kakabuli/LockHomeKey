@@ -34,6 +34,7 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
+import com.yun.software.kaadas.UI.activitys.BigImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,8 @@ public class WifiLockVideoAddSuccessActivity extends BaseActivity<IWifiLockVideo
     private boolean isUpdate = false;
 
     private String password = "";
+
+    String name = "";
 
     private WifiLockVideoBindBean wifiLockVideoBindBean;
 
@@ -141,6 +144,28 @@ public class WifiLockVideoAddSuccessActivity extends BaseActivity<IWifiLockVideo
         }
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(TextUtils.isEmpty(inputName.getText().toString().trim())){
+                name = wifiSN;
+            }
+            if(!isUpdate){
+                /*mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),name,wifiLockVideoBindBean.getUserId(),
+                        password,sSsid,func,3,
+                        wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
+                        wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
+                );*/
+                mPresenter.setNickName(wifiSN, name);
+            }else{
+                mPresenter.setNickName(wifiSN, name);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         inputName.setCursorVisible(true);
@@ -164,11 +189,25 @@ public class WifiLockVideoAddSuccessActivity extends BaseActivity<IWifiLockVideo
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                Intent backIntent = new Intent(this, MainActivity.class);
-                startActivity(backIntent);
+                /*Intent backIntent = new Intent(this, MainActivity.class);
+                startActivity(backIntent);*/
+                if (TextUtils.isEmpty(name)) {
+                    name = wifiSN;
+                }
+                showLoading(getString(R.string.is_saving_name));
+                if(!isUpdate){
+                    /*mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),name,wifiLockVideoBindBean.getUserId(),
+                            password,sSsid,func,3,
+                            wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
+                            wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
+                    );*/
+                    mPresenter.setNickName(wifiSN, name);
+                }else{
+                    mPresenter.setNickName(wifiSN, name);
+                }
                 break;
             case R.id.save:
-                String name = inputName.getText().toString().trim();
+                name = inputName.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
                     ToastUtil.getInstance().showShort(R.string.not_empty);
                     return;
@@ -180,11 +219,12 @@ public class WifiLockVideoAddSuccessActivity extends BaseActivity<IWifiLockVideo
 
                 showLoading(getString(R.string.is_saving_name));
                 if(!isUpdate){
-                    mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),name,wifiLockVideoBindBean.getUserId(),
+                    /*mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),name,wifiLockVideoBindBean.getUserId(),
                             password,sSsid,func,3,
                             wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
                             wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
-                    );
+                    );*/
+                    mPresenter.setNickName(wifiSN, name);
                 }else{
                     mPresenter.setNickName(wifiSN, name);
                 }

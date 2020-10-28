@@ -16,8 +16,11 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLangResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -468,7 +471,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockSafeMode setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeMode.class);
+                            SetVideoLockSafeModeResult setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeModeResult.class);
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
@@ -513,7 +516,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockAmMode setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmMode.class);
+                            SetVideoLockAmModeResult setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmModeResult.class);
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
@@ -539,6 +542,69 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
         }
     }
 
+    public void setConnectLanguage(String wifiSN,String language){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().mqttCtrl(1);
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    setLanguage(wifiSN,language);
+                                }else{
+                                    mViewRef.get().onSettingCallBack(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+
+    }
 
     public void setLanguage(String wifiSN,String language){
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
@@ -554,14 +620,15 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                             return false;
                         }
                     })
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(3 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockLang setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLang.class);
+                            SetVideoLockLangResult setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLangResult.class);
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     if(isSafe()){
                                         LogUtils.e("shulan setVideoLockLang-->" + setVideoLockLang.getParams().getLanguage());
                                         mViewRef.get().onSettingCallBack(true);
@@ -582,7 +649,12 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                         }
                     });
 
+        }else{
+            if(isSafe()){
+                mViewRef.get().onSettingCallBack(false);
+            }
         }
+//        setMqttCtrl(0);
     }
 
 }

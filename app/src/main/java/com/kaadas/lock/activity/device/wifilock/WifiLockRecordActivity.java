@@ -86,7 +86,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(isVideoLock){
+        /*if(isVideoLock){
             registerBroadcast();
             new Thread(new Runnable() {
                 @Override
@@ -94,7 +94,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                     mPresenter.connectP2P();
                 }
             }).start();
-        }
+        }*/
     }
 
     @Override
@@ -107,9 +107,9 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(isVideoLock){
+        /*if(isVideoLock){
             unRegisterBroadcast();
-        }
+        }*/
     }
 
     @Override
@@ -241,9 +241,9 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     public void finish() {
         super.finish();
-        if(isVideoLock){
+/*        if(isVideoLock){
             mPresenter.release();
-        }
+        }*/
     }
     private void registerBroadcast(){
         if(mInnerRecevier == null){

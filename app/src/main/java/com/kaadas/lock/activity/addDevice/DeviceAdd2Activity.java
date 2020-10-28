@@ -232,10 +232,19 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
 //                    } else if ( (result.contains("_WiFi_2")||result.contains("_WiFi_fast"))){  //新的快速配网
 //                        startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
                     } else if ( (result.contains("_WiFi_"))){  //4-30新的配网流程
-                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
-                        String wifiModelType = "WiFi";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        startActivity(wifiIntent);
+                        if(result.equals("kaadas_WiFi_camera")){
+                            //视频WIFI锁
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi&VIDEO";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        }else{
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        }
+
                     } else if ( (result.contains("http://qr01.cn/EYopdB"))){  //已生产的错误的X1二维码
                         Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
                         String wifiModelType = "WiFi";
@@ -244,6 +253,12 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                     }else if ( (result.contains("_WiFi&BLE_"))){  //5-11WiFi&BLE，蓝牙Wi-Fi模组配网
                         Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
                         String wifiModelType = "WiFi&BLE";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        startActivity(wifiIntent);
+                    }else if(result.contains("WiFi&VIDEO") || result.contains("kaadas_WiFi_camera")){
+                        //视频WIFI锁
+                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                        String wifiModelType = "WiFi&VIDEO";
                         wifiIntent.putExtra("wifiModelType", wifiModelType);
                         startActivity(wifiIntent);
                     }

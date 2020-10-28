@@ -1,5 +1,10 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -7,16 +12,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -25,12 +38,24 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoFifthPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAddSuccessView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.MediaPlayerWrapper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.MediaStatus;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.StatusHelper;
+import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.utils.FileUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.RotateTransformation;
+import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.widget.AVLoadingIndicatorView;
+import com.xm.sdk.struct.stream.AVStreamHeader;
+import com.xmitech.sdk.H264Frame;
+import com.xmitech.sdk.MP4Info;
+import com.yun.software.kaadas.Utils.FileTool;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,7 +63,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivity{
+public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlayerView, MyAlbumPlayerPresenter<IMyAlbumPlayerView>>  implements IMyAlbumPlayerView{
 
     private MediaPlayerWrapper mediaPlayer;
     private String filepath;
@@ -50,6 +75,8 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
     SeekBar durationSeekBar;
     @BindView(R.id.video_surface)
     SurfaceView surfaceView;
+    @BindView(R.id.video_surface_1)
+    SurfaceView surfaceView1;
     @BindView(R.id.lly_bottom_bar)
     LinearLayout llyBootomBar;
     @BindView(R.id.iv_play_start)
@@ -62,6 +89,26 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
     TextView tvTime;
     @BindView(R.id.tv_name)
     TextView tvName;
+    @BindView(R.id.avi)
+    AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
+    @BindView(R.id.iv_cache)
+    ImageView ivCache;
+
+    private String wifiSn;
+    private WifiLockInfo wifiLockInfo;
+    private WifiVideoLockAlarmRecord record;
+
+    private String path;
+
+    private Dialog dialog;
+
+    private boolean isPlay = false;
+
+    private InnerRecevier mInnerRecevier = null;
+
+    private boolean isRecordSuccess = false;
 
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
@@ -78,9 +125,12 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
         setContentView(R.layout.activity_wifi_lock_video_album_detail);
         ButterKnife.bind(this);
 
-        String stringExtra = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
+        filepath = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
         String name = getIntent().getStringExtra("NAME");
-
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        record = (WifiVideoLockAlarmRecord) getIntent().getSerializableExtra("record");
+        path = FileTool.getVideoCacheFolder(this,record.getWifiSN()).getPath();
         tvName.setText(name);
         // initDate
         statusHelper = new StatusHelper(this);
@@ -100,9 +150,54 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             }
         });
-        // initData
-        filepath = stringExtra;
-        playOperation();
+
+        if(new File(filepath).exists()){
+            avi.setVisibility(View.GONE);
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
+            // initData
+            surfaceView1.setVisibility(View.GONE);
+            surfaceView.setVisibility(View.VISIBLE);
+            playOperation();
+            isPlay = false;
+            ivCache.setVisibility(View.GONE);
+            isRecordSuccess = true;
+        }else{
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            tvTips.setVisibility(View.VISIBLE);
+            if(record.getThumbUrl()!=null && !record.getThumbUrl().isEmpty()){
+                Glide.with(this).load(record.getThumbUrl())
+                        .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default).dontAnimate()
+                                .transform(new RotateTransformation(90f))).into(ivCache);
+            }else{
+                Glide.with(this).load(R.mipmap.img_video_lock_default).into(ivCache);
+            }
+            surfaceView1.setVisibility(View.VISIBLE);
+            surfaceView.setVisibility(View.GONE);
+            isPlay = true;
+            isRecordSuccess = false;
+            realTimeOperation();
+            ivCache.setVisibility(View.VISIBLE);
+
+        }
+
+
+    }
+
+    private void realTimeOperation() {
+        if(wifiLockInfo!=null){
+            ivPlayStart.setVisibility(View.GONE);
+            llyBootomBar.setVisibility(View.GONE);
+            mPresenter.settingDevice(wifiLockInfo);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.connectP2P();
+                }
+            }).start();
+        }
     }
 
     //播放操作
@@ -205,6 +300,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
     protected void onResume() {
         super.onResume();
 //        mPresenter.attachView(this);
+        registerBroadcast();
     }
 
     @Override
@@ -226,6 +322,31 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
         if (mediaPlayer != null) {
             mediaPlayer.releaseResource();
         }
+
+        unRegisterBroadcast();
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        try{
+
+            if(!isRecordSuccess){
+                if(new File(filepath).exists()){
+                    new File(filepath).delete();
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+        mPresenter.release();
+    }
+
+    @Override
+    protected MyAlbumPlayerPresenter<IMyAlbumPlayerView> createPresent() {
+        return new MyAlbumPlayerPresenter<>();
     }
 
     void startRepeatTimer() {
@@ -287,7 +408,15 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
 //                    pause();
                 } else {
                     ivPlayStart.setVisibility(View.GONE);
-                    play();
+                    if(!isPlay){
+
+                        play();
+                    }else{
+                        surfaceView.setVisibility(View.VISIBLE);
+                        surfaceView1.setVisibility(View.GONE);
+                        playOperation();
+                        isPlay = false;
+                    }
                 }
                 break;
             case R.id.iv_pause:
@@ -296,9 +425,271 @@ public class WifiLockVideoAlbumDetailActivity extends BaseAddToApplicationActivi
                     pause();
                 } else {
                     ivPlayStart.setVisibility(View.GONE);
-                    play();
+                    if(!isPlay){
+
+                        play();
+                    }else{
+                        surfaceView.setVisibility(View.VISIBLE);
+                        surfaceView1.setVisibility(View.GONE);
+                        playOperation();
+                        isPlay = false;
+                    }
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onConnectFailed(int paramInt) {
+        mPresenter.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(!WifiLockVideoAlbumDetailActivity.this.isFinishing()){
+                    if(avi != null){
+                        avi.hide();
+                    }
+                    if(tvTips != null)
+                        tvTips.setVisibility(View.GONE);
+                    if(paramInt == -3){
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out) + "");
+                    }else{
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed) + "");
+                    }
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void onConnectSuccess() {
+
+        XMP2PManager.getInstance().setSurfaceView(surfaceView1);
+        mPresenter.playDeviceRecordVideo(record,path);
+    }
+
+    @Override
+    public void onStartConnect(String paramString) {
+
+    }
+
+    @Override
+    public void onErrorMessage(String message) {
+
+    }
+
+    @Override
+    public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+
+    }
+
+    @Override
+    public void onVideoFrameUsed(H264Frame h264Frame) {
+        if(h264Frame.getFrameTimeStamp() == 0){
+            mPresenter.release();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ivPlayStart.setVisibility(View.VISIBLE);
+                    llyBootomBar.setVisibility(View.VISIBLE);
+//                    playOperation();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onStopRecordMP4CallBack(MP4Info mp4Info, String name) {
+//        mPresenter.release();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mp4Info.isResult()){
+                    filepath = mp4Info.getFilePath();
+                    isRecordSuccess = true;
+                    /*ivPlayStart.setVisibility(View.VISIBLE);
+                    llyBootomBar.setVisibility(View.VISIBLE);
+                    surfaceView.setVisibility(View.VISIBLE);
+                    surfaceView1.setVisibility(View.GONE);
+                    playOperation();*/
+                }else {
+                    isRecordSuccess = false;
+                    File file = new File(mp4Info.getFilePath());
+                    if(file.exists()){
+                        file.delete();
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onstartRecordMP4CallBack() {
+        mPresenter.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                avi.hide();
+                tvTips.setVisibility(View.GONE);
+                ivCache.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void onSuccessRecord(boolean b) {
+        mPresenter.release();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtil.getInstance().showShort("找不到文件");
+            }
+        });
+    }
+
+    public void creteDialog(String content){
+        if(dialog == null){
+            dialog = new Dialog(this, R.style.MyDialog);
+        }
+        // 获取Dialog布局
+        View mView = LayoutInflater.from(this).inflate(R.layout.no_et_title_two_button_dialog, null);
+   /*     tvTitle = mView.findViewById(R.id.tv_hint);
+        tvTitle.setVisibility(View.GONE);*/
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        tvContent.setText(content + "");
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        tv_cancel.setText("关闭");
+        tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        tv_query.setTextColor(Color.parseColor("#2096F8"));
+        tv_query.setText("重新连接");
+        dialog.setContentView(mView);
+
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER);
+
+        WindowManager.LayoutParams params = window.getAttributes();
+        WindowManager windowManager = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        int width = display.getWidth();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        params.width = (int) (width * 0.8);
+        window.setAttributes(params);
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                avi.setVisibility(View.VISIBLE);
+                avi.show();
+                tvTips.setVisibility(View.VISIBLE);
+                dialog.dismiss();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.connectP2P();
+                    }
+                }).start();
+            }
+        });
+//        LogUtils.e("shulan -----+++++");
+        if(!WifiLockVideoAlbumDetailActivity.this.isFinishing()){
+            dialog.show();
+        }
+
+    }
+
+    private void registerBroadcast(){
+        if(mInnerRecevier == null){
+            mInnerRecevier = new InnerRecevier();
+        }
+        IntentFilter homeFilter = new IntentFilter();
+        homeFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        homeFilter.addAction(Intent.ACTION_SCREEN_ON);
+        homeFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        homeFilter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(mInnerRecevier, homeFilter);
+    }
+
+    private void unRegisterBroadcast(){
+        if(mInnerRecevier != null){
+            unregisterReceiver(mInnerRecevier);
+        }
+    }
+
+    private class InnerRecevier extends BroadcastReceiver {
+
+        final String SYSTEM_DIALOG_REASON_KEY = "reason";
+
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (reason != null) {
+                    if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        // home键
+                        LogUtils.e("shulan --home");
+                        try{
+                            if(!isRecordSuccess){
+                                if(new File(filepath).exists()){
+                                    new File(filepath).delete();
+                                }
+                            }
+                        }catch (Exception e){
+
+                        }
+
+                        mPresenter.release();
+                    } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
+                        //多任务
+                        LogUtils.e("shulan --recent");
+                        try{
+                            if(!isRecordSuccess){
+                                if(new File(filepath).exists()){
+                                    new File(filepath).delete();
+                                }
+                            }
+
+                        }catch (Exception e){
+
+                        }
+                        mPresenter.release();
+                    }
+                }
+            }else if(action.equals(Intent.ACTION_SCREEN_ON)){
+                LogUtils.e("shulan -- screen_on");
+            }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
+                LogUtils.e("shulan -- screen_off");
+                try{
+
+                    if(!isRecordSuccess){
+                        if(new File(filepath).exists()){
+                            new File(filepath).delete();
+                        }
+                    }
+                }catch (Exception e){
+
+                }
+                mPresenter.release();
+            }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
+                LogUtils.e("shulan -- 解锁");
+
+            }
+
         }
     }
 }

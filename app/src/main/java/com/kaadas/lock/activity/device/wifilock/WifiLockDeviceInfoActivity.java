@@ -88,9 +88,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
     private void initData() {
         if (wifiLockInfo != null) {
-            sWifiVersion = wifiLockInfo.getWifiVersion();
-            String productModel = wifiLockInfo.getProductModel();
-            tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
+            sWifiVersion = wifiLockInfo.getWifiVersion() + "";
+            String productModel = wifiLockInfo.getProductModel() + "";
+            tvDeviceModel.setText(TextUtils.isEmpty(productModel + "") ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
                 if (productInfo.getDevelopmentModel().contentEquals(productModel)){
@@ -123,9 +123,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 rlLockFirwareNumber.setVisibility(View.GONE);
             }
 
-            lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
+            lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion() + "";
             tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
-            wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
+            wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion() + "") ? "" : wifiLockInfo.getWifiVersion());
         }
     }
 

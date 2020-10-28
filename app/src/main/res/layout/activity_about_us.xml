@@ -133,7 +133,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/dp_16"
-                    android:text="400-11-66667"
+                    android:text="400-800-5919"
                     android:textColor="#1F96F7"
                     android:textSize="@dimen/sp_15" />
 

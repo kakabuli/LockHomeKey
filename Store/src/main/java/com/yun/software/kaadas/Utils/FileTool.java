@@ -106,6 +106,14 @@ public class FileTool {
         return folder;
     }
 
+    public static String getCacheFolder(Context context,String CACHE){
+        File folder = new File(context.getExternalFilesDir("")+ File.separator + "",CACHE);
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        return folder.getPath();
+    }
+
     /**
      * 获取的目录默认没有最后的”/”,需要自己加上
      * 获取本应用视频缓存目录
@@ -113,7 +121,7 @@ public class FileTool {
      * @return
      */
     public static File getVideoCacheFolder(Context context,String wifiSn) {
-        File folder = new File(context.getCacheDir(), "VIDEOCACHE-" + wifiSn);
+        File folder = new File(getCacheFolder(context,"CACHE"), "VIDEOCACHE-" + wifiSn);
         if (!folder.exists()) {
             folder.mkdir();
         }

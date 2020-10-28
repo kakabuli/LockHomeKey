@@ -52,7 +52,7 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
     private int[] weekPeriod;
-    private int[] weekTimp = new int[]{1,2,3,4,5,6,7};
+    private int[] weekTimp = new int[]{0,0,0,0,0,0,0};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,18 +78,25 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
                     sum += weekPeriod[i];
                     if(weekPeriod[i] == 1){
                         ivWeek1.setChecked(true);
+                        weekTimp[0] = 1;
                     }else if(weekPeriod[i] == 2){
                         ivWeek2.setChecked(true);
+                        weekTimp[1] = 2;
                     }else if(weekPeriod[i] == 3){
                         ivWeek3.setChecked(true);
+                        weekTimp[2] = 3;
                     }else if(weekPeriod[i] == 4){
                         ivWeek4.setChecked(true);
+                        weekTimp[3] = 4;
                     }else if(weekPeriod[i] == 5){
                         ivWeek5.setChecked(true);
+                        weekTimp[4] = 5;
                     }else if(weekPeriod[i] == 6){
                         ivWeek6.setChecked(true);
+                        weekTimp[5] = 6;
                     }else if(weekPeriod[i] == 7){
                         ivWeek7.setChecked(true);
+                        weekTimp[6] = 7;
                     }
                 }
                 if(sum == 28){
@@ -126,6 +133,13 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
                     ivWeek5.setChecked(false);
                     ivWeek6.setChecked(false);
                     ivWeek7.setChecked(false);
+                    weekTimp[0] = 0;
+                    weekTimp[1] = 0;
+                    weekTimp[2] = 0;
+                    weekTimp[3] = 0;
+                    weekTimp[4] = 0;
+                    weekTimp[5] = 0;
+                    weekTimp[6] = 0;
                 }else{
                     ivWeek0.setChecked(true);
                     ivWeek1.setChecked(true);
@@ -135,6 +149,13 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
                     ivWeek5.setChecked(true);
                     ivWeek6.setChecked(true);
                     ivWeek7.setChecked(true);
+                    weekTimp[0] = 1;
+                    weekTimp[1] = 2;
+                    weekTimp[2] = 3;
+                    weekTimp[3] = 4;
+                    weekTimp[4] = 5;
+                    weekTimp[5] = 6;
+                    weekTimp[6] = 7;
                 }
                 break;
             case R.id.rl_iv_week_1:
@@ -217,6 +238,43 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
         if(ivWeek0.isChecked()){
             weekPeriod = new Integer[]{1,2,3,4,5,6,7};
         }else {
+
+            if(ivWeek1.isChecked()){
+                weekTimp[0] = 1;
+            }else{
+                weekTimp[0] = 0;
+            }
+            if(ivWeek2.isChecked()){
+                weekTimp[1] = 2;
+            }else{
+                weekTimp[1] = 0;
+            }
+            if(ivWeek3.isChecked()){
+                weekTimp[2] = 3;
+            }else{
+                weekTimp[2] = 0;
+            }
+            if(ivWeek4.isChecked()){
+                weekTimp[3] = 4;
+            }else{
+                weekTimp[3] = 0;
+            }
+            if(ivWeek5.isChecked()){
+                weekTimp[4] = 5;
+            }else{
+                weekTimp[4] = 0;
+            }
+            if(ivWeek6.isChecked()){
+                weekTimp[5] = 6;
+            }else{
+                weekTimp[5] = 0;
+            }
+
+            if(ivWeek7.isChecked()){
+                weekTimp[6] = 7;
+            }else{
+                weekTimp[6] = 0;
+            }
             for (int i = 0 ; i < weekTimp.length;i++){
                 if(weekTimp[i] != 0){
                     list.add(weekTimp[i]);
@@ -231,6 +289,10 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
         }
         Intent intent = new Intent();
         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, week);
+        for (int i=0;i<week.length;i++){
+            LogUtils.e("shulan ---week{"+i+"}" + week[i]);
+        }
+        intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
         setResult(RESULT_OK,intent);
         finish();
     }

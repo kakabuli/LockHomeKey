@@ -16,7 +16,9 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -467,7 +469,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockSafeMode setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeMode.class);
+                            SetVideoLockSafeModeResult setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeModeResult.class);
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
@@ -493,6 +495,65 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
         }
     }
 
+    public void setConnectAMMode(String wifiSN,int amMode){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+//                    setMqttCtrl(0);
+                }
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().mqttCtrl(1);
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    setAMMode(wifiSN,amMode);
+                                }else{
+                                    mViewRef.get().onSettingCallBack(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
     public void setAMMode(String wifiSN,int amMode){
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
@@ -507,16 +568,17 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                             return false;
                         }
                     })
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockAmMode setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmMode.class);
-                            if(setVideoLockAmMode != null){
-                                if("200".equals(setVideoLockAmMode.getCode() + "")){
+                            SetVideoLockAmModeResult setVideoLockAmModeResult = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmModeResult.class);
+                            if(setVideoLockAmModeResult != null){
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                if("200".equals(setVideoLockAmModeResult.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockAmMode.getParams().getAmMode());
+
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -535,7 +597,13 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                         }
                     });
 
+        }else{
+            if(isSafe()){
+                mViewRef.get().onSettingCallBack(false);
+            }
         }
+//        setMqttCtrl(0);
+//        release();
     }
 
 }

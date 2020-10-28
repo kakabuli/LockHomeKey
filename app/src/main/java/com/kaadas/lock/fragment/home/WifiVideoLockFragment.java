@@ -13,11 +13,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingTestActivity;
 import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
@@ -48,6 +52,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 
 import java.util.ArrayList;
@@ -56,7 +61,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
-import la.xiong.androidquick.tool.ToastUtil;
+import la.xiong.androidquick.tool.ScreenUtils;
+import la.xiong.androidquick.tool.SizeUtils;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
@@ -79,6 +85,8 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     TextView tvSynchronizedRecord;
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
+    @BindView(R.id.lly_record_bar)
+    LinearLayout llyRecordBar;
     @BindView(R.id.tv_more)
     TextView tvMore;
     @BindView(R.id.rl_has_data)
@@ -95,6 +103,8 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     TextView tvOpenLockTimes;
     @BindView(R.id.tv_center_content)
     TextView tvCenterContent;
+    @BindView(R.id.tv_center_mode)
+    TextView tvCenterMode;
 
     private WifiLockInfo wifiLockInfo;
     private boolean isOpening = false;
@@ -161,7 +171,6 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         int faceStatus = wifiLockInfo.getFaceStatus();  //面容识别已关闭
         int powerSave = wifiLockInfo.getPowerSave();   //已启动节能模式
 
-        LogUtils.e("shulan -----节能模式 powerSave-->" + powerSave);
         if (isOpening){
             changeLockStatus(4);
         }else {
@@ -244,6 +253,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         recycleview.setAdapter(operationGroupRecordAdapter);
         ivDeviceDynamic.setOnClickListener(this);
         tvMore.setOnClickListener(this);
+        llyRecordBar.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         ivBackGround.setOnClickListener(this);
 
@@ -271,6 +281,8 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
             tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(updateTime));
         }
 
+        tvCenterMode.setVisibility(View.VISIBLE);
+        tvTopStates.setText("已关锁");
         ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
         switch (status) {
             case 2:
@@ -284,25 +296,31 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText("布防模式");
                 break;
             case 3:
                 //“已反锁，请门内开锁”
-                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
                 ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
 //                tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
                 tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText(tvCenterMode.getText() + "");
                 if (openStatusTime == 0) {
                     tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText("反锁模式");
                 break;
             case 4:
                 //“锁已打开”
-                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                //TODO:开锁动画
+//                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
                 ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
 //                tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
+                tvCenterMode.setText(tvCenterMode.getText() + "");
                 tvCenterContent.setText(getString(R.string.click_door_info));
+                tvTopStates.setText("已开锁");
                 if (openStatusTime == 0) {
                     tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
                 } else {
@@ -320,6 +338,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText("正常模式");
                 break;
             case 6:
                 //已启动安全模式
@@ -332,6 +351,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText("安全模式");
                 break;
             case 7:
                 //面容识别已关闭
@@ -356,6 +376,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText("");
                 break;
             case 9:
                 //已提拉上锁
@@ -368,8 +389,15 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
+                tvCenterMode.setText(tvCenterMode.getText() + "");
                 break;
         }
+        if(wifiLockInfo.getPowerSave() == 1){
+            tvCenterContent.setText(getString(R.string.power_Save_mode));
+        }else{
+            tvCenterContent.setText(getString(R.string.click_door_info));
+        }
+
     }
 
 
@@ -388,6 +416,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.lly_record_bar:
             case R.id.rl_device_dynamic:
             case R.id.iv_device_dynamic:
             case R.id.tv_more:
@@ -404,6 +433,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 if(wifiLockInfo.getPowerSave() == 0){
 
                     intent = new Intent(getContext(),WifiLockVideoCallingActivity.class);
+//                    intent = new Intent(getContext(), WifiLockVideoCallingTestActivity.class);
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
                     intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
                     startActivity(intent);
@@ -467,6 +497,15 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //            Toast.makeText(getContext(), getString(R.string.no_data), Toast.LENGTH_SHORT).show();
 //        }
 //        hiddenLoading();
+        mPresenter.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                LogUtils.e("shulan -----------");
+                if (isNotice)
+                    ToastUtil.getInstance().showShort("服务器没有数据");
+            }
+        });
+
     }
 
     @Override
@@ -571,7 +610,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), "锁已开启节能模式，无法查看门外情况", "请更换电池或进入管理员模式进行关闭",
                 "确定", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {

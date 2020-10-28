@@ -154,7 +154,7 @@ public class BleUtil {
             case 3:
                 openType = RFID;  //卡片
                 break;
-            case 4: //机械钥匙
+            case 4: //机械方式
                 openType = MANUAL;
                 break;
             case 5://遥控开门
@@ -667,7 +667,7 @@ public class BleUtil {
     public static final int DOOR_BELL = 0x60;
 
     /**
-     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
+     * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械方式报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
      * @return
      */
     public static String getAlarmByType(int type,Context context) {
@@ -685,7 +685,7 @@ public class BleUtil {
             case BROKEN: //4防撬
                 content = context.getString(R.string.wifi_lock_alarm_lock_broken);
                 break;
-            case MECHANICAL_KEY://8机械钥匙报警
+            case MECHANICAL_KEY://8机械方式报警
                 content = context.getString(R.string.wifi_lock_alarm_opens);
                 break;
             case LOW_POWER://16低电压
@@ -709,7 +709,7 @@ public class BleUtil {
     }
 
     /**
-            * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械钥匙报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
+            * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械方式报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃
      * @return
      */
     public static String getVideoAlarmByType(int type,Context context) {

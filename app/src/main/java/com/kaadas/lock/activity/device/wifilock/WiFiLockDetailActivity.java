@@ -123,9 +123,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         showLockType();
         initRecycleview();
         initData();
-
-        String lockNickname = wifiLockInfo.getLockNickname();
-        tvBluetoothName.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
     }
 
     @Override
@@ -152,6 +149,16 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             mPresenter.queryUserList(wifiSn);
             dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
 
+            String lockNickname = "";
+            if(wifiLockInfo.getLockNickname() != null)
+                lockNickname = wifiLockInfo.getLockNickname();
+            tvBluetoothName.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
+
+            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                tvDate.setVisibility(View.GONE);
+            }else{
+                tvDate.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -235,6 +242,10 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     protected void onResume() {
         super.onResume();
         //每次显示界面都重新设置状态和电量
+        mPresenter.attachView(this);
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        LogUtils.e("获取到的设备Sn是   " + wifiSn);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
     }
 
     private void initPassword() {

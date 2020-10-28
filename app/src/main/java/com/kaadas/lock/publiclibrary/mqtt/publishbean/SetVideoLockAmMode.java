@@ -27,15 +27,7 @@ public class SetVideoLockAmMode implements Serializable {
     private String func;
     private ParamsBean params;
     private String timestamp;
-    private int code;
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
 
     public String getWfId() {
         return wfId;
@@ -110,7 +102,7 @@ public class SetVideoLockAmMode implements Serializable {
         }
     }
 
-    public SetVideoLockAmMode(String msgtype, String userId, int msgId, String wfId, String func, ParamsBean params, String timestamp,int code) {
+    public SetVideoLockAmMode(String msgtype, String userId, int msgId, String wfId, String func, ParamsBean params, String timestamp) {
         this.msgtype = msgtype;
         this.userId = userId;
         this.msgId = msgId;
@@ -118,6 +110,5 @@ public class SetVideoLockAmMode implements Serializable {
         this.func = func;
         this.params = params;
         this.timestamp = timestamp;
-        this.code = code;
     }
 }

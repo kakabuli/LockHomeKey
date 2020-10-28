@@ -27,15 +27,7 @@ public class SetVideoLockSafeMode implements Serializable {
     private String func;
     private ParamsBean params;
     private String timestamp;
-    private int code;
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
 
     public String getWfId() {
         return wfId;
@@ -118,7 +110,6 @@ public class SetVideoLockSafeMode implements Serializable {
         this.func = func;
         this.params = params;
         this.timestamp = timestamp;
-        this.code = code;
     }
 
     @Override
@@ -131,7 +122,6 @@ public class SetVideoLockSafeMode implements Serializable {
                 ", func='" + func + '\'' +
                 ", params=" + params +
                 ", timestamp='" + timestamp + '\'' +
-                ", code=" + code +
                 '}';
     }
 }

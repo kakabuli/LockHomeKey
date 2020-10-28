@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
@@ -14,17 +15,26 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.widget.RelativeLayout;
 
+import com.blankj.ALog;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
+import com.xm.sdk.struct.stream.AVStreamHeader;
+import com.xmitech.sdk.AudioFrame;
+import com.xmitech.sdk.H264Frame;
+import com.xmitech.sdk.MP4Info;
+import com.xmitech.sdk.interfaces.AVFilterListener;
+import com.xmitech.sdk.interfaces.VideoPackagedListener;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -42,16 +52,14 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     private static  String serviceString=XMP2PManager.serviceString;;
 
+    private int times = 4;
+
+    private Handler postHandler = new Handler();
 
     @Override
     public void attachView(IMyAlbumPlayerView view) {
         super.attachView(view);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                connectP2P();
-            }
-        }).start();
+
     }
 
     @Override
@@ -141,19 +149,196 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     }
 
-    public void playDeviceRecordVideo(String fileName,String filaDate){
-        XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
-        XMP2PManager.getInstance().setAudioFrame();
-//        XMP2PManager.getInstance().setSurfaceView(surfaceView);
+    public int startAudioStream(){
+        return XMP2PManager.getInstance().startAudioStream();
+    }
 
-        int ret = XMP2PManager.getInstance().playDeviceRecordVideo(filaDate,fileName,0,0);
-        LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
+    public void startRealTimeVideo(SurfaceView surfaceView){
+        LogUtils.e("shulan isConnect--> " + XMP2PManager.getInstance().isConnected(-1));
+//        if(XMP2PManager.getInstance().isConnected(-1)){
+        LogUtils.e("startRealTimeVideo");
+        XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
+        try {
+            XMP2PManager.getInstance().setAudioFrame();
+        }catch (java.lang.NegativeArraySizeException e){
+
+        }
+
+        XMP2PManager.getInstance().setSurfaceView(surfaceView);
         XMP2PManager.getInstance().play();
-        XMP2PManager.getInstance().enableAudio(false);
+        XMP2PManager.getInstance().startVideoStream();
+
+        XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
+            @Override
+            public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+                LogUtils.e("shulan onVideoFrameUsed--" + paramAVStreamHeader.m_TimeStamp);
+                if(isSafe()){
+                    mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
+                }
+            }
+        });
+        XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
+            @Override
+            public void onAudioRecordData(AudioFrame audioFrame) {
+
+                //frame为采集封装的数据,通过传输库发送给设备
+                int ret = XMP2PManager.getInstance().sendTalkBackAudioData(audioFrame);
+            }
+
+            @Override
+            public void onVideoFrameUsed(H264Frame h264Frame) {
+
+            }
+
+            @Override
+            public void onAudioFrameUsed(AudioFrame audioFrame) {
+
+            }
+
+            @Override
+            public void onLastFrameRgbData(int[] ints, int height, int width, boolean b) {
+
+
+            }
+
+            @Override
+            public void onCodecNotify(int i, Object o) {
+
+            }
+
+
+        });
+//        }
+    }
+
+
+    public void connectPlayDeviceRecordVideo(WifiVideoLockAlarmRecord record, String path,SurfaceView surfaceView){
+        times = 4;
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                /*if(isSafe()){
+                    mViewRef.get().onSuccessRecord(false);
+                }*/
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                playDeviceRecordVideo(record,path);
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+               /* if(isSafe()){
+                    mViewRef.get().onSuccessRecord(false);
+                }*/
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
+
+    public void playDeviceRecordVideo(WifiVideoLockAlarmRecord record,String path){
+        XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
+        try {
+            XMP2PManager.getInstance().setAudioFrame();
+        }catch (java.lang.NegativeArraySizeException e){
+
+        }
+        XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
+            @Override
+            public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+
+
+            }
+        });
+
+        XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
+            @Override
+            public void onAudioRecordData(AudioFrame audioFrame) {
+
+            }
+
+            @Override
+            public void onVideoFrameUsed(H264Frame h264Frame) {
+                if(isSafe()){
+                    mViewRef.get().onVideoFrameUsed(h264Frame);
+                }
+            }
+
+            @Override
+            public void onAudioFrameUsed(AudioFrame audioFrame) {
+
+            }
+
+            @Override
+            public void onLastFrameRgbData(int[] ints, int i, int i1, boolean b) {
+
+            }
+
+            @Override
+            public void onCodecNotify(int i, Object o) {
+
+            }
+        });
+
+        LogUtils.e("shulan  path-->" + path +  File.separator + record.get_id() + ".mp4");
+
+        startRecordMP4(path +  File.separator + record.get_id() + ".mp4",record.getStartTime() + "");
+        int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate(),record.getFileName(),0,0);
+        LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
+
+        XMP2PManager.getInstance().play();
+        XMP2PManager.getInstance().enableAudio(true);
         XMP2PManager.getInstance().setOnPlayDeviceRecordVideo(new XMP2PManager.PlayDeviceRecordVideo() {
             @Override
             public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
-                LogUtils.e("shulan onPlayDeviceRecordVideoProcResult--jsonObject-->" + jsonObject);
+                try {
+                    if(jsonObject.getInt("errno") == 116 && times>0){
+                        postHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                playDeviceRecordVideo(record,path);
+                            }
+                        },500);
+                        times--;
+                        return;
+                    }
+
+                    if(jsonObject.getString("result").equals("ok")){
+//                        startRecordMP4(path +  File.separator + id + ".mp4");
+                        if(isSafe()){
+                            mViewRef.get().onSuccessRecord(true);
+                        }
+                    }else if(jsonObject.getString("result").equals("failed")){
+                        if(isSafe()){
+                            mViewRef.get().onSuccessRecord(false);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             @Override
@@ -163,9 +348,36 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
             @Override
             public void onPushCmdRet(int cmdCode, JSONObject jsonString) {
-
+                if(cmdCode == 101){
+                    stopRecordMP4();
+                }
             }
         });
     }
 
+
+    public void startRecordMP4(String filePath,String name){
+        XMP2PManager.getInstance().startRecordMP4(filePath,0,0,0,XMP2PManager.SCREEN_ROTATE);
+        XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
+            @Override
+            public void onStartedPackaged() {
+                LogUtils.e("shulan 开始录制");
+                if(isSafe()){
+                    mViewRef.get().onstartRecordMP4CallBack();
+                }
+            }
+
+            @Override
+            public void onStopPackaged(MP4Info mp4Info) {
+                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+                if(isSafe()){
+                    mViewRef.get().onStopRecordMP4CallBack(mp4Info,name);
+                }
+            }
+        });
+    }
+
+    public void stopRecordMP4(){
+        XMP2PManager.getInstance().stopRecordMP4();
+    }
 }

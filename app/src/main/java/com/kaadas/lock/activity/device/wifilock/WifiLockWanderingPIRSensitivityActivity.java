@@ -15,7 +15,9 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +40,7 @@ public class WifiLockWanderingPIRSensitivityActivity extends BaseActivity<IWifiL
 
     private int pir;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,29 +49,30 @@ public class WifiLockWanderingPIRSensitivityActivity extends BaseActivity<IWifiL
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        pir = getIntent().getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,35);
         initData();
     }
 
     private void initData() {
-        if(wifiLockInfo != null){
-            if(wifiLockInfo.getSetPir() != null){
-                pir = wifiLockInfo.getSetPir().getPir_sen();
+        /*if(wifiLockInfo != null){
+            if(wifiLockInfo.getSetPir() != null){*/
+//                pir = wifiLockInfo.getSetPir().getPir_sen();
 
                 if(pir <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1){
-                    ivSensitivity1.setChecked(true);
-                    ivSensitivity2.setChecked(false);
-                    ivSensitivity3.setChecked(false);
-                }else if(pir <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
-                    ivSensitivity1.setChecked(false);
-                    ivSensitivity2.setChecked(true);
-                    ivSensitivity3.setChecked(false);
-                }else if(pir <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
                     ivSensitivity1.setChecked(false);
                     ivSensitivity2.setChecked(false);
                     ivSensitivity3.setChecked(true);
+                }else if(pir <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2 && pir > KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1){
+                    ivSensitivity1.setChecked(false);
+                    ivSensitivity2.setChecked(true);
+                    ivSensitivity3.setChecked(false);
+                }else if(pir <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3 && pir > KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2) {
+                    ivSensitivity1.setChecked(true);
+                    ivSensitivity2.setChecked(false);
+                    ivSensitivity3.setChecked(false);
                 }
-            }
-        }
+//            }
+//        }
     }
 
 
@@ -78,31 +82,47 @@ public class WifiLockWanderingPIRSensitivityActivity extends BaseActivity<IWifiL
             case R.id.back:
                 Intent intent = new Intent();
                 intent.putExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,pir);
+                intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 setResult(RESULT_OK,intent);
                 finish();
                 break;
             case R.id.rl_sensitivity_1:
-                if(!ivSensitivity1.isChecked()){
-                    ivSensitivity1.setChecked(true);
-                    ivSensitivity2.setChecked(false);
-                    ivSensitivity3.setChecked(false);
-                    pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1;
+                if(wifiLockInfo.getPowerSave() == 0){
+
+                    if(!ivSensitivity1.isChecked()){
+                        ivSensitivity1.setChecked(true);
+                        ivSensitivity2.setChecked(false);
+                        ivSensitivity3.setChecked(false);
+                        pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3;
+                    }
+                }else{
+                    powerStatusDialog();
                 }
                 break;
             case R.id.rl_sensitivity_2:
-                if(!ivSensitivity2.isChecked()){
-                    ivSensitivity2.setChecked(true);
-                    ivSensitivity1.setChecked(false);
-                    ivSensitivity3.setChecked(false);
-                    pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2;
+                if(wifiLockInfo.getPowerSave() == 0){
+
+                    if(!ivSensitivity2.isChecked()){
+                        ivSensitivity2.setChecked(true);
+                        ivSensitivity1.setChecked(false);
+                        ivSensitivity3.setChecked(false);
+                        pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2;
+                    }
+                }else{
+                    powerStatusDialog();
                 }
                 break;
             case R.id.rl_sensitivity_3:
-                if(!ivSensitivity3.isChecked()){
-                    ivSensitivity3.setChecked(true);
-                    ivSensitivity2.setChecked(false);
-                    ivSensitivity1.setChecked(false);
-                    pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3;
+                if(wifiLockInfo.getPowerSave() == 0){
+                    if(!ivSensitivity3.isChecked()){
+                        ivSensitivity3.setChecked(true);
+                        ivSensitivity2.setChecked(false);
+                        ivSensitivity1.setChecked(false);
+                        pir = KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1;
+                    }
+
+                }else{
+                    powerStatusDialog();
                 }
                 break;
         }
@@ -232,4 +252,28 @@ public class WifiLockWanderingPIRSensitivityActivity extends BaseActivity<IWifiL
         mPresenter.detachView();
     }
 
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
+                "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 }

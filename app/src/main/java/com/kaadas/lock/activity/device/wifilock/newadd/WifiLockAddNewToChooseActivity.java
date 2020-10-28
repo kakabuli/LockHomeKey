@@ -187,10 +187,19 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
                     LogUtils.e("扫描结果是   " + result);
 
                     if ( (result.contains("_WiFi_"))){  //4-30新的配网流程
-                        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
-                        String wifiModelType = "WiFi";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        startActivity(wifiIntent);
+                        if(result.equals("kaadas_WiFi_camera")){
+                            //视频WIFI锁
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi&VIDEO";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        }else{
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        }
+
                     } else if ( (result.contains("http://qr01.cn/EYopdB"))){  //已生产的错误的X1二维码
                         Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
                         String wifiModelType = "WiFi";

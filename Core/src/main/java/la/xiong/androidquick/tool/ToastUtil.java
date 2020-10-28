@@ -108,6 +108,7 @@ public class ToastUtil {
         show(text, Toast.LENGTH_SHORT);
     }
 
+
     /**
      * Show the sToast for a short period of time.
      *
@@ -240,7 +241,8 @@ public class ToastUtil {
             @Override
             public void run() {
                 cancel();
-                sToast = Toast.makeText(Utils.getApp(), text, duration);
+                sToast = Toast.makeText(Utils.getApp(), "", duration);
+                sToast.setText(text);
                 final TextView tvMessage = sToast.getView().findViewById(android.R.id.message);
                 if (sMsgColor != COLOR_DEFAULT) {
                     tvMessage.setTextColor(sMsgColor);

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -50,6 +51,8 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     CheckBox ckSafe;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -92,13 +95,19 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        if(wifiLockInfo.getPowerSave() == 0){
+        /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     mPresenter.connectP2P();
                 }
             }).start();
+        }else{
+            avi.hide();
+        }*/
+        if(avi != null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
         }
         registerBroadcast();
     }
@@ -121,12 +130,35 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
         mPresenter.release();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(wifiLockInfo.getPowerSave() == 0){
+                if(avi.isShow())
+                    setSafeMode();
+            }else {
+
+                finish();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+
+    }
+
+
     @OnClick({R.id.back,R.id.safe_layout,R.id.normal_layout})
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.back:
-                setSafeMode();
-//                finish();
+                if(wifiLockInfo.getPowerSave() == 0){
+                    if(avi.isShow())
+                        setSafeMode();
+
+                }else{
+
+                    finish();
+                }
                 break;
             case R.id.normal_layout:
                 if(avi.isShow()){
@@ -166,9 +198,16 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
         if(ckSafe.isChecked()){
             safeMode = 1;
         }
-        avi.setVisibility(View.VISIBLE);
-        avi.show();
-        mPresenter.setSafeMode(wifiSn,safeMode);
+
+        if(safeMode != wifiLockInfo.getSafeMode()){
+
+            avi.setVisibility(View.VISIBLE);
+            avi.show();
+            tvTips.setVisibility(View.VISIBLE);
+            mPresenter.setConnectSafeMode(wifiSn,safeMode);
+        }else{
+            finish();
+        }
     }
 
 
@@ -215,6 +254,7 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
 
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
+                tvTips.setVisibility(View.VISIBLE);
                 dialog.dismiss();
                 new Thread(new Runnable() {
                     @Override
@@ -379,18 +419,19 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     @Override
     public void onConnectFailed(int paramInt) {
         LogUtils.e("shulan ---------");
-        mPresenter.setMqttCtrl(0);
+//        mPresenter.setMqttCtrl(0);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(!WifiVideoLockSafeModeActivity.this.isFinishing()){
                     if(avi != null){
                         avi.hide();
+                        tvTips.setVisibility(View.GONE);
                     }
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             }
@@ -422,6 +463,7 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
                 public void run() {
                     if(avi != null)
                         avi.hide();
+                    tvTips.setVisibility(View.GONE);
                 }
             });
 
@@ -431,7 +473,8 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     @Override
     public void onSettingCallBack(boolean flag) {
         if(!WifiVideoLockSafeModeActivity.this.isFinishing()){
-            mPresenter.handler.post(new Runnable() {
+            mPresenter.setMqttCtrl(0);
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if(flag){
@@ -442,7 +485,10 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
                     }
-
+                    if(avi != null){
+                        avi.hide();
+                        tvTips.setVisibility(View.GONE);
+                    }
                     finish();
                 }
             });

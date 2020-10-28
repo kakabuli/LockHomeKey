@@ -58,6 +58,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_16"
+            android:clickable="false"
             android:button="@drawable/wandering_judge_time_selector"
             />
 
@@ -94,6 +95,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:button="@drawable/wandering_judge_time_selector"
+                android:clickable="false"
                 />
 
             <View
@@ -129,6 +131,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:button="@drawable/wandering_judge_time_selector"
+                android:clickable="false"
                 />
 
             <View
@@ -164,6 +167,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:button="@drawable/wandering_judge_time_selector"
+                android:clickable="false"
                 />
 
             <View
@@ -199,6 +203,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:button="@drawable/wandering_judge_time_selector"
+                android:clickable="false"
                 />
 
             <View
@@ -234,6 +239,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_16"
                 android:button="@drawable/wandering_judge_time_selector"
+                android:clickable="false"
                 />
 
             <View

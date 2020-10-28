@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 
@@ -136,6 +137,7 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+//                    ToastUtil.getInstance().showShort("修改成功");
                     if(status == 1){
                         ivMessageFree.setSelected(true);
                     }else if(status == 2){
@@ -149,7 +151,14 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
 
     @Override
     public void onUpdatePushStatusFailed(BaseResult result) {
-
+        /*if(!WifiLockMessagePushActivity.this.isFinishing()){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.getInstance().showShort("修改失败");
+                }
+            });
+        }*/
     }
 
     @Override

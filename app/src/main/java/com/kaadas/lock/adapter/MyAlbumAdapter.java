@@ -83,14 +83,24 @@ public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
                     LogUtils.e("shulan name -- > " + ((List<FileItemBean>)adapter.getData()).get(position).getName());
                     String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
                     filename = StringUtil.getFileNameNoEx(filename);
-                    filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    try {
+                        filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                     intent.putExtra("NAME",filename);
                     context.startActivity(intent);
                 }else if(((List<FileItemBean>)adapter.getData()).get(position).getType() == 2){
                     Intent intent = new Intent(context, WifiLockVideoAlbumDetailActivity.class);
                     String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
                     filename = StringUtil.getFileNameNoEx(filename);
-                    filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    try{
+                        filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
                     intent.putExtra("NAME",filename);
                     LogUtils.e("shulan name -- > " + ((List<FileItemBean>)adapter.getData()).get(position).getName());
                     intent.putExtra(KeyConstants.VIDEO_PIC_PATH,((List<FileItemBean>)adapter.getData()).get(position).getPath());

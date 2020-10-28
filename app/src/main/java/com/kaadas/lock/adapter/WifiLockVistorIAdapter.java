@@ -81,8 +81,10 @@ public class WifiLockVistorIAdapter extends BaseQuickAdapter<WifiVideoLockAlarmR
 
         if(record.getThumbUrl()!=null && !record.getThumbUrl().isEmpty()){
             Glide.with(mContext).load(record.getThumbUrl())
-                    .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default)
+                    .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default).dontAnimate()
                             .transform(new RotateTransformation(90f))).into(ivContent);
+        }else{
+            Glide.with(mContext).load(R.mipmap.img_video_lock_default).into(ivContent);
         }
 
         if(record.isThumbState() && record.getFileName() != null){

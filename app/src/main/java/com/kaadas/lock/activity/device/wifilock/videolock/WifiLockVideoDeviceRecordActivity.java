@@ -37,6 +37,9 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.player.StatusHelper;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.xm.sdk.struct.stream.AVStreamHeader;
+import com.xmitech.sdk.H264Frame;
+import com.xmitech.sdk.MP4Info;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -127,6 +130,12 @@ public class WifiLockVideoDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.connectP2P();
+            }
+        }).start();
         registerBroadcast();
     }
 
@@ -182,9 +191,9 @@ public class WifiLockVideoDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
                 @Override
                 public void run() {
                     if(paramInt == -3){
-                        creteDialog("视频连接超时，请稍后再试");
+                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
                     }else{
-                        creteDialog("网络异常，视频无法连接");
+                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
                     }
                 }
             });
@@ -194,8 +203,8 @@ public class WifiLockVideoDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
 
     @Override
     public void onConnectSuccess() {
-        mPresenter.playDeviceRecordVideo(mWifiVideoLockAlarmRecord.getFileName(),
-                mWifiVideoLockAlarmRecord.getFileDate());
+        /*mPresenter.playDeviceRecordVideo(mWifiVideoLockAlarmRecord.getFileName(),
+                mWifiVideoLockAlarmRecord.getFileDate(),surfaceView);*/
     }
 
     @Override
@@ -205,6 +214,31 @@ public class WifiLockVideoDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
 
     @Override
     public void onErrorMessage(String message) {
+
+    }
+
+    @Override
+    public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+
+    }
+
+    @Override
+    public void onVideoFrameUsed(H264Frame h264Frame) {
+
+    }
+
+    @Override
+    public void onStopRecordMP4CallBack(MP4Info mp4Info, String name) {
+
+    }
+
+    @Override
+    public void onstartRecordMP4CallBack() {
+
+    }
+
+    @Override
+    public void onSuccessRecord(boolean b) {
 
     }
 
@@ -319,4 +353,6 @@ public class WifiLockVideoDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
 
         }
     }
+
+
 }

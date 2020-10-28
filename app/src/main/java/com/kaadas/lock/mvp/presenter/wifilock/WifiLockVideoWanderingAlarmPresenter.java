@@ -16,9 +16,13 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLangResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPir;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPirResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -442,8 +446,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }finally {
-                        mViewRef.get().onMqttCtrl(false);
                     }
                 }
             }
@@ -469,7 +471,7 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockSafeMode setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeMode.class);
+                            SetVideoLockSafeModeResult setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeModeResult.class);
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode())){
                                     if(isSafe()){
@@ -514,7 +516,7 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockAmMode setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmMode.class);
+                            SetVideoLockAmModeResult setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmModeResult.class);
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
@@ -560,7 +562,7 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockLang setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLang.class);
+                            SetVideoLockLangResult setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLangResult.class);
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode())){
                                     if(isSafe()){
@@ -586,6 +588,70 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
         }
     }
 
+    public void setConnectWanderingAlarm(String wifiSN,int stayStatus,int stayTime,int pirSen){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().mqttCtrl(1);
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    setWanderingAlarm(wifiSN,stayStatus,stayTime,pirSen);
+                                }else{
+                                    mViewRef.get().onSettingCallBack(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+//                setMqttCtrl(0);
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+
+    }
+
     public void setWanderingAlarm(String wifiSN,int stayStatus,int stayTime,int pirSen){
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
@@ -600,13 +666,14 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                             return false;
                         }
                     })
-                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SettingVideoLockPir settingVideoLockPir = new Gson().fromJson(mqttData.getPayload(), SettingVideoLockPir.class);
+                            SettingVideoLockPirResult settingVideoLockPir = new Gson().fromJson(mqttData.getPayload(), SettingVideoLockPirResult.class);
                             if(settingVideoLockPir != null){
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(settingVideoLockPir.getCode() + "")){
                                     if(isSafe()){
                                         LogUtils.e("shulan settingVideoLockPir-->" + settingVideoLockPir.getParams().toString());
@@ -628,6 +695,11 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                         }
                     });
 
+        }else{
+            if(isSafe()){
+                mViewRef.get().onSettingCallBack(false);
+            }
         }
+//        setMqttCtrl(0);
     }
 }

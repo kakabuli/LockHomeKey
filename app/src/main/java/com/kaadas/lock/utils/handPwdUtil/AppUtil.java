@@ -1,5 +1,6 @@
 package com.kaadas.lock.utils.handPwdUtil;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.view.WindowManager;
 
@@ -17,5 +18,6 @@ public class AppUtil {
 		int result[] = { width, height };
 		return result;
 	}
+
 
 }

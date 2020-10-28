@@ -16,8 +16,11 @@ import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLang;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLangResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -221,6 +224,70 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
         compositeDisposable.add(listenActionUpdateDisposable);
     }
 
+    public void connectNotifyGateWayNewVersion(){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    notifyGateWayNewVersion();
+                                }else{
+                                    if(isSafe()){
+                                        mViewRef.get().onSettingCallBack(false);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                try{
+                    XMP2PManager.getInstance().mqttCtrl(1);
+                }catch (Exception e){
+
+                }
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
     public void notifyGateWayNewVersion(){
         LogUtils.e("shulan -----notifyGateWayNewVersion---");
         XMP2PManager.getInstance().notifyGateWayNewVersion();
@@ -242,7 +309,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                         if ("200".equals(otaResult.getCode() + "")) {
                             if (isSafe()) {
                                 CheckOTAResult.UpdateFileInfo data = otaResult.getData();
-                                mViewRef.get().needUpdate(data, SN,version, type);
+                                mViewRef.get().needUpdate(data, SN,data.getFileVersion(), type);
                             }
                         } else if ("401".equals(otaResult.getCode() + "")) { // 数据参数不对
                             if (isSafe()) {
@@ -276,6 +343,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
 
     public void uploadOta(CheckOTAResult.UpdateFileInfo updateFileInfo, String wifiSN) {
+
         XiaokaiNewServiceImp.wifiLockUploadOta(updateFileInfo, wifiSN)
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
@@ -478,7 +546,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockSafeMode setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeMode.class);
+                            SetVideoLockSafeModeResult setVideoLockSafeMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockSafeModeResult.class);
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
@@ -523,7 +591,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockAmMode setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmMode.class);
+                            SetVideoLockAmModeResult setVideoLockAmMode = new Gson().fromJson(mqttData.getPayload(), SetVideoLockAmModeResult.class);
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
@@ -569,7 +637,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SetVideoLockLang setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLang.class);
+                            SetVideoLockLangResult setVideoLockLang = new Gson().fromJson(mqttData.getPayload(), SetVideoLockLangResult.class);
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode() + "")){
                                     if(isSafe()){
