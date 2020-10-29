@@ -56,13 +56,14 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
         setContentView(R.layout.activity_wifi_lock_add_new_first);
         Intent intent = getIntent();
         wifiModelType = intent.getStringExtra("wifiModelType");
-        LogUtils.e("shulan", "WifiLockAddNewFirstActivity onCreate: wifiModelType=" + wifiModelType);
         ButterKnife.bind(this);
 
         if(wifiModelType.contains("VIDEO")){
             ivImgLock.setImageResource(R.mipmap.wifi_video_lock_img_lock);
+            notice.setText(getText(R.string.wifi_lock_new_add_first_notice3));
         }else{
             ivImgLock.setImageResource(R.mipmap.new_add_first);
+            notice.setText(getText(R.string.wifi_lock_new_add_first_notice2));
         }
     }
 

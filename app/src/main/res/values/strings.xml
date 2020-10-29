@@ -1615,8 +1615,8 @@
     <string name="qr_notice">在门锁后面板找到配网二维码\n将二维码放入框内</string>
     <string name="open_camera_failed">打开相机失败，请检查是否拒绝了应用权限</string>
     <string name="wifi_lock_new_add_first_notice1">第一步：门锁配网准备</string>
-    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 电池仓上装上锂电池(锂电池需要\n保证电池充足)</string>
-<!--    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 检查后面板Wi-Fi模块是否插紧\n③ 电池仓装上4节或8节电池</string>-->
+    <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 检查后面板Wi-Fi模块是否插紧\n③ 电池仓装上4节或8节电池</string>
+    <string name="wifi_lock_new_add_first_notice3">① 按照说明书安装完门锁\n② 电池仓上装上锂电池(锂电池需要\n保证电池充足)</string>
     <string name="retry_connect">已联网，重新连接</string>
     <string name="lock_ok_set_net">门锁安装好，去配网</string>
     <string name="wifi_lodfdsjfsdfj">① 用手触碰按键区，唤醒门锁\n门锁是否语音播报：“门锁未激活”</string>
