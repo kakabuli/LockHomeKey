@@ -136,6 +136,7 @@ public class LogUtils {
 	 * 以级别为 e 的形式输出LOG
 	 */
 	public static void e(String TAG, String msg) {
+
 		if (mDebuggable >= LEVEL_ERROR) {
 			if (isOutFile){
 				ALog.e(mTag+TAG, msg);

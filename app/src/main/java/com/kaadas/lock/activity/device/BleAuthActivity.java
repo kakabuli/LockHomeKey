@@ -155,9 +155,8 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
-        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
         //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
+//        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
             options = new RequestOptions()
                     .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
                     .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
@@ -171,9 +170,12 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
                     //匹配型号获取下载地址
                     Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                    return;
                 }
             }
-        }
+//        }
+        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
+
     }
 
     @Override

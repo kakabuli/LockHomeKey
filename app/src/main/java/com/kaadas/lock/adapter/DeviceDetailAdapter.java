@@ -177,10 +177,13 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     }
 
                     isWifiDevice(false, helper, status, batteryView, blePower);
+                    batteryView.setPower(blePower);
+                    helper.setText(R.id.device_power_text, blePower + "%");
+                    textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
+
                     String model = bleLockInfo.getServerLockInfo().getModel();
-                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
                     //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
+//                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
                         for (ProductInfo productInfo:productList) {
                             if (productInfo.getDevelopmentModel().contentEquals(model)){
 //                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
@@ -188,13 +191,14 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                                 //匹配型号获取下载地址
 //                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).into((ImageView) helper.getView(R.id.device_image));
                                 Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                                return;
                             }
                         }
-                    }
-                    batteryView.setPower(blePower);
-                    helper.setText(R.id.device_power_text, blePower + "%");
+//                    }
+                    LogUtils.e("--kaadas--:打印");
 
-                    textView.setText(bleLockInfo.getServerLockInfo().getLockNickName());
+                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
+
                 }
                 break;
 
@@ -204,12 +208,17 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                 if (wifiLockInfo != null) {
                     int power1 = wifiLockInfo.getPower();
                     isWifiDevice(false, helper, "online", batteryView, power1);
-                    String model = wifiLockInfo.getProductModel();
 
-                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
+                    batteryView.setPower(power1);
+                    helper.setText(R.id.device_power_text, power1 + "%");
+                    textView.setText(wifiLockInfo.getLockNickname());
+                    helper.setVisible(R.id.device_type_image, false);
+                    helper.setVisible(R.id.device_type_text, false);
+
+                    String model = wifiLockInfo.getProductModel();
                     if (model != null) {
                         //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-                        if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon) {
+//                        if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon) {
                             for (ProductInfo productInfo : productList) {
                                 try {
 
@@ -219,21 +228,19 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                                         //匹配型号获取下载地址
 //                                Glide.with(mContext).load(productInfo.getDeviceListUrl()).into((ImageView) helper.getView(R.id.device_image));
                                         Glide.with(mContext).load(productInfo.getDeviceListUrl()).apply(options).into((ImageView) helper.getView(R.id.device_image));
+                                        return;
                                     }
                                 } catch (Exception e) {
                                     LogUtils.e("--kaadas--:" + e.getMessage());
                                 }
 
                             }
-                        }
+//                        }
                     }
-                    batteryView.setPower(power1);
-                    helper.setText(R.id.device_power_text, power1 + "%");
+                    LogUtils.e("--kaadas--:打印");
 
-                    textView.setText(wifiLockInfo.getLockNickname());
+                    helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
 
-                    helper.setVisible(R.id.device_type_image, false);
-                    helper.setVisible(R.id.device_type_text, false);
                 }
                 break;
         }

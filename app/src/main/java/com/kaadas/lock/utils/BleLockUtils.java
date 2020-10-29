@@ -635,8 +635,6 @@ public class BleLockUtils {
             if (model.startsWith("K7")) {
                 return R.mipmap.k7;
             }
-
-
             else if (model.startsWith("S118") ) {
                 return R.mipmap.s118;
             }  else if (model.startsWith("K10W") ) {
@@ -648,10 +646,6 @@ public class BleLockUtils {
             } else if (model.startsWith("K7P") ) {
                 return R.mipmap.k7p;
             }
-
-
-
-
             else if (model.startsWith("KX-T") || model.startsWith("K8300")) {
                 return R.mipmap.kx_t;
             } else if (model.startsWith("S110")) {
