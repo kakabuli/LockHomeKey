@@ -468,11 +468,14 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 
     @Override
     public void onLoadServerRecord(List<WifiLockOperationRecord> operationRecords, boolean isNotice) {
+
         groupData(operationRecords);
 //        hiddenLoading();
 //        if (isNotice) {
 //            Toast.makeText(getContext(), getString(R.string.sync_success), Toast.LENGTH_SHORT).show();
 //        }
+        if(isNotice)
+            ToastUtil.getInstance().showShort(R.string.sync_success);
     }
 
     @Override
@@ -481,6 +484,9 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //            Toast.makeText(getContext(), getString(R.string.synv_failed), Toast.LENGTH_SHORT).show();
 //        }
 //        hiddenLoading();
+        if(isNotice)
+            ToastUtil.getInstance().showShort(R.string.synv_failed);
+
     }
 
     @Override
@@ -497,14 +503,8 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //            Toast.makeText(getContext(), getString(R.string.no_data), Toast.LENGTH_SHORT).show();
 //        }
 //        hiddenLoading();
-        mPresenter.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.e("shulan -----------");
-                if (isNotice)
-                    ToastUtil.getInstance().showShort("服务器没有数据");
-            }
-        });
+        if (isNotice)
+            ToastUtil.getInstance().showShort(R.string.no_data);
 
     }
 

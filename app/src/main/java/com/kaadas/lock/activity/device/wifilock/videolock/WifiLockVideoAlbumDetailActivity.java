@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.MyAlbumPlayerPresenter;
@@ -110,6 +111,8 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 
     private boolean isRecordSuccess = false;
 
+    private long currentTime = 0;
+
     Handler timerHandler = new Handler();
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -122,12 +125,12 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.e("WifiLockVideoAlbumDetailActivity onCreate");
         setContentView(R.layout.activity_wifi_lock_video_album_detail);
         ButterKnife.bind(this);
 
         filepath = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
         String name = getIntent().getStringExtra("NAME");
-
 
         tvName.setText(name);
         // initDate
@@ -171,7 +174,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             tvTips.setVisibility(View.VISIBLE);
             if(record.getThumbUrl()!=null && !record.getThumbUrl().isEmpty()){
                 Glide.with(this).load(record.getThumbUrl())
-                        .apply(new RequestOptions().error(R.mipmap.img_video_lock_default).placeholder(R.mipmap.img_video_lock_default).dontAnimate()
+                        .apply(new RequestOptions().dontAnimate()
                                 .transform(new RotateTransformation(90f))).into(ivCache);
             }else{
                 Glide.with(this).load(R.mipmap.img_video_lock_default).into(ivCache);
@@ -184,7 +187,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             ivCache.setVisibility(View.VISIBLE);
 
         }
-
 
     }
 
@@ -265,7 +267,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     private void initSeekBar() {
         long videoDuration = mediaPlayer.getDuration();
 
-        Log.e("howard", "video duration = " + videoDuration);
         if (videoDuration == 0) {
             Toast.makeText(this.getApplicationContext(), "Could not play this video.", Toast.LENGTH_SHORT).show();
             finish();
@@ -303,6 +304,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     protected void onResume() {
         super.onResume();
 //        mPresenter.attachView(this);
+
         registerBroadcast();
     }
 
@@ -315,12 +317,14 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onStop() {
         super.onStop();
+
 //        mPresenter.detachView();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity onDestroy");
         stopRepeatTimer();
         if (mediaPlayer != null) {
             mediaPlayer.releaseResource();
@@ -333,18 +337,22 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     public void finish() {
         super.finish();
-        try{
+        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity ----finish-----");
+        mPresenter.release();
 
+        try{
             if(!isRecordSuccess){
-                if(new File(filepath).exists()){
-                    new File(filepath).delete();
+                if(!filepath.isEmpty()){
+                    if(new File(filepath).exists()){
+                        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity-----finish++++++ file.delete");
+                        new File(filepath).delete();
+                    }
                 }
             }
         }catch (Exception e){
 
         }
 
-        mPresenter.release();
     }
 
     @Override
@@ -489,6 +497,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     public void onVideoFrameUsed(H264Frame h264Frame) {
         if(h264Frame.getFrameTimeStamp() == 0){
+            isRecordSuccess = true;
             mPresenter.release();
             runOnUiThread(new Runnable() {
                 @Override
@@ -498,32 +507,50 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 //                    playOperation();
                 }
             });
+        }else{
+            isRecordSuccess = false;
         }
     }
 
     @Override
     public void onStopRecordMP4CallBack(MP4Info mp4Info, String name) {
-//        mPresenter.release();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(mp4Info.isResult()){
-                    filepath = mp4Info.getFilePath();
-                    isRecordSuccess = true;
-                    /*ivPlayStart.setVisibility(View.VISIBLE);
-                    llyBootomBar.setVisibility(View.VISIBLE);
-                    surfaceView.setVisibility(View.VISIBLE);
-                    surfaceView1.setVisibility(View.GONE);
-                    playOperation();*/
-                }else {
-                    isRecordSuccess = false;
+        if(mp4Info.isResult()){
+            filepath = mp4Info.getFilePath();
+//                    isRecordSuccess = true;
+            /*ivPlayStart.setVisibility(View.VISIBLE);
+            llyBootomBar.setVisibility(View.VISIBLE);
+            surfaceView.setVisibility(View.VISIBLE);
+            surfaceView1.setVisibility(View.GONE);
+            playOperation();*/
+            if(WifiLockVideoAlbumDetailActivity.this.isFinishing() && !isRecordSuccess){
+                try {
+                    if(!mp4Info.getFilePath().isEmpty()){
+
+                        File file = new File(mp4Info.getFilePath());
+                        if(file.exists()){
+                            LogUtils.e("shulan -----onStopRecordMP4CallBack++++++" + mp4Info.isResult() + "file.delete");
+                            file.delete();
+                        }
+                    }
+                }catch (Exception e){
+
+                }
+            }
+        }else {
+//                    isRecordSuccess = false;
+            try {
+                if(!mp4Info.getFilePath().isEmpty()){
                     File file = new File(mp4Info.getFilePath());
                     if(file.exists()){
+                        LogUtils.e("shulan -----onStopRecordMP4CallBack++++++" + mp4Info.isResult()+ "file.delete");
                         file.delete();
                     }
                 }
+            }catch (Exception e){
+
             }
-        });
+
+        }
 
 
     }
@@ -604,7 +631,7 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
+
         if(!WifiLockVideoAlbumDetailActivity.this.isFinishing()){
             dialog.show();
         }
@@ -645,11 +672,14 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
+
                         try{
                             if(!isRecordSuccess){
-                                if(new File(filepath).exists()){
-                                    new File(filepath).delete();
+                                if(!filepath.isEmpty()){
+
+                                    if(new File(filepath).exists()){
+                                        new File(filepath).delete();
+                                    }
                                 }
                             }
                         }catch (Exception e){
@@ -659,11 +689,13 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
                         try{
                             if(!isRecordSuccess){
-                                if(new File(filepath).exists()){
-                                    new File(filepath).delete();
+                                if(!filepath.isEmpty()){
+
+                                    if(new File(filepath).exists()){
+                                        new File(filepath).delete();
+                                    }
                                 }
                             }
 
@@ -674,14 +706,15 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
                 try{
 
                     if(!isRecordSuccess){
-                        if(new File(filepath).exists()){
-                            new File(filepath).delete();
+                        if(!filepath.isEmpty()){
+
+                            if(new File(filepath).exists()){
+                                new File(filepath).delete();
+                            }
                         }
                     }
                 }catch (Exception e){
@@ -689,7 +722,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 }
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
 
             }
 

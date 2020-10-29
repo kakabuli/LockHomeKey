@@ -62,7 +62,6 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
         wifiModelType = intent.getStringExtra("wifiModelType");
-        LogUtils.e("shulan WifiLockAddNewThirdActivity--wifiModelType--" + wifiModelType);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
@@ -111,7 +110,6 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
                     wifiVideoIntent.putExtra("wifiModelType", wifiModelType);
                     wifiVideoIntent.putExtra("distribution_again",distributionAgain);
                     wifiVideoIntent.putExtra("distribution",distribution);
-                    LogUtils.e("shulan already_modify-->distribution-->" + distribution);
                     startActivity(wifiVideoIntent);
                 }else{
                     //startActivity(new Intent(this,WifiLockAddNewfourthActivity.class));

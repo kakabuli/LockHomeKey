@@ -69,6 +69,14 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
         tvWarnInformation.setOnClickListener(this);
         tvVistorRecord.setOnClickListener(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        initFragment();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        LogUtils.e("shulan WifiLockRecordActivity onRestart");
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
             tvVistorRecord.setVisibility(View.VISIBLE);
             isVideoLock = true;
@@ -79,12 +87,12 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
             tvVistorRecord.setVisibility(View.GONE);
             isVideoLock = false;
         }
-        initFragment();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        LogUtils.e("shulan WifiLockRecordActivity onResume");
         mPresenter.attachView(this);
         /*if(isVideoLock){
             registerBroadcast();
@@ -95,6 +103,18 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                 }
             }).start();
         }*/
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+            tvVistorRecord.setVisibility(View.VISIBLE);
+            isVideoLock = true;
+            WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+            mPresenter.settingDevice(wifiLockInfoBySn);
+            mPresenter.settingDevice(wifiLockInfoBySn);
+        }else{
+            tvVistorRecord.setVisibility(View.GONE);
+            isVideoLock = false;
+        }
+
     }
 
     @Override

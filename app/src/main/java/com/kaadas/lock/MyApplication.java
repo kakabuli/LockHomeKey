@@ -68,6 +68,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.xiaomi.mipush.sdk.MiPushClient;
+import com.xm.sdk.log.XMLog;
+import com.xmitech.sdk.log.LogCodec;
 import com.yun.software.kaadas.Utils.ActivityCollectorUtil;
 import com.yun.software.kaadas.Utils.UserUtils;
 /*import com.uuzuche.lib_zxing.activity.ZXingLibrary;*/
@@ -147,12 +149,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
         initXMP2PManager();
+        XMLog.DEBUG=true;
+        LogCodec.DEBUG=true;
         regToWx();
         //配置数据库
         setUpWriteDataBase();
         // HuaWei phone
         if (Rom.isEmui()) {
-            LogUtils.e("shulan Rom.isEmui()");
             HMSAgent.init(this);
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);

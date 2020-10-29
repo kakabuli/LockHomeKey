@@ -227,9 +227,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
         LogUtils.e("获取到的设备型号是   "+ model);
-        ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
         //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-        if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
+//        if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default){
             options = new RequestOptions()
                     .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
                     .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
@@ -244,9 +243,12 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
                     //LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
                     //匹配型号获取下载地址
                     Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                    return;
                 }
             }
-        }
+//        }
+        ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(model));
+
     }
 
     @Override

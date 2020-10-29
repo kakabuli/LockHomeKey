@@ -223,13 +223,20 @@ public class WifiLockVideoLanguageSettingActivity extends BaseActivity<IWifiVide
         if(enImg.isChecked()){
             language = "en";
         }
+
         if(wifiLockInfo.getLanguage().equals(language)){
             finish();
         }else{
             tvTips.setVisibility(View.VISIBLE);
             avi.setVisibility(View.VISIBLE);
             avi.show();
-            mPresenter.setConnectLanguage(wifiSn,language);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.setConnectLanguage(wifiSn,language);
+                }
+            }).start();
+
         }
 
 

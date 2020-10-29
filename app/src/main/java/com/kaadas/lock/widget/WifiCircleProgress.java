@@ -122,7 +122,6 @@ public class WifiCircleProgress extends View {
         mHintSize = typedArray.getDimension(R.styleable.CircleProgressBar_hintSize, CircleConstant.DEFAULT_HINT_SIZE);
 
         mValue = typedArray.getFloat(R.styleable.CircleProgressBar_value, CircleConstant.DEFAULT_VALUE);
-        Log.d("shulan", "WifiCircleProgress initAttrs: mValue=" + mValue);
         mMaxValue = typedArray.getFloat(R.styleable.CircleProgressBar_maxValue, CircleConstant.DEFAULT_MAX_VALUE);
         //内容数值精度格式
         mPrecision = typedArray.getInt(R.styleable.CircleProgressBar_precision, 0);

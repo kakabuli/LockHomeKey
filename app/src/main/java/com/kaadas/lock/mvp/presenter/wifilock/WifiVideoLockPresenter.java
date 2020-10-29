@@ -121,6 +121,7 @@ public class WifiVideoLockPresenter<T> extends BasePresenter<IWifiVideoLockView>
     public void getOperationRecord(String wifiSn,boolean isNotice) {
         XiaokaiNewServiceImp.wifiLockGetOperationList(wifiSn, 1)
                 .timeout(10 *1000,TimeUnit.MILLISECONDS)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new BaseObserver<GetWifiLockOperationRecordResult>() {
                     @Override
                     public void onSuccess(GetWifiLockOperationRecordResult operationRecordResult) {

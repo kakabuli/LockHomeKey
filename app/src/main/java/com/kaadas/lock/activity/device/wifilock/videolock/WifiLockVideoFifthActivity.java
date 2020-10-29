@@ -76,7 +76,7 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
         LogUtils.e("shulan sPassword-->" + sPassword);
         Bitmap qrBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.qr_logo);
         Bitmap qrCode = QrCodeUtils.createQRCode(new Gson().toJson(new QrCodeBean(sSsid, MyApplication.getInstance().getUid(), sPassword)),
-                240, qrBitmap);
+                240);
         Glide.with(this).load(qrCode).into(ivQrcode);
         distributionAgain = getIntent().getBooleanExtra("distribution_again",false);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);

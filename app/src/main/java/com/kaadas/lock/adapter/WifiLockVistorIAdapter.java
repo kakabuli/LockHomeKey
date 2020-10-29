@@ -102,8 +102,7 @@ public class WifiLockVistorIAdapter extends BaseQuickAdapter<WifiVideoLockAlarmR
             @Override
             public void onClick(View v) {
                 if(record.getFileDate() != null && !record.getFileDate().isEmpty()){
-                    LogUtils.e("shulan WifiLockVistorIAdapter-->fileDate-->" + record.getFileDate());
-                    LogUtils.e("shulan WifiLockVistorIAdapter-->VedioTime-->" + record.getVedioTime());
+
                     if(mListener != null){
                         mListener.onVideoRecordCallBackLinstener(record);
                     }

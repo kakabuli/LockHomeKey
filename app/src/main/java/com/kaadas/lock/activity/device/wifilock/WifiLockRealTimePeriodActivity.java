@@ -53,7 +53,7 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
         ButterKnife.bind(this);
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        snoozeStartTime = getIntent().getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START);
+        snoozeStartTime = getIntent().getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
         startTime = getIntent().getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START,0);
         endTime = getIntent().getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END,0);
         if(endTime == 86400){
@@ -106,7 +106,6 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
 
         startTime = DateUtils.getSecondTime(startStr);
         endTime = DateUtils.getSecondTime(endStr);
-        LogUtils.e("shulan -------startStr-" + DateUtils.getSecondTime(startStr) + "--endStr-" + DateUtils.getSecondTime(endStr));
         if(endStr.equals("23:59")){
             endTime = 86400;
         }
@@ -124,7 +123,6 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
             mTimePickerDialog = new TimePickerDialog(WifiLockRealTimePeriodActivity.this, tvVideoTimeSetting.getText().toString(), new TimePickerDialog.ConfirmAction() {
                 @Override
                 public void onClick(String startAndEndTime) {
-                    LogUtils.e("shulan showTimePickDialog---startAndEndTime-" + startAndEndTime);
                     tvVideoTimeSetting.setText(startAndEndTime + "");
                     time = startAndEndTime;
                 }

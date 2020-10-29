@@ -200,11 +200,16 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
         }
 
         if(safeMode != wifiLockInfo.getSafeMode()){
-
             avi.setVisibility(View.VISIBLE);
             avi.show();
             tvTips.setVisibility(View.VISIBLE);
-            mPresenter.setConnectSafeMode(wifiSn,safeMode);
+           new Thread(new Runnable() {
+               @Override
+               public void run() {
+                   mPresenter.setConnectSafeMode(wifiSn,safeMode);
+               }
+           }).start();
+
         }else{
             finish();
         }

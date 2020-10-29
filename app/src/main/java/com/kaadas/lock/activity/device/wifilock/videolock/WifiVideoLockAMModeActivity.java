@@ -197,12 +197,18 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
         if(ckAm.isChecked()){
             amMode = 0;
         }
-        if(amMode != wifiLockInfo.getAmMode()){
 
+
+        if(amMode != wifiLockInfo.getAmMode()){
             avi.setVisibility(View.VISIBLE);
             avi.show();
             tvTips.setVisibility(View.VISIBLE);
-            mPresenter.setConnectAMMode(wifiSn,amMode);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.setConnectAMMode(wifiSn,amMode);
+                }
+            }).start();
         }else{
             finish();
         }

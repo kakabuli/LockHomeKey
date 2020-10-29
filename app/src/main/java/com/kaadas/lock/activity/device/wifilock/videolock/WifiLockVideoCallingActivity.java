@@ -240,7 +240,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if(wifiLockInfo == null){
-            LogUtils.e("shulan wifiLockInfo = searchVideoLock(wifiSn)");
             wifiLockInfo = searchVideoLock(wifiSn);
         }
         if (wifiLockInfo != null){
@@ -352,7 +351,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 finish();
                 break;
             case R.id.iv_answer_icon:
-                LogUtils.e("shulan iv_answer_icon--"+isConnect);
                 if(this.isConnect){
                     rlVideoLayout.setVisibility(View.VISIBLE);
                     rlMarkLayout.setVisibility(View.GONE);
@@ -362,7 +360,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                         public void run() {
                             if(isShowAudio && mPresenter.startAudioStream() >= 0) {
                                 if (!mPresenter.isEnableAudio()) {
-                                    LogUtils.e("shulan enableAudio --> true");
                                     mPresenter.enableAudio(true);
                                     isMute = false;
                                     isShowAudio = false;
@@ -374,7 +371,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 break;
             case R.id.iv_mute:
                 if(!isMute){
-                    LogUtils.e("shulan 111+isMute" + isMute);
                     if(mPresenter.stopAudioStream() >= 0){
                         if(mPresenter.isEnableAudio()){
                             mPresenter.enableAudio(false);
@@ -385,7 +381,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                     }
 
                 }else{
-                    LogUtils.e("shulan 222+isMute" + isMute);
                     if(mPresenter.startAudioStream() >=0){
                         if(!mPresenter.isEnableAudio()){
                             mPresenter.enableAudio(true);
@@ -469,7 +464,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                 break;*/
             case R.id.iv_screenshot:
-                LogUtils.e("shulan iv_screenshot");
                 mPresenter.snapImage();
                 break;
             case R.id.iv_temporary_pwd:
@@ -505,8 +499,12 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         ivMute.setImageResource(R.mipmap.real_time_video_mute);
         isShowAudio = true;
         isFirstAudio = false;
+        llyRecord.setVisibility(View.GONE);
+        ivRecoring.setSelected(false);
+        ivCalling.setSelected(false);
+        tvCallingTips.setText("对讲");
+        tvCallingTips.setTextColor(Color.parseColor("#333333"));
         registerBroadcast();
-        LogUtils.e("shulan WifiLockVideoCallingActivity --onResume--");
         if(isLastPirture){
             if(myBitmap != null){
                 ivCache.setVisibility(View.VISIBLE);
@@ -521,15 +519,12 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtils.e("shulan onPause---");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mPresenter.detachView();
-        LogUtils.e("shulan -onStop--------");
-//        myBitmap;
     }
 
     @Override
@@ -585,7 +580,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void onConnectSuccess() {
-        LogUtils.e("shulan ------------");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -600,12 +594,12 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         });
         mPresenter.startRealTimeVideo(mSufaceView);
         this.isConnect = true;
-        LogUtils.e("shulan onConnectSuccess-isConnect->" + isConnect);
+
     }
 
     @Override
     public void onStartConnect(String paramString) {
-        LogUtils.e("shulan" + "onStartConnect: paramString-->" + paramString);
+
     }
 
     @Override
@@ -617,15 +611,13 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 tvTips.setVisibility(View.GONE);
             }
         });*/
-        LogUtils.e("shulan" + "onErrorMessage: message-->" + message);
+
     }
 
     @Override
     public void onLastFrameRgbData(int[] ints, int width, int height, boolean b) {
-        LogUtils.e("shulan ints="+ints,"--height=" +height + "--width=" + width +"--b=" +b);
         if(ints != null ){
             Bitmap bitmap = MyBitmapFactory.createMyBitmap(ints, width, height);
-            LogUtils.e("shulan bitmap-->" + bitmap);
             myBitmap = BitmapUtil.rotaingImageView(90,bitmap);
             if(!b){
                 runOnUiThread(new Runnable() {
@@ -718,7 +710,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                 if(isShowAudio && mPresenter.startAudioStream() >= 0) {
                     if (!mPresenter.isEnableAudio()) {
-                        LogUtils.e("shulan enableAudio --> true");
                         mPresenter.enableAudio(true);
                         isMute = false;
                         isShowAudio = false;
@@ -799,7 +790,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 finish();
             }
         });
-//        LogUtils.e("shulan -----+++++");
         if(!WifiLockVideoCallingActivity.this.isFinishing()){
             openDialog.show();
         }
@@ -876,12 +866,9 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             if (!TextUtils.isEmpty(wifiLockInfo.getWifiSN())) {
 
                 String wifiSN = wifiLockInfo.getWifiSN();
-                LogUtils.e("shulan wifiSN-->" + wifiSN);
                 String randomCode = wifiLockInfo.getRandomCode();
-                LogUtils.e("shulan randomCode-->" + randomCode);
                 String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
                 LogUtils.e("--kaadas--wifiSN-  " + wifiSN);
-                LogUtils.e("shulan time-->  " + time);
                 MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
                 MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
                 MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());

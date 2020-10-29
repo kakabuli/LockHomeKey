@@ -652,7 +652,7 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
             }
         });
         int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
-
+        LogUtils.e("shulan param-->" + param);
     }
 
     public void setRealTime(String wifiSN,int keepAliveStatus, int startTime, int endTime, int[] snoozeStartTime) {

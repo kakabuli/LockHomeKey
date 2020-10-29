@@ -348,7 +348,6 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -358,7 +357,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }

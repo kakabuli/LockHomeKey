@@ -108,7 +108,7 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
             case R.id.back:
                 if(wifiLockInfo.getPowerSave() == 0){
                     if(avi.isShow())
-                    setRealTime();
+                        setRealTime();
 
                 }else{
                     finish();
@@ -151,20 +151,51 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
         }
     }
 
+    private boolean isEqual(int[] s1,int[] s2){
+        try {
+            if(s1 != null && s2 != null){
+                if(s1.length != s2.length){
+                    return true;
+                }else{
+                    for(int i = 0;i < s1.length;i++){
+                        if(s1[i] != s2[i]){
+                            return true;
+                        }
+                    }
+                }
+            }else {
+                return true;
+            }
+
+        }catch (Exception e){
+
+        }
+        return false;
+    }
+
     private void setRealTime() {
-        try{
+
+        try {
+
             if(keepAliveStatus != wifiLockInfo.getKeep_alive_status() || startTime != wifiLockInfo.getAlive_time().getSnooze_start_time()
-                    || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || snoozeStartTime != wifiLockInfo.getAlive_time().getKeep_alive_snooze()){
+                    || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || isEqual(snoozeStartTime,wifiLockInfo.getAlive_time().getKeep_alive_snooze())){
                 tvTips.setVisibility(View.VISIBLE);
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
-                mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+                    }
+                }).start();
+
             }else{
                 finish();
             }
         }catch (Exception e){
 
         }
+
 
     }
 
@@ -297,7 +328,6 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
         if(!WifiLockRealTimeActivity.this.isFinishing()){
             dialog.show();
         }
@@ -338,21 +368,16 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
                         mPresenter.release();
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
 
             }
 
@@ -476,7 +501,6 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
 
     @Override
     public void onConnectFailed(int paramInt) {
-        LogUtils.e("shulan ---------");
         mPresenter.setMqttCtrl(0);
         runOnUiThread(new Runnable() {
             @Override
@@ -530,14 +554,16 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
     @Override
     public void onSettingCallBack(boolean flag) {
         if(!WifiLockRealTimeActivity.this.isFinishing()){
+
             mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtils.e("shulan ---flag--" + flag);
                     if(flag){
-                        ToastUtil.getInstance().showLong("修改成功");
+                        ToastUtil.getInstance().showShort("修改成功");
                     }else{
-                        ToastUtil.getInstance().showLong("修改失败");
+                        ToastUtil.getInstance().showShort("修改失败");
                     }
                     if(avi != null){
                         tvTips.setVisibility(View.GONE);

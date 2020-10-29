@@ -132,6 +132,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     }
 
     private void initData() {
+        wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if (wifiLockInfo != null){
             String localPasswordCache = (String) SPUtils.get(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn, "");
@@ -203,11 +204,10 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
         if (wifiLockInfo != null) {
             if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
-                ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
                 String model = wifiLockInfo.getProductModel();
                 if (model != null) {
                     //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-                    if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default) {
+//                    if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default) {
                         options = new RequestOptions()
                                 .placeholder(R.mipmap.bluetooth_lock_default)      //加载成功之前占位图
                                 .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
@@ -222,13 +222,15 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                                     //匹配型号获取下载地址
                                     Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                                    return;
                                 }
                             } catch (Exception e) {
                                 LogUtils.e("--kaadas--:" + e.getMessage());
                             }
                         }
-                    }
+//                    }
                 }
+                ivLockIcon.setImageResource(BleLockUtils.getDetailImageByModel(wifiLockInfo.getProductModel()));
             }
         }
     }

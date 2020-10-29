@@ -109,7 +109,11 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     }
 
     private void showLockType() {
-        String lockType = wifiLockInfo.getProductModel();
+        String lockType = "";
+        if(wifiLockInfo != null){
+
+            lockType = wifiLockInfo.getProductModel();
+        }
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
@@ -122,7 +126,11 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     }
 
     private void changeLockIcon() {
-        String model = wifiLockInfo.getProductModel();
+        String model = "";
+        if(wifiLockInfo != null){
+            model = wifiLockInfo.getProductModel();
+        }
+
         ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
         if (model != null) {
             //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载

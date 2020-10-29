@@ -43,6 +43,8 @@ import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.utils.WifiVideoPasswordFactorManager;
 
+import org.linphone.mediastream.Log;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -71,9 +73,13 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     private String password = "";
 
+    private int func ;
+
     private WifiLockVideoBindBean wifiLockVideoBindBean;
 
     private String wifiModelType;
+
+    private long time = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,7 +131,10 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
                 if (!wifiUtils.isWifiEnable()) {
                     ToastUtil.getInstance().showShort(getString(R.string.wifi_no_open_please_open_wifi));
                 }
-                checkAdminPassword(adminPassword);
+                if(System.currentTimeMillis() - time > 500){
+                    checkAdminPassword(adminPassword);
+                    time = System.currentTimeMillis();
+                }
                 break;
         }
     }
@@ -158,16 +167,14 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
     }
 
 
-    private void onSuccess(WifiVideoPasswordFactorManager.FactorResult result) {
-        password = Rsa.bytesToHexString(result.password);
-
+    private void onSuccess(String randomCode,int func) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(WifiLockVideoSixthActivity.this, WifiLockVideoAddSuccessActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiLockVideoBindBean.getWfId());
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, Rsa.bytesToHexString(result.password));
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, result.func);
+                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID,sSsid);
                 intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA,wifiLockVideoBindBean);
                 startActivity(intent);
@@ -288,6 +295,8 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
             WifiVideoPasswordFactorManager.FactorResult result = WifiVideoPasswordFactorManager.parsePasswordData(adminPassword,randomCode);
             if(result.result == 0){
                 LogUtils.e("shulan     randomcode-->  " + Rsa.bytesToHexString(result.password));
+                randomCode = Rsa.bytesToHexString(result.password);
+                func = result.func;
                 if(MyApplication.getInstance().getWifiLockInfoBySn(wifiLockVideoBindBean.getWfId()) == null){
                     mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
                             Rsa.bytesToHexString(result.password),sSsid,result.func,3,
@@ -295,7 +304,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
                         wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
                 );
 
-                    onSuccess(result);
+
                 }else{
 
                     mPresenter.updateBindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
@@ -320,7 +329,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     @Override
     public void onBindSuccess(String wifiSn) {
-
+        onSuccess(randomCode,func);
     }
 
     @Override

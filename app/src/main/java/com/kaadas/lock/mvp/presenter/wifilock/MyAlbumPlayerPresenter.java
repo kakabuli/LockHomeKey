@@ -85,8 +85,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: paramInt=" + paramInt);
-
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
             }
@@ -95,7 +93,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -104,7 +101,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -113,7 +109,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -123,12 +118,12 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 
@@ -156,7 +151,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
     public void startRealTimeVideo(SurfaceView surfaceView){
         LogUtils.e("shulan isConnect--> " + XMP2PManager.getInstance().isConnected(-1));
 //        if(XMP2PManager.getInstance().isConnected(-1)){
-        LogUtils.e("startRealTimeVideo");
+
         XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
         try {
             XMP2PManager.getInstance().setAudioFrame();
@@ -171,7 +166,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
             @Override
             public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
-                LogUtils.e("shulan onVideoFrameUsed--" + paramAVStreamHeader.m_TimeStamp);
+
                 if(isSafe()){
                     mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
                 }

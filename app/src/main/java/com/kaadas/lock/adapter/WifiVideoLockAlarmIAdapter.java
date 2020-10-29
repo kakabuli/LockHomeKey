@@ -167,7 +167,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                     if(mListener != null){
                         mListener.onVideoRecordCallBackLinstener(record);
                     }
-                    /*LogUtils.e("shulan WifiVideoLockAlarmIAdapter-->fileDate-->" + record.getFileDate());
+                    /*
                     Intent intent = new Intent(mContext, WifiLockVideoDeviceRecordActivity.class);
                     intent.putExtra(KeyConstants.WIFI_SN,record.getWifiSN());
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_ALARM_RECORD_DATA,record);

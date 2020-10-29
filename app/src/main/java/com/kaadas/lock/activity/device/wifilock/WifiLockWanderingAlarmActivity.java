@@ -184,14 +184,25 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
         }else{
             stayStatus = 0;
         }
-        if(stayTime!= wifiLockInfo.getSetPir().getStay_time() || stayStatus != wifiLockInfo.getStay_status() || pirSen != wifiLockInfo.getSetPir().getPir_sen()){
-            tvTips.setVisibility(View.VISIBLE);
-            avi.setVisibility(View.VISIBLE);
-            avi.show();
-            mPresenter.setConnectWanderingAlarm(wifiSn,stayStatus,stayTime,pirSen);
-        }else {
-            finish();
+
+        try {
+            if(stayTime!= wifiLockInfo.getSetPir().getStay_time() || stayStatus != wifiLockInfo.getStay_status() || pirSen != wifiLockInfo.getSetPir().getPir_sen()){
+                tvTips.setVisibility(View.VISIBLE);
+                avi.setVisibility(View.VISIBLE);
+                avi.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setConnectWanderingAlarm(wifiSn,stayStatus,stayTime,pirSen);
+                    }
+                }).start();
+            }else {
+                finish();
+            }
+        }catch (Exception e){
+
         }
+
 
     }
 
@@ -264,6 +275,7 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
             switch (requestCode){
                 case KeyConstants.WIFI_VIDEO_LOCK_WANDERING_SENSITIVITY_CODE:
                     if(data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,-1) == -1){

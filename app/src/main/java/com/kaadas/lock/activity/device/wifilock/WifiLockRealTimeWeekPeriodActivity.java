@@ -64,14 +64,18 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         weekPeriod = getIntent().getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
+
+        if(weekPeriod == null){
+            weekPeriod = new int[0];
+        }
         initData();
     }
 
     private void initData() {
 
         if(wifiLockInfo != null){
-            if(wifiLockInfo.getAlive_time() != null){
-                weekPeriod = wifiLockInfo.getAlive_time().getKeep_alive_snooze();
+            if(weekPeriod.length > 0){
+//                weekPeriod = wifiLockInfo.getAlive_time().getKeep_alive_snooze();
                 int sum = 0;
                 for(int i = 0 ; i<weekPeriod.length;i++){
 
@@ -289,9 +293,6 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
         }
         Intent intent = new Intent();
         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, week);
-        for (int i=0;i<week.length;i++){
-            LogUtils.e("shulan ---week{"+i+"}" + week[i]);
-        }
         intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
         setResult(RESULT_OK,intent);
         finish();
