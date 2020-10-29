@@ -71,9 +71,6 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
                     }
 
                     wifiVideoLockAlarmRecords.addAll(alarmRecords);
-                    for (int i = 0 ; i <wifiVideoLockAlarmRecords.size() ;i++){
-                        LogUtils.e("shulan wifiVideoLockAlarmRecords-"+ i +"->" + wifiVideoLockAlarmRecords.get(i).toString());
-                    }
 
                     if (isSafe()) {
                         mViewRef.get().onLoadServerRecord(wifiVideoLockAlarmRecords, page);
@@ -119,7 +116,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
         XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
             @Override
             public void onStartedPackaged() {
-                LogUtils.e("shulan 开始录制");
+
                 if(isSafe()){
 //                    mViewRef.get().onstartRecordMP4CallBack();
                 }
@@ -127,7 +124,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
             @Override
             public void onStopPackaged(MP4Info mp4Info) {
-                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+
                 if(isSafe()){
                     mViewRef.get().onStopRecordMP4CallBack(mp4Info,filename);
                 }
@@ -192,7 +189,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
             @Override
             public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
                 long time = paramAVStreamHeader.m_TimeStamp;
-                LogUtils.e("shulan 录屏的时间戳--> " + time);
+
                 if(!first)
                     firstTime = time - firstTime;
                 if(isSafe()){
@@ -205,7 +202,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
         });
         startRecordMP4(path +File.separator + record.get_id() +  ".mp4",record.getStartTime() + "");
         int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate(),record.getFileName(),0,0);
-        LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
+
         /*if(ret < 0){
             connectP2P();
             if(isSafe()){
@@ -217,7 +214,6 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
         XMP2PManager.getInstance().setOnPlayDeviceRecordVideo(new XMP2PManager.PlayDeviceRecordVideo() {
             @Override
             public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
-                LogUtils.e("shulan onPlayDeviceRecordVideoProcResult--jsonObject-->" + jsonObject);
                 try {
                     if(jsonObject.getInt("errno") == 116 && times>0){
                         postHandler.postDelayed(new Runnable() {
@@ -252,7 +248,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
             @Override
             public void onPlayRecViewCtrlResult(JSONObject jsonObject) {
-                LogUtils.e("shulan onPlayRecViewCtrlResult--jsonObject-->" + jsonObject);
+
             }
 
             @Override
@@ -286,7 +282,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: paramInt=" + paramInt);
+
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -296,7 +292,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -305,7 +301,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -314,7 +310,7 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -324,12 +320,12 @@ public class WifiVideoLockAlarmRecordPresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 

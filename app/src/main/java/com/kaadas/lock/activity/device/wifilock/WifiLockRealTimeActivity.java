@@ -559,7 +559,7 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    LogUtils.e("shulan ---flag--" + flag);
+
                     if(flag){
                         ToastUtil.getInstance().showShort("修改成功");
                     }else{

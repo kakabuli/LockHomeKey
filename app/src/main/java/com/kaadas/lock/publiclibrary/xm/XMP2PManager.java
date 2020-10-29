@@ -624,7 +624,6 @@ public class XMP2PManager extends StreamListener  {
     }
 
     public void setAudioFrame(){
-        LogUtils.e("shulan setAudioFrame");
         AudioFrame audioFrame = new AudioFrame();
         audioFrame.setSampRate(8000);//设置采样率，目前只支持8K
         audioFrame.setFrameType(3);//1：表示 G711A，3:表示AAC 音频格式
@@ -716,7 +715,6 @@ public class XMP2PManager extends StreamListener  {
      * @return (错误代码参考APIS_Error.java)
      */
     public int searchRecordFileList(int searchType, String date, int channel){
-        LogUtils.e("shulan searchRecordFileList-->" );
         return getInstanceP2P().searchRecordFileList(searchType,date,channel);
     }
 

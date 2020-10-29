@@ -133,9 +133,9 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         if (new File(fileName).exists()){
                             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
-                            LogUtils.e("shulan createTime-->" + fileName);
+
                             fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
-                            LogUtils.e("shulan filename-->" + fileName);
+
                             intent.putExtra("NAME",fileName);
                             startActivity(intent);
                         }else{
@@ -181,7 +181,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
-                LogUtils.e("shulan WifiVideoLockAlarmRecordFragment onLoadMore");
+
                 mPresenter.getWifiVideoLockGetAlarmList(currentPage, wifiSn);
             }
         });
@@ -203,7 +203,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     @Override
     public void onLoadServerRecord(List<WifiVideoLockAlarmRecord> alarmRecords, int page) {
-        LogUtils.e("shulan WifiVideoLockAlarmRecordFragment onLoadServerRecord");
+
         if (page == 1) {
             list.clear();
         }
@@ -318,7 +318,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 if(!getActivity().isFinishing() && progressDialog != null){
                     if(progressDialog!=null){
                         progressDialog.dismiss();
-                        LogUtils.e("shulan progressDialog2-->" +progressDialog);
+
                     }
 
                 }
@@ -359,7 +359,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                     @Override
                     public void run() {
                         if(progressDialog!=null){
-                            LogUtils.e("shulan progressDialog11-->" +progressDialog);
+
                             progressDialog.dismiss();
                         }
                     }
@@ -368,9 +368,9 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 //                    ToastUtil.getInstance()
                 Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
                 intent.putExtra(KeyConstants.VIDEO_PIC_PATH,mp4Info.getFilePath());
-                LogUtils.e("shulan createTime-->" + fileName);
+
                 fileName = DateUtils.getStrFromMillisecond2(Long.parseLong(fileName));
-                LogUtils.e("shulan filename-->" + fileName);
+
                 intent.putExtra("NAME",fileName);
                 startActivity(intent);
 

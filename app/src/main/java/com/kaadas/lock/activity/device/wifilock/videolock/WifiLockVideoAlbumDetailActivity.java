@@ -324,7 +324,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity onDestroy");
         stopRepeatTimer();
         if (mediaPlayer != null) {
             mediaPlayer.releaseResource();
@@ -337,14 +336,12 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     public void finish() {
         super.finish();
-        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity ----finish-----");
         mPresenter.release();
 
         try{
             if(!isRecordSuccess){
                 if(!filepath.isEmpty()){
                     if(new File(filepath).exists()){
-                        LogUtils.e("shulan WifiLockVideoAlbumDetailActivity-----finish++++++ file.delete");
                         new File(filepath).delete();
                     }
                 }

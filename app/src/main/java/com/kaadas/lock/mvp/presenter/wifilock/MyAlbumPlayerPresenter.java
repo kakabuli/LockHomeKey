@@ -297,11 +297,11 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
             }
         });
 
-        LogUtils.e("shulan  path-->" + path +  File.separator + record.get_id() + ".mp4");
+
 
         startRecordMP4(path +  File.separator + record.get_id() + ".mp4",record.getStartTime() + "");
         int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate(),record.getFileName(),0,0);
-        LogUtils.e("shulan playDeviceRecordVideo -- ret" + ret);
+
 
         XMP2PManager.getInstance().play();
         XMP2PManager.getInstance().enableAudio(true);
@@ -338,7 +338,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
             @Override
             public void onPlayRecViewCtrlResult(JSONObject jsonObject) {
-                LogUtils.e("shulan onPlayRecViewCtrlResult--jsonObject-->" + jsonObject);
+
             }
 
             @Override
@@ -356,7 +356,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
             @Override
             public void onStartedPackaged() {
-                LogUtils.e("shulan 开始录制");
+
                 if(isSafe()){
                     mViewRef.get().onstartRecordMP4CallBack();
                 }
@@ -364,7 +364,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
             @Override
             public void onStopPackaged(MP4Info mp4Info) {
-                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+
                 if(isSafe()){
                     mViewRef.get().onStopRecordMP4CallBack(mp4Info,name);
                 }

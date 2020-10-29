@@ -53,7 +53,6 @@ public class WifiLockVideoSixthPresenter<T> extends BasePresenter<IWifiLockVideo
                 SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_RANDOMCODE + wifiSN,true);
                 if (isSafe()) {
                     mViewRef.get().onBindSuccess(wifiSN);
-                    LogUtils.e("shulan WifiLockVideoSixthPresenter baseResult-->" + baseResult.getMsg());
                 }
             }
 
@@ -190,7 +189,6 @@ public class WifiLockVideoSixthPresenter<T> extends BasePresenter<IWifiLockVideo
 
                                     WifiVideoLockBindErrorBean mWifiVideoLockBindErrorBean = new Gson().fromJson(mqttData.getPayload(),WifiVideoLockBindErrorBean.class);
 
-                                    LogUtils.e("shulan listenerBindingStatus-----------------"+mWifiVideoLockBindErrorBean.toString());
 
                                     if(mWifiVideoLockBindErrorBean.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM)
                                             && mWifiVideoLockBindErrorBean.getEventtype().equals("errorNotify")){

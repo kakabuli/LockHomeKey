@@ -366,7 +366,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -375,7 +375,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -385,12 +385,12 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 
@@ -432,7 +432,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -472,7 +472,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
+
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

@@ -87,7 +87,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            LogUtils.e("shulan --------listenWifiLockStatus");
+
                             String payload = mqttData.getPayload();
                             WifiLockOperationBean wifiLockOperationBean = new Gson().fromJson(payload, WifiLockOperationBean.class);
                             if (wifiLockOperationBean != null) {
@@ -115,7 +115,6 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", this + "onConnectFailed: paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -125,7 +124,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -134,7 +133,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -143,7 +142,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -153,12 +152,12 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 
@@ -317,7 +316,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
         XMP2PManager.getInstance().setVideoPackagedListener(new VideoPackagedListener() {
             @Override
             public void onStartedPackaged() {
-                LogUtils.e("shulan 开始录制");
+
                 if(isSafe()){
                     mViewRef.get().onstartRecordMP4CallBack();
                 }
@@ -325,7 +324,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
             @Override
             public void onStopPackaged(MP4Info mp4Info) {
-                LogUtils.e("shulan mp4Info-->" +mp4Info.toString());
+
                 if(isSafe()){
                     mViewRef.get().onStopRecordMP4CallBack(mp4Info);
                 }

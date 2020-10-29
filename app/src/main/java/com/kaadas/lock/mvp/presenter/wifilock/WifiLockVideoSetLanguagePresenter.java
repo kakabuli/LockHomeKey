@@ -350,7 +350,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -360,7 +359,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -369,7 +368,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -378,7 +377,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -388,12 +387,10 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
         }
     };
 
@@ -435,7 +432,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -475,7 +471,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -520,7 +515,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockAmMode.getParams().getAmMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -564,7 +558,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                     @Override
                     public void onMqttCtrl(JSONObject jsonObject) {
                         if(isSafe()){
-                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
                                     setLanguage(wifiSN,language);
@@ -630,7 +623,6 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                                 if("200".equals(setVideoLockLang.getCode() + "")){
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     if(isSafe()){
-                                        LogUtils.e("shulan setVideoLockLang-->" + setVideoLockLang.getParams().getLanguage());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
