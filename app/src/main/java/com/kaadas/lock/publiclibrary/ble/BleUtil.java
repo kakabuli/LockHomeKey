@@ -699,8 +699,7 @@ public class BleUtil {
                 break;
             case CLOSE_FACE://128低电量关人脸
                 content = context.getString(R.string.wifi_lock_alarm_lower_power_close_face);
-                break;//96门铃
-
+                break;
             default:
                 content = context.getString(R.string.warring_unkonw);
                 break;

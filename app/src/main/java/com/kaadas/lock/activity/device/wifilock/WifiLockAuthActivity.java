@@ -131,10 +131,9 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
             model = wifiLockInfo.getProductModel();
         }
 
-        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
         if (model != null) {
             //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
-            if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default) {
+//            if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default) {
                 options = new RequestOptions()
                         .placeholder(R.mipmap.bluetooth_authorization_lock_default)      //加载成功之前占位图
                         .error(R.mipmap.bluetooth_authorization_lock_default)      //加载错误之后的错误图
@@ -149,13 +148,15 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
 
                             //匹配型号获取下载地址
                             Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
+                            return;
                         }
                     } catch (Exception e) {
                         com.kaadas.lock.utils.LogUtils.e("--kaadas--:" + e.getMessage());
                     }
                 }
-            }
+//            }
         }
+        ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
     }
 
     @Override

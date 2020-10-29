@@ -59,7 +59,6 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
     private Disposable functionSetDisposable;
     private int functionSet = -1;
 
-
     public void setPwd1(String pwd1, boolean isBind, int version, String deviceSn, String mac, String deviceName) {
         LogUtils.e("密码1是   " + pwd1);
         this.isBind = isBind;
