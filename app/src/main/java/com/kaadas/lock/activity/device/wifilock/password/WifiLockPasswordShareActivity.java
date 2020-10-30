@@ -77,12 +77,9 @@ public class WifiLockPasswordShareActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(wifiLockInfo.getWifiSN())) {
 
                 String wifiSN = wifiLockInfo.getWifiSN();
-                LogUtils.e("shulan wifiSN-->" + wifiSN);
                 String randomCode = wifiLockInfo.getRandomCode();
-                LogUtils.e("shulan randomCode-->" + randomCode);
                 String time = (System.currentTimeMillis() / 1000 / 60 / 5) + "";
                 LogUtils.e("--kaadas--wifiSN-  " + wifiSN);
-                LogUtils.e("shulan time-->  " + time);
                 MyLog.getInstance().save("--kaadas调试--wifiSN  " + wifiSN);
                 MyLog.getInstance().save("--kaadas调试--randomCode  " + randomCode);
                 MyLog.getInstance().save("--kaadas调试--System.currentTimeMillis()  " + System.currentTimeMillis());

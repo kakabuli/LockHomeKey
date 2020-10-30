@@ -425,6 +425,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     }
                     mPresenter.refreshData();
                     refreshLayout.finishRefresh(8 * 1000);
+                    if (deviceDetailAdapter != null) {
+                        deviceDetailAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     ToastUtil.getInstance().showShort(getString(R.string.network_exception));
                     refreshLayout.finishRefresh();

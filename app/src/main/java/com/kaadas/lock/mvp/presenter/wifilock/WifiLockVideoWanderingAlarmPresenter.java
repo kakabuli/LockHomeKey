@@ -352,7 +352,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -362,7 +361,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -371,7 +369,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -380,7 +377,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -390,12 +386,10 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
         }
     };
 
@@ -425,9 +419,18 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
 
 
     public void settingDevice(WifiLockInfo wifiLockInfo) {
-        did = wifiLockInfo.getDevice_did();
-        sn = wifiLockInfo.getDevice_sn();
-        p2pPassword = wifiLockInfo.getP2p_password();
+        if(wifiLockInfo.getDevice_did() != null){
+
+            did = wifiLockInfo.getDevice_did();
+        }
+        if(wifiLockInfo.getDevice_sn() != null){
+
+            sn = wifiLockInfo.getDevice_sn();
+        }
+        if(wifiLockInfo.getP2p_password() != null){
+
+            p2pPassword = wifiLockInfo.getP2p_password();
+        }
 
     }
 
@@ -437,7 +440,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -475,7 +477,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -520,7 +521,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockAmMode.getParams().getAmMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -566,7 +566,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockLang.getParams().getLanguage());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -610,7 +609,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     @Override
                     public void onMqttCtrl(JSONObject jsonObject) {
                         if(isSafe()){
-                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
                                     setWanderingAlarm(wifiSN,stayStatus,stayTime,pirSen);
@@ -676,7 +674,6 @@ public class WifiLockVideoWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(settingVideoLockPir.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan settingVideoLockPir-->" + settingVideoLockPir.getParams().toString());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

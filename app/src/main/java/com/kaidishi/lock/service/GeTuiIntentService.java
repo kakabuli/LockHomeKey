@@ -50,7 +50,6 @@ public class GeTuiIntentService extends GTIntentService {
         String pkg = msg.getPkgName();
         String cid = msg.getClientId();
 
-        LogUtils.e("shulan------------------------");
 
         // 第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
         boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);

@@ -212,6 +212,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_wifi_lock_video_calling);
 
         ButterKnife.bind(this);

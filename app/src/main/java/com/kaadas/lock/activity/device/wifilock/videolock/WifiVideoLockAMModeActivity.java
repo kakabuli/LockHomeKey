@@ -266,7 +266,6 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
         if(!WifiVideoLockAMModeActivity.this.isFinishing()){
             dialog.show();
         }
@@ -311,17 +310,13 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
                         mPresenter.release();
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
 
             }
 

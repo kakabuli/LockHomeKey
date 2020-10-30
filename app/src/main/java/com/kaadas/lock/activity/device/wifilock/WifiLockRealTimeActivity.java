@@ -134,9 +134,8 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
                 if(avi.isShow()){
                     if(wifiLockInfo.getPowerSave() == 0){
                         if(ivVideoConnectOpen.isSelected()){
-                            ivVideoConnectOpen.setSelected(false);
-                            keepAliveStatus = 0;
-                            rlRealTimePeriod.setVisibility(View.GONE);
+                            createKeepAliveDialog();
+
                         }else{
                             ivVideoConnectOpen.setSelected(true);
                             rlRealTimePeriod.setVisibility(View.VISIBLE);
@@ -149,6 +148,33 @@ public class WifiLockRealTimeActivity extends BaseActivity<IWifiVideoRealTimeVie
 
                 break;
         }
+    }
+
+    private void createKeepAliveDialog() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "您确定要关闭吗?", "关闭会导致APP无法远程查看门外情况",
+                "有人按门铃（或锁被唤醒）时，可视对讲不受影响", "取消", "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        ivVideoConnectOpen.setSelected(false);
+                        keepAliveStatus = 0;
+                        rlRealTimePeriod.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     private boolean isEqual(int[] s1,int[] s2){

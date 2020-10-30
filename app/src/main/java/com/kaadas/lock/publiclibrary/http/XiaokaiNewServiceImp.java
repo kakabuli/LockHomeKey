@@ -1049,7 +1049,7 @@ public class XiaokaiNewServiceImp {
      *
      * @param wifiSN
      * @param uid
-     * @param switchX 推送开关：1关 2开
+     * @param switchX 推送开关： 1(0默认开启)开启推送 2关闭推送
      * @return
      */
     public static Observable<BaseResult> wifiLockUpdatePush(String wifiSN, String uid, int switchX) {

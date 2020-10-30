@@ -42,7 +42,6 @@ public class WifiLockAddNewSecondActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Intent intent = getIntent();
         wifiModelType = intent.getStringExtra("wifiModelType");
-        LogUtils.e("shulan WifiLockAddNewSecondActivity--wifiModelType--" + wifiModelType);
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();

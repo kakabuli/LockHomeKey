@@ -545,7 +545,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 }
                 else if (eventparams.getEventCode() == 0x02) { //开锁
                     LogUtils.e("门锁状态上报   开锁" );
-                    mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), true);
+                    mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
                     isOpening = true;
                     wifiLockInfo.setOpenStatus(2);
                     mPresenter.getOpenCount(wifiLockInfo.getWifiSN());

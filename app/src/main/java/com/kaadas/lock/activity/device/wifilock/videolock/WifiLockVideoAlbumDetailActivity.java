@@ -365,11 +365,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         timerHandler.removeCallbacks(timerRunnable);
     }
 
-    /*@Override
-    protected MyAlbumPlayerPresenter<IMyAlbumPlayerView> createPresent() {
-        return new MyAlbumPlayerPresenter<>();
-    }*/
-
     private void reset() {
         ivPlayStart.setVisibility(View.VISIBLE);
 //        pause();

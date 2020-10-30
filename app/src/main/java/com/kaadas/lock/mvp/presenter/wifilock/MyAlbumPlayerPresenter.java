@@ -149,7 +149,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
     }
 
     public void startRealTimeVideo(SurfaceView surfaceView){
-        LogUtils.e("shulan isConnect--> " + XMP2PManager.getInstance().isConnected(-1));
 //        if(XMP2PManager.getInstance().isConnected(-1)){
 
         XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);

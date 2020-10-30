@@ -252,7 +252,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
     private void checkNotificatoinEnabled() {
-        LogUtils.e("shulan-----------checkNotificatoinEnabled");
         if(!NotificationUtil.isNotifyEnabled(this)){
             AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "检测到您没有打开通知权限，是否去打开",
                     "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
@@ -420,7 +419,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         if (Rom.isEmui()) {
             // no get token
               String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
-            LogUtils.e("shulan huawei--->" + huawei);
             if (TextUtils.isEmpty(huawei)) {
                 // 初始化,生成token失败
                 Log.e(GeTui.VideoLog, "startSendFile to HMSAgent,token produce fail");
@@ -430,7 +428,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //                        showLog("get token: end code=" + rtnCode);
                         // 0:表示成功
                         Log.e(GeTui.VideoLog, "get token: end code=" + rtnCode);
-                        LogUtils.e("shulan get token: end code=" + rtnCode);
                         if(TextUtils.isEmpty(huawei)){
                             uploadToken(2,(String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, ""));
                         }
@@ -438,7 +435,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                     }
                 });
             } else {
-                LogUtils.e("shulan huawei--->" + huawei);
                 uploadToken(3,huawei);
                 // produce token success,upload token fail
 //                if (!ispush) {

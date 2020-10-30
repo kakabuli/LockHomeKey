@@ -227,6 +227,50 @@ public class AlertDialogUtil {
         });
     }
 
+    //no_et_dialog
+    public void noEditTwoButtonTwoContentDialog(Context context, String title, String content1, String content2,String left, String right, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_et_two_content_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_hint);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tvContent1 = mView.findViewById(R.id.tv_content_1);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        //   tv_query.setTextColor(Color.parseColor("#101010"));
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        alertDialog.setCancelable(false);//窗口外不隐藏
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setVisibility(View.VISIBLE);
+            tvTitle.setText(title);
+        }
+        tvContent.setText(content1);
+        tvContent1.setText(content2);
+        tv_cancel.setText(left);
+        tv_query.setText(right);
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (clickListener != null) {
+                    clickListener.left();
+                }
+
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+            }
+        });
+    }
+
 
 
     //have_edit_dialog

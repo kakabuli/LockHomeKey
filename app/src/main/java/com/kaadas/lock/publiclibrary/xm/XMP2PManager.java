@@ -550,7 +550,6 @@ public class XMP2PManager extends StreamListener  {
      * @param Rate   录制的视频的帧率
      */
     public void startRecordMP4(String filePath, int width, int height, int Rate){
-        LogUtils.e("shulan startRecordMP4");
         getCodecInstance().startRecordToMP4(filePath, width, height, Rate);
 
     }

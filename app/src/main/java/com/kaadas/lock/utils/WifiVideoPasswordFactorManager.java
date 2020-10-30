@@ -70,6 +70,10 @@ public class WifiVideoPasswordFactorManager {
 //        WifiResult wifiResult = new WifiResult();
 //        wifiResult.data = data;
 //        wifiResult.func = data[45] & 0xff;
+        if(str.length() < 64){
+            result.result = -2;
+            return result;
+        }
         String s = str.substring(0,64) + str.substring(str.length() - 2);
 
         byte[] data = Rsa.hexString2Bytes(s);

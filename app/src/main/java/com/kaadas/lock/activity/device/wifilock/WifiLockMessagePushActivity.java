@@ -69,11 +69,12 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
     private void initData() {
         if(wifiLockInfo != null){
             pushSwitch = wifiLockInfo.getPushSwitch();
-            if(pushSwitch == 1){
+            if(pushSwitch == 2){
                 ivMessageFree.setSelected(true);
-            }else if(pushSwitch == 2){
+            }else{
                 ivMessageFree.setSelected(false);
             }
+
         }
     }
 
@@ -87,9 +88,9 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
             case R.id.rl_message_free:
             case R.id.iv_message_free:
                 if(ivMessageFree.isSelected()){
-                    mPresenter.updateSwitchStatus(2,wifiSn);
-                }else{
                     mPresenter.updateSwitchStatus(1,wifiSn);
+                }else{
+                    mPresenter.updateSwitchStatus(2,wifiSn);
                 }
                 break;
         }
@@ -138,9 +139,9 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
                 @Override
                 public void run() {
 //                    ToastUtil.getInstance().showShort("修改成功");
-                    if(status == 1){
+                    if(status == 2){
                         ivMessageFree.setSelected(true);
-                    }else if(status == 2){
+                    }else {
                         ivMessageFree.setSelected(false);
                     }
                 }

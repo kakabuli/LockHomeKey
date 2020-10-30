@@ -75,7 +75,7 @@ public class DoorbellingService extends Service {
 
                                     WifiLockVideoBindBean mWifiLockVideoBindBean = new Gson().fromJson(mqttData.getPayload(), WifiLockVideoBindBean.class);
 
-                                    /*LogUtils.e("shulan getDeviceBindingStatus-----------------" + mWifiLockVideoBindBean.toString());
+                                    /*
 
                                     if (mWifiLockVideoBindBean.getEventparams() != null) {
                                         if (isSafe())

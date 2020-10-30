@@ -85,7 +85,6 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
 
         apSsidText.setText(wifiName.trim());
-        LogUtils.e("shulan WifiLockVideoFourthActivity-->distribution-->" +distribution);
         if(distributionAgain){
             head.setText("第二步：配置连接WI-FI");
         }else{

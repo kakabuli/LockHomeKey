@@ -353,7 +353,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -363,7 +362,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -372,7 +370,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -381,7 +378,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -391,12 +387,10 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
         }
     };
 
@@ -426,9 +420,18 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
 
 
     public void settingDevice(WifiLockInfo wifiLockInfo) {
-        did = wifiLockInfo.getDevice_did();
-        sn = wifiLockInfo.getDevice_sn();
-        p2pPassword = wifiLockInfo.getP2p_password();
+        if(wifiLockInfo.getDevice_did() != null){
+
+            did = wifiLockInfo.getDevice_did();
+        }
+        if(wifiLockInfo.getDevice_sn() != null){
+
+            sn = wifiLockInfo.getDevice_sn();
+        }
+        if(wifiLockInfo.getP2p_password() != null){
+
+            p2pPassword = wifiLockInfo.getP2p_password();
+        }
 
     }
 
@@ -438,7 +441,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -478,7 +480,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -523,7 +524,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockAmMode.getParams().getAmMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -569,7 +569,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setVideoLockLang-->" + setVideoLockLang.getParams().getLanguage());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -613,7 +612,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                     @Override
                     public void onMqttCtrl(JSONObject jsonObject) {
                         if(isSafe()){
-                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
                                     setRealTime(wifiSN,keepAliveStatus,startTime,endTime,snoozeStartTime);
@@ -652,7 +650,6 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
             }
         });
         int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
-        LogUtils.e("shulan param-->" + param);
     }
 
     public void setRealTime(String wifiSN,int keepAliveStatus, int startTime, int endTime, int[] snoozeStartTime) {
@@ -675,12 +672,10 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             SettingVideoLockAliveTimeResult settingVideoLockAliveTime = new Gson().fromJson(mqttData.getPayload(), SettingVideoLockAliveTimeResult.class);
-                            LogUtils.e("shulan --------------------" + settingVideoLockAliveTime.toString());
                             if(settingVideoLockAliveTime != null){
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(settingVideoLockAliveTime.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan settingVideoLockAliveTime-->" + settingVideoLockAliveTime.toString());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

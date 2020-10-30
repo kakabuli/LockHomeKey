@@ -346,7 +346,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -356,7 +355,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -365,7 +363,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -374,7 +371,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -384,12 +380,10 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
         }
     };
 
@@ -419,9 +413,18 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
 
     public void settingDevice(WifiLockInfo wifiLockInfo) {
-        did = wifiLockInfo.getDevice_did();
-        sn = wifiLockInfo.getDevice_sn();
-        p2pPassword = wifiLockInfo.getP2p_password();
+        if(wifiLockInfo.getDevice_did() != null){
+
+            did = wifiLockInfo.getDevice_did();
+        }
+        if(wifiLockInfo.getDevice_sn() != null){
+
+            sn = wifiLockInfo.getDevice_sn();
+        }
+        if(wifiLockInfo.getP2p_password() != null){
+
+            p2pPassword = wifiLockInfo.getP2p_password();
+        }
 
     }
 
@@ -431,7 +434,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);

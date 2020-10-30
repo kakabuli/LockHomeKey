@@ -420,9 +420,18 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
 
 
     public void settingDevice(WifiLockInfo wifiLockInfo) {
-        did = wifiLockInfo.getDevice_did();
-        sn = wifiLockInfo.getDevice_sn();
-        p2pPassword = wifiLockInfo.getP2p_password();
+        if(wifiLockInfo.getDevice_did() != null){
+
+            did = wifiLockInfo.getDevice_did();
+        }
+        if(wifiLockInfo.getDevice_sn() != null){
+
+            sn = wifiLockInfo.getDevice_sn();
+        }
+        if(wifiLockInfo.getP2p_password() != null){
+
+            p2pPassword = wifiLockInfo.getP2p_password();
+        }
 
     }
 

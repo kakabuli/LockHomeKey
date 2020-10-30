@@ -553,7 +553,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
             public void onConnectFailed(int paramInt) {
                 if(isSafe()){
                     mViewRef.get().onSettingCallBack(false);
-                    setMqttCtrl(0);
                 }
             }
 
@@ -585,7 +584,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
             @Override
             public void onErrorMessage(String message) {
-                setMqttCtrl(0);
 
             }
 
@@ -616,17 +614,15 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                             return false;
                         }
                     })
-                    .timeout(3 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
                             SetVideoLockVolumeResult setVideoLockVolume = new Gson().fromJson(mqttData.getPayload(), SetVideoLockVolumeResult.class);
-                            LogUtils.e("shulan 000setVideoLockVolume-->" + setVideoLockVolume.toString());
                             if(setVideoLockVolume != null){
                                 if("200".equals(setVideoLockVolume.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setVideoLockVolume-->" + setVideoLockVolume.toString());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -650,6 +646,5 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                 mViewRef.get().onSettingCallBack(false);
             }
         }
-        setMqttCtrl(0);
     }
 }

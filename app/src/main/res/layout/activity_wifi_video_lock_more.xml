@@ -234,14 +234,13 @@
                     android:layout_marginRight="@dimen/dp_16"
                     />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_1"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="@dimen/dp_17"
-                    android:background="#EAE9E9"></View>
+              
             </RelativeLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_17"
+                android:background="#EAE9E9"></View>
             <RelativeLayout
                 android:id="@+id/rl_powerSave"
                 android:layout_width="match_parent"

@@ -169,7 +169,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             tvDeviceName.setText(wifiLockInfo.getLockNickname());  //昵称
 //            ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
             setVolume = wifiLockInfo.getVolume();
-            LogUtils.e("shulan wifiLockInfo.powersave()---" + wifiLockInfo.getPowerSave());
             if(wifiLockInfo.getVolume() == 1){
                 ivSilentMode.setSelected(true);
             }else {
@@ -389,11 +388,23 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                                 avi.show();
                                 if(ivSilentMode.isSelected()){
                                     setVolume = 0;
-                                    mPresenter.setConnectVolume(wifiSn,0);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mPresenter.setConnectVolume(wifiSn,0);
+                                        }
+                                    }).start();
+
 //                                    ivSilentMode.setSelected(false);
                                 }else{
                                     setVolume = 1;
-                                    mPresenter.setConnectVolume(wifiSn,1);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mPresenter.setConnectVolume(wifiSn,1);
+                                        }
+                                    }).start();
+
 //                                    ivSilentMode.setSelected(true);
 
                                 }
@@ -598,21 +609,16 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
                         mPresenter.release();
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
 
             }
 
@@ -737,7 +743,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 case KeyConstants.WIFI_VIDEO_LOCK_AM_MODE_CODE:
                     int amMode = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_AM_MODE,0);
                     ivAm.setText(amMode == 1 ? getString(R.string.hand) + "上锁": getString(R.string.auto) + "上锁");
-                    LogUtils.e("shulan 222amMode--> " + amMode);
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE_CODE:
                     String language = data.getStringExtra(KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE);
@@ -751,7 +756,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE:
                     int stayStatus = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM,0);
-                    LogUtils.e("shulan ---WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE---stayStatus-" + stayStatus);
                     if(stayStatus == 0){
                         tvWanderingAlarmRight.setText("已关闭");
                     }else if(stayStatus == 1){
@@ -814,7 +818,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
         if(!WifiLockVideoMoreActivity.this.isFinishing()){
             dialog.show();
         }

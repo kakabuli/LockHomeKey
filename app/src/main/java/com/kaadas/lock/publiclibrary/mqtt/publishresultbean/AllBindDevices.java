@@ -361,10 +361,8 @@ public class AllBindDevices {
                 if(!TextUtils.isEmpty(wifiLockInfo.getDevice_did()) && !TextUtils.isEmpty(wifiLockInfo.getP2p_password())
                         && !TextUtils.isEmpty(wifiLockInfo.getDevice_sn()) && !TextUtils.isEmpty(wifiLockInfo.getMac())){
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_VIDEO_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
-                    LogUtils.e("shulan____1-->" + wifiLockInfo.toString());
                 }else {
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
-                    LogUtils.e("shulan____2-->" + wifiLockInfo.toString());
                 }
 
             }
