@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Process;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -137,6 +140,8 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     private Dialog dialog;
 
     private int setVolume = 0;
+
+    Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -394,7 +399,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                                             mPresenter.setConnectVolume(wifiSn,0);
                                         }
                                     }).start();
-
 //                                    ivSilentMode.setSelected(false);
                                 }else{
                                     setVolume = 1;
@@ -404,7 +408,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                                             mPresenter.setConnectVolume(wifiSn,1);
                                         }
                                     }).start();
-
 //                                    ivSilentMode.setSelected(true);
 
                                 }
@@ -869,6 +872,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     @Override
     public void onConnectFailed(int paramInt) {
         mPresenter.setMqttCtrl(0);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -918,20 +922,21 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     }
 
     @Override
-    public void onSettingCallBack(boolean flag) {
+    public void onSettingCallBack(boolean flag,int code) {
         if(!WifiLockVideoMoreActivity.this.isFinishing()){
-            mPresenter.handler.post(new Runnable() {
+            mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     if(flag){
-                        ToastUtil.getInstance().showLong("修改成功");
-                        if(setVolume == 1){
+                        ToastUtil.getInstance().showShort("修改成功");
+                        if(code == 1){
                             ivSilentMode.setSelected(true);
                         }else{
                             ivSilentMode.setSelected(false);
                         }
                     }else{
-                        ToastUtil.getInstance().showLong("修改失败");
+                        setVolume = code;
+                        ToastUtil.getInstance().showShort("修改失败");
                     }
                     if(avi!=null){
                         tvTips.setVisibility(View.GONE);
@@ -939,6 +944,7 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     }
                 }
             });
+            mPresenter.release();
         }
     }
 

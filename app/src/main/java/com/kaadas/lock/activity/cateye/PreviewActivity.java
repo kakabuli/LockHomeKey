@@ -106,7 +106,7 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         simpleDateFormat0.setTimeZone(TimeZone.getTimeZone("GMT+0"));
         imageUrl= getIntent().getStringExtra("imgUrl");  //1554945365_picture.jpg
         deviceId= getIntent().getStringExtra("deviceId");  //CH01183910018
-        newImgUrl= getIntent().getStringExtra("newImgUrl");  //2019-04-11 09:16:05
+        newImgUrl= getIntent().getStringExtra("newImgUrl") + "";  //2019-04-11 09:16:05
 
         gatewayId= getIntent().getStringExtra("gatewayId");
         currentTimeFolder = "orangecat-"+ newImgUrl.split(" ")[0].replace("-","");  //orangecat-20190411

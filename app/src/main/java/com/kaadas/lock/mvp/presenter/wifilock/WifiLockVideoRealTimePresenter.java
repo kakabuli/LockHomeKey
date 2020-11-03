@@ -47,6 +47,7 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
     private Disposable listenActionUpdateDisposable;
     private String wifiSN;
     private Disposable otaDisposable;
+    private Disposable setRealTimeLinstenerDisposable;
 
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -656,7 +657,8 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
             MqttMessage mqttMessage = MqttCommandFactory.settingVideoLockAliveTime(wifiSN,keepAliveStatus,snoozeStartTime,startTime,endTime);
-            mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setRealTimeLinstenerDisposable);
+            setRealTimeLinstenerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -688,12 +690,10 @@ public class WifiLockVideoRealTimePresenter<T> extends BasePresenter<IWifiVideoR
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
-                            }
+
                         }
                     });
-
+            compositeDisposable.add(setRealTimeLinstenerDisposable);
         }else{
             if(isSafe()){
                 mViewRef.get().onSettingCallBack(false);

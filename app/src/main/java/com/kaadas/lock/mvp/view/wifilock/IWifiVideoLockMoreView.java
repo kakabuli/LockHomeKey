@@ -101,6 +101,6 @@ public interface IWifiVideoLockMoreView extends IBaseView {
     void onMqttCtrl(boolean flag);
 
     //设置的值回调
-    void onSettingCallBack(boolean flag);
+    void onSettingCallBack(boolean flag,int code);
 
 }

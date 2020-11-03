@@ -52,7 +52,7 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
             head.setText(R.string.modify_admin_pwd);
             title.setText(R.string.modify_admin_pwd);
         }else {
-            head.setText("第四步：" + R.string.modify_admin_pwd);
+            head.setText("第四步：" + getString(R.string.modify_admin_pwd));
             title.setText(R.string.add_lock);
         }
     }

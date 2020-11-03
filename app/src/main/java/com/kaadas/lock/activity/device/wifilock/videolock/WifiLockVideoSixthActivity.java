@@ -294,7 +294,7 @@ public class WifiLockVideoSixthActivity extends BaseActivity<IWifiLockVideoSixth
         if(!TextUtils.isEmpty(randomCode)){
             WifiVideoPasswordFactorManager.FactorResult result = WifiVideoPasswordFactorManager.parsePasswordData(adminPassword,randomCode);
             if(result.result == 0){
-                LogUtils.e("shulan     randomcode-->  " + Rsa.bytesToHexString(result.password));
+
                 randomCode = Rsa.bytesToHexString(result.password);
                 func = result.func;
                 if(MyApplication.getInstance().getWifiLockInfoBySn(wifiLockVideoBindBean.getWfId()) == null){

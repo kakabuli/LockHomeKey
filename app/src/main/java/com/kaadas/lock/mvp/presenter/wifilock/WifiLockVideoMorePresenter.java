@@ -36,9 +36,11 @@ import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
+import io.reactivex.subjects.PublishSubject;
 
 public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockMoreView> {
 
@@ -46,6 +48,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
     private String wifiSN;
     private Disposable otaDisposable;
     private Disposable wifiLockStatusListenDisposable;
+    private Disposable setVolumeListenDisposable;
 
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -353,7 +356,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -363,7 +365,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -372,7 +374,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -381,7 +383,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -391,12 +393,12 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 
@@ -438,7 +440,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -478,12 +480,12 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
-                                        mViewRef.get().onSettingCallBack(true);
+
+                                        mViewRef.get().onSettingCallBack(true,safeMode);
                                     }
                                 }else{
                                     if(isSafe()){
-                                        mViewRef.get().onSettingCallBack(false);
+                                        mViewRef.get().onSettingCallBack(false,safeMode);
                                     }
                                 }
                             }
@@ -492,7 +494,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
+                                mViewRef.get().onSettingCallBack(false,safeMode);
                             }
                         }
                     });
@@ -552,7 +554,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
             @Override
             public void onConnectFailed(int paramInt) {
                 if(isSafe()){
-                    mViewRef.get().onSettingCallBack(false);
+                    mViewRef.get().onSettingCallBack(false,volume == 1 ? 0:1);
                 }
             }
 
@@ -567,7 +569,7 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                                 if (jsonObject.getString("result").equals("ok")){
                                     setVolume(wifiSN,volume);
                                 }else{
-                                    mViewRef.get().onSettingCallBack(false);
+                                    mViewRef.get().onSettingCallBack(false,volume == 1 ? 0:1);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -604,7 +606,8 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
             MqttMessage mqttMessage = MqttCommandFactory.setVideoLockVolume(wifiSN,volume);
-            mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setVolumeListenDisposable);
+            setVolumeListenDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -615,7 +618,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                         }
                     })
                     .timeout(20 * 1000, TimeUnit.MILLISECONDS)
-                    .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
@@ -623,11 +625,13 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                             if(setVideoLockVolume != null){
                                 if("200".equals(setVideoLockVolume.getCode() + "")){
                                     if(isSafe()){
-                                        mViewRef.get().onSettingCallBack(true);
+                                        mViewRef.get().onSettingCallBack(true,volume);
+
                                     }
                                 }else{
                                     if(isSafe()){
-                                        mViewRef.get().onSettingCallBack(false);
+                                        mViewRef.get().onSettingCallBack(false,volume == 1 ? 0:1);
+
                                     }
                                 }
                             }
@@ -635,15 +639,13 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
-                            }
+
                         }
                     });
-
+            compositeDisposable.add(setVolumeListenDisposable);
         }else{
             if(isSafe()){
-                mViewRef.get().onSettingCallBack(false);
+                mViewRef.get().onSettingCallBack(false,volume == 1 ? 0:1);
             }
         }
     }

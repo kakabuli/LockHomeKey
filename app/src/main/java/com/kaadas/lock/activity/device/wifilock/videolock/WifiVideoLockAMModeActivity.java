@@ -306,7 +306,6 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
@@ -440,7 +439,6 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
 
     @Override
     public void onConnectFailed(int paramInt) {
-        LogUtils.e("shulan ---------");
 //        mPresenter.setMqttCtrl(0);
         runOnUiThread(new Runnable() {
             @Override
@@ -503,7 +501,7 @@ public class WifiVideoLockAMModeActivity extends BaseActivity<IWifiVideoLockAMMo
                         Intent intent = new Intent();
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_AM_MODE,amMode);
                         setResult(RESULT_OK,intent);
-                        LogUtils.e("shulan 111amMode--> " + amMode);
+
                     }else{
                         ToastUtil.getInstance().showLong("修改失败");
                     }

@@ -44,6 +44,7 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
     private Disposable listenActionUpdateDisposable;
     private String wifiSN;
     private Disposable otaDisposable;
+    private Disposable setLanguageLinstenerDisposable;
 
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -603,7 +604,8 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
             MqttMessage mqttMessage = MqttCommandFactory.setVideoLockLang(wifiSN,language);
-            mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setLanguageLinstenerDisposable);
+            setLanguageLinstenerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -635,12 +637,10 @@ public class WifiLockVideoSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
-                            }
+
                         }
                     });
-
+            compositeDisposable.add(setLanguageLinstenerDisposable);
         }else{
             if(isSafe()){
                 mViewRef.get().onSettingCallBack(false);

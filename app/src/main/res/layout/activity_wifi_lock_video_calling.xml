@@ -312,7 +312,6 @@
         android:id="@+id/rl_mark_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         >
 
 
@@ -424,7 +423,28 @@
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_11" />
 
+            <ImageView
+                android:id="@+id/iv_refuse_icon_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="@dimen/dp_78"
+                android:src="@mipmap/refuse_icon" />
+
+
+            <TextView
+                android:id="@+id/tv_refuse_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/iv_refuse_icon_1"
+                android:layout_marginLeft="@dimen/dp_94"
+                android:layout_marginTop="@dimen/dp_32"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/sp_11" />
         </RelativeLayout>
+
 
         <View
             android:id="@+id/v_view"

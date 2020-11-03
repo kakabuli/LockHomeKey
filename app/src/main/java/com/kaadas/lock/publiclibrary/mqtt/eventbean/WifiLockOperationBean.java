@@ -150,5 +150,16 @@ public class WifiLockOperationBean {
         public void setAppID(int appID) {
             this.appID = appID;
         }
+
+        @Override
+        public String toString() {
+            return "EventparamsBean{" +
+                    "eventType=" + eventType +
+                    ", eventSource=" + eventSource +
+                    ", eventCode=" + eventCode +
+                    ", userID=" + userID +
+                    ", appID=" + appID +
+                    '}';
+        }
     }
 }

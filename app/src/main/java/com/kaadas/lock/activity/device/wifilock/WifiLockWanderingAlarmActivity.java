@@ -282,7 +282,6 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
 
                     }else{
                         pirSen = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,-1);
-                        LogUtils.e("shulan -------pirSen--->" + pirSen);
                         if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
                             tvWanderingPirSensitivityRight.setText("低");
                         }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
@@ -357,7 +356,7 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
+
         if(!WifiLockWanderingAlarmActivity.this.isFinishing()){
             dialog.show();
         }
@@ -398,21 +397,16 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
                         mPresenter.release();
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
 
             }
 
@@ -536,7 +530,6 @@ public class WifiLockWanderingAlarmActivity  extends BaseActivity<IWifiVideoLock
 
     @Override
     public void onConnectFailed(int paramInt) {
-        LogUtils.e("shulan ---------");
         mPresenter.setMqttCtrl(0);
         runOnUiThread(new Runnable() {
             @Override

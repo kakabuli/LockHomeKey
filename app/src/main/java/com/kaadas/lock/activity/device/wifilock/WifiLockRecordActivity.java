@@ -53,9 +53,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     private String wifiSn;
     private boolean isVideoLock = false;
 
-    private InnerRecevier mInnerRecevier;
-
-    private boolean isP2PConnect = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,14 +72,10 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onRestart() {
         super.onRestart();
-        LogUtils.e("shulan WifiLockRecordActivity onRestart");
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
             tvVistorRecord.setVisibility(View.VISIBLE);
             isVideoLock = true;
-            WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-            mPresenter.settingDevice(wifiLockInfoBySn);
-            mPresenter.settingDevice(wifiLockInfoBySn);
         }else{
             tvVistorRecord.setVisibility(View.GONE);
             isVideoLock = false;
@@ -92,24 +85,11 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtils.e("shulan WifiLockRecordActivity onResume");
         mPresenter.attachView(this);
-        /*if(isVideoLock){
-            registerBroadcast();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPresenter.connectP2P();
-                }
-            }).start();
-        }*/
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
             tvVistorRecord.setVisibility(View.VISIBLE);
             isVideoLock = true;
-            WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-            mPresenter.settingDevice(wifiLockInfoBySn);
-            mPresenter.settingDevice(wifiLockInfoBySn);
         }else{
             tvVistorRecord.setVisibility(View.GONE);
             isVideoLock = false;
@@ -127,9 +107,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*if(isVideoLock){
-            unRegisterBroadcast();
-        }*/
     }
 
     @Override
@@ -195,7 +172,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                         videoLockAlarmRecordFragment = new WifiVideoLockAlarmRecordFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString(KeyConstants.WIFI_SN,wifiSn);
-                        bundle.putBoolean(KeyConstants.WIFI_VIDEO_LOCK_XM_CONNECT,isP2PConnect);
                         videoLockAlarmRecordFragment.setArguments(bundle);
                         fragmentTransaction.add(R.id.content, videoLockAlarmRecordFragment);
                     }
@@ -229,7 +205,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                     vistorRecordFragment = new WifiLockVistorRecordFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString(KeyConstants.WIFI_SN,wifiSn);
-                    bundle.putBoolean(KeyConstants.WIFI_VIDEO_LOCK_XM_CONNECT,isP2PConnect);
                     vistorRecordFragment.setArguments(bundle);
                     fragmentTransaction.add(R.id.content, vistorRecordFragment);
                 }
@@ -261,95 +236,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     public void finish() {
         super.finish();
-/*        if(isVideoLock){
-            mPresenter.release();
-        }*/
-    }
-    private void registerBroadcast(){
-        if(mInnerRecevier == null){
-            mInnerRecevier = new InnerRecevier();
-        }
-        IntentFilter homeFilter = new IntentFilter();
-        homeFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        homeFilter.addAction(Intent.ACTION_SCREEN_ON);
-        homeFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        homeFilter.addAction(Intent.ACTION_USER_PRESENT);
-        registerReceiver(mInnerRecevier, homeFilter);
     }
 
-    private void unRegisterBroadcast(){
-        if(mInnerRecevier != null){
-            unregisterReceiver(mInnerRecevier);
-        }
-    }
-
-    private class InnerRecevier extends BroadcastReceiver {
-
-        final String SYSTEM_DIALOG_REASON_KEY = "reason";
-
-        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
-
-        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if(!isVideoLock){
-                return;
-            }
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                if (reason != null) {
-                    if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                        // home键
-                        LogUtils.e("shulan --home");
-                        mPresenter.release();
-                    } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
-                        //多任务
-                        LogUtils.e("shulan --recent");
-                        mPresenter.release();
-                    }
-                }
-            }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
-            }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
-                mPresenter.release();
-            }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
-
-            }
-
-        }
-    }
-
-    @Override
-    public void onConnectFailed(int paramInt) {
-        if(!WifiLockRecordActivity.this.isFinishing()){
-            if(paramInt >= 0){
-                isP2PConnect = false;
-            }
-        }
-    }
-
-    @Override
-    public void onConnectSuccess() {
-        if(!WifiLockRecordActivity.this.isFinishing()){
-            isP2PConnect = true;
-        }
-    }
-
-    @Override
-    public void onStartConnect(String paramString) {
-        if(!WifiLockRecordActivity.this.isFinishing()){
-
-        }
-    }
-
-    @Override
-    public void onErrorMessage(String message) {
-        if(!WifiLockRecordActivity.this.isFinishing()){
-
-        }
-    }
 }

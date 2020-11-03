@@ -22,7 +22,7 @@ public class WifiLockVideoScanPresenter<T> extends BasePresenter<IWifiLockVideoF
     public void attachView(IWifiLockVideoFifthView view) {
         super.attachView(view);
         getDeviceBindingStatus();
-        LogUtils.e("shulan 111111111111111111111111");
+
     }
 
     @Override
@@ -48,7 +48,6 @@ public class WifiLockVideoScanPresenter<T> extends BasePresenter<IWifiLockVideoF
 
                                     WifiLockVideoBindBean mWifiLockVideoBindBean = new Gson().fromJson(mqttData.getPayload(),WifiLockVideoBindBean.class);
 
-                                    LogUtils.e("shulan getDeviceBindingStatus-----------------"+mWifiLockVideoBindBean.toString());
 
                                     if(mWifiLockVideoBindBean.getEventparams() != null && mWifiLockVideoBindBean.getEventtype().equals(MqttConstant.WIFI_VIDEO_BINDINFO_NOTIFY)){
                                         if (isSafe())

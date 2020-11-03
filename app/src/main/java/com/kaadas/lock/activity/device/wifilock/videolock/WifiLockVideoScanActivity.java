@@ -121,7 +121,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
             if(mWifiLockVideoBindBean.getEventparams() != null)
                 onScanSuccess(mWifiLockVideoBindBean);
         }
-        LogUtils.e("-----++++shulan+++---");
+
         //获取权限  定位权限
         permissionDisposable = rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -309,7 +309,6 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
      */
     @Override
     public void onDeviceBinding(WifiLockVideoBindBean wifiLockVideoBindBean) {
-        LogUtils.e("------------------shulan-------------");
         handler.removeCallbacks(runnable);
 //                onScanSuccess();
         handler.removeCallbacks(timeoutRunnable);

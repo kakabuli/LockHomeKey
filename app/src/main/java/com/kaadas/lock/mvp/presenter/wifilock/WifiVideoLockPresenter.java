@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiVideoLockView;
@@ -23,6 +24,9 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +43,7 @@ public class WifiVideoLockPresenter<T> extends BasePresenter<IWifiVideoLockView>
     @Override
     public void attachView(IWifiVideoLockView view) {
         super.attachView(view);
-
+        listenWifiLockStatus();
         listenWifiLockOpenStatus();
 
         listenActionUpdate();
@@ -51,8 +55,7 @@ public class WifiVideoLockPresenter<T> extends BasePresenter<IWifiVideoLockView>
         XiaokaiNewServiceImp.wifiVideoLockGetDoorbellList(wifiSn,1).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
             @Override
             public void onSuccess(GetWifiVideoLockAlarmRecordResult getWifiVideoLockAlarmRecordResult) {
-                LogUtils.e("shulan----------1111------------------");
-                LogUtils.e("shulan getWifiVideoLockAlarmRecordResult-->" + getWifiVideoLockAlarmRecordResult.toString());
+
             }
 
             @Override
@@ -77,8 +80,7 @@ public class WifiVideoLockPresenter<T> extends BasePresenter<IWifiVideoLockView>
         XiaokaiNewServiceImp.wifiVideoLockGetAlarmList(wifiSn,1).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
             @Override
             public void onSuccess(GetWifiVideoLockAlarmRecordResult getWifiVideoLockAlarmRecordResult) {
-                LogUtils.e("shulan----------2222------------------");
-                LogUtils.e("shulan getWifiVideoLockAlarmRecordResult-->" + getWifiVideoLockAlarmRecordResult.toString());
+
             }
 
             @Override
@@ -230,4 +232,46 @@ public class WifiVideoLockPresenter<T> extends BasePresenter<IWifiVideoLockView>
         }
     }
 
+
+    public void listenWifiLockStatus() {
+        if (mqttService != null) {
+            toDisposable(wifiLockStatusListenDisposable);
+            wifiLockStatusListenDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.FUNC_WFEVENT)) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            String payload = mqttData.getPayload();
+
+                            JSONObject jsonObject = new JSONObject(payload);
+
+                            String eventtype = "";
+                            try {
+                                if (payload.contains("eventtype")) {
+                                    eventtype = jsonObject.getString("eventtype");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            if ("action".equals(eventtype)) {
+                                WifiLockActionBean wifiLockActionBean = new Gson().fromJson(payload, WifiLockActionBean.class);
+                                if (wifiLockActionBean != null && wifiLockActionBean.getEventparams() != null) {
+                                    WifiLockActionBean.EventparamsBean eventparams = wifiLockActionBean.getEventparams();
+                                    MyApplication.getInstance().updateWifiLockInfo(wifiLockActionBean.getWfId(), wifiLockActionBean);
+                                }
+                            }
+                        }
+                    });
+            compositeDisposable.add(wifiLockStatusListenDisposable);
+        }
+    }
 }

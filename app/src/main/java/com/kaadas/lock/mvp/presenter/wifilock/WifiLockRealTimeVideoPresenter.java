@@ -78,32 +78,32 @@ public class WifiLockRealTimeVideoPresenter<T> extends BasePresenter<IWifiLockRe
     XMP2PManager.ConnectStatusListener listener = new XMP2PManager.ConnectStatusListener() {
         @Override
         public void onConnectFailed(int paramInt) {
-            LogUtils.e("shulan", "WifiLockRealTimeVideoPresenter onConnectFailed: paramInt=" + paramInt);
+
         }
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","WifiLockRealTimeVideoPresenter onConnectSuccess");
+
         }
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","WifiLockRealTimeVideoPresenter onStartConnect");
+
         }
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","WifiLockRealTimeVideoPresenter onErrorMessage");
+
         }
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","WifiLockRealTimeVideoPresenter onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","WifiLockRealTimeVideoPresenter onRebootDevice");
+
         }
     };
 

@@ -87,8 +87,7 @@ public class WifiLockAlarmRecordPresenter<T> extends BasePresenter<IWifiLockAlar
         XiaokaiNewServiceImp.wifiVideoLockGetAlarmList(wifiSn,1).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
             @Override
             public void onSuccess(GetWifiVideoLockAlarmRecordResult getWifiVideoLockAlarmRecordResult) {
-                LogUtils.e("shulan----------2222------------------");
-                LogUtils.e("shulan getWifiVideoLockAlarmRecordResult-->" + getWifiVideoLockAlarmRecordResult.toString());
+
                 List<WifiVideoLockAlarmRecord> alarmRecords = getWifiVideoLockAlarmRecordResult.getData();
                 if (alarmRecords != null && alarmRecords.size() > 0) {
                     if (page == 1) {

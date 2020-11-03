@@ -72,8 +72,6 @@ public class WifiLockVideoFifthActivity extends BaseActivity<IWifiLockVideoFifth
 
         sSsid = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_SSID);
         sPassword =getIntent().getStringExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD);
-        LogUtils.e("shulan sSsid-->" + sSsid);
-        LogUtils.e("shulan sPassword-->" + sPassword);
         Bitmap qrBitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.qr_logo);
         Bitmap qrCode = QrCodeUtils.createQRCode(new Gson().toJson(new QrCodeBean(sSsid, MyApplication.getInstance().getUid(), sPassword)),
                 240);

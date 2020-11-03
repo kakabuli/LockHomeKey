@@ -99,7 +99,8 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
         }
     }
 
-    @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6032, R.id.gw6010, R.id.single_switch, R.id.double_switch})
+    @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6032, R.id.gw6010, R.id.single_switch,
+            R.id.double_switch,R.id.video_lock,R.id.face_lock,R.id.k20v_lock,R.id.k11f_lock,R.id._3d_lock})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -120,6 +121,8 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 Intent bluetoothIntent = new Intent(DeviceAdd2Activity.this, AddBluetoothFirstActivity.class);
                 startActivity(bluetoothIntent);
                 break;
+            case R.id.face_lock:
+            case R.id.video_lock:
             case R.id.wifi_lock:
 //                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
                 Intent chooseAddIntent = new Intent(this, WifiLockAddNewToChooseActivity.class);
@@ -205,6 +208,21 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
             case R.id.single_switch:
                 break;
             case R.id.double_switch:
+                break;
+
+            case R.id._3d_lock:
+            case R.id.k11f_lock:
+                Intent k11fIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                String k11fType = "WiFi";
+                k11fIntent.putExtra("wifiModelType", k11fType);
+                startActivity(k11fIntent);
+                break;
+            case R.id.k20v_lock:
+                //视频WIFI锁
+                Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                String wifiModelType = "WiFi&VIDEO";
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
                 break;
         }
     }

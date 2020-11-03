@@ -527,6 +527,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     public void onWifiLockOperationEvent(String wifiSn, WifiLockOperationBean.EventparamsBean eventparams) {
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
             if (eventparams.getEventType() == 0x01) { //操作类
+
                 if (eventparams.getEventCode() == 0x01) {  //上锁
                     LogUtils.e("门锁状态上报  上锁" );
                     isOpening = false;
@@ -583,10 +584,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                     public void onSuccess(GetWifiLockOperationRecordResult operationRecordResult) {
                         if (operationRecordResult.getData() != null && operationRecordResult.getData().size() > 0) {  //服务器没有数据  提示用户
                             List<WifiLockOperationRecord> operationRecords = operationRecordResult.getData();
-                            LogUtils.e("shulan operationRecords-->" + operationRecords.size());
-                            for(int i = 0 ; i < operationRecords.size() ;i++){
-                                LogUtils.e("shulan--> operationRecords("+i+")--" +operationRecords.toString());
-                            }
+
                         }
 
                     }

@@ -40,6 +40,7 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
     private Disposable listenActionUpdateDisposable;
     private String wifiSN;
     private Disposable otaDisposable;
+    private Disposable setSafeModeLinstenerDisposable;
 
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -472,7 +473,7 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
                     @Override
                     public void onMqttCtrl(JSONObject jsonObject) {
                         if(isSafe()){
-                            LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
                                     setSafeMode(wifiSN,safeMode);
@@ -517,7 +518,8 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
             MqttMessage mqttMessage = MqttCommandFactory.setVideoLockSafeMode(wifiSN,safeMode);
-            mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setSafeModeLinstenerDisposable);
+            setSafeModeLinstenerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -550,12 +552,10 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
-                            }
+
                         }
                     });
-
+            compositeDisposable.add(setSafeModeLinstenerDisposable);
         }else{
             if(isSafe()){
                 mViewRef.get().onSettingCallBack(false);

@@ -415,7 +415,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             adapater = new WifiLockDetailAdapater(supportFunctions, new WifiLockDetailAdapater.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
-                    Log.d("shulan", "=WifiLockDetailAdapater onItemClick: ");
                     Intent intent;
                     switch (bluetoothLockFunctionBean.getType()) {
                         case BleLockUtils.TYPE_PASSWORD:
@@ -468,7 +467,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_MORE:
                             if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
-                                LogUtils.e("shulan -------------");
                                 intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
@@ -520,7 +518,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             oneLineAdapater = new WifiLockDetailOneLineAdapater(supportFunctions, new WifiLockDetailOneLineAdapater.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position, WifiLockFunctionBean bluetoothLockFunctionBean) {
-                    Log.d("shulan", "WifiLockDetailOneLineAdapater onItemClick: ");
                     Intent intent;
                     switch (bluetoothLockFunctionBean.getType()) {
                         case BleLockUtils.TYPE_PASSWORD:
@@ -572,7 +569,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_MORE:
                             if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
-                                LogUtils.e("shulan -------------");
                                 intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
@@ -690,7 +686,6 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        LogUtils.e("shulan --"+ this +"-requestCode-->" + requestCode);
         switch (requestCode){
             case REQUEST_AUDIO_PERMISSION_REQUEST_CODE:
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){//同意授权

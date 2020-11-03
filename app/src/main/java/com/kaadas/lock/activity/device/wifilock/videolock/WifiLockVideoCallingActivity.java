@@ -104,8 +104,12 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
     ImageView ivAnswerIcon;
     @BindView(R.id.iv_refuse_icon)
     ImageView ivRefuseIcon;
+    @BindView(R.id.iv_refuse_icon_1)
+    ImageView ivRefuseIcon1;
     @BindView(R.id.tv_answer)
     TextView tvAnswer;
+    @BindView(R.id.tv_refuse_1)
+    TextView tvRefuse1;
     @BindView(R.id.tv_refuse)
     TextView tvRefuse;
     @BindView(R.id.avi)
@@ -227,6 +231,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             ivBigHeadPic.setVisibility(View.VISIBLE);
             ivHeadPic.setVisibility(View.GONE);
             tvHeadPic.setVisibility(View.GONE);
+            tvDoorbell.setVisibility(View.GONE);
             isDoorbelling = false;
 
         }else if(isCalling == 1){
@@ -236,6 +241,14 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             ivBigHeadPic.setVisibility(View.GONE);
             ivHeadPic.setVisibility(View.VISIBLE);
             tvHeadPic.setVisibility(View.VISIBLE);
+            tvDoorbell.setVisibility(View.VISIBLE);
+            tvRefuse1.setVisibility(View.GONE);
+            ivRefuseIcon1.setVisibility(View.GONE);
+            if(avi != null){
+                avi.hide();
+            }
+            if(tvTips != null)
+                tvTips.setVisibility(View.GONE);
             isDoorbelling = true;
         }
 
@@ -345,6 +358,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 finish();
                 break;
             case R.id.iv_real_time_refuse_icon:
+            case R.id.iv_refuse_icon_1:
             case R.id.iv_refuse_icon:
                 mPresenter.stopConnect();
                 avi.hide();
@@ -368,6 +382,15 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                             }
                         }
                     }).start();
+                }else{
+                    ivAnswerIcon.setVisibility(View.GONE);
+                    tvAnswer.setVisibility(View.GONE);
+                    ivRefuseIcon.setVisibility(View.GONE);
+                    tvRefuse.setVisibility(View.GONE);
+                    tvDoorbell.setVisibility(View.GONE);
+                    avi.setVisibility(View.VISIBLE);
+                    avi.show();
+                    tvTips.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.iv_mute:
@@ -587,9 +610,9 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 if(isCalling == 1){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
-                    tvDoorbell.setVisibility(View.VISIBLE);
+//                    tvDoorbell.setVisibility(View.VISIBLE);
                 }else{
-                    tvDoorbell.setVisibility(View.GONE);
+//                    tvDoorbell.setVisibility(View.GONE);
                 }
             }
         });
@@ -957,7 +980,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 }).start();
             }
         });
-//        LogUtils.e("shulan -----+++++");
+
         if(!WifiLockVideoCallingActivity.this.isFinishing()){
             dialog.show();
         }
@@ -998,24 +1021,23 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
-                        LogUtils.e("shulan --home");
                         isLastPirture = true;
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-                        LogUtils.e("shulan --recent");
+
                         isLastPirture = true;
                         mPresenter.release();
                     }
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
-                LogUtils.e("shulan -- screen_on");
+
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                LogUtils.e("shulan -- screen_off");
+
                 isLastPirture = true;
                 mPresenter.release();
             }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
-                LogUtils.e("shulan -- 解锁");
+
 
             }
 

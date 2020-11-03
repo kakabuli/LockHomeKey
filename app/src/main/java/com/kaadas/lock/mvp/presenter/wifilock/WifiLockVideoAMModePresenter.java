@@ -42,6 +42,7 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
     private Disposable listenActionUpdateDisposable;
     private String wifiSN;
     private Disposable otaDisposable;
+    private Disposable setAMLinstenerDisposable;
 
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -566,7 +567,8 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
 
             MqttMessage mqttMessage = MqttCommandFactory.setVideoLockAmMode(wifiSN,amMode);
-            mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setAMLinstenerDisposable);
+            setAMLinstenerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -599,12 +601,10 @@ public class WifiLockVideoAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            if(isSafe()){
-                                mViewRef.get().onSettingCallBack(false);
-                            }
+
                         }
                     });
-
+            compositeDisposable.add(setAMLinstenerDisposable);
         }else{
             if(isSafe()){
                 mViewRef.get().onSettingCallBack(false);

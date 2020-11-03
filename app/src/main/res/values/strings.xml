@@ -1524,8 +1524,13 @@
     <string name="auto_connect_wifi_notice4">添加过程中避免手机断电和App退出</string>
     <string name="is_connect_wifi_please_wait">正在切换WiFi，请稍后...</string>
     <string name="ble_lock">蓝牙锁</string>
+    <string name="face_lock">人脸锁</string>
+    <string name="video_lock">视频锁</string>
     <string name="zigbeelock">网关锁</string>
     <string name="wifi_lock2">WiFi锁</string>
+    <string name="k20v_lock">K20-V\n可视猫眼智能锁</string>
+    <string name="k11f_lock">K11 Face</string>
+    <string name="_3d_lock">兰博基尼传奇\n3D人脸识别智能锁</string>
     <string name="other_device">其他智能家居</string>
     <string name="cateye2">猫 眼</string>
     <string name="single_switch">零火单键</string>

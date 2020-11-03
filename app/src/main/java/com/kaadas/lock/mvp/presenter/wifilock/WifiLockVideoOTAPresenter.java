@@ -244,7 +244,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     notifyGateWayNewVersion();
                                 }else{
@@ -289,7 +289,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
     }
 
     public void notifyGateWayNewVersion(){
-        LogUtils.e("shulan -----notifyGateWayNewVersion---");
+
         XMP2PManager.getInstance().notifyGateWayNewVersion();
     }
 
@@ -419,7 +419,6 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            LogUtils.e("shulan", "onConnectFailed: 111paramInt=" + paramInt);
 
             if(isSafe()){
                 mViewRef.get().onConnectFailed(paramInt);
@@ -429,7 +428,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
         @Override
         public void onConnectSuccess() {
-            LogUtils.e("shulan","onConnectSuccess");
+
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
@@ -438,7 +437,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
         @Override
         public void onStartConnect(String paramString) {
-            LogUtils.e("shulan","onStartConnect");
+
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -447,7 +446,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
         @Override
         public void onErrorMessage(String message) {
-            LogUtils.e("shulan","onErrorMessage");
+
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);
@@ -457,12 +456,12 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
 
         @Override
         public void onNotifyGateWayNewVersion(String paramString) {
-            LogUtils.e("shulan","onNotifyGateWayNewVersion");
+
         }
 
         @Override
         public void onRebootDevice(String paramString) {
-            LogUtils.e("shulan","onRebootDevice");
+
         }
     };
 
@@ -504,7 +503,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
             @Override
             public void onMqttCtrl(JSONObject jsonObject) {
                 if(isSafe()){
-                    LogUtils.e("shulan setMqttCtrl-->" + jsonObject.toString());
+
                     try {
                         if (jsonObject.getString("result").equals("ok")){
                             mViewRef.get().onMqttCtrl(true);
@@ -550,7 +549,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                             if(setVideoLockSafeMode != null){
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
+
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -595,7 +594,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                             if(setVideoLockAmMode != null){
                                 if("200".equals(setVideoLockAmMode.getCode())){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setAmMode-->" + setVideoLockAmMode.getParams().getAmMode());
+
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{
@@ -641,7 +640,7 @@ public class WifiLockVideoOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                             if(setVideoLockLang != null){
                                 if("200".equals(setVideoLockLang.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setVideoLockLang-->" + setVideoLockLang.getParams().getLanguage());
+
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

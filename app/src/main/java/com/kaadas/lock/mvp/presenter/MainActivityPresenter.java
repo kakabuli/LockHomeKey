@@ -831,7 +831,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
                 public void onSuccess(BaseResult baseResult) {
                     if (mViewRef != null) {
                         mViewRef.get().uploadpush(baseResult);
-                        LogUtils.e("shulan uploadPushId---baseResult-->" + baseResult.toString());
+
                     }
                 }
 

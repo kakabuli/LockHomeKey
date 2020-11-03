@@ -56,7 +56,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     @BindView(R.id.tv_user_protocol)
     TextView tvUserProtocol;
     TimeUtils timeUtils;//时间工具类
-    boolean userProtocolSlected = true;//用户协议选中状态
+    boolean userProtocolSlected = false;//用户协议选中状态
 
     @BindView(R.id.iv_password_status)
     ImageView ivPasswordStatus;//密码状态图标
@@ -105,6 +105,10 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 finish();
                 break;
             case R.id.btn_register:
+                if(!userProtocolSlected){
+                    ToastUtil.getInstance().showShort("请勾选用户协议");
+                    return;
+                }
                 register();
                 break;
             case R.id.tv_get_verification:

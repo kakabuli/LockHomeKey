@@ -432,11 +432,11 @@ public class XMP2PManager extends StreamListener  {
      */
     public void stopCodec()
     {
+        releaseAudio();
         if(getCodecInstance().isRecord()){
             getCodecInstance().stopRecordToMP4();
         }
         getCodecInstance().stop();
-        releaseAudio();
         LogUtils.e("shulan --------stopCodec");
     }
 
@@ -462,6 +462,14 @@ public class XMP2PManager extends StreamListener  {
      */
     private void releaseAudio()
     {
+        if(getCodecInstance().isEnableAudio()){
+            getCodecInstance().enableAudio(false);
+        }
+
+        if(getCodecInstance().isTalkback()){
+            getCodecInstance().talkback(false);
+        }
+
         getCodecInstance().releaseAudio();
     }
 

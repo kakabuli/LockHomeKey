@@ -79,7 +79,8 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
             llCardFinger.setVisibility(View.GONE);
             headTitle.setText(R.string.password_detail);
             foreverPassword = (ForeverPassword) getIntent().getSerializableExtra(KeyConstants.TO_PWD_DETAIL);
-            nickName = foreverPassword.getNickName();
+            if(foreverPassword.getNickName() != null)
+                nickName = foreverPassword.getNickName();
             createTime = foreverPassword.getCreateTime();
             num = Integer.parseInt(foreverPassword.getNum());
             initData();

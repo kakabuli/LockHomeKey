@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.bean.WifiLockActionBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -21,6 +22,9 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +41,7 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
     @Override
     public void attachView(IWifiLockView view) {
         super.attachView(view);
-
+        listenWifiLockStatus();
         listenWifiLockOpenStatus();
 
         listenActionUpdate();
@@ -175,4 +179,45 @@ public class WifiLockPresenter<T> extends BasePresenter<IWifiLockView> {
         }
     }
 
+    public void listenWifiLockStatus() {
+        if (mqttService != null) {
+            toDisposable(wifiLockStatusListenDisposable);
+            wifiLockStatusListenDisposable = mqttService.listenerDataBack()
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if (mqttData.getFunc().equals(MqttConstant.FUNC_WFEVENT)) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            String payload = mqttData.getPayload();
+
+                            JSONObject jsonObject = new JSONObject(payload);
+
+                            String eventtype = "";
+                            try {
+                                if (payload.contains("eventtype")) {
+                                    eventtype = jsonObject.getString("eventtype");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            if ("action".equals(eventtype)) {
+                                WifiLockActionBean wifiLockActionBean = new Gson().fromJson(payload, WifiLockActionBean.class);
+                                if (wifiLockActionBean != null && wifiLockActionBean.getEventparams() != null) {
+                                    WifiLockActionBean.EventparamsBean eventparams = wifiLockActionBean.getEventparams();
+                                    MyApplication.getInstance().updateWifiLockInfo(wifiLockActionBean.getWfId(), wifiLockActionBean);
+                                }
+                            }
+                        }
+                    });
+            compositeDisposable.add(wifiLockStatusListenDisposable);
+        }
+    }
 }

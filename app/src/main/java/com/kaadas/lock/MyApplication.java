@@ -149,8 +149,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
         initXMP2PManager();
-        XMLog.DEBUG=true;
-        LogCodec.DEBUG=true;
         regToWx();
         //配置数据库
         setUpWriteDataBase();
@@ -178,6 +176,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private void initXMP2PManager() {
         XMP2PManager.getInstance().initAPI(XMP2PManager.serviceString);
         XMP2PManager.getInstance().init(getApplicationContext());
+        XMLog.DEBUG=false;
+        LogCodec.DEBUG=false;
     }
 
     private void regToWx() {

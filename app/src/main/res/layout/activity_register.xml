@@ -269,7 +269,7 @@
                     android:text="@string/register_default_agree"
                     android:textColor="#333333"
                     android:drawablePadding="@dimen/dp_10"
-                    android:drawableLeft="@mipmap/register_selected"
+                    android:drawableLeft="@mipmap/register_unselected"
                     android:textSize="@dimen/sp_12" />
 
                 <LinearLayout

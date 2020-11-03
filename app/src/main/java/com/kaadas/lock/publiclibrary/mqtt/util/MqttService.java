@@ -291,9 +291,6 @@ public class MqttService extends Service {
                     powerDataObversable.onNext(mqttData);
                 }
 
-                LogUtils.e("shulan mqttData.getFunc()-->" + mqttData.getFunc() );
-                LogUtils.e("shulan MqttConstant.FUNC_WFEVENT-->" + MqttConstant.FUNC_WFEVENT );
-                LogUtils.e("shulan -->" + MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc()));
                 if(MqttConstant.FUNC_WFEVENT.equals(mqttData.getFunc())){
 
                     executeDoorbellingFunction(jsonObject);
