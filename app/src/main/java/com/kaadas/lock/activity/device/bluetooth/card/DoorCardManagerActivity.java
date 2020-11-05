@@ -73,18 +73,22 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_door_card_manager);
         ButterKnife.bind(this);
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        tvContent.setText(getString(R.string.door_card));
-        ivBack.setOnClickListener(this);
-        tvSynchronizedRecord.setOnClickListener(this);
-        llAdd.setOnClickListener(this);
-        pageChange();
-        //进入默认鉴权
-        mPresenter.isAuth(bleLockInfo, false);
-        initRecycleview();
-        initData();
-        initRefresh();
-        mPresenter.getAllPassword(bleLockInfo, true);
+        if(MyApplication.getInstance().getBleService().getBleLockInfo() != null){
+
+            bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+
+            tvContent.setText(getString(R.string.door_card));
+            ivBack.setOnClickListener(this);
+            tvSynchronizedRecord.setOnClickListener(this);
+            llAdd.setOnClickListener(this);
+            pageChange();
+            //进入默认鉴权
+            mPresenter.isAuth(bleLockInfo, false);
+            initRecycleview();
+            initData();
+            initRefresh();
+            mPresenter.getAllPassword(bleLockInfo, true);
+        }
     }
 
     @Override

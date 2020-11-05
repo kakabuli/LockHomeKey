@@ -94,38 +94,40 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
         ButterKnife.bind(this);
 
         productList = MyApplication.getInstance().getProductInfos();
+        if(MyApplication.getInstance().getBleService().getBleLockInfo() != null){
 
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+            bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
 
-        deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
-        tvDeviceName.setText(deviceNickname);
-        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) {
-            rlDeviceName.setVisibility(View.VISIBLE);
-        } else {
-            rlDeviceName.setVisibility(View.GONE);
-        }
+            deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
+            tvDeviceName.setText(deviceNickname);
+            if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())) {
+                rlDeviceName.setVisibility(View.VISIBLE);
+            } else {
+                rlDeviceName.setVisibility(View.GONE);
+            }
 
-        showLoading(getString(R.string.being_get_device_information));
-        if (mPresenter.isAuth(bleLockInfo, true)) {
-            mPresenter.getBluetoothDeviceInformation();
-        }
-        ivBack.setOnClickListener(this);
-        tvContent.setText(R.string.device_info);
-        rlBluetoothModuleVersion.setOnClickListener(this);
+            showLoading(getString(R.string.being_get_device_information));
+            if (mPresenter.isAuth(bleLockInfo, true)) {
+                mPresenter.getBluetoothDeviceInformation();
+            }
+            ivBack.setOnClickListener(this);
+            tvContent.setText(R.string.device_info);
+            rlBluetoothModuleVersion.setOnClickListener(this);
 
-        tv3dCamera.setOnClickListener(this);
-        tv3dAlgorithm.setOnClickListener(this);
+            tv3dCamera.setOnClickListener(this);
+            tv3dAlgorithm.setOnClickListener(this);
 
 
-        boolean supportFace = BleLockUtils.isSupportFace(bleLockInfo.getServerLockInfo().getFunctionSet());
-        if (!supportFace) {
-            lr3dAlgorithm.setVisibility(View.GONE);
-            lr3dCamera.setVisibility(View.GONE);
-        } else {
-            lr3dAlgorithm.setVisibility(View.GONE);
-            lr3dCamera.setVisibility(View.GONE);
-//            lr3dAlgorithm.setVisibility(View.VISIBLE);
-//            lr3dCamera.setVisibility(View.VISIBLE);
+            boolean supportFace = BleLockUtils.isSupportFace(bleLockInfo.getServerLockInfo().getFunctionSet());
+            if (!supportFace) {
+                lr3dAlgorithm.setVisibility(View.GONE);
+                lr3dCamera.setVisibility(View.GONE);
+            } else {
+                lr3dAlgorithm.setVisibility(View.GONE);
+                lr3dCamera.setVisibility(View.GONE);
+    //            lr3dAlgorithm.setVisibility(View.VISIBLE);
+    //            lr3dCamera.setVisibility(View.VISIBLE);
+            }
         }
     }
 

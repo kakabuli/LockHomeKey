@@ -131,9 +131,14 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         initData();
         initView();
         initClick();
-        cateEyeInfoBase = daoSession.getCateEyeInfoBaseDao().queryBuilder()
-                .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
-                .unique();
+        try {
+
+            cateEyeInfoBase = daoSession.getCateEyeInfoBaseDao().queryBuilder()
+                    .where(CateEyeInfoBaseDao.Properties.DeviceId.eq(deviceId)).build()
+                    .unique();
+        }catch (Exception e){
+
+        }
         if (cateEyeInfoBase != null) {
             tvBell.setText(getString(R.string.the_tinkle_of_bells) + cateEyeInfoBase.getCurBellNum());//设置铃声值
             switch (cateEyeInfoBase.getBellVolume()) {

@@ -76,8 +76,11 @@ public class CommentStartActvity extends BaseActivity {
     @Override
     protected void initViewsAndEvents() {
         orderInfor = getIntent().getParcelableExtra("bean");
-        for (IndentInfo  infor :orderInfor.getIndentInfo()){
-            listBeans.add(new SubmitComment(String.valueOf(infor.getProductId()),infor.getLogo(),String.valueOf(infor.getIndentId()),infor.getProductLabels()));
+        if(orderInfor.getIndentInfo() != null){
+
+            for (IndentInfo  infor :orderInfor.getIndentInfo()){
+                listBeans.add(new SubmitComment(String.valueOf(infor.getProductId()),infor.getLogo(),String.valueOf(infor.getIndentId()),infor.getProductLabels()));
+            }
         }
         tvTitle.setText("评论");
         tvRight.setText("提交");

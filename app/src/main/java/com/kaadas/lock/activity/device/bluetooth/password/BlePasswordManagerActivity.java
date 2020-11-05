@@ -76,8 +76,11 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
         setContentView(R.layout.activity_bluetooth_password_manager);
         ButterKnife.bind(this);
         tvContent.setText(getString(R.string.password));
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        mPresenter.getAllPassword(bleLockInfo, true);
+        if(MyApplication.getInstance().getBleService().getBleLockInfo() != null){
+
+            bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+            mPresenter.getAllPassword(bleLockInfo, true);
+        }
         ivBack.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         llAddPassword.setOnClickListener(this);

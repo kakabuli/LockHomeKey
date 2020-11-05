@@ -136,8 +136,13 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         if (new File(fileName).exists()){
                             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
+                            try{
+                                fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
 
-                            fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                            }catch (Exception e){
+
+                            }
+
 
                             intent.putExtra("NAME",fileName);
                             intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
@@ -146,7 +151,12 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         }else{
                             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
-                            fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                            try{
+
+                                fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                            }catch (Exception e){
+
+                            }
                             intent.putExtra("NAME",fileName);
                             intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                             intent.putExtra("record",record);

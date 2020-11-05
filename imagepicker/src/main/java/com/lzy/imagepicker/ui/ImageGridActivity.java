@@ -289,7 +289,10 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);  //如果是多选，点击图片进入预览界面
         } else {
             imagePicker.clearSelectedImages();
-            imagePicker.addSelectedImageItem(position, imagePicker.getCurrentImageFolderItems().get(position), true);
+            if(position < imagePicker.getCurrentImageFolderItems().size()){
+
+                imagePicker.addSelectedImageItem(position, imagePicker.getCurrentImageFolderItems().get(position), true);
+            }
             if (imagePicker.isCrop()) {
                 Intent intent = new Intent(ImageGridActivity.this, ImageCropActivity.class);
                 startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP);  //单选需要裁剪，进入裁剪界面

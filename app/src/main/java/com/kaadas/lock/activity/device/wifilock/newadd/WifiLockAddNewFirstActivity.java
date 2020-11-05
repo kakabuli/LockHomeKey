@@ -45,7 +45,7 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.iv_img_lock)
     ImageView ivImgLock;
 
-    private String wifiModelType;
+    private String wifiModelType = "";
 
     private Disposable permissionDisposable;
     final RxPermissions rxPermissions = new RxPermissions(this);
@@ -55,9 +55,8 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_first);
         Intent intent = getIntent();
-        wifiModelType = intent.getStringExtra("wifiModelType");
+        wifiModelType = intent.getStringExtra("wifiModelType") + "";
         ButterKnife.bind(this);
-
         if(wifiModelType.contains("VIDEO")){
             ivImgLock.setImageResource(R.mipmap.wifi_video_lock_img_lock);
             notice.setText(getText(R.string.wifi_lock_new_add_first_notice3));
@@ -65,6 +64,7 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
             ivImgLock.setImageResource(R.mipmap.new_add_first);
             notice.setText(getText(R.string.wifi_lock_new_add_first_notice2));
         }
+
     }
 
     @OnClick({R.id.back, R.id.help, R.id.button_next, R.id.tv_reconnect})

@@ -73,7 +73,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(updateNameDisposable);
                             UpdateDevNickNameResult nameResult = new Gson().fromJson(mqttData.getPayload(), UpdateDevNickNameResult.class);
                             if (nameResult != null) {
-                                if ("200".equals(nameResult.getCode())) {
+                                if ("200".equals(nameResult.getCode() + "")) {
                                     if (isSafe()) {
                                         mViewRef.get().updateDevNickNameSuccess(nickName);
                                         MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -123,7 +123,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(getLockSoundVolumeDisposable);
                             GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
                             if (getSoundVolume != null) {
-                                if ("200".equals(getSoundVolume.getReturnCode())) {
+                                if ("200".equals(getSoundVolume.getReturnCode() + "")) {
                                     if (isSafe()) {
                                         mViewRef.get().getSoundVolumeSuccess(getSoundVolume.getReturnData().getVolume());
                                     }
@@ -172,7 +172,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             toDisposable(setLockSoundVolumeDisposable);
                             GetSoundVolume getSoundVolume = new Gson().fromJson(mqttData.getPayload(), GetSoundVolume.class);
                             if (getSoundVolume != null) {
-                                if ("200".equals(getSoundVolume.getReturnCode())) {
+                                if ("200".equals(getSoundVolume.getReturnCode() + "")) {
                                     if (isSafe()) {
                                         mViewRef.get().setSoundVolumeSuccess(getSoundVolume.getParams().getVolume());
                                     }
@@ -279,7 +279,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(setAMDisposable);
                             SetAMBean setAMBean = new Gson().fromJson(mqttData.getPayload(), SetAMBean.class);
-                            if ("200".equals(setAMBean.getReturnCode())) {
+                            if ("200".equals(setAMBean.getReturnCode() + "")) {
                                 if (isSafe()) {
                                     mViewRef.get().setAMSuccess(autoRelockTime);
                                 }
@@ -322,7 +322,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(getAMDisposable);
                             GetAMBean getAMBean = new Gson().fromJson(mqttData.getPayload(), GetAMBean.class);
-                            if ("200".equals(getAMBean.getReturnCode())) {
+                            if ("200".equals(getAMBean.getReturnCode() + "")) {
                                 if (isSafe()) {
                                     mViewRef.get().getAMSuccess(getAMBean.getReturnData().getAutoRelockTime());
                                 }
@@ -389,7 +389,7 @@ public class GatewayLockMorePresenter<T> extends BasePresenter<GatewayLockMoreVi
                             UpdatePushSwitchResult updatePushSwitchResult = new Gson().fromJson(mqttData.getPayload(), UpdatePushSwitchResult.class);
                             if (updatePushSwitchResult != null) {
                                 String returnCode = updatePushSwitchResult.getCode();
-                                if ("200".equals(returnCode)) {
+                                if ("200".equals(returnCode + "")) {
                                     MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     if (isSafe()) {
                                         mViewRef.get().onUpdatePushSwitchSuccess(pushStatus);

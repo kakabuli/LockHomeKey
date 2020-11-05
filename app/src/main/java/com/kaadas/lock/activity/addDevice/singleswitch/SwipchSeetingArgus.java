@@ -100,6 +100,8 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
         //设备型号
 //        tv_start.setText(wifiLockInfo.getProductModel());
         //键位开关
+        if(wifiLockInfo != null){
+
         if (wifiLockInfo.getSingleFireSwitchInfo() != null) {
             try {
 
@@ -140,6 +142,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
             String bindingTime = DateUtils.timestampToDateSecond(wifiLockInfo.getSingleFireSwitchInfo().getSwitchBind());
 
             swipch_link_setting_binding_time.setText(bindingTime);
+        }
         }
     }
 

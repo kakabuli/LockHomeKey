@@ -76,24 +76,25 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
         ButterKnife.bind(this);
 
         productList = MyApplication.getInstance().getProductInfos();
+        if(MyApplication.getInstance().getBleService().getBleLockInfo() != null){
 
-        bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
-        deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
-        tvDeviceName.setText(deviceNickname);
-        showLoading(getString(R.string.being_get_device_information));
-        if (mPresenter.isAuth(bleLockInfo, true)) {
-            mPresenter.getBluetoothDeviceInformation();
+            bleLockInfo = MyApplication.getInstance().getBleService().getBleLockInfo();
+            deviceNickname = bleLockInfo.getServerLockInfo().getLockNickName();
+            tvDeviceName.setText(deviceNickname);
+            showLoading(getString(R.string.being_get_device_information));
+            if (mPresenter.isAuth(bleLockInfo, true)) {
+                mPresenter.getBluetoothDeviceInformation();
+            }
+            if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())){
+                deviceInfoRight.setVisibility(View.GONE);
+            }else {
+                deviceInfoRight.setVisibility(View.VISIBLE);
+            }
+            ivBack.setOnClickListener(this);
+            rlDeviceName.setOnClickListener(this);
+            tvContent.setText(R.string.device_info);
+            rlBluetoothModuleVersion.setOnClickListener(this);
         }
-        if (!"1".equals(bleLockInfo.getServerLockInfo().getIs_admin())){
-            deviceInfoRight.setVisibility(View.GONE);
-        }else {
-            deviceInfoRight.setVisibility(View.VISIBLE);
-        }
-        ivBack.setOnClickListener(this);
-        rlDeviceName.setOnClickListener(this);
-        tvContent.setText(R.string.device_info);
-        rlBluetoothModuleVersion.setOnClickListener(this);
-
     }
 
     @Override

@@ -350,49 +350,52 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
 
 
     public void readLockFunctionSet() {
-        functionSetDisposable = bleService.readFunctionSet(500)
-                .filter(new Predicate<ReadInfoBean>() {
-                    @Override
-                    public boolean test(ReadInfoBean readInfoBean) throws Exception {
-                        return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
+        if(bleService != null){
+            toDisposable(functionSetDisposable);
+            functionSetDisposable = bleService.readFunctionSet(500)
+                    .filter(new Predicate<ReadInfoBean>() {
+                        @Override
+                        public boolean test(ReadInfoBean readInfoBean) throws Exception {
+                            return readInfoBean.type == ReadInfoBean.TYPE_LOCK_FUNCTION_SET;
 
-                    }
-                })
-                .retryWhen(new RetryWithTime(2, 0))
-                .timeout(2 * 1000, TimeUnit.MILLISECONDS)
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<ReadInfoBean>() {
-                    @Override
-                    public void accept(ReadInfoBean readInfoBean) throws Exception {
-                        toDisposable(functionSetDisposable);
-                        int funcSet = (int) readInfoBean.data;
-                        if (isSafe()) {
-                            mViewRef.get().readFunctionSetSuccess(funcSet);
                         }
+                    })
+                    .retryWhen(new RetryWithTime(2, 0))
+                    .timeout(2 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<ReadInfoBean>() {
+                        @Override
+                        public void accept(ReadInfoBean readInfoBean) throws Exception {
+                            int funcSet = (int) readInfoBean.data;
+                            if (isSafe()) {
+                                mViewRef.get().readFunctionSetSuccess(funcSet);
+                            }
 
-                        LogUtils.e("--kaadas--收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
-                        if (BleLockUtils.isExistFunctionSet(funcSet)) {
-                            functionSet = funcSet;
-                            if (funcSet == 0xff) {
+                            LogUtils.e("--kaadas--收到锁功能集   " + Rsa.byteToHexString((byte) funcSet));
+                            if (BleLockUtils.isExistFunctionSet(funcSet)) {
+                                functionSet = funcSet;
+                                if (funcSet == 0xff) {
+                                    if (isSafe()) {
+                                        mViewRef.get().readFunctionSetFailed(new BleProtocolFailedException(0xff));
+                                    }
+                                }
+                            } else {
                                 if (isSafe()) {
-                                    mViewRef.get().readFunctionSetFailed(new BleProtocolFailedException(0xff));
+                                    mViewRef.get().unknownFunctionSet(funcSet);
                                 }
                             }
-                        } else {
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
                             if (isSafe()) {
-                                mViewRef.get().unknownFunctionSet(funcSet);
+                                mViewRef.get().readFunctionSetFailed(throwable);
                             }
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (isSafe()) {
-                            mViewRef.get().readFunctionSetFailed(throwable);
-                        }
-                    }
-                });
-        compositeDisposable.add(functionSetDisposable);
+                    });
+            compositeDisposable.add(functionSetDisposable);
+
+        }
 
     }
 

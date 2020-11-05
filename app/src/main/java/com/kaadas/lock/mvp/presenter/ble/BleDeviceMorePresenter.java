@@ -465,23 +465,25 @@ public class BleDeviceMorePresenter<T> extends BleCheckOTAPresenter<IDeviceMoreV
     @Override
     public void attachView(IDeviceMoreView view) {
         super.attachView(view);
-        toDisposable(deviceStateChangeDisposable);
         //通知界面更新显示设备状态
-        deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
-                .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Consumer<BleDataBean>() {
-                    @Override
-                    public void accept(BleDataBean bleDataBean) throws Exception {
-                        if (isSafe()) {   //通知界面更新显示设备状态
-                            mViewRef.get().onStateUpdate(-1);
+        if(bleService != null){
+            toDisposable(deviceStateChangeDisposable);
+            deviceStateChangeDisposable = bleService.listenerDeviceStateChange()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<BleDataBean>() {
+                        @Override
+                        public void accept(BleDataBean bleDataBean) throws Exception {
+                            if (isSafe()) {   //通知界面更新显示设备状态
+                                mViewRef.get().onStateUpdate(-1);
+                            }
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("监听设备状态改变出错   " + throwable.toString());
-                    }
-                });
-        compositeDisposable.add(deviceStateChangeDisposable);
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            LogUtils.e("监听设备状态改变出错   " + throwable.toString());
+                        }
+                    });
+            compositeDisposable.add(deviceStateChangeDisposable);
+        }
     }
 }

@@ -822,6 +822,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
      */
 
     public void getAllPassword(BleLockInfo bleLockInfo, boolean isForceServer) {
+        if(bleLockInfo.getServerLockInfo() == null){
+            return;
+        }
         XiaokaiNewServiceImp.getPasswords(MyApplication.getInstance().getUid(), bleLockInfo.getServerLockInfo().getLockName(), 0)
                 .subscribe(new BaseObserver<GetPasswordResult>() {
                     @Override

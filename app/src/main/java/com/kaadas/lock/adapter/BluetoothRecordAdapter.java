@@ -51,9 +51,12 @@ public class BluetoothRecordAdapter extends BaseQuickAdapter<BluetoothRecordBean
         List<BluetoothItemRecordBean> data = bean.getList();
        // Log.e(GeTui.VideoLog,"数据是.....:"+data);
 //        data.clear();
-        BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(R.layout.item_item_bluetooth_record,data);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setAdapter(bluetoothItemRecordAdapter);
+        if(data != null && data.size() > 0){
+
+            BluetoothItemRecordAdapter bluetoothItemRecordAdapter = new BluetoothItemRecordAdapter(R.layout.item_item_bluetooth_record,data);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            recyclerView.setAdapter(bluetoothItemRecordAdapter);
+        }
     /*    if (bluetoothItemRecordAdapter!=null){
             List<BluetoothItemRecordBean> dataList = bean.getList();
             data.addAll(dataList);

@@ -92,52 +92,55 @@ public class WarringRecordPresenter<T> extends BlePresenter<IWarringRecordView> 
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
-        XiaokaiNewServiceImp.getWarringRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
-                pagenum)
-                .subscribe(new BaseObserver<GetWarringRecordResult>() {
-                    @Override
-                    public void onSuccess(GetWarringRecordResult warringRecordResult) {
-                        if (warringRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
-                            if (isSafe()) {
-                                if (pagenum == 1) { //第一次获取数据就没有
-                                    mViewRef.get().onServerNoData();
-                                } else {
-                                    mViewRef.get().noMoreData();
+        if(bleService.getBleLockInfo().getServerLockInfo() != null){
+            XiaokaiNewServiceImp.getWarringRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
+                    pagenum)
+                    .subscribe(new BaseObserver<GetWarringRecordResult>() {
+                        @Override
+                        public void onSuccess(GetWarringRecordResult warringRecordResult) {
+                            if (warringRecordResult.getData().size() == 0) {  //服务器没有数据  提示用户
+                                if (isSafe()) {
+                                    if (pagenum == 1) { //第一次获取数据就没有
+                                        mViewRef.get().onServerNoData();
+                                    } else {
+                                        mViewRef.get().noMoreData();
+                                    }
+                                    return;
                                 }
-                                return;
+                            }
+                            ///将服务器数据封装成用来解析的数据
+                            for (GetWarringRecordResult.DataBean record : warringRecordResult.getData()) {
+                                serverRecords.add(new WarringRecord(record.getWarningType(), record.getWarningTime()));
+                            }
+                            if (isSafe()) {
+                                mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
                             }
                         }
-                        ///将服务器数据封装成用来解析的数据
-                        for (GetWarringRecordResult.DataBean record : warringRecordResult.getData()) {
-                            serverRecords.add(new WarringRecord(record.getWarningType(), record.getWarningTime()));
-                        }
-                        if (isSafe()) {
-                            mViewRef.get().onLoadServerRecord(serverRecords, pagenum);
-                        }
-                    }
 
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-                        LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
-                        if (isSafe()) {  //
-                            mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                        @Override
+                        public void onAckErrorCode(BaseResult baseResult) {
+                            LogUtils.e("获取 开锁记录  失败   " + baseResult.getMsg() + "  " + baseResult.getCode());
+                            if (isSafe()) {  //
+                                mViewRef.get().onLoadServerRecordFailedServer(baseResult);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailed(Throwable throwable) {
-                        LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
-                        if (isSafe()) {
-                            mViewRef.get().onLoadServerRecordFailed(throwable);
+                        @Override
+                        public void onFailed(Throwable throwable) {
+                            LogUtils.e("获取 开锁记录  失败   " + throwable.getMessage());
+                            if (isSafe()) {
+                                mViewRef.get().onLoadServerRecordFailed(throwable);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-                        serverDisposable = d;
-                        compositeDisposable.add(serverDisposable);
-                    }
-                });
+                        @Override
+                        public void onSubscribe1(Disposable d) {
+                            serverDisposable = d;
+                            compositeDisposable.add(serverDisposable);
+                        }
+                    });
+        }
+
     }
 
 

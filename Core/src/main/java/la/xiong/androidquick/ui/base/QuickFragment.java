@@ -107,7 +107,8 @@ public abstract class QuickFragment extends Fragment {
             }catch (NoClassDefFoundError e){
                 mainLayout=inflater.inflate(layoutId, container, false);
             }
-            mainLayout.setClickable(true);
+            if(mainLayout != null)
+                mainLayout.setClickable(true);
             return mainLayout;
         } else {
             return super.onCreateView(inflater, container, savedInstanceState);

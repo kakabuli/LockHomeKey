@@ -487,21 +487,26 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     case HomeShowBean.TYPE_GATEWAY_LOCK:
                         GwLockInfo lockInfo = (GwLockInfo) deviceDetailBean.getObject();
                         GatewayInfo gw = MyApplication.getInstance().getGatewayById(lockInfo.getGwID());
-                        String gatewayModel = gw.getServerInfo().getModel();   // 6032 网关
-                        if (gw.getServerInfo().getIsAdmin() == 1) {
-                            //网关锁
-                            Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
-                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
-                            startActivity(gatewayLockintent);
-                        } else {
-                            //授权锁
-                            //网关锁
-                            Intent gatewayLockintent = new Intent(getActivity(), GatewayLockAuthorizeFunctionActivity.class);
-                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
-                            gatewayLockintent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
-                            startActivity(gatewayLockintent);
+                        try{
+                            String gatewayModel = gw.getServerInfo().getModel();   // 6032 网关
+                            if (gw.getServerInfo().getIsAdmin() == 1) {
+                                //网关锁
+                                Intent gatewayLockintent = new Intent(getActivity(), GatewayLockFunctionActivity.class);
+                                gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                                gatewayLockintent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
+                                startActivity(gatewayLockintent);
+                            } else {
+                                //授权锁
+                                //网关锁
+                                Intent gatewayLockintent = new Intent(getActivity(), GatewayLockAuthorizeFunctionActivity.class);
+                                gatewayLockintent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, deviceDetailBean);
+                                gatewayLockintent.putExtra(KeyConstants.GATEWAY_MODEL,gatewayModel);
+                                startActivity(gatewayLockintent);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
+
 
                         break;
                     case HomeShowBean.TYPE_GATEWAY:

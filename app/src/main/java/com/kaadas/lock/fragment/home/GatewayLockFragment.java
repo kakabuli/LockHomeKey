@@ -2,6 +2,7 @@ package com.kaadas.lock.fragment.home;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -356,7 +357,8 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 //                tvInner.setText();
 //                tvInner.setTextColor();
                 tvExternal.setVisibility(View.VISIBLE);
-                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+//                tvExternal.setTextColor(getResources().getColor(R.color.cC6F5FF));
+                tvExternal.setTextColor(Color.parseColor("#C6F5FF"));
                 tvExternal.setText(getString(R.string.open_lock_success));
                 break;
             case 8:
@@ -573,9 +575,13 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
         LogUtils.e("请求到的数据是"+devId);
         if (gatewayId!=null&&deviceId!=null) {
             if (deviceId.equals(devId)) {
-                if (mOpenLockRecordList.size() > 0) {
-                    changePage(true);
-                } else {
+                if(mOpenLockRecordList != null){
+                    if (mOpenLockRecordList.size() > 0) {
+                        changePage(true);
+                    } else {
+                        changePage(false);
+                    }
+                }else{
                     changePage(false);
                 }
                 groupData(mOpenLockRecordList);

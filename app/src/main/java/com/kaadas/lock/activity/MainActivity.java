@@ -123,6 +123,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     public boolean isSelectHome = true;
     private NetWorkChangReceiver netWorkChangReceiver;
+    private WifiReceiver mReceiver = null;
     private boolean isRegistered = false;
     UpgradePresenter upgradePresenter = null;
     public static boolean isRunning = false;
@@ -238,9 +239,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 Log.e(GeTui.VideoLog, "update.....fail.......失败");
             }
         });
-        IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
-        registerReceiver(mReceiver, filter);
+        registerWifiReceiver();
 
 //        RadioButton rb_shop = findViewById(R.id.rb_shop);
 //        rb_shop.setVisibility(View.GONE);
@@ -334,7 +333,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         return new MainActivityPresenter<>(this);
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private class WifiReceiver extends BroadcastReceiver{
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -352,7 +352,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                     break;
             }
         }
-    };
+    }
 
     private void onWifiChanged(WifiInfo info) {
         boolean disconnected = info == null
@@ -1024,6 +1024,19 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 unregisterReceiver(netWorkChangReceiver);
             }
         }
+        unResisterWifiReceiver();
+    }
+
+    private void registerWifiReceiver(){
+        if(mReceiver == null){
+            mReceiver = new WifiReceiver();
+        }
+        IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+        registerReceiver(mReceiver, filter);
+    }
+
+    private void unResisterWifiReceiver(){
         if (mReceiver!=null){
             unregisterReceiver(mReceiver);
 
