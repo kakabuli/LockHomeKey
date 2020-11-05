@@ -107,6 +107,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     TextView tvCenterMode;
 
     private WifiLockInfo wifiLockInfo;
+    private String wifiSN = "";
     private boolean isOpening = false;
     private List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
     private WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
@@ -118,14 +119,15 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         View view = inflater.inflate(R.layout.fragment_wifi_video_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-        wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO);
+//        wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO);
+        wifiSN = (String) getArguments().getSerializable(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
         if (wifiLockInfo!=null){
-            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
-            mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-            mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
+            mPresenter.getOpenCount(wifiSN);
+            mPresenter.getOperationRecord(wifiSN, false);
 
-            mPresenter.getWifiVideoLockGetDoorbellList(1,wifiLockInfo.getWifiSN());
-            mPresenter.getWifiVideoLockGetAlarmList(1,wifiLockInfo.getWifiSN());
+            mPresenter.getWifiVideoLockGetDoorbellList(1,wifiSN);
+            mPresenter.getWifiVideoLockGetAlarmList(1,wifiSN);
             initData();
         }
 

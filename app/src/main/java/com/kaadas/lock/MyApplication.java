@@ -97,6 +97,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.subjects.PublishSubject;
 
 
@@ -170,7 +171,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         LogUtils.e("attachView  App启动完成 ");
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
-
+        setRxJavaErrorHandler();
     }
 
     private void initXMP2PManager() {
@@ -609,6 +610,9 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     public WifiLockInfo getWifiLockInfoBySn(String sn) {
+        if(sn.isEmpty()){
+            return null;
+        }
         if (homeShowDevices != null) {
             for (int i = homeShowDevices.size() - 1; i >= 0; i--) {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
@@ -989,6 +993,15 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                     }
                 });
         ALog.e(config.toString());
+    }
+
+    private void setRxJavaErrorHandler() {
+        RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                ALog.e("Rxjava throwable-->" + throwable);
+            }
+        });
     }
 
 

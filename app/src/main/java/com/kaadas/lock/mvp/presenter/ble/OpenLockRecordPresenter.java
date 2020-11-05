@@ -106,6 +106,16 @@ public class OpenLockRecordPresenter<T> extends BlePresenter<IOpenLockRecordView
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             serverRecords.clear();
         }
+        if(bleService.getBleLockInfo().getServerLockInfo() == null){
+            if (isSafe()) {
+                if (pagenum == 1) { //第一次获取数据就没有
+                    mViewRef.get().onServerNoData();
+                } else {
+                    mViewRef.get().noMoreData();
+                }
+                return;
+            }
+        }
         XiaokaiNewServiceImp.getLockRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
                 MyApplication.getInstance().getUid(),
                 null,

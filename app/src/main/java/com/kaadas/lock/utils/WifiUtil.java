@@ -32,6 +32,9 @@ public class WifiUtil {
         printCurWifiInfo();
 
         List wifiList = mWifiManager.getConfiguredNetworks();
+        if(wifiList.size() < 0){
+            return false;
+        }
         boolean bFindInList = false;
         for (int i = 0; i < wifiList.size(); ++i) {
             WifiConfiguration wifiInfo0 = (WifiConfiguration) wifiList.get(i);

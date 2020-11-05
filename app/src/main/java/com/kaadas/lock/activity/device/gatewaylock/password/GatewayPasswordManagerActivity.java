@@ -124,31 +124,39 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
     @Override
     protected void onResume() {
         super.onResume();
-        //从数据库获取数据
-        List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = daoManager.queryAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
-        mList.clear();
+        try{
+            if(!deviceId.isEmpty() && !gatewayId.isEmpty()){
 
-        List<GatewayPasswordPlanBean> temp =new ArrayList<>();
-        temp.addAll(gatewayPasswordPlanBeans);
+                //从数据库获取数据
+                List<GatewayPasswordPlanBean> gatewayPasswordPlanBeans = daoManager.queryAll(deviceId, MyApplication.getInstance().getUid(), gatewayId);
+                mList.clear();
 
-        for (int i=0;i<temp.size();i++){
-            if(temp.get(i).getPasswordNumber()==9){
-                GatewayPasswordPlanBean gatewayPasswordPlanBean= temp.get(i);
-               gatewayPasswordPlanBeans.remove(gatewayPasswordPlanBean);
+                List<GatewayPasswordPlanBean> temp =new ArrayList<>();
+                temp.addAll(gatewayPasswordPlanBeans);
+
+                for (int i=0;i<temp.size();i++){
+                    if(temp.get(i).getPasswordNumber()==9){
+                        GatewayPasswordPlanBean gatewayPasswordPlanBean= temp.get(i);
+                        gatewayPasswordPlanBeans.remove(gatewayPasswordPlanBean);
+                    }
+                }
+
+
+                mList.addAll(gatewayPasswordPlanBeans);
+                if (gatewayPasswordPlanBeans.size() > 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        mList.sort(Comparator.naturalOrder());
+                    }
+                    gatewayLockPasswordAdapter.notifyDataSetChanged();
+                    passwordPageChange(true);
+                } else {
+                    passwordPageChange(false);
+                }
             }
+        }catch (Exception e){
+
         }
 
-
-        mList.addAll(gatewayPasswordPlanBeans);
-        if (gatewayPasswordPlanBeans.size() > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mList.sort(Comparator.naturalOrder());
-            }
-            gatewayLockPasswordAdapter.notifyDataSetChanged();
-            passwordPageChange(true);
-        } else {
-            passwordPageChange(false);
-        }
     }
 
     @Override
@@ -244,8 +252,8 @@ public class GatewayPasswordManagerActivity extends BaseActivity<IGatewayLockPas
 
     public void initData() {
         Intent intent = getIntent();
-        gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID);
-        deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID);
+        gatewayId = intent.getStringExtra(KeyConstants.GATEWAY_ID) + "";
+        deviceId = intent.getStringExtra(KeyConstants.DEVICE_ID) + "";
         lockInfo = (GwLockInfo) intent.getSerializableExtra(KeyConstants.GATEWAY_LOCK_INFO);
         userId = MyApplication.getInstance().getUid();
         gatewayModel =getIntent().getStringExtra(KeyConstants.GATEWAY_MODEL);

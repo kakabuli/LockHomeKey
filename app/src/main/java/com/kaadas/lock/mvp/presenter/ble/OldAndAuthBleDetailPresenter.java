@@ -59,7 +59,12 @@ public class OldAndAuthBleDetailPresenter<T> extends BlePresenter<IOldBleDetailV
     }
 
     public int getBleVersion() {
-        return bleService.getBleVersion();
+        if(bleService != null){
+
+            return bleService.getBleVersion();
+        }else{
+            return 0;
+        }
     }
 
     public void getPower() {

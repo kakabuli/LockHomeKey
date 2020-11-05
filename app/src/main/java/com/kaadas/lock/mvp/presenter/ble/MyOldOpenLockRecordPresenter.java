@@ -225,13 +225,17 @@ public class MyOldOpenLockRecordPresenter<T> extends BlePresenter<IOldBleLockVie
             endIndex = ((currentPage + 1) * 20);
         }
 
+
+
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
         }
 
+        if(bleService.getBleLockInfo().getAuthKey() != null){
+            command = BleCommandFactory.getLockRecordCommand((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
+            bleService.sendCommand(command);
+        }
 
-        command = BleCommandFactory.getLockRecordCommand((byte) startIndex, (byte) endIndex, bleService.getBleLockInfo().getAuthKey());
-        bleService.sendCommand(command);
 
         disposable = bleService.listeneDataChange()
                 .filter(new Predicate<BleDataBean>() {

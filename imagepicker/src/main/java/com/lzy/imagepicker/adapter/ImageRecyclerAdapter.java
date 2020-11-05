@@ -178,8 +178,15 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             } else {
                 cbCheck.setVisibility(View.GONE);
             }
-            Log.d("davi "," mActivity "+mActivity+" imageItem.path "+imageItem.path+" ivThumb "+ivThumb+" mImageSize "+mImageSize);
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
+            try {
+                if(imagePicker.getImageLoader() != null){
+
+                    Log.d("davi "," mActivity "+mActivity+" imageItem.path "+imageItem.path+" ivThumb "+ivThumb+" mImageSize "+mImageSize);
+                    imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
+                }
+            }catch (Exception e){
+
+            }
         }
 
     }

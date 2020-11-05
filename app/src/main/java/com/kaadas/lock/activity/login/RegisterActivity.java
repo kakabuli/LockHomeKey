@@ -106,7 +106,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 break;
             case R.id.btn_register:
                 if(!userProtocolSlected){
-                    ToastUtil.getInstance().showShort("请勾选用户协议");
+                    ToastUtil.getInstance().showShort("请先同意用户协议");
                     return;
                 }
                 register();

@@ -145,6 +145,19 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                 }.getType());
                 LogUtils.e("本地的分享用户为  shareUsers  " + (shareUsers == null ? 0 : shareUsers.size()));
             }
+            if(supportFunctions == null){
+                String functionSet = wifiLockInfo.getFunctionSet(); //锁功能集
+                int func = 0x64;
+                try {
+                    if(!functionSet.isEmpty()){
+
+                        func = Integer.parseInt(functionSet);
+                    }
+                } catch (Exception e) {
+                    func = 0x64;
+                }
+                supportFunctions = BleLockUtils.getWifiLockSupportFunction(func);
+            }
             initPassword();
             mPresenter.getPasswordList(wifiSn);
             mPresenter.queryUserList(wifiSn);

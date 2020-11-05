@@ -205,6 +205,7 @@ public class WifiLockVideoCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
             XMP2PManager.getInstance().setSurfaceView(surfaceView);
             XMP2PManager.getInstance().play();
+            XMP2PManager.getInstance().setAECM(true);
             XMP2PManager.getInstance().startVideoStream();
 
 

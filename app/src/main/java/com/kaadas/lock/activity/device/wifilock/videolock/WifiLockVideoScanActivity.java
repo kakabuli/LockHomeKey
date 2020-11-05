@@ -157,9 +157,6 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
 
                     }
                 });
-//        WifiUtil.getIns().init(getApplicationContext());
-//        LogUtils.e("开始搜索Kaadas_Ap热点");
-//        WifiUtil.getIns().changeToWifi("kaadas_AP", "88888888");
     }
 
 
@@ -229,9 +226,6 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
 //                onScanSuccess();
                 handler.removeCallbacks(timeoutRunnable);
                 finish();
-            }
-            else {
-//                WifiUtil.getIns().changeToWifi("kaadas_AP", "88888888");
             }
         }
     }

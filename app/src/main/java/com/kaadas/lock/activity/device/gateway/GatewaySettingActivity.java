@@ -234,38 +234,40 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
     }
 
     private void setGatewayBaseInfo(GatewayBaseInfo gatewayBaseInfo) {
-        if (TextUtils.isEmpty(gatewayNickName)){
-            gatewaySettingItemBeans.get(0).setContent(gatewayBaseInfo.getGatewayName());
-        }else{
-            //网关名称
-            gatewaySettingItemBeans.get(0).setContent(gatewayNickName);
-        }
-        //网关
-        gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getGatewayId());
-        //固件版本号
-        gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSW());
-        if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){
+        if (gatewaySettingItemBeans!=null&&gatewaySettingItemBeans.size()>0){
 
-        }else {
-            //局域网ip
-            gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getLanIp());
-            //广域网ip
-            gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getWanIp());
-            //局域网子网掩码
-            gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getLanNetmask());
-            //广域网子网掩码
-            gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanNetmask());
-            //网关广域网接入方式
-            gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getWanType());
-            gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getSsid());
-            gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getPwd());
-            gatewaySettingItemBeans.get(10).setContent(gatewayBaseInfo.getChannel());
-        }
+            if (TextUtils.isEmpty(gatewayNickName)){
+                gatewaySettingItemBeans.get(0).setContent(gatewayBaseInfo.getGatewayName());
+            }else{
+                //网关名称
+                gatewaySettingItemBeans.get(0).setContent(gatewayNickName);
+            }
+            //网关
+            gatewaySettingItemBeans.get(1).setContent(gatewayBaseInfo.getGatewayId());
+            //固件版本号
+            gatewaySettingItemBeans.get(2).setContent(gatewayBaseInfo.getSW());
+            if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){
 
-        if (gatewaySettingAdapter!=null){
-            gatewaySettingAdapter.notifyDataSetChanged();
-        }
+            }else {
+                //局域网ip
+                gatewaySettingItemBeans.get(5).setContent(gatewayBaseInfo.getLanIp());
+                //广域网ip
+                gatewaySettingItemBeans.get(6).setContent(gatewayBaseInfo.getWanIp());
+                //局域网子网掩码
+                gatewaySettingItemBeans.get(7).setContent(gatewayBaseInfo.getLanNetmask());
+                //广域网子网掩码
+                gatewaySettingItemBeans.get(8).setContent(gatewayBaseInfo.getWanNetmask());
+                //网关广域网接入方式
+                gatewaySettingItemBeans.get(9).setContent(gatewayBaseInfo.getWanType());
+                gatewaySettingItemBeans.get(3).setContent(gatewayBaseInfo.getSsid());
+                gatewaySettingItemBeans.get(4).setContent(gatewayBaseInfo.getPwd());
+                gatewaySettingItemBeans.get(10).setContent(gatewayBaseInfo.getChannel());
+            }
 
+            if (gatewaySettingAdapter!=null){
+                gatewaySettingAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
 

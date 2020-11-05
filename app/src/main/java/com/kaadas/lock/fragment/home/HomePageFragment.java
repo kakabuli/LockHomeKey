@@ -297,7 +297,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     WifiLockFragment wifiLockFragment = new WifiLockFragment();
                     Bundle wifiBundle = new Bundle();
                     WifiLockInfo wifiLockInfo = (WifiLockInfo) devices.get(i).getObject();
-                    wifiBundle.putSerializable(KeyConstants.WIFI_LOCK_INFO, wifiLockInfo);
+//                    wifiBundle.putSerializable(KeyConstants.WIFI_LOCK_INFO, wifiLockInfo);
+                    wifiBundle.putString(KeyConstants.WIFI_SN,wifiLockInfo.getWifiSN());
                     wifiLockFragment.setArguments(wifiBundle);
                     fragments.add(wifiLockFragment);
                     break;
@@ -306,7 +307,8 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     WifiVideoLockFragment wifiVideoLockFragment = new WifiVideoLockFragment();
                     Bundle wifiVideoBundle = new Bundle();
                     WifiLockInfo wifiVideoLockInfo = (WifiLockInfo) devices.get(i).getObject();
-                    wifiVideoBundle.putSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO, wifiVideoLockInfo);
+//                    wifiVideoBundle.putSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO, wifiVideoLockInfo);
+                    wifiVideoBundle.putString(KeyConstants.WIFI_SN,wifiVideoLockInfo.getWifiSN());
                     wifiVideoLockFragment.setArguments(wifiVideoBundle);
                     fragments.add(wifiVideoLockFragment);
                     break;

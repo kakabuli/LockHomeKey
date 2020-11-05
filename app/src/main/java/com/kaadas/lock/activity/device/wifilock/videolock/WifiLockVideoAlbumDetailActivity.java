@@ -125,10 +125,8 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.e("WifiLockVideoAlbumDetailActivity onCreate");
         setContentView(R.layout.activity_wifi_lock_video_album_detail);
         ButterKnife.bind(this);
-
         filepath = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
         String name = getIntent().getStringExtra("NAME");
 
@@ -140,11 +138,9 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                LogUtils.d("davi surface "+"销毁了");
             }
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                LogUtils.d("davi holder "+holder);
                 mediaPlayer.setSurfaceHolder(holder);
             }
             @Override
@@ -212,7 +208,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             return;
         }
         mediaPlayer.setMediaPlayerFromUri(filepath);
-        LogUtils.d("davi 走到这 "+Thread.currentThread().getName());
         statusHelper.setMediaStatus(MediaStatus.START);
         mediaPlayer.prepare();
         initEvent();
@@ -288,7 +283,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                     updateStartValueView(progress);
                 } else if (progress >= seekBar.getMax()) {
                     reset();
-                    //     LogUtil.i("play finish reset");
                 }
             }
             @Override
@@ -303,8 +297,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onResume() {
         super.onResume();
-//        mPresenter.attachView(this);
-
         registerBroadcast();
     }
 
@@ -317,8 +309,6 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onStop() {
         super.onStop();
-
-//        mPresenter.detachView();
     }
 
     @Override
@@ -330,8 +320,8 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         }
 
         unRegisterBroadcast();
-
     }
+
 
     @Override
     public void finish() {
@@ -508,19 +498,13 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     public void onStopRecordMP4CallBack(MP4Info mp4Info, String name) {
         if(mp4Info.isResult()){
             filepath = mp4Info.getFilePath();
-//                    isRecordSuccess = true;
-            /*ivPlayStart.setVisibility(View.VISIBLE);
-            llyBootomBar.setVisibility(View.VISIBLE);
-            surfaceView.setVisibility(View.VISIBLE);
-            surfaceView1.setVisibility(View.GONE);
-            playOperation();*/
+
             if(WifiLockVideoAlbumDetailActivity.this.isFinishing() && !isRecordSuccess){
                 try {
                     if(!mp4Info.getFilePath().isEmpty()){
 
                         File file = new File(mp4Info.getFilePath());
                         if(file.exists()){
-                            LogUtils.e("shulan -----onStopRecordMP4CallBack++++++" + mp4Info.isResult() + "file.delete");
                             file.delete();
                         }
                     }
@@ -529,12 +513,11 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 }
             }
         }else {
-//                    isRecordSuccess = false;
+
             try {
                 if(!mp4Info.getFilePath().isEmpty()){
                     File file = new File(mp4Info.getFilePath());
                     if(file.exists()){
-                        LogUtils.e("shulan -----onStopRecordMP4CallBack++++++" + mp4Info.isResult()+ "file.delete");
                         file.delete();
                     }
                 }

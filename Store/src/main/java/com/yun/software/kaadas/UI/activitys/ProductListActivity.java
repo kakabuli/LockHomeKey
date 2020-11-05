@@ -73,7 +73,9 @@ public class ProductListActivity extends BaseActivity {
     @Override
     protected void initViewsAndEvents() {
         HomeCategoriesBean bean = getIntent().getParcelableExtra("bean");
-        tvTitle.setText(bean.getName());
+        if(bean.getName() != null){
+            tvTitle.setText(bean.getName());
+        }
         getData(bean);
 
 

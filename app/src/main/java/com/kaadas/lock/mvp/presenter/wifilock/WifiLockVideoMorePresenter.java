@@ -349,73 +349,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
         });
     }
 
-
-
-
-    XMP2PManager.ConnectStatusListener listener1 = new XMP2PManager.ConnectStatusListener() {
-        @Override
-        public void onConnectFailed(int paramInt) {
-            XMP2PManager.getInstance().stopCodec();//
-
-            if(isSafe()){
-                mViewRef.get().onConnectFailed(paramInt);
-            }
-
-        }
-
-        @Override
-        public void onConnectSuccess() {
-
-            if(isSafe()){
-                mViewRef.get().onConnectSuccess();
-            }
-
-        }
-
-        @Override
-        public void onStartConnect(String paramString) {
-
-            if(isSafe()){
-                mViewRef.get().onStartConnect(paramString);
-            }
-
-        }
-
-        @Override
-        public void onErrorMessage(String message) {
-
-//            stopConnect();
-            if(isSafe()){
-                mViewRef.get().onErrorMessage(message);
-            }
-
-        }
-
-        @Override
-        public void onNotifyGateWayNewVersion(String paramString) {
-
-        }
-
-        @Override
-        public void onRebootDevice(String paramString) {
-
-        }
-    };
-
-
-    public int connectP2P(){
-
-        DeviceInfo deviceInfo=new DeviceInfo();
-        deviceInfo.setDeviceDid(did);
-        deviceInfo.setP2pPassword(p2pPassword);
-        deviceInfo.setDeviceSn(sn);
-        deviceInfo.setServiceString(serviceString);
-        XMP2PManager.getInstance().setOnConnectStatusListener(listener1);
-        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
-
-        return param;
-    }
-
     public void release(){
         XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
@@ -436,25 +369,6 @@ public class WifiLockVideoMorePresenter<T> extends BasePresenter<IWifiVideoLockM
 
     public void setMqttCtrl(int ctrl){
         XMP2PManager.getInstance().mqttCtrl(ctrl);
-        XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
-            @Override
-            public void onMqttCtrl(JSONObject jsonObject) {
-                if(isSafe()){
-
-                    try {
-                        if (jsonObject.getString("result").equals("ok")){
-                            mViewRef.get().onMqttCtrl(true);
-                        }else{
-                            mViewRef.get().onMqttCtrl(false);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }finally {
-                        mViewRef.get().onMqttCtrl(false);
-                    }
-                }
-            }
-        });
     }
 
     public void setSafeMode(String wifiSN,int safeMode){

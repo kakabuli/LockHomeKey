@@ -84,6 +84,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     TextView tvOpenLockTimes;
 
     private WifiLockInfo wifiLockInfo;
+    private String wifiSN = "";
     private boolean isOpening = false;
     private List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
     private WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
@@ -95,11 +96,11 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         View view = inflater.inflate(R.layout.fragment_wifi_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-        wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_LOCK_INFO);
+        wifiSN = (String) getArguments().getSerializable(KeyConstants.WIFI_SN);
+        wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
         if (wifiLockInfo!=null){
-            wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
-            mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
-            mPresenter.getOperationRecord(wifiLockInfo.getWifiSN(), false);
+            mPresenter.getOpenCount(wifiSN);
+            mPresenter.getOperationRecord(wifiSN, false);
             initData();
         }
 

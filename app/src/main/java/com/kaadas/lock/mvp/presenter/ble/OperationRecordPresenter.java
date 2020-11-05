@@ -120,6 +120,9 @@ public class OperationRecordPresenter<T> extends BlePresenter<IOperationRecordVi
         if (pagenum == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
             operationServerRecords.clear();
         }
+        if(bleService.getBleLockInfo() == null){
+            return;
+        }
         XiaokaiNewServiceImp.getOperationRecord(bleService.getBleLockInfo().getServerLockInfo().getLockName(),
                 pagenum)
                 .subscribe(new BaseObserver<OperationRecordResult>() {

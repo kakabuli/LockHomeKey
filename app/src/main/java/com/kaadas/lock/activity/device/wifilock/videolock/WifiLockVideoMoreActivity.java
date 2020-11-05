@@ -770,64 +770,6 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         }
     }
 
-    public void creteDialog(String content){
-        if(dialog == null){
-            dialog = new Dialog(this, R.style.MyDialog);
-        }
-        // 获取Dialog布局
-        View mView = LayoutInflater.from(this).inflate(R.layout.no_et_title_two_button_dialog, null);
-   /*     tvTitle = mView.findViewById(R.id.tv_hint);
-        tvTitle.setVisibility(View.GONE);*/
-        TextView tvContent = mView.findViewById(R.id.tv_content);
-        tvContent.setText(content + "");
-        TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("关闭");
-        tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
-        TextView tv_query = mView.findViewById(R.id.tv_right);
-        tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("重新连接");
-        dialog.setContentView(mView);
-
-        Window window = dialog.getWindow();
-        window.setGravity(Gravity.CENTER);
-
-        WindowManager.LayoutParams params = window.getAttributes();
-        WindowManager windowManager = (WindowManager) this
-                .getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        int width = display.getWidth();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-        params.width = (int) (width * 0.8);
-        window.setAttributes(params);
-
-        tv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        tv_query.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTips.setVisibility(View.VISIBLE);
-                avi.setVisibility(View.VISIBLE);
-                avi.show();
-                dialog.dismiss();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPresenter.connectP2P();
-                    }
-                }).start();
-            }
-        });
-        if(!WifiLockVideoMoreActivity.this.isFinishing()){
-            dialog.show();
-        }
-
-    }
-
-
     @Override
     public void noNeedUpdate() {
 
@@ -870,60 +812,9 @@ public class WifiLockVideoMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     }
 
     @Override
-    public void onConnectFailed(int paramInt) {
-        mPresenter.setMqttCtrl(0);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(!WifiLockVideoMoreActivity.this.isFinishing()){
-                    if(avi != null){
-                        avi.hide();
-                        tvTips.setVisibility(View.GONE);
-                    }
-                    if(paramInt == -3){
-                        creteDialog(getString(R.string.video_lock_xm_connect_time_out_1) + "");
-                    }else{
-                        creteDialog(getString(R.string.video_lock_xm_connect_failed_1) + "");
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onConnectSuccess() {
-        mPresenter.setMqttCtrl(1);
-    }
-
-    @Override
-    public void onStartConnect(String paramString) {
-
-    }
-
-    @Override
-    public void onErrorMessage(String message) {
-
-    }
-
-    @Override
-    public void onMqttCtrl(boolean flag) {
-        if(!WifiLockVideoMoreActivity.this.isFinishing()){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tvTips.setVisibility(View.GONE);
-                    if(avi != null)
-                        avi.hide();
-                }
-            });
-
-        }
-    }
-
-    @Override
     public void onSettingCallBack(boolean flag,int code) {
         if(!WifiLockVideoMoreActivity.this.isFinishing()){
+            mPresenter.setMqttCtrl(0);
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {

@@ -64,6 +64,7 @@ public class RetrofitServiceManager {
                 }
             });
             builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+
             addInterceptor(builder, true);
             mRetrofit = new Retrofit.Builder()
                     .client(builder.build())

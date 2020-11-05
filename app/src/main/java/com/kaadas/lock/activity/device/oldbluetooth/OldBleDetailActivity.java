@@ -118,8 +118,11 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
         } else {
             changeBluetoothFunction(17);
         }
-
-        deviceImage.setImageResource( BleLockUtils.getDetailImageByModel(bleLockInfo.getServerLockInfo().getModel()));
+        if(bleLockInfo.getServerLockInfo() != null){
+            deviceImage.setImageResource( BleLockUtils.getDetailImageByModel(bleLockInfo.getServerLockInfo().getModel()));
+        }else{
+            deviceImage.setImageResource(R.mipmap.bluetooth_lock_default);
+        }
     }
 
 

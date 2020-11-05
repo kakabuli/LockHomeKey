@@ -144,114 +144,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     }
 
-    public int startAudioStream(){
-        return XMP2PManager.getInstance().startAudioStream();
-    }
-
-    public void startRealTimeVideo(SurfaceView surfaceView){
-//        if(XMP2PManager.getInstance().isConnected(-1)){
-
-        XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
-        try {
-            XMP2PManager.getInstance().setAudioFrame();
-        }catch (java.lang.NegativeArraySizeException e){
-
-        }
-
-        XMP2PManager.getInstance().setSurfaceView(surfaceView);
-        XMP2PManager.getInstance().play();
-        XMP2PManager.getInstance().startVideoStream();
-
-        XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
-            @Override
-            public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
-
-                if(isSafe()){
-                    mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
-                }
-            }
-        });
-        XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
-            @Override
-            public void onAudioRecordData(AudioFrame audioFrame) {
-
-                //frame为采集封装的数据,通过传输库发送给设备
-                int ret = XMP2PManager.getInstance().sendTalkBackAudioData(audioFrame);
-            }
-
-            @Override
-            public void onVideoFrameUsed(H264Frame h264Frame) {
-
-            }
-
-            @Override
-            public void onAudioFrameUsed(AudioFrame audioFrame) {
-
-            }
-
-            @Override
-            public void onLastFrameRgbData(int[] ints, int height, int width, boolean b) {
-
-
-            }
-
-            @Override
-            public void onCodecNotify(int i, Object o) {
-
-            }
-
-
-        });
-//        }
-    }
-
-
-    public void connectPlayDeviceRecordVideo(WifiVideoLockAlarmRecord record, String path,SurfaceView surfaceView){
-        times = 4;
-        DeviceInfo deviceInfo=new DeviceInfo();
-        deviceInfo.setDeviceDid(did);
-        deviceInfo.setP2pPassword(p2pPassword);
-        deviceInfo.setDeviceSn(sn);
-        deviceInfo.setServiceString(serviceString);
-        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
-            @Override
-            public void onConnectFailed(int paramInt) {
-                /*if(isSafe()){
-                    mViewRef.get().onSuccessRecord(false);
-                }*/
-            }
-
-            @Override
-            public void onConnectSuccess() {
-                playDeviceRecordVideo(record,path);
-            }
-
-            @Override
-            public void onStartConnect(String paramString) {
-
-            }
-
-            @Override
-            public void onErrorMessage(String message) {
-               /* if(isSafe()){
-                    mViewRef.get().onSuccessRecord(false);
-                }*/
-            }
-
-            @Override
-            public void onNotifyGateWayNewVersion(String paramString) {
-
-            }
-
-            @Override
-            public void onRebootDevice(String paramString) {
-
-            }
-        });
-        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
-    }
-
-
     public void playDeviceRecordVideo(WifiVideoLockAlarmRecord record,String path){
         XMP2PManager.getInstance().setRotate(XMP2PManager.SCREEN_ROTATE);
         try {
@@ -303,6 +195,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
 
         XMP2PManager.getInstance().play();
+        XMP2PManager.getInstance().setAECM(false);
         XMP2PManager.getInstance().enableAudio(true);
         XMP2PManager.getInstance().setOnPlayDeviceRecordVideo(new XMP2PManager.PlayDeviceRecordVideo() {
             @Override

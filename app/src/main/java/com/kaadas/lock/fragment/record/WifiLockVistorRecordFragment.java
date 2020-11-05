@@ -73,14 +73,12 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     TextView tvSynchronizedRecord;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
-//    private ProgressDialog progressDialog;//创建ProgressDialog
 
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
     private String wifiSn;
 
-    private boolean isP2PConnect = false;
     private WifiLockInfo wifiLockInfoBySn;
 
     @Nullable
@@ -89,23 +87,12 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         view = View.inflate(getActivity(), R.layout.fragment_bluetooth_open_lock_record, null);
         unbinder = ButterKnife.bind(this, view);
         wifiSn = getArguments().getString(KeyConstants.WIFI_SN);
-        isP2PConnect = getArguments().getBoolean(KeyConstants.WIFI_VIDEO_LOCK_XM_CONNECT);
         wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         rlHead.setVisibility(View.GONE);
 
         initRecycleView();
         initRefresh();
         initData();
-//        createProgress();
-//        mPresenter.settingDevice(wifiLockInfoBySn);
-       /* if(!isP2PConnect){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPresenter.connectP2P();
-                }
-            }).start();
-        }*/
         return view;
     }
 
@@ -157,17 +144,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                             intent.putExtra("record",record);
                             startActivity(intent);
                         }else{
-                            /*getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(progressDialog != null){
-                                        if (!progressDialog.isShowing()){
-                                            progressDialog.show();
-                                        }
-                                    }
-                                }
-                            });*/
-
                             Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
@@ -175,7 +151,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                             intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                             intent.putExtra("record",record);
                             startActivity(intent);
-//                            mPresenter.connectPlayDeviceRecordVideo(record,path);
                         }
 
                     }
@@ -209,8 +184,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         unbinder.unbind();
     }
 
-
-    Handler handler = new Handler();
 
     @Override
     public void onLoadServerRecord(List<WifiVideoLockAlarmRecord> lockRecords, int page) {
@@ -271,8 +244,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     }
 
     private void removeGroupData() {
-     /*   List<WifiVideoLockAlarmRecord> data = new ArrayList<>();
-        data.addAll(records);*/
         for(int i = 0 ; i < records.size();i++){
 //            String id = records.get(i).get_id();
             for(int j = records.size() - 1 ; j > i; j--){
@@ -311,102 +282,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         ToastUtil.getInstance().showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
-    }
-
-    @Override
-    public void onStopRecordMP4CallBack(MP4Info mp4Info,String fileName) {
-        if(mp4Info.isResult()){
-           /* getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(progressDialog!=null){
-
-                        progressDialog.dismiss();
-                    }
-                }
-            });*/
-            getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(mp4Info.getFilePath()))));
-            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
-            intent.putExtra(KeyConstants.VIDEO_PIC_PATH,mp4Info.getFilePath());
-
-            fileName = DateUtils.getStrFromMillisecond2(Long.parseLong(fileName));
-
-            intent.putExtra("NAME",fileName);
-            startActivity(intent);
-
-        }
-    }
-
-    @Override
-    public void onstartRecordMP4CallBack() {
-
-    }
-
-    @Override
-    public void onStartProgress(long time) {
-
-        /*if(time != 0)
-            progressDialog.incrementProgressBy((int) time);*/
-    }
-
-    @Override
-    public void onSuccessRecord(boolean flag) {
-
-       /* mPresenter.release();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(!getActivity().isFinishing() && progressDialog != null){
-                    if(progressDialog!=null){
-                        progressDialog.dismiss();
-
-                    }
-
-                }
-                if(!flag){
-                    ToastUtil.getInstance().showShort("下载失败!");
-                }
-            }
-        });*/
-    }
-
-
-    /*public void createProgress(){
-        if (null == progressDialog) {
-//            synchronized (ProgressDialog.class) {
-//                if (null == progressDialog) {
-                    progressDialog = new ProgressDialog(getActivity());
-//                }
-//            }
-        }
-        progressDialog.setMessage("正在下载...");
-        progressDialog.setCancelable(false);//按空白地方 进度条窗口不会消失
-        progressDialog.setMax(9000);
-        progressDialog.incrementProgressBy(0);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    }*/
-
-
-    @Override
-    public void onConnectFailed(int paramInt) {
-        if(paramInt < 0){
-            isP2PConnect = false;
-        }
-    }
-
-    @Override
-    public void onConnectSuccess() {
-        isP2PConnect = true;
-    }
-
-    @Override
-    public void onStartConnect(String paramString) {
-
-    }
-
-    @Override
-    public void onErrorMessage(String message) {
-
     }
 
     public void powerStatusDialog(){
