@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="WiFi列表无法显示？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="请检查手机是否禁止APP的获取定位权限."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="打开手机设置-应用权限管理，找到凯迪仕智能锁APP，开启定位权限.."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注： Android手机的APP要获取WiFi列表，需要获取定位权限."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="锂电池没电？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="将原配锂电池按标签指示方向插入门锁后面板电池仓，若门锁提示电量低，代表锂电池要更换."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="将锂电池取下然后找一个手机充电器，即可给锂电池充电."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注: 注意充电器的接口与锂电池的接口要一致，都是使用micro USB接口，充电7个小时左右即可满电."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="APP配网失败？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① WiFi是否是2.4G频段\n② 请检查WiFi的密码是否正确\n③ 请检查WiFi路由器是否能上网\n④ 公共场所的WiFi不支持\n⑤ WiFi路由器离门锁太远或者穿越多堵墙？\n⑥ WiFi天线中间连接线是否接好\n⑦ WiFi路由器未设置密码"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 目前不支持WiFi的5G频段和公共场所的WiFi（需要密码的那种），请连接2.4G频段的可正常上网的WiFi；\n② 请将路由器离门锁可视距离不超过20米；\n③ 请检查WiFi密码是否正确，区分空格和特殊字符；\n④ 请在门锁上重新进入管理员模式，按4进入配网状态，然后APP上重新按引导步骤添加即可；\n⑤ 请保证WiFi路由器离门锁可视距离不超过20米；\n⑥ 请将WiFi天线连接线接好；\n⑦ 为保障安全，暂时不支持未设置过密码的WiFi路由器给门锁配网."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注： 注意充电器的接口与锂电池的接口要一致，都是使用micro USB接口，充电7个小时左右即可满电."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="收不到门铃和报警推送？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 请检查手机APP是否开启推送免打扰； \n② 请检查APP推送权限是否开启."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 点击APP里对应门锁的更多按钮，进入设置页面，选择消息推送，进入后关闭消息免打扰； \n② 打开android手机设置-应用权限管理，找到凯迪仕智能锁APP，开启所有推送和相关权限."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注：Android手机由于系统厂商默认会禁止APP的消息推送权限和其他权限，需要用户手动设置开启，请允许APP开机自启动，在后台时别杀"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="图像看不了、不清晰、卡顿？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 先检查镜头玻璃是否干净 \n② 镜头有无水汽 \n③ WiFi信号不稳定 \n④ 是否关闭视频长连接"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 用无尘布将镜头擦拭干净 \n② 若镜头玻璃内部有水汽，需拆机维修 \n③ WiFi信号不稳定会导致图像卡顿或无法出图，请将路由器靠近智能锁，可视距离不超过20米\n④请在APP实时视频页面右上角设置按钮进入，打开视频长连接开关，设置周期为每（00:00-23:59）"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注：联网产品对WiFi信号有要求，请确保手机和家中的WiFi路由器能正常上网."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="无法扫描二维码？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 请检查APP是否提示获取相机权限受限\n② 门锁后面板二维码损坏"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="① 打开手机设置-应用权限管理，找到凯迪仕智能锁APP，开启相机权限\n② 请选择添加视频锁，手动输入型号：K20V"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注：部分Android手机由于系统厂商默认会禁止APP获取相关权限，需要用户手动设置开启."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="徘徊报警不报警？"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/lly_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="请检查APP对应门锁的徘徊报警开关是否开启"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="解决方法："
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_14" />
+
+
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="打开凯迪仕APP，找到对应门锁，点击“更多”按钮，进入设置页面，找到徘徊报警选型，进入后，开启徘徊报警开关."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                    <TextView
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#666666"
+                        android:text="注：为了省电，徘徊报警默认是关闭的，需打开才能有此功能，徘徊报警的PIR的灵敏度分：低中高，分别对应1米、2米、3米的侦测距离，判定时间10-60秒，默认在门外徘徊30秒触发报警."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_12"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

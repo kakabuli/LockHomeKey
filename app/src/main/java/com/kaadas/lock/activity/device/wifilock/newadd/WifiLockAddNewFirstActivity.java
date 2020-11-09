@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFifthActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -74,7 +75,12 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this,WifiLockHelpActivity.class));
+                if(wifiModelType.contains("VIDEO")){
+                    startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
+                }else{
+                    startActivity(new Intent(this,WifiLockHelpActivity.class));
+                }
+
                 break;
             case R.id.button_next:
                 //检查权限，检查是否连接wifi

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -67,6 +68,8 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     WifiVideoLockAlarmIAdapter wifiLockAlarmGroupRecordAdapter;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
+    @BindView(R.id.tv_no_more)
+    TextView tvNoMore;
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
     private Unbinder unbinder;
@@ -188,7 +191,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     @Override
     public void onLoadServerRecord(List<WifiVideoLockAlarmRecord> alarmRecords, int page) {
-
+        tvNoMore.setVisibility(View.GONE);
         if (page == 1) {
             list.clear();
         }
@@ -275,6 +278,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
+        tvNoMore.setVisibility(View.VISIBLE);
         ToastUtil.getInstance().showShort(R.string.server_no_data_2);
     }
 

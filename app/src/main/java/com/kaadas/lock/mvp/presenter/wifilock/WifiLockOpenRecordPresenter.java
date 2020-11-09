@@ -73,4 +73,5 @@ public class WifiLockOpenRecordPresenter<T> extends BasePresenter<IWifiLockOpenR
                 })
         ;
     }
+
 }

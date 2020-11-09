@@ -188,11 +188,8 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
             }
         });
 
-
-
         startRecordMP4(path +  File.separator + record.get_id() + ".mp4",record.getStartTime() + "");
-        int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate(),record.getFileName(),0,0);
-
+        int ret = XMP2PManager.getInstance().playDeviceRecordVideo(record.getFileDate() ,record.getFileName() ,0,0);
 
         XMP2PManager.getInstance().play();
         XMP2PManager.getInstance().setAECM(false);
@@ -217,7 +214,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
                         if(isSafe()){
                             mViewRef.get().onSuccessRecord(true);
                         }
-                    }else if(jsonObject.getString("result").equals("failed")){
+                    }else if(jsonObject.getString("result").equals("fail")){
                         if(isSafe()){
                             mViewRef.get().onSuccessRecord(false);
                         }

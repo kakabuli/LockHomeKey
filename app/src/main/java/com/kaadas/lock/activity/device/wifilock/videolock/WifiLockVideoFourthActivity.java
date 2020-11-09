@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewCheckWifiActivity;
@@ -105,7 +106,7 @@ public class WifiLockVideoFourthActivity extends BaseAddToApplicationActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, WifiLockHelpActivity.class));
+                startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
                 break;
             case R.id.confirm_btn:
 

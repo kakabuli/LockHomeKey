@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -54,7 +55,7 @@ public class WifiLockVideoScanFailedActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, WifiLockHelpActivity.class));
+                startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
                 break;
            /* case R.id.notice:
                 startActivity(new Intent(WifiLockVideoScanFailedActivity.this, WifiLcokSupportWifiActivity.class));

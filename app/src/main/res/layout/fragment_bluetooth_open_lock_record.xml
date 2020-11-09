@@ -51,4 +51,11 @@
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
+    <TextView
+        android:id="@+id/tv_no_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:text="没有数据啦"/>
 </RelativeLayout>

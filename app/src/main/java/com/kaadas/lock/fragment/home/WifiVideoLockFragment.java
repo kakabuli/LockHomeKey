@@ -433,31 +433,16 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 break;
             case R.id.iv_external_big:
                 if(wifiLockInfo.getPowerSave() == 0){
-
                     intent = new Intent(getContext(),WifiLockVideoCallingActivity.class);
 //                    intent = new Intent(getContext(), WifiLockVideoCallingTestActivity.class);
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
                     intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
                     startActivity(intent);
+
                 }else{
                     powerStatusDialog();
                 }
 
-               /* TextView msg = new TextView(getActivity());
-                msg.setText("不可点击");
-                msg.setPadding(100, 80, 100, 80);
-                msg.setGravity(Gravity.CENTER);
-                msg.setTextSize(15);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                builder.setView(msg);
-
-                builder.show();*/
-
-//                mPresenter.getWifiVideoLockGetAlarmList(1,wifiLockInfo.getWifiSN());
-//                mPresenter.getWifiVideoLockGetDoorbellList(1,wifiLockInfo.getWifiSN());
-//                getOpenRecordFromServer(1,wifiLockInfo.getWifiSN());
                 break;
         }
     }

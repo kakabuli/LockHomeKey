@@ -34,6 +34,7 @@ import com.kaadas.lock.activity.device.wifilock.WifiLockPowerSaveActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRealTimeActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockSafeModelActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockWanderingAlarmActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
@@ -259,7 +260,7 @@ public class WifiLockVideoScanActivity extends BaseActivity<IWifiLockVideoFifthV
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, WifiLockHelpActivity.class));
+                startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
                 break;
             case R.id.circle_progress_bar2:
                 break;

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#F8F8F8">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/user_help"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E8E8E8"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"
+        android:background="#ffffff">
+
+        <RelativeLayout
+            android:id="@+id/rl_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="怎么配置视频锁"
+                android:textSize="@dimen/sp_15"
+                android:textColor="#1F96F7"
+                android:layout_centerInParent="true"/>
+            <View
+                android:id="@+id/v_left"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="2dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:background="#1F96F7"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="常见问题"
+                android:textSize="@dimen/sp_15"
+                android:textColor="#333333"
+                android:layout_centerInParent="true"/>
+            <View
+                android:id="@+id/v_right"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="2dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:background="#1F96F7"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

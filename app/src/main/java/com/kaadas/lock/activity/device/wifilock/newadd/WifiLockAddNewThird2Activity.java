@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
 
@@ -64,7 +65,11 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this, WifiLockHelpActivity.class));
+                if(wifiModelType.contains("VIDEO")){
+                    startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
+                }else{
+                    startActivity(new Intent(this,WifiLockHelpActivity.class));
+                }
                 break;
             case R.id.already_modify:
                 if(wifiModelType.contains("VIDEO")){

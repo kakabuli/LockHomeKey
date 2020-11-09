@@ -122,7 +122,18 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 startActivity(bluetoothIntent);
                 break;
             case R.id.face_lock:
+                Intent faceIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                String faveType = "WiFi";
+                faceIntent.putExtra("wifiModelType", faveType);
+                startActivity(faceIntent);
+                break;
             case R.id.video_lock:
+                //视频WIFI锁
+                Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                String wifiModelType = "WiFi&VIDEO";
+                wifiIntent.putExtra("wifiModelType", wifiModelType);
+                startActivity(wifiIntent);
+                break;
             case R.id.wifi_lock:
 //                startActivity(new Intent(this,WifiLockAddNewFirstActivity.class));
                 Intent chooseAddIntent = new Intent(this, WifiLockAddNewToChooseActivity.class);
@@ -219,10 +230,10 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 break;
             case R.id.k20v_lock:
                 //视频WIFI锁
-                Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
-                String wifiModelType = "WiFi&VIDEO";
-                wifiIntent.putExtra("wifiModelType", wifiModelType);
-                startActivity(wifiIntent);
+                Intent k20vIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                String k20vModelType = "WiFi&VIDEO";
+                k20vIntent.putExtra("wifiModelType", k20vModelType);
+                startActivity(k20vIntent);
                 break;
         }
     }

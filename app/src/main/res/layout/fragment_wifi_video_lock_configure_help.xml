@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="配置前确认"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:visibility="gone"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="#666666"
+                    android:text="① 确认门锁已安装； \n② 推开门锁后面板电池盖（后面板上方位置，用力向上推开），安装上随包配送的锂电池； \n③ 请确保锂电池电量充足，请按电池指向确保电池正负安装正确； \n④ 当门锁出现低电量报警时，请及时更换电池； \n⑤ 请确保家里的WiFi网络（仅支持2.4G网络，后缀是_5G的不支持）能正常使用，请将手机连接到该WiFi网络."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="第一步：进行门锁的激活操作"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:lineSpacingExtra="5dp"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="#666666"
+                    android:text="① 微信搜索【凯迪仕智能锁】公众号并关注； \n② 进入公众号-【售后服务】，点击【产品激活】； \n③ 扫描包装盒产品序列号，获得激活码； \n④ 唤醒门锁，输入激活码，按“#”确认."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="第二步：修改初始管理员密码"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_3"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:textColor="#666666"
+                   android:text="① 用手触碰按键区，唤醒门锁，确保门锁数字键盘灯亮； \n② 按键区，输入“*”两次，即“**”； \n③ 输入初始管理员密码“12345678” \n④ 按“#”确认； \n⑤ 语音播报“已进入管理模式，请修改管理密码”； \n⑥ 输入新设定的管理密码，按“#”确认； \n⑦ 再次输入刚才的管理员密码，按“#”完成修改."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="第三步：门锁首次配网"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_4"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:textColor="#666666"
+                    android:text="① 在APP添加设备页面，选择K20-V可视猫眼智能锁或点击右上角扫描图标，扫描； 对应门锁后面板的配网二维码，进行配网； \n② 进入门锁配网准备页面，点击“门锁安装好，去配网”按钮； \n③ 点击“门锁已激活”按钮（未激活请参考门锁的激活操作）； \n④ 根据提示，进入管理模式，按“4”进入配网状态； \n⑤ 输入WiFi密码（确保此WiFi是2.4G频段，暂时不支持5G频段），点击下一步； \n⑥ 将生成的二维码放到门锁前面板的镜头前10-15CM扫描，等听到“扫描成功，配网中” 语音； 后，根据语音提示，点击下一步（若提示配网失败，请重新进入管理模式，按4配网）； \n⑦ WiFi连接成功后，请输入管理员密码，用于开启临时密码功能； \n⑧ 管理员密码验证成功后，可以给门锁起一个名字，完成门锁配网."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="门锁都支持哪些WiFi"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_5"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:textColor="#666666"
+                    android:text="① 门锁目前支持2.4G的WiFi，暂不支持5G频段的WiFi； \n② 如果您的路由器同时打开了2.4G和5G的WiFi，建议两者使用 不同的WiFi名称，以免影响门锁联网效果和视频对讲效果； \n③ 门锁暂不支持同一WiFi名称漫游的公共WiFi环境，比如很多公司、酒店等公共场合的WiFi环境； \n④ 如果需要在上述公共WiFi环境下使用，可以安装一台拥有独立WiFi名称的路由器，并将该路由器接入公共WiFi网络； \n⑤ 如使用连接的家庭WiFi无密码，将不允许配网，请设置密码后再添加门锁."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="检查路由器设置"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_6"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:textColor="#666666"
+                    android:text="① 确认路由器设置的WiFi名称及密码没有使用特殊字符； \n② 确认路由器的WiFi网络安全认证类型是WPA-PSK或者WPA2-PSK； \n③ 确认路由器的WiFi网络是否设置了白名单、黑名单、MAC地址过滤； \n④ 如果您的路由器长时间工作，建议重启路由器后重试."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+            </LinearLayout>
+            <LinearLayout
+                android:paddingHorizontal="@dimen/dp_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:background="@drawable/background_add_white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="@dimen/dp_10"
+                        android:text="以上步骤都正常，仍配网失败"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15" />
+
+                    <ImageView
+                        android:id="@+id/iv_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wifi_video_lock_help_selector"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/dp_27"
+                        />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_7"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="@dimen/dp_12"
+                    android:text="① 尝试关闭手机WiFi再打开后再试； \n② 重新启动手机系统后再试."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

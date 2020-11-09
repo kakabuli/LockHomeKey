@@ -460,7 +460,6 @@ public class WifiLockVideoSafeModePresenter<T> extends BasePresenter<IWifiVideoL
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(setVideoLockSafeMode.getCode() + "")){
                                     if(isSafe()){
-                                        LogUtils.e("shulan setSafeMode-->" + setVideoLockSafeMode.getParams().getSafeMode());
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

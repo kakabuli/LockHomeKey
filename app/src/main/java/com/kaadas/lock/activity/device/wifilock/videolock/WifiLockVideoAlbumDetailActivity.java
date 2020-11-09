@@ -56,6 +56,8 @@ import com.xmitech.sdk.H264Frame;
 import com.xmitech.sdk.MP4Info;
 import com.yun.software.kaadas.Utils.FileTool;
 
+import org.linphone.core.TunnelConfig;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -544,13 +546,21 @@ public class WifiLockVideoAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 
     @Override
     public void onSuccessRecord(boolean b) {
-        mPresenter.release();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ToastUtil.getInstance().showShort("找不到文件");
-            }
-        });
+        if(!b){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.getInstance().showShort("找不到文件");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },500);
+
+                }
+            });
+        }
     }
 
     public void creteDialog(String content){

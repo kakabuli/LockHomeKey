@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockInputAdminPasswordActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
@@ -101,7 +102,12 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.help:
-                startActivity(new Intent(this,WifiLockHelpActivity.class));
+                if(wifiModelType.contains("VIDEO")){
+                    startActivity(new Intent(this, WifiVideoLockHelpActivity.class));
+                }else{
+                    startActivity(new Intent(this,WifiLockHelpActivity.class));
+                }
+
                 break;
             case R.id.already_modify:
                 if(wifiModelType.contains("VIDEO")){

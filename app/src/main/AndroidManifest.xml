@@ -1011,6 +1011,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.WifiVideoLockHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.add.WifiLockHelpActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

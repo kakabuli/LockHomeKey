@@ -58,6 +58,8 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     TextView tvSynchronizedRecord;
     @BindView(R.id.rl_head)
     RelativeLayout rlHead;
+    @BindView(R.id.tv_no_more)
+    TextView tvNoMore;
 
     private int currentPage = 1;   //当前的开锁记录时间
     View view;
@@ -138,7 +140,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     @Override
     public void onLoadServerRecord(List<WifiLockOperationRecord> lockRecords, int page) {
         LogUtils.e("收到服务器数据  " + lockRecords.size());
-
+        tvNoMore.setVisibility(View.GONE);
         if (page == 1) {
             records.clear();
         }
@@ -207,6 +209,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
         ToastUtil.getInstance().showShort(R.string.server_no_data_2);
+        tvNoMore.setVisibility(View.VISIBLE);
     }
 
     @Override

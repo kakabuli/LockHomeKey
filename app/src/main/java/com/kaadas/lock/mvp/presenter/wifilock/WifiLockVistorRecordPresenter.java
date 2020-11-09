@@ -35,12 +35,8 @@ import io.reactivex.disposables.Disposable;
 
 public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVistorRecordView> {
 
-    private List<WifiVideoLockAlarmRecord> wifiVideoLockAlarmRecords = new ArrayList<>();
 
     public void getWifiVideoLockGetAlarmList(int page, String wifiSn) {
-        if (page == 1) {
-            wifiVideoLockAlarmRecords.clear();
-        }
         XiaokaiNewServiceImp.wifiVideoLockGetDoorbellList(wifiSn,page).subscribe(new BaseObserver<GetWifiVideoLockAlarmRecordResult>() {
             @Override
             public void onSuccess(GetWifiVideoLockAlarmRecordResult getWifiVideoLockAlarmRecordResult) {
@@ -50,9 +46,9 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
                         String object = new Gson().toJson(alarmRecords);
                         SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSn, object);
                     }
-                    wifiVideoLockAlarmRecords.addAll(alarmRecords);
+
                     if (isSafe()) {
-                        mViewRef.get().onLoadServerRecord(wifiVideoLockAlarmRecords, page);
+                        mViewRef.get().onLoadServerRecord(alarmRecords, page);
                     }
                 } else {
                     if (page == 1) {
@@ -91,5 +87,14 @@ public class WifiLockVistorRecordPresenter<T> extends BasePresenter<IWifiLockVis
 
     }
 
-
+/*    private void removeGroupData() {
+        for(int i = 0 ; i < wifiVideoLockAlarmRecords.size();i++){
+//            String id = list.get(i).get_id();
+            for(int j = wifiVideoLockAlarmRecords.size() - 1 ; j > i; j--){
+                if(wifiVideoLockAlarmRecords.get(i).get_id() == wifiVideoLockAlarmRecords.get(j).get_id()){
+                    wifiVideoLockAlarmRecords.remove(j);
+                }
+            }
+        }
+    }*/
 }
