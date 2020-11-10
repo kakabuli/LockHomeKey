@@ -254,7 +254,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if(wifiLockInfo == null){
-            wifiLockInfo = searchVideoLock(wifiSn);
+            wifiLockInfo = MyApplication.getInstance().searchVideoLock(wifiSn);
         }
         if (wifiLockInfo != null){
             mPresenter.settingDevice(wifiLockInfo);
@@ -319,23 +319,23 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                         ActivityCompat.requestPermissions( WifiLockVideoCallingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
                         ToastUtil.showShort("请先获取麦克风权限");
                     }else{
+                        if(isFirstAudio){
 
-                        if(mPresenter.isTalkback()){
-                            ivCalling.setSelected(false);
-                            mPresenter.talkback(false);
-                            mPresenter.stopTalkback();
-                            tvCallingTips.setText("对讲");
-                            tvCallingTips.setTextColor(Color.parseColor("#333333"));
-                        }else{
-                            ivCalling.setSelected(true);
-                            mPresenter.talkback(true);
-                            mPresenter.startTalkback();
-                            showShort("已开启对讲");
-                            tvCallingTips.setText("对讲中");
-                            tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
+                            if(mPresenter.isTalkback()){
+                                ivCalling.setSelected(false);
+                                mPresenter.talkback(false);
+                                mPresenter.stopTalkback();
+                                tvCallingTips.setText("对讲");
+                                tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                            }else{
+                                ivCalling.setSelected(true);
+                                mPresenter.talkback(true);
+                                mPresenter.startTalkback();
+                                showShort("已开启对讲");
+                                tvCallingTips.setText("对讲中");
+                                tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
+                            }
                         }
-
-
                     }
                 }
                 return false;
@@ -995,18 +995,5 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             }
         }
 
-    private WifiLockInfo searchVideoLock(String wifiSN){
-        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
-        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
-            List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
-            if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
-                for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
-                    if(wifiLockInfo.getWifiSN().equals(wifiSN)){
-                        return wifiLockInfo;
-                    }
-                }
-            }
-        }
-        return null;
-    }
+
 }

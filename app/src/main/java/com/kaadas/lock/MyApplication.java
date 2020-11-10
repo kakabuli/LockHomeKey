@@ -609,6 +609,21 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 });
     }
 
+    public WifiLockInfo searchVideoLock(String wifiSN){
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
+            List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
+            if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
+                for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
+                    if(wifiLockInfo.getWifiSN().equals(wifiSN)){
+                        return wifiLockInfo;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public WifiLockInfo getWifiLockInfoBySn(String sn) {
         if(sn.isEmpty()){
             return null;
