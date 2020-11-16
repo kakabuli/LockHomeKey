@@ -45,6 +45,7 @@
                 android:hint="@string/input_other_telephone_or_account"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:textColorHint="#999999"
                 android:textSize="@dimen/sp_15" />
 

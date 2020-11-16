@@ -111,6 +111,7 @@
             android:layout_marginRight="@dimen/dp_30"
             android:background="@null"
             android:ellipsize="end"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:gravity="center_vertical"
             android:hint="@string/input_telephone_or_rmail"
             android:maxLines="1"
@@ -148,6 +149,7 @@
             android:layout_marginRight="@dimen/dp_132"
             android:background="@null"
             android:ellipsize="end"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:gravity="center_vertical"
             android:hint="@string/input_verification"
             android:inputType="number"
@@ -201,6 +203,7 @@
             android:layout_marginRight="@dimen/dp_70"
             android:background="@null"
             android:ellipsize="end"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:gravity="center_vertical"
             android:hint="@string/input_password"
             android:inputType="textPassword"
@@ -250,7 +253,7 @@
                 android:gravity="center"
                 android:text="@string/register"
                 android:textColor="#FFFFFF"
-                android:textSize="@dimen/sp_12" />
+                android:textSize="@dimen/sp_15" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

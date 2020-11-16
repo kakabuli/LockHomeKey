@@ -50,6 +50,7 @@
             android:drawablePadding="4dp"
             android:hint="@string/search"
             android:paddingLeft="10dp"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:paddingRight="10dp"
             android:singleLine="true"
             android:textSize="14sp" />

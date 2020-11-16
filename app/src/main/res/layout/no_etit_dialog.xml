@@ -27,6 +27,7 @@
         android:hint="@string/swipch_setting_pluease_input_center_hint"
         android:textColor="@color/dialog_color"
         android:layout_marginLeft="20dp"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:layout_marginRight="20dp"
         android:background="#ffffff"
         android:textSize="@dimen/sp_13"></EditText>

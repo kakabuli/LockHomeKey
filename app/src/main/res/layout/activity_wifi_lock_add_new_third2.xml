@@ -73,7 +73,7 @@
                 android:lineSpacingExtra="@dimen/dp_6"
                 android:text="@string/modify_pwd_notice"
                 android:textColor="#ff333333"
-                android:textSize="15sp" />
+                android:textSize="@dimen/sp_13" />
         </LinearLayout>
 
         <ImageView

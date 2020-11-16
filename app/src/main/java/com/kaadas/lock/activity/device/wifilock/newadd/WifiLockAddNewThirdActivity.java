@@ -47,8 +47,6 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
     TextView notModify;
     @BindView(R.id.not_modify_1)
     TextView notModify1;
-    @BindView(R.id.view_2)
-    View view2;
 
     private String wifiModelType;
 
@@ -83,14 +81,12 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
             ivAnim.setVisibility(View.GONE);
             notModify1.setVisibility(View.VISIBLE);
             notModify.setVisibility(View.GONE);
-            view2.setVisibility(View.VISIBLE);
         }else {
             head.setText(R.string.wifi_lock_add_new_third_notice1);
             ivAnim.setVisibility(View.VISIBLE);
             notice.setText(R.string.dkjsfkjhad);
             notModify1.setVisibility(View.GONE);
             notModify.setVisibility(View.VISIBLE);
-            view2.setVisibility(View.GONE);
         }
     }
 

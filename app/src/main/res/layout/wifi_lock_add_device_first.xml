@@ -131,6 +131,7 @@
                     android:paddingBottom="@dimen/dp_4"
                     android:background="@drawable/edit_text_line_1f967f"
                     android:layout_marginLeft="@dimen/dp_10"
+                    android:textCursorDrawable="@drawable/edittext_cursor"
                     android:textSize="12sp"
                     android:text="@string/how_to_active"
                     android:textColor="#1F96F7"

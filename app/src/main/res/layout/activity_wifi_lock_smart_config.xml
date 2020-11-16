@@ -125,6 +125,7 @@
         android:padding="@dimen/dp_5"
         android:background="@drawable/edit_text_line_1f967f"
         android:layout_marginLeft="@dimen/dp_10"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:textSize="13sp"
         android:text="@string/look_wifi_support"
         android:textColor="#1F96F7"

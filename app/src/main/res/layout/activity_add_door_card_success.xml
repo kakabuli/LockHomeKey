@@ -56,6 +56,7 @@
                 android:hint="@string/input_or_select_name"
                 android:maxLines="1"
                 android:textColor="#999999"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:textSize="@dimen/sp_15" />
 
         </LinearLayout>

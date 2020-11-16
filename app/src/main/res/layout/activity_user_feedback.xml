@@ -66,6 +66,7 @@
             android:layout_marginLeft="@dimen/dp_12"
             android:layout_marginRight="@dimen/dp_12"
             android:background="@null"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:scrollbars="none"
             android:gravity="top"
             android:hint="@string/user_feedback_hint"

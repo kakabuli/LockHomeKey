@@ -72,7 +72,8 @@
             android:layout_marginBottom="@dimen/dp_25"
             android:text="@string/video_notice"
             android:textColor="#606060"
-            android:textSize="13sp" />
+            android:lineSpacingExtra="@dimen/dp_8"
+            android:textSize="@dimen/sp_13" />
 
 
         <RelativeLayout
@@ -103,7 +104,8 @@
                 android:singleLine="true"
                 android:textColor="#000"
                 android:textColorHint="#959595"
-                android:textSize="14sp" />
+                android:textCursorDrawable="@drawable/edittext_cursor"
+                android:textSize="@dimen/sp_14" />
 
 
         </RelativeLayout>
@@ -133,7 +135,8 @@
                 android:singleLine="true"
                 android:textColor="#000"
                 android:textColorHint="#959595"
-                android:textSize="14sp" />
+                android:textCursorDrawable="@drawable/edittext_cursor"
+                android:textSize="@dimen/sp_14" />
 
             <ImageView
                 android:id="@+id/iv_eye"
@@ -153,7 +156,7 @@
             android:layout_height="wrap_content"
             android:text="@string/noly_support_24G"
             android:textColor="#1F96F7"
-            android:textSize="10sp" />
+            android:textSize="@dimen/sp_10" />
         <ScrollView
             android:layout_weight="1"
             android:layout_width="match_parent"

@@ -93,6 +93,7 @@
                 android:singleLine="true"
                 android:inputType="number"
                 android:textColor="#000"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:textColorHint="#959595"
                 android:textSize="13sp" />
         </ScrollView>

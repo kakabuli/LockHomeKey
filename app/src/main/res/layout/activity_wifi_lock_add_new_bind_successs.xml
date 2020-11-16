@@ -81,6 +81,7 @@
                 android:textColor="#ffb1b1b1"
                 android:textSize="@dimen/sp_15"
                 android:background="@null"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:hint="手动输入或从下面已有名称选择"
                 android:ellipsize="end"

@@ -75,6 +75,7 @@
             android:drawableLeft="@mipmap/video_lock_dms_icon_search"
             android:drawablePadding="@dimen/dp_13"
             android:hint="@string/input_lock_product"
+            android:textCursorDrawable="@drawable/edittext_cursor"
             android:paddingLeft="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_13"
             android:layout_marginRight="@dimen/dp_13"

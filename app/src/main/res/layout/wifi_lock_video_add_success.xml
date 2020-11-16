@@ -79,6 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:textColor="#ffb1b1b1"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:textSize="@dimen/sp_15"
                 android:background="@null"
                 android:layout_marginLeft="@dimen/dp_10"

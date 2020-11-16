@@ -75,6 +75,7 @@
                 android:layout_marginLeft="@dimen/dp_30"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="@dimen/dp_25"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:background="@drawable/edit_text_line_ffdcdcdc"
                 android:drawableLeft="@mipmap/add_wifi_lock_pwd"
                 android:drawablePadding="@dimen/dp_6"

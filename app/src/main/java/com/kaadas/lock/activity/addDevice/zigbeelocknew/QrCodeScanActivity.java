@@ -128,14 +128,14 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
                 finish();
                 break;
             case R.id.touch_light_layout:
-                mZBarView.openFlashlight(); // 打开闪光灯
-//                if (!isOpenLight){
-//                    isOpenLight = true;
-//                    mZBarView.openFlashlight(); // 打开闪光灯
-//                }else {
-//                    isOpenLight = true;
-//                    mZBarView.closeFlashlight(); // 打开闪光灯
-//                }
+//                mZBarView.openFlashlight(); // 打开闪光灯
+                if (!isOpenLight){
+                    isOpenLight = true;
+                    mZBarView.openFlashlight(); // 打开闪光灯
+                }else {
+                    isOpenLight = false;
+                    mZBarView.closeFlashlight(); // 打开闪光灯
+                }
                 break;
         }
     }

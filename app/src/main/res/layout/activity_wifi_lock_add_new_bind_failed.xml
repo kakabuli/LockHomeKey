@@ -123,6 +123,7 @@
                 android:editable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textCursorDrawable="@drawable/edittext_cursor"
                 android:text="@string/look_wifi_support_rout"
                 android:textColor="#1F96F7" />
         </LinearLayout>
@@ -150,6 +151,7 @@
         android:id="@+id/et_other_method"
         android:editable="false"
         android:paddingBottom="@dimen/dp_4"
+        android:textCursorDrawable="@drawable/edittext_cursor"
         android:background="@drawable/edit_text_line_1f967f"
         android:layout_marginLeft="@dimen/dp_10"
         android:textSize="13sp"
