@@ -110,13 +110,11 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             }
 
             if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSN) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
-                rlFaceModelFirmwareVersion.setVisibility(View.GONE);
                 rlWifiModelFirmwareVersion.setVisibility(View.GONE);
                 rlLockModelFirmwareVersion.setVisibility(View.GONE);
                 rlCameraVersion.setVisibility(View.VISIBLE);
                 rlLockFirwareNumber.setVisibility(View.VISIBLE);
             }else{
-                rlFaceModelFirmwareVersion.setVisibility(View.VISIBLE);
                 rlWifiModelFirmwareVersion.setVisibility(View.VISIBLE);
                 rlLockModelFirmwareVersion.setVisibility(View.VISIBLE);
                 rlCameraVersion.setVisibility(View.GONE);

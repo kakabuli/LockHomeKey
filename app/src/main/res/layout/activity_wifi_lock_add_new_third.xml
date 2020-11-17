@@ -124,7 +124,7 @@
             android:id="@+id/not_modify_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_line_209afd"
+            android:background="@null"
             android:text="如何修改初始管理密码?"
             android:textColor="#1F96F7"
             android:textSize="@dimen/sp_13"
