@@ -385,13 +385,6 @@ public class BindBlePresenter<T> extends BasePresenter<IBindBleView> {
                                 }
                             }
                         }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            if (isSafe()) {
-                                mViewRef.get().readFunctionSetFailed(throwable);
-                            }
-                        }
                     });
             compositeDisposable.add(functionSetDisposable);
 
