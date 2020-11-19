@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.yun.software.kaadas.UI.activitys.BigImageActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +77,18 @@ public class WifiLockWanderingPIRSensitivityActivity extends BaseActivity<IWifiL
 //        }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent();
+            intent.putExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,pir);
+            intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+            setResult(RESULT_OK,intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+    }
 
     @OnClick({R.id.back,R.id.rl_sensitivity_1,R.id.rl_sensitivity_2,R.id.rl_sensitivity_3})
     public void onClick(View v) {

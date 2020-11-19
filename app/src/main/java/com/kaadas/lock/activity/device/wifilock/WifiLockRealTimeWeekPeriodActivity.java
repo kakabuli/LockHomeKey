@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -117,6 +118,14 @@ public class WifiLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiLockMo
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setWeekPeriod();
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+    }
 
     @OnClick({R.id.back,R.id.rl_iv_week_0,R.id.rl_iv_week_1,R.id.rl_iv_week_2,R.id.rl_iv_week_3,R.id.rl_iv_week_4,R.id.rl_iv_week_5,
     R.id.rl_iv_week_6,R.id.rl_iv_week_7,R.id.iv_week_0})

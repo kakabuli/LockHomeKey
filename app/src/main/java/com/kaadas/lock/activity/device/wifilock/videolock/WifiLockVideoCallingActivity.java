@@ -233,7 +233,6 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
             tvHeadPic.setVisibility(View.GONE);
             tvDoorbell.setVisibility(View.GONE);
             isDoorbelling = false;
-
         }else if(isCalling == 1){
             rlCallingTime.setVisibility(View.VISIBLE);
             rlRealTime.setVisibility(View.GONE);
@@ -390,6 +389,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                     avi.setVisibility(View.VISIBLE);
                     avi.show();
                     tvTips.setVisibility(View.VISIBLE);
+                    isDoorbelling = false;
                 }
                 break;
             case R.id.iv_mute:
@@ -563,6 +563,15 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                         tvTips.setVisibility(View.GONE);
                     isConnect = false;
                     LogUtils.e(this + "");
+                    if(paramInt == -19){//退出再进还是上一个session，返回-19.这是静默重连
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPresenter.connectP2P();
+                            }
+                        }).start();
+                        return;
+                    }
                     if(paramInt == -3){
                         creteDialog(getString(R.string.video_lock_xm_connect_time_out) + "");
                     }else{
@@ -578,7 +587,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void onConnectSuccess() {
-        runOnUiThread(new Runnable() {
+        /*runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(isCalling == 1){
@@ -588,7 +597,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                 }
             }
-        });
+        });*/
         mPresenter.startRealTimeVideo(mSufaceView);
         this.isConnect = true;
 
@@ -623,7 +632,8 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
                 mPresenter.handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ivScreenshotBitmap.setVisibility(View.GONE);
+                        if(ivScreenshotBitmap != null)
+                            ivScreenshotBitmap.setVisibility(View.GONE);
                     }
                 },3000);
 
@@ -681,9 +691,9 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp - 28800000));
+//                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp - 28800000));
                 ivCache.setVisibility(View.GONE);
-                if(isCalling == 0){
+                if(isCalling == 0 || !isDoorbelling){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
                     rlVideoLayout.setVisibility(View.VISIBLE);
@@ -694,7 +704,7 @@ public class WifiLockVideoCallingActivity extends BaseActivity<IWifiLockVideoCal
         });
         //
 
-        if(isCalling == 0){
+        if(isCalling == 0 || !isDoorbelling){
             if(!isFirstAudio){
 
                 if(isShowAudio && mPresenter.startAudioStream() >= 0) {

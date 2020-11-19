@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -68,6 +69,14 @@ public class WifiLockRealTimePeriodActivity extends BaseActivity<IWifiLockMoreVi
         tvVideoTimeSetting.setText(DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime));
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setRealTimePeriod();
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
+    }
 
     @OnClick({R.id.back,R.id.rl_real_time_setting,R.id.rl_real_time_rule_repet})
     public void onClick(View v) {
