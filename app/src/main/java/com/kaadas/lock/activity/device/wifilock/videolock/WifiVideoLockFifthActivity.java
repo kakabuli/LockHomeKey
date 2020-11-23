@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockFifthPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
@@ -147,9 +148,16 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
                     public void right() {
                         finish();
                         //退出当前界面
-                        Intent intent = new Intent(WifiVideoLockFifthActivity.this, WifiLockAddNewFirstActivity.class);
-                        intent.putExtra("wifiModelType",wifiModelType);
-                        startActivity(intent);
+                        if(distributionAgain){
+                            Intent wifiIntent = new Intent(WifiVideoLockFifthActivity.this, WifiLockAddNewThirdActivity.class);
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            wifiIntent.putExtra("distribution_again", true);
+                            startActivity(wifiIntent);
+                        }else {
+                            Intent intent = new Intent(WifiVideoLockFifthActivity.this, WifiLockAddNewFirstActivity.class);
+                            intent.putExtra("wifiModelType",wifiModelType);
+                            startActivity(intent);
+                        }
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
