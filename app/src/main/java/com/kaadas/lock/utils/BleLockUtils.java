@@ -817,6 +817,9 @@ public class BleLockUtils {
             else if (model.contentEquals("K10F")) {
                 return R.mipmap.small_k10_f;
             }
+            else if(model.contentEquals("K10V") || model.contentEquals("K20V")){
+                return R.mipmap.small_k20_v;
+            }
             else {
                 return R.mipmap.default_zigbee_lock_icon;
             }

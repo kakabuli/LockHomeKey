@@ -276,5 +276,10 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
         }
     }
 
-
+    public void setProductList(List<ProductInfo> productInfo){
+        if(productInfo.size() >0){
+            this.productList.clear();
+            this.productList.addAll(productInfo);
+        }
+    }
 }

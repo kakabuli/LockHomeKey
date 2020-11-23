@@ -426,6 +426,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                     mPresenter.refreshData();
                     refreshLayout.finishRefresh(8 * 1000);
                     if (deviceDetailAdapter != null) {
+                        deviceDetailAdapter.setProductList(MyApplication.getInstance().getProductInfos());
                         deviceDetailAdapter.notifyDataSetChanged();
                     }
                 } else {
