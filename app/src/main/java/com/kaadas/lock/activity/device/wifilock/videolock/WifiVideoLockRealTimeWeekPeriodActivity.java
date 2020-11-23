@@ -180,6 +180,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek1.setChecked(true);
                     weekTimp[0] = 1;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_2:
                 if(ivWeek2.isChecked()){
@@ -190,6 +191,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek2.setChecked(true);
                     weekTimp[1] = 2;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_3:
                 if(ivWeek3.isChecked()){
@@ -200,6 +202,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek3.setChecked(true);
                     weekTimp[2] = 3;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_4:
                 if(ivWeek4.isChecked()){
@@ -210,6 +213,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek4.setChecked(true);
                     weekTimp[3] = 4;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_5:
                 if(ivWeek5.isChecked()){
@@ -220,6 +224,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek5.setChecked(true);
                     weekTimp[4] = 5;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_6:
                 if(ivWeek6.isChecked()){
@@ -230,6 +235,7 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek6.setChecked(true);
                     weekTimp[5] = 6;
                 }
+                setEveryDay();
                 break;
             case R.id.rl_iv_week_7:
                 if(ivWeek7.isChecked()){
@@ -240,7 +246,16 @@ public class WifiVideoLockRealTimeWeekPeriodActivity extends BaseActivity<IWifiL
                     ivWeek7.setChecked(true);
                     weekTimp[6] = 7;
                 }
+                setEveryDay();
                 break;
+        }
+    }
+
+    private void setEveryDay(){
+        if(ivWeek1.isChecked() && ivWeek2.isChecked() && ivWeek3.isChecked() && ivWeek4.isChecked() && ivWeek5.isChecked() && ivWeek6.isChecked() && ivWeek7.isChecked()){
+            ivWeek0.setChecked(true);
+        }else{
+            ivWeek0.setChecked(false);
         }
     }
 
