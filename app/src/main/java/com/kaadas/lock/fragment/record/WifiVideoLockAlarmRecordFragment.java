@@ -1,8 +1,6 @@
 package com.kaadas.lock.fragment.record;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,35 +16,24 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
-import com.kaadas.lock.adapter.WifiLockAlarmGroupRecordAdapter;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
 import com.kaadas.lock.adapter.WifiVideoLockAlarmIAdapter;
-import com.kaadas.lock.bean.WifiLockAlarmRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAlarmRecordPresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiVideoLockAlarmRecordPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockAlarmRecordView;
-import com.kaadas.lock.mvp.view.wifilock.IWifiVideoLockAlarmRecordView;
-import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockAlarmRecordPresenter;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockAlarmRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
-import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.xmitech.sdk.MP4Info;
 import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
@@ -121,7 +108,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         String path = FileTool.getVideoCacheFolder(getActivity(),record.getWifiSN()).getPath();
                         String fileName = path +  File.separator + record.get_id() + ".mp4";
                         if (new File(fileName).exists()){
-                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try{
                                 fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
@@ -133,7 +120,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                             intent.putExtra("NAME",fileName);
                             startActivity(intent);
                         }else{
-                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try {
 

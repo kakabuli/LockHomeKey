@@ -1,11 +1,9 @@
 package com.kaadas.lock.adapter;
 
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,13 +14,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoDeviceRecordActivity;
-import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
-import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.RotateTransformation;
 
 import java.util.List;

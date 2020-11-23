@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,14 +11,12 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFifthActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.WiFiLockUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 

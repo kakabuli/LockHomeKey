@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCameraVersionActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoLockFirwareNumberActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCameraVersionActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockFirwareNumberActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
@@ -24,7 +24,6 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -165,12 +164,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 }
                 break;
             case R.id.rl_lock_firware_number:
-                Intent intent = new Intent(this, WifiLockVideoLockFirwareNumberActivity.class);
+                Intent intent = new Intent(this, WifiVideoLockFirwareNumberActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSN);
                 startActivity(intent);
                 break;
             case R.id.rl_camera_version:
-                Intent intent1 = new Intent(this, WifiLockVideoCameraVersionActivity.class);
+                Intent intent1 = new Intent(this, WifiVideoLockCameraVersionActivity.class);
                 intent1.putExtra(KeyConstants.WIFI_SN, wifiSN);
                 startActivity(intent1);
                 break;

@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockFourthActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +73,7 @@ public class WifiLockAddNewThird2Activity extends AppCompatActivity {
                 break;
             case R.id.already_modify:
                 if(wifiModelType.contains("VIDEO")){
-                    Intent wifiVideoIntent = new Intent(this, WifiLockVideoFourthActivity.class);
+                    Intent wifiVideoIntent = new Intent(this, WifiVideoLockFourthActivity.class);
                     wifiVideoIntent.putExtra("wifiModelType", wifiModelType);
                     startActivity(wifiVideoIntent);
                 }else{

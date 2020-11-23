@@ -1,9 +1,5 @@
 package com.kaadas.lock.activity.device.wifilock;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,9 +17,8 @@ import com.kaadas.lock.fragment.record.WifiLockOpenRecordFragment;
 import com.kaadas.lock.fragment.record.WifiLockVistorRecordFragment;
 import com.kaadas.lock.fragment.record.WifiVideoLockAlarmRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoRecordPresenter;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoRecordView;
-import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -31,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordView,
-        WifiLockVideoRecordPresenter<IWifiLockVideoRecordView>> implements IWifiLockVideoRecordView,View.OnClickListener  {
+        WifiVideoLockRecordPresenter<IWifiLockVideoRecordView>> implements IWifiLockVideoRecordView,View.OnClickListener  {
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
@@ -110,8 +105,8 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     }
 
     @Override
-    protected WifiLockVideoRecordPresenter<IWifiLockVideoRecordView> createPresent() {
-        return new WifiLockVideoRecordPresenter<>();
+    protected WifiVideoLockRecordPresenter<IWifiLockVideoRecordView> createPresent() {
+        return new WifiVideoLockRecordPresenter<>();
     }
 
     private void initFragment() {

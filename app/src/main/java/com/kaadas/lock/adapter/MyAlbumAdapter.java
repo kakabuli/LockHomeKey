@@ -5,24 +5,21 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.huawei.android.hms.agent.common.UIUtils;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoPreViewActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockPreViewActivity;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.lzy.imagepicker.util.Utils;
 
 import java.util.List;
 
@@ -78,7 +75,7 @@ public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 LogUtils.e(data.get(position).getPath());
                 if(((List<FileItemBean>)adapter.getData()).get(position).getType() == 1){
-                    Intent intent = new Intent(context, WifiLockVideoPreViewActivity.class);
+                    Intent intent = new Intent(context, WifiVideoLockPreViewActivity.class);
                     intent.putExtra(KeyConstants.VIDEO_PIC_PATH,((List<FileItemBean>)adapter.getData()).get(position).getPath());
                     String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
                     filename = StringUtil.getFileNameNoEx(filename);
@@ -91,7 +88,7 @@ public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
                     intent.putExtra("NAME",filename);
                     context.startActivity(intent);
                 }else if(((List<FileItemBean>)adapter.getData()).get(position).getType() == 2){
-                    Intent intent = new Intent(context, WifiLockVideoAlbumDetailActivity.class);
+                    Intent intent = new Intent(context, WifiVideoLockAlbumDetailActivity.class);
                     String filename = ((List<FileItemBean>)adapter.getData()).get(position).getName();
                     filename = StringUtil.getFileNameNoEx(filename);
                     try{

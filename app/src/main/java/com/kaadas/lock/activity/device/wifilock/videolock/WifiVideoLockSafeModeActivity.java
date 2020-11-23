@@ -5,16 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,24 +16,20 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoMorePresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVideoSafeModePresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiVideoLockMoreView;
-import com.kaadas.lock.mvp.view.wifilock.IWifiVideoLockSafeModeView;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockSafeModePresenter;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockSafeModeView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSafeModeView, WifiLockVideoSafeModePresenter<IWifiVideoLockSafeModeView>>
+public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSafeModeView, WifiVideoLockSafeModePresenter<IWifiVideoLockSafeModeView>>
         implements IWifiVideoLockSafeModeView{
 
 
@@ -87,8 +77,8 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     }
 
     @Override
-    protected WifiLockVideoSafeModePresenter<IWifiVideoLockSafeModeView> createPresent() {
-        return new WifiLockVideoSafeModePresenter<>();
+    protected WifiVideoLockSafeModePresenter<IWifiVideoLockSafeModeView> createPresent() {
+        return new WifiVideoLockSafeModePresenter<>();
     }
 
     @Override

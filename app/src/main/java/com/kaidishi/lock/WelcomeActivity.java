@@ -1,62 +1,46 @@
 package com.kaidishi.lock;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
 import com.kaadas.lock.activity.login.GuidePageActivity;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyFingerPrintActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
-import com.kaadas.lock.bean.HomeShowBean;
-import com.kaadas.lock.bean.UpgradePresenter;
-import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.mvp.presenter.SplashPresenter;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
-import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ServiceUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.mvp.view.ISplashView;
 import com.kaadas.lock.utils.ftp.GeTui;
-import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
-
-import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 
 public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<ISplashView>> implements ISplashView {
@@ -87,7 +71,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
 
         if(TextUtils.equals(func,"doorbell") &&!TextUtils.isEmpty(wifiSN)){
             if((time + 180000) > System.currentTimeMillis()){
-                Intent intent = new Intent(WelcomeActivity.this, WifiLockVideoCallingActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, WifiVideoLockCallingActivity.class);
                 intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
                 intent.putExtra("VIDEO_CALLING_IS_MAINACTIVITY",true);
                 intent.putExtra(KeyConstants.WIFI_SN,wifiSN);

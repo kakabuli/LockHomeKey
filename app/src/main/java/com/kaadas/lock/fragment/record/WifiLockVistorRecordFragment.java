@@ -1,13 +1,9 @@
 package com.kaadas.lock.fragment.record;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,34 +16,25 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumDetailActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoDeviceRecordActivity;
-import com.kaadas.lock.adapter.WifiLockRecordIAdapter;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
 import com.kaadas.lock.adapter.WifiLockVistorIAdapter;
-import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockOpenRecordPresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockVistorRecordPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockOpenRecordView;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockVistorRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVistorRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
-import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.xmitech.sdk.MP4Info;
 import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
@@ -61,7 +48,7 @@ import butterknife.Unbinder;
 /**
  * Created by David on 2019/4/22
  */
-public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRecordView, WifiLockVistorRecordPresenter<IWifiLockVistorRecordView>>
+public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRecordView, WifiVideoLockVistorRecordPresenter<IWifiLockVistorRecordView>>
         implements IWifiLockVistorRecordView {
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
@@ -115,8 +102,8 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
 
 
     @Override
-    protected WifiLockVistorRecordPresenter<IWifiLockVistorRecordView> createPresent() {
-        return new WifiLockVistorRecordPresenter<>();
+    protected WifiVideoLockVistorRecordPresenter<IWifiLockVistorRecordView> createPresent() {
+        return new WifiVideoLockVistorRecordPresenter<>();
     }
 
     private void initRecycleView() {
@@ -136,7 +123,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         String path = FileTool.getVideoCacheFolder(getActivity(),record.getWifiSN()).getPath();
                         String fileName = path +  File.separator + record.get_id() + ".mp4";
                         if (new File(fileName).exists()){
-                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try{
                                 fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
@@ -151,7 +138,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                             intent.putExtra("record",record);
                             startActivity(intent);
                         }else{
-                            Intent intent = new Intent(getActivity(), WifiLockVideoAlbumDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try{
 

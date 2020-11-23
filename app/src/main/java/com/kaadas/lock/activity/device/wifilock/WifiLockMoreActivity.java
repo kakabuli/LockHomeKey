@@ -17,11 +17,11 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockLockRealTimeActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
@@ -39,7 +39,6 @@ import com.kaadas.lock.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import la.xiong.androidquick.tool.DialogUtil;
 
 public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>>
         implements IWifiLockMoreView, View.OnClickListener {
@@ -399,11 +398,11 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         break;
 
                     case R.id.rl_real_time_video:
-                        intent = new Intent(this,WifiLockRealTimeActivity.class);
+                        intent = new Intent(this, WifiVideoLockLockRealTimeActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.rl_wandering_alarm:
-                        intent = new Intent(this,WifiLockWanderingAlarmActivity.class);
+                        intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
                         startActivity(intent);
                         break;
                 }

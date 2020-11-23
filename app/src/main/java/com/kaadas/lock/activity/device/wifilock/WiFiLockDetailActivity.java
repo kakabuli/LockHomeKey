@@ -3,16 +3,13 @@ package com.kaadas.lock.activity.device.wifilock;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,9 +27,9 @@ import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WiFiLockPasswordManagerActivity;
 import com.kaadas.lock.activity.device.wifilock.password.WifiLockPasswordShareActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoAlbumActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoCallingActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoMoreActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockMoreActivity;
 import com.kaadas.lock.adapter.WifiLockDetailAdapater;
 import com.kaadas.lock.adapter.WifiLockDetailOneLineAdapater;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -51,26 +48,18 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.PermissionUtil;
-import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
-import com.lzy.imagepicker.ui.ImageGridActivity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CRC32;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import la.xiong.androidquick.tool.ToastUtil;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
-import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, WifiLockDetailPresenter<IWifiLockDetailView>>
         implements IWifiLockDetailView, View.OnClickListener {
@@ -480,7 +469,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_MORE:
                             if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
-                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockMoreActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                             }else{
@@ -503,7 +492,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
 
                         case BleLockUtils.TYPE_ALBUM:
-                            intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoAlbumActivity.class);
+                            intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockAlbumActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                             startActivity(intent);
                             break;
@@ -515,7 +504,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_VIDEO:
                             if(wifiLockInfo.getPowerSave() == 0){
-                                intent = new Intent(WiFiLockDetailActivity.this,WifiLockVideoCallingActivity.class);
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockCallingActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivity(intent);
@@ -582,7 +571,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             break;
                         case BleLockUtils.TYPE_MORE:
                             if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
-                                intent = new Intent(WiFiLockDetailActivity.this, WifiLockVideoMoreActivity.class);
+                                intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockMoreActivity.class);
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivityForResult(intent, TO_MORE_REQUEST_CODE);
                             }else{

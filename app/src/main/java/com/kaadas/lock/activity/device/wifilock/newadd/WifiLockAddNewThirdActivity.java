@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -16,10 +15,9 @@ import android.widget.TextView;
 import com.espressif.iot.esptouch.util.TouchNetUtil;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.WifiVideoLockHelpActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockFourthActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockInputAdminPasswordActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiLockVideoFourthActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
@@ -108,7 +106,7 @@ public class WifiLockAddNewThirdActivity extends AppCompatActivity {
             case R.id.already_modify:
                 if(wifiModelType.contains("VIDEO")){
                     saveWifiName();
-                    Intent wifiVideoIntent = new Intent(this, WifiLockVideoFourthActivity.class);
+                    Intent wifiVideoIntent = new Intent(this, WifiVideoLockFourthActivity.class);
                     wifiVideoIntent.putExtra("wifiModelType", wifiModelType);
                     wifiVideoIntent.putExtra("distribution_again",distributionAgain);
                     wifiVideoIntent.putExtra("distribution",distribution);
