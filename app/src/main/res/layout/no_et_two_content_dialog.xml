@@ -59,6 +59,7 @@
             android:textColor="#9A9A9A"
             />
         <TextView
+            android:id="@+id/tv_view"
             android:layout_width="@dimen/dp_1"
             android:layout_height="match_parent"
             android:background="@color/dialog_line"
