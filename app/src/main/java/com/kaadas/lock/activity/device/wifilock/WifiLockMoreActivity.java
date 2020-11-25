@@ -20,7 +20,7 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockLockRealTimeActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockRealTimeActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -398,7 +398,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         break;
 
                     case R.id.rl_real_time_video:
-                        intent = new Intent(this, WifiVideoLockLockRealTimeActivity.class);
+                        intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.rl_wandering_alarm:

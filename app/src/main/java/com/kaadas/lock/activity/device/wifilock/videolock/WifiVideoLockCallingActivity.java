@@ -389,7 +389,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 break;
             case R.id.iv_setting:
                 isLastPirture = true;
-                Intent settingIntent = new Intent(WifiVideoLockCallingActivity.this, WifiVideoLockLockRealTimeActivity.class);
+                Intent settingIntent = new Intent(WifiVideoLockCallingActivity.this, WifiVideoLockRealTimeActivity.class);
                 settingIntent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 startActivity(settingIntent);
                 mPresenter.release();
@@ -619,9 +619,11 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                     @Override
                     public void run() {
-                        Glide.with(WifiVideoLockCallingActivity.this).load(myBitmap).into(ivScreenshotBitmap);
-                        ivScreenshotBitmap.setVisibility(View.VISIBLE);
-                        showShort("截图成功");
+                        if(ivScreenshotBitmap != null){
+                            Glide.with(WifiVideoLockCallingActivity.this).load(myBitmap).into(ivScreenshotBitmap);
+                            ivScreenshotBitmap.setVisibility(View.VISIBLE);
+                            showShort("截图成功");
+                        }
                     }
                 });
 
