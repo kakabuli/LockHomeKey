@@ -564,6 +564,7 @@ public class BleService extends Service {
 
             lastReceiveDataTime = System.currentTimeMillis();
             if(characteristic.getUuid().toString().equals(BLeConstants.DISTRIBUTION_NETWORK_NOTIFY_CHAR)) {
+
                 /*
                 *该通道仅用于“BLE+WIFI方案”配网使用
                 *所有数据为非加密
@@ -610,11 +611,13 @@ public class BleService extends Service {
                 }
                 }
             else {
+
                 //加密数据中的   开锁记录   报警记录    不要回确认帧    秘钥上报  需要逻辑层才回确认帧
                 if (value[0] == 1 && !((value[3] & 0xff) == 0x04)
                         && !((value[3] & 0xff) == 0x14) && !((value[3] & 0xff) == 0x08)
                         && bleVersion != 1 && (value[3] & 0xff) != 0x18
                         && value.length == 20) {  //如果是加密数据  那么回确认帧
+
                     sendCommand(BleCommandFactory.confirmCommand(value));
                 }
 
@@ -622,6 +625,7 @@ public class BleService extends Service {
                         && (value[3] & 0xFF) != 0x08) { //鉴权帧不在此处做判断   大概率此时还没有鉴权帧
                     byte[] payload = new byte[16];
                     System.arraycopy(value, 4, payload, 0, 16);
+
                     if (bleLockInfo != null && bleLockInfo.getAuthKey() != null) {
                         byte[] decrypt = Rsa.decrypt(payload, bleLockInfo.getAuthKey());
                         byte checkNum = 0;
@@ -676,7 +680,9 @@ public class BleService extends Service {
                             dataChangeSubject.onNext(bleDataBean);
                         }
                     }, 10);
-                } else {  //直接朝下面发送
+                }
+                else {  //直接朝下面发送
+
                     dataChangeSubject.onNext(bleDataBean);
                 }
             }
@@ -1182,7 +1188,7 @@ public class BleService extends Service {
         if (isFFE1) {
             return BleUtil.BLE_VERSION_NEW2;
         }
-        if (isFFD0) {
+        if (isFFD0 || is1802) {
             return BleUtil.BLE_VERSION_NEW1;
         }
         return BleUtil.BLE_VERSION_OLD;

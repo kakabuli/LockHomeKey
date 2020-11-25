@@ -73,7 +73,7 @@ public class BLeConstants {
 
     /**
      * 蓝牙版本
-     * 软件版本，“VM.mm.bbb”
+     * 软件版本，“VM.mm.bbb”或V101
      * M   主版本号
      * mm  子版本号
      * bbb  内部版本序号

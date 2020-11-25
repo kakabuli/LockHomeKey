@@ -978,9 +978,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                         compositeDisposable.add(d);
                     }
                 });
-
     }
-
 
     public void realOpenLock(String pwd, boolean isApp) {
         if (isSafe()) {
@@ -1039,7 +1037,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                 });
         compositeDisposable.add(openLockDisposable);
     }
-
 
     /**
      * 监听开锁上报
