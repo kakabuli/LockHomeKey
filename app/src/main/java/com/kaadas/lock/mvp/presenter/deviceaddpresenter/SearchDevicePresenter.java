@@ -362,7 +362,7 @@ public class SearchDevicePresenter<T> extends BasePresenter<ISearchDeviceView> {
                         return readInfoBean.type == ReadInfoBean.TYPE_SN;
                     }
                 })
-                .timeout(2000, TimeUnit.MILLISECONDS)
+                .timeout(5000, TimeUnit.MILLISECONDS)//改为5秒
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<ReadInfoBean>() {
                     @Override
