@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +44,8 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
 import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
@@ -182,8 +185,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     private List<ProductInfo> productList = new ArrayList<>();
 
-    private boolean isStartAudio = true;
-
     private boolean isLastPirture = false;
 
     @Override
@@ -262,8 +263,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                             .error(R.mipmap.bluetooth_lock_default)      //加载错误之后的错误图
                             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)    //只缓存最终的图片
                             .dontAnimate()                                    //直接显示图片
-                            .fitCenter();//指定图片的缩放类型为fitCenter （是一种“中心匹配”的方式裁剪方式，它裁剪出来的图片长宽都会小于等于ImageView的大小，这样一来。图片会完整地显示出来，但是ImageView可能并没有被填充满）
-//                            .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
+                            .fitCenter();
 
                     for (ProductInfo productInfo : productList) {
                         try {
@@ -426,24 +426,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
                 }
                 break;
-            /*case R.id.iv_calling:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                    ToastUtil.showShort("请先获取麦克风权限");
-                }else{
-                    if(mPresenter.isTalkback()){
-                        ivCalling.setSelected(false);
-                        mPresenter.talkback(false);
-                        mPresenter.stopTalkback();
-                    }else{
-                        ivCalling.setSelected(true);
-                        mPresenter.talkback(true);
-                        mPresenter.startTalkback();
-                    }
-
-                }
-
-                break;*/
             case R.id.iv_screenshot:
                 mPresenter.snapImage();
                 break;
@@ -470,12 +452,38 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mPresenter.connectP2P();
+        if(wifiLockInfo.getKeep_alive_status() == 1){
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mPresenter.setStartTime();
+                    mPresenter.connectP2P();
+                }
+            }).start();
+        }else{
+            if(isCalling == 1){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setStartTime();
+                        mPresenter.connectP2P();
+                    }
+                }).start();
+            }else{
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(avi != null){
+                            avi.hide();
+                        }
+                        if(tvTips != null)
+                            tvTips.setVisibility(View.GONE);
+                        showKeepAliveDialog();
+                    }
+                },500);
             }
-        }).start();
+        }
         ivMute.setImageResource(R.mipmap.real_time_video_mute);
         isShowAudio = true;
         isFirstAudio = false;
@@ -494,6 +502,31 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         }else{
             ivCache.setVisibility(View.GONE);
         }
+    }
+
+    private void showKeepAliveDialog() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "视频长连接已关闭", "按门铃时可查看门外情况",
+                "唤醒门锁后，可在视频设置中开启", "", "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     @Override
@@ -535,21 +568,10 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     if(tvTips != null)
                         tvTips.setVisibility(View.GONE);
                     isConnect = false;
-                    LogUtils.e(this + "");
-                    if(paramInt == -19){//退出再进还是上一个session，返回-19.这是静默重连
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPresenter.connectP2P();
-                            }
-                        }).start();
-                        return;
-                    }
-                    if(paramInt == -3){
-                        creteDialog(getString(R.string.video_lock_xm_connect_time_out) + "");
-                    }else{
-                        creteDialog(getString(R.string.video_lock_xm_connect_failed) + "");
-                    }
+                    LogUtils.e("shulan"+this + " paramInt=" + paramInt);
+                    String errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
+                    creteDialog(errorStringWithCode + "");
+
                 }
 
             }
@@ -557,6 +579,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
 
     }
+
 
     @Override
     public void onConnectSuccess() {
@@ -633,8 +656,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 WifiVideoLockCallingActivity.this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.fromFile(FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()))));
 
-
-
             }
 
         }
@@ -654,9 +675,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
               }
           });
 
-
     }
-
 
     //开始视频回调，时间戳数据...
     @Override
@@ -675,7 +694,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 }
             }
         });
-        //
 
         if(isCalling == 0 || !isDoorbelling){
             if(!isFirstAudio){
@@ -909,6 +927,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        mPresenter.setStartTime();
                         mPresenter.connectP2P();
                     }
                 }).start();

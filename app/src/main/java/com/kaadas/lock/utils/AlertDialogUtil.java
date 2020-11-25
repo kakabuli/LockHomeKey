@@ -235,6 +235,7 @@ public class AlertDialogUtil {
         TextView tvContent1 = mView.findViewById(R.id.tv_content_1);
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
+        TextView tv_view = mView.findViewById(R.id.tv_view);
         //   tv_query.setTextColor(Color.parseColor("#101010"));
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
         alertDialog.setCancelable(false);//窗口外不隐藏
@@ -246,7 +247,14 @@ public class AlertDialogUtil {
         }
         tvContent.setText(content1);
         tvContent1.setText(content2);
-        tv_cancel.setText(left);
+        if("".equals(left)){
+            tv_cancel.setVisibility(View.GONE);
+            tv_view.setVisibility(View.GONE);
+        }else{
+            tv_cancel.setVisibility(View.VISIBLE);
+            tv_cancel.setText(left);
+            tv_view.setVisibility(View.VISIBLE);
+        }
         tv_query.setText(right);
         //取消
         tv_cancel.setOnClickListener(new View.OnClickListener() {

@@ -1823,5 +1823,27 @@
     <string name="lock_wifi_firware_number">Wi-Fi固件版本</string>
     <string name="child_system_firware_number">子系统固件版本</string>
 
+    <string name="xm_device_error_reason">无法连接到设备，原因是：</string>
+    <string name="xm_dynamic_library_not_initialized">动态库未初始化</string>
+    <string name="xm_repeated_initialization">重复初始化</string>
+    <string name="xm_connection_timed_out">连接超时</string>
+    <string name="xm_invalid_did">无效DID</string>
+    <string name="xm_invalid_parameter">无效参数</string>
+    <string name="xm_device_not_online">设备不在线</string>
+    <string name="xm_unable_to_resolve_name">无法解析名称</string>
+    <string name="xm_invalid_did_prefix">无效DID前缀</string>
+    <string name="xm_id_expired">ID过期</string>
+    <string name="xm_no_forwarding_server_available">没有转发服务器可用</string>
+    <string name="xm_invalid_session_handle">无效会话</string><!--无效session句柄-->
+    <string name="xm_client_disconnects_deivce_p2p">客户端主动断开当前设备session</string><!--客户端主动断开当前设备P2P session-->
+    <string name="xm_device_disconnects_client_p2p">设备主动断开当前客户端session</string><!--设备主动断开当前客户端P2P session-->
+    <string name="xm_current_p2p_session_closed">当前session已关闭</string><!--当前P2P session会话已关闭-->
+    <string name="xm_the_remote_buffer_is_full">远程站点缓冲区已满</string>
+    <string name="xm_user_monitoring_interrupt">监听中断</string><!--用户监听中断-->
+    <string name="xm_session_maximum_connection_exceeded">超出session最大连接</string>
+    <string name="xm_udp_port_binding_failed">UDP端口绑定失败</string>
+    <string name="xm_exit_from_user_connection">连接中退出</string><!--用户连接中退出-->
+    <string name="xm_insufficient_memory_for_session_closure">会话关闭的内存不足</string><!--会话关闭的内存不足-->
+    <string name="xm_invalid_api_license">无效的API许可</string>
 
 </resources>

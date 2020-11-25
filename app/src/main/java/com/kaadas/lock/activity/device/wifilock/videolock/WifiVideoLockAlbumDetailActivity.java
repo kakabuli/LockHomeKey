@@ -35,7 +35,9 @@ import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.MediaPlayerWrapper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.MediaStatus;
 import com.kaadas.lock.publiclibrary.linphone.linphone.player.StatusHelper;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.RotateTransformation;
 import com.kaadas.lock.utils.ToastUtil;
@@ -181,12 +183,28 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             llyBootomBar.setVisibility(View.GONE);
             mPresenter.settingDevice(wifiLockInfo);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPresenter.connectP2P();
-                }
-            }).start();
+            if(wifiLockInfo.getKeep_alive_status() ==1){
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setStartTime();
+                        mPresenter.connectP2P();
+                    }
+                }).start();
+            }else{
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(avi != null){
+                            avi.hide();
+                        }
+                        if(tvTips != null)
+                            tvTips.setVisibility(View.GONE);
+                        showKeepAliveDialog();
+                    }
+                },500);
+            }
         }
     }
 
@@ -432,11 +450,8 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                     }
                     if(tvTips != null)
                         tvTips.setVisibility(View.GONE);
-                    if(paramInt == -3){
-                        creteDialog(getString(R.string.video_lock_xm_connect_time_out) + "");
-                    }else{
-                        creteDialog(getString(R.string.video_lock_xm_connect_failed) + "");
-                    }
+                    String errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockAlbumDetailActivity.this,paramInt);
+                    creteDialog(errorStringWithCode + "");
                 }
 
             }
@@ -598,6 +613,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        mPresenter.setStartTime();
                         mPresenter.connectP2P();
                     }
                 }).start();
@@ -698,5 +714,30 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             }
 
         }
+    }
+
+    private void showKeepAliveDialog() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "视频长连接已关闭", "按门铃时可查看门外情况",
+                "唤醒门锁后，可在视频设置中开启", "", "确定", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 }
