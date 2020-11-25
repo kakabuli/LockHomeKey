@@ -105,7 +105,11 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         initListener();
         LogUtils.e("授权界面");
         rlDeviceInformation.setVisibility(View.VISIBLE);
-        dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
+        try{
+            dealWithPower(wifiLockInfo.getPower(), wifiLockInfo.getUpdateTime());
+        }catch (Exception e){
+
+        }
     }
 
     private void showLockType() {

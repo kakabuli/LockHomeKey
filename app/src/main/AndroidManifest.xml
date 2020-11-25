@@ -117,7 +117,7 @@
         <activity android:name=".activity.device.wifilock.WifiLockMessagePushActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockLockRealTimeActivity"
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity"

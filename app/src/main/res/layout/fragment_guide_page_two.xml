@@ -63,19 +63,19 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="@dimen/dp_14"
-                    android:layout_height="@dimen/dp_14"
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
                     android:background="@drawable/guide_indicator_unselect" />
 
                 <ImageView
-                    android:layout_width="@dimen/dp_14"
-                    android:layout_height="@dimen/dp_14"
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_18"
                     android:background="@drawable/guide_indicator_select" />
 
                 <ImageView
-                    android:layout_width="@dimen/dp_14"
-                    android:layout_height="@dimen/dp_14"
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_18"
                     android:background="@drawable/guide_indicator_unselect" />
             </LinearLayout>

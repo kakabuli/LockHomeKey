@@ -60,25 +60,30 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         mOutputY = imagePicker.getOutPutY();
         mIsSaveRectangle = imagePicker.isSaveRectangle();
         mImageItems = imagePicker.getSelectedImages();
-        String imagePath = mImageItems.get(0).path;
+        String imagePath = "";
+        if(mImageItems != null && mImageItems.size() >0){
+            imagePath = mImageItems.get(0).path;
+        }
 
         mCropImageView.setFocusStyle(imagePicker.getStyle());
         mCropImageView.setFocusWidth(imagePicker.getFocusWidth());
         mCropImageView.setFocusHeight(imagePicker.getFocusHeight());
 
-        //缩放图片
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imagePath, options);
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        options.inSampleSize = calculateInSampleSize(options, displayMetrics.widthPixels, displayMetrics.heightPixels);
-        options.inJustDecodeBounds = false;
-        mBitmap = BitmapFactory.decodeFile(imagePath, options);
-//        mCropImageView.setImageBitmap(mBitmap);
-        //设置默认旋转角度
-        mCropImageView.setImageBitmap(mCropImageView.rotate(mBitmap, BitmapUtil.getBitmapDegree(imagePath)));
+        if(!imagePath.isEmpty()){
+            //缩放图片
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imagePath, options);
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            options.inSampleSize = calculateInSampleSize(options, displayMetrics.widthPixels, displayMetrics.heightPixels);
+            options.inJustDecodeBounds = false;
+            mBitmap = BitmapFactory.decodeFile(imagePath, options);
+    //        mCropImageView.setImageBitmap(mBitmap);
+            //设置默认旋转角度
+            mCropImageView.setImageBitmap(mCropImageView.rotate(mBitmap, BitmapUtil.getBitmapDegree(imagePath)));
 
-//        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
+    //        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
+        }
     }
 
     public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {

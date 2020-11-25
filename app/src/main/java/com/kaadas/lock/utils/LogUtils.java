@@ -4,14 +4,15 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.blankj.ALog;
+import com.kaadas.lock.BuildConfig;
 
 /**
  * Created by walter on 2016/6/30.
  */
 public class LogUtils {
+	public static final boolean DEBUG = BuildConfig.DEBUG;
 
-
-	private static final boolean isOutFile = false;
+	public static final boolean isOutFile = !BuildConfig.DEBUG;
 	/**
 	 * 日志输出级别NONE
 	 */
@@ -54,8 +55,10 @@ public class LogUtils {
 	 * 以级别为 d 的形式输出LOG
 	 */
 	public static void v(String msg) {
-		if (mDebuggable >= LEVEL_VERBOSE) {
-			Log.v(mTag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_VERBOSE) {
+				Log.v(mTag, msg);
+			}
 		}
 	}
 
@@ -63,13 +66,17 @@ public class LogUtils {
 	 * 以级别为 d 的形式输出LOG
 	 */
 	public static void d(String msg) {
-		if (mDebuggable >= LEVEL_DEBUG) {
-			Log.d(mTag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_DEBUG) {
+				Log.d(mTag, msg);
+			}
 		}
 	}
 	public static void d(String Tag, String msg) {
-		if (mDebuggable >= LEVEL_DEBUG) {
-			Log.d(Tag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_DEBUG) {
+				Log.d(Tag, msg);
+			}
 		}
 	}
 	
@@ -77,13 +84,17 @@ public class LogUtils {
 	 * 以级别为 i 的形式输出LOG
 	 */
 	public static void i(String msg) {
-		if (mDebuggable >= LEVEL_INFO) {
-			Log.i(mTag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_INFO) {
+				Log.i(mTag, msg);
+			}
 		}
 	}
 	public static void i(String tag, String msg) {
-		if (mDebuggable >= LEVEL_INFO) {
-			Log.i(tag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_INFO) {
+				Log.i(tag, msg);
+			}
 		}
 	}
 	
@@ -92,8 +103,10 @@ public class LogUtils {
 	 * 以级别为 w 的形式输出LOG
 	 */
 	public static void w(String msg) {
-		if (mDebuggable >= LEVEL_WARN) {
-			Log.w(mTag, msg);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_WARN) {
+				Log.w(mTag, msg);
+			}
 		}
 	}
 	
@@ -104,8 +117,10 @@ public class LogUtils {
 	 * 以级别为 w 的形式输出Throwable
 	 */
 	public static void w(Throwable tr) {
-		if (mDebuggable >= LEVEL_WARN) {
-			Log.w(mTag, "", tr);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_WARN) {
+				Log.w(mTag, "", tr);
+			}
 		}
 	}
 	
@@ -114,8 +129,10 @@ public class LogUtils {
 	 * 以级别为 w 的形式输出LOG信息和Throwable
 	 */
 	public static void w(String msg, Throwable tr) {
-		if (mDebuggable >= LEVEL_WARN && null != msg) {
-			Log.w(mTag, msg, tr);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_WARN && null != msg) {
+				Log.w(mTag, msg, tr);
+			}
 		}
 	}
 	
@@ -128,7 +145,8 @@ public class LogUtils {
 			if (isOutFile){
 				ALog.e( msg);
 			}else {
-				Log.e(mTag, msg);
+				if(DEBUG)
+					Log.e(mTag, msg);
 			}
 		}
 	}
@@ -141,7 +159,8 @@ public class LogUtils {
 			if (isOutFile){
 				ALog.e(mTag+TAG, msg);
 			}else {
-				Log.e(mTag+TAG, msg);
+				if(DEBUG)
+					Log.e(mTag+TAG, msg);
 			}
 
 		}
@@ -153,8 +172,10 @@ public class LogUtils {
 	 * 以级别为 e 的形式输出Throwable
 	 */
 	public static void e(Throwable tr) {
-		if (mDebuggable >= LEVEL_ERROR) {
-			Log.e(mTag, "", tr);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_ERROR) {
+				Log.e(mTag, "", tr);
+			}
 		}
 	}
 	
@@ -163,8 +184,10 @@ public class LogUtils {
 	 * 以级别为 e 的形式输出LOG信息和Throwable
 	 */
 	public static void e(String msg, Throwable tr) {
-		if (mDebuggable >= LEVEL_ERROR && null != msg) {
-			Log.e(mTag, msg, tr);
+		if(DEBUG){
+			if (mDebuggable >= LEVEL_ERROR && null != msg) {
+				Log.e(mTag, msg, tr);
+			}
 		}
 	}
 	
@@ -173,10 +196,12 @@ public class LogUtils {
 	 * 以级别为 e 的形式输出msg信息,附带时间戳，用于输出一个时间段结束点* @param msg 需要输出的msg
 	 */
 	public static void elapsed(String msg) {
-		long currentTime = System.currentTimeMillis();
-		long elapsedTime = currentTime - mTimestamp;
-		mTimestamp = currentTime;
-		LogUtils.e("[Elapsed：" + elapsedTime + "]" + msg);
+		if(DEBUG) {
+			long currentTime = System.currentTimeMillis();
+			long elapsedTime = currentTime - mTimestamp;
+			mTimestamp = currentTime;
+			LogUtils.e("[Elapsed：" + elapsedTime + "]" + msg);
+		}
 	}
 
     public static void e(FragmentActivity activity) {

@@ -503,14 +503,18 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                             break;
                         case BleLockUtils.TYPE_VIDEO:
-                            if(wifiLockInfo.getPowerSave() == 0){
-                                intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockCallingActivity.class);
-                                intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                startActivity(intent);
+                            try {
+                                if(wifiLockInfo.getPowerSave() == 0){
+                                    intent = new Intent(WiFiLockDetailActivity.this, WifiVideoLockCallingActivity.class);
+                                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
+                                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                                    startActivity(intent);
 
-                            }else{
-                                powerStatusDialog();
+                                }else{
+                                    powerStatusDialog();
+                                }
+                            }catch (Exception e){
+
                             }
 
                             break;

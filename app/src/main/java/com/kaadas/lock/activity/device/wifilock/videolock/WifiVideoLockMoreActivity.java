@@ -484,7 +484,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     case R.id.rl_real_time_video:
                         if(avi.isShow()){
 
-                            intent = new Intent(this, WifiVideoLockLockRealTimeActivity.class);
+                            intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                             startActivity(intent);
                             mPresenter.release();

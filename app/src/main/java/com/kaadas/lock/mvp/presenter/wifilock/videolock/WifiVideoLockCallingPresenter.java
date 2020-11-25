@@ -42,6 +42,11 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     static int	m_handleSession	= -1;
     int			mChannel		= 0;
 
+    private static final long OVER_TIME_SECONDS = 30000;
+    private static final int OVER_TIME_TIMES = 10;
+    private long startTime = 0;
+    private int connectTimes = 0;
+
     @Override
     public void attachView(IWifiLockVideoCallingView view) {
         super.attachView(view);
@@ -89,13 +94,19 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     }
 
 
+
     XMP2PManager.ConnectStatusListener listener = new XMP2PManager.ConnectStatusListener() {
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
+            if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
 
-            if(isSafe()){
-                mViewRef.get().onConnectFailed(paramInt);
+                if(isSafe()){
+                    mViewRef.get().onConnectFailed(paramInt);
+                }
+            }else{
+                connectTimes++;
+                connectP2P();
             }
 
         }
@@ -161,6 +172,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     public void release(){
         XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        this.startTime = 0;
+        this.connectTimes = 0;
     }
 
     public void stopConnect(){
@@ -339,4 +352,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     }
 
 
+    public void setStartTime() {
+        this.startTime = System.currentTimeMillis();
+        this.connectTimes = 0;
+    }
 }

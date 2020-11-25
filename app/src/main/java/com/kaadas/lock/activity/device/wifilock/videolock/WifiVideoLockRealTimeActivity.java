@@ -30,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiVideoLockLockRealTimeActivity extends BaseActivity<IWifiVideoLockRealTimeView, WifiVideoLockRealTimePresenter<IWifiVideoLockRealTimeView>>
+public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRealTimeView, WifiVideoLockRealTimePresenter<IWifiVideoLockRealTimeView>>
         implements IWifiVideoLockRealTimeView, View.OnClickListener {
 
     @BindView(R.id.back)
@@ -106,16 +106,20 @@ public class WifiVideoLockLockRealTimeActivity extends BaseActivity<IWifiVideoLo
                 break;
             case R.id.rl_real_time_period:
                 if(avi.isShow()) {
-                    if (wifiLockInfo.getPowerSave() == 0) {
-                        Intent intent = new Intent(this, WifiVideoLockRealTimePeriodActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START, startTime);
-                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END, endTime);
-                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, snoozeStartTime);
-                        startActivityForResult(intent,KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_CODE);
-                        mPresenter.release();
-                    }else{
-                        powerStatusDialog();
+                    try {
+                        if (wifiLockInfo.getPowerSave() == 0) {
+                            Intent intent = new Intent(this, WifiVideoLockRealTimePeriodActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START, startTime);
+                            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_END, endTime);
+                            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD, snoozeStartTime);
+                            startActivityForResult(intent,KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_SETTING_CODE);
+                            mPresenter.release();
+                        }else{
+                            powerStatusDialog();
+                        }
+                    }catch (Exception e){
+
                     }
                 }
 
@@ -451,7 +455,7 @@ public class WifiVideoLockLockRealTimeActivity extends BaseActivity<IWifiVideoLo
 
     @Override
     public void onSettingCallBack(boolean flag) {
-        if(!WifiVideoLockLockRealTimeActivity.this.isFinishing()){
+        if(!WifiVideoLockRealTimeActivity.this.isFinishing()){
 
             mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {

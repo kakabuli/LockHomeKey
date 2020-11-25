@@ -319,7 +319,7 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
                 }
                 break;
             case R.id.iv_setting:
-                Intent settingIntent = new Intent(WifiVideoLockCallingTestActivity.this, WifiVideoLockLockRealTimeActivity.class);
+                Intent settingIntent = new Intent(WifiVideoLockCallingTestActivity.this, WifiVideoLockRealTimeActivity.class);
                 settingIntent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                 startActivity(settingIntent);
                 mPresenter.release();

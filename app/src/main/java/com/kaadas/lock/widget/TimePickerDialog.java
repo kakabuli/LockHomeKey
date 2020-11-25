@@ -16,6 +16,10 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.bean.FAQBean;
+import com.kaadas.lock.publiclibrary.linphone.linphone.util.DateUtil;
+import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.LogUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,6 +43,8 @@ public class TimePickerDialog extends Dialog {
     private View submitBtn;
 
     private ConfirmAction confirmAction;
+
+    private boolean isEndTime = false;
 
 
     public TimePickerDialog(@NonNull Context context) {
@@ -91,7 +97,6 @@ public class TimePickerDialog extends Dialog {
 
     private void setEvent() {
         submitBtn.setOnClickListener(v -> {
-
             confirmAction.onClick(startTime + " - " + endTime);
             dismiss();
         });
@@ -110,34 +115,132 @@ public class TimePickerDialog extends Dialog {
 
 
         if (!isNull(startTime) && !isNull(endTime)) {
+            if(equalsToTime(startTime,endTime)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    timePickerStart.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerStart.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                timePickerStart.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
-                timePickerStart.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                    timePickerEnd.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerEnd.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                } else {
+                    timePickerStart.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerStart.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
 
-                timePickerEnd.setHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
-                timePickerEnd.setMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
-            } else {
-                timePickerStart.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
-                timePickerStart.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                    timePickerEnd.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerEnd.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                }
+                endTime = startTime;
+            }else{
 
-                timePickerEnd.setCurrentHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
-                timePickerEnd.setCurrentMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    timePickerStart.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerStart.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+
+                    timePickerEnd.setHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                    timePickerEnd.setMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                } else {
+                    timePickerStart.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                    timePickerStart.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+
+                    timePickerEnd.setCurrentHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                    timePickerEnd.setCurrentMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                }
             }
 
         }
 
-        timePickerStart.setOnTimeChangedListener((timePicker, hourOfDay, minute) -> {
+        timePickerStart.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                String h = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+                String m = minute < 10 ? "0" + minute : "" + minute;
+                startTime = h + ":" + m;
+                if(equalsToTime(startTime,endTime)){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        timePickerEnd.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                        timePickerEnd.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                    } else {
+                        timePickerEnd.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                        timePickerEnd.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                    }
+                    if(startTime.equals(endTime)){
+                        if(startTime.equals("23:59")){
+                            startTime = "23" + ":" + "58";
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                timePickerStart.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                                timePickerStart.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                            } else {
+                                timePickerStart.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                                timePickerStart.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                            }
+                        }else{
+                            if(m.equals("59")){
+                                endTime = ((hourOfDay + 1) < 10 ? "0" + (hourOfDay + 1) : "" + (hourOfDay + 1)) + ":" + "00";
+                            }else{
+                                endTime = h + ":" + ((minute + 1) < 10 ? "0" + (minute +1) : "" + (minute + 1));
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                timePickerEnd.setMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                                timePickerEnd.setHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                            } else {
+                                timePickerEnd.setCurrentMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                                timePickerEnd.setCurrentHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                            }
+                        }
+                    }
+                }
 
-            String h = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-            String m = minute < 10 ? "0" + minute : "" + minute;
-            startTime = h + ":" + m;
+            }
+
         });
         timePickerEnd.setOnTimeChangedListener((timePicker, hourOfDay, minute) -> {
             String h = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
             String m = minute < 10 ? "0" + minute : "" + minute;
             endTime = h + ":" + m;
+            if(equalsToTime(startTime,endTime)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    timePickerStart.setHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                    timePickerStart.setMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                } else {
+                    timePickerStart.setCurrentHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                    timePickerStart.setCurrentMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                }
+                if(startTime.equals(endTime)){
+                    if(endTime.equals("00:00")){
+                        endTime = "00" + ":" + "01";
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            timePickerEnd.setHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                            timePickerEnd.setMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                        } else {
+                            timePickerEnd.setCurrentHour(Integer.parseInt(endTime.substring(0, endTime.indexOf(":"))));
+                            timePickerEnd.setCurrentMinute(Integer.parseInt(endTime.substring(endTime.indexOf(":") + 1)));
+                        }
+                    }else{
+                            if(m.equals("00")){
+                                isEndTime = true;
+                                startTime = ((hourOfDay - 1) < 10 ? "0" + (hourOfDay - 1) : "" + (hourOfDay - 1)) + ":" + "59";
+                            }else{
+                                startTime = h + ":" + ((minute - 1) < 10 ? "0" + (minute - 1) : "" + (minute - 1));
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                timePickerStart.setMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                                timePickerStart.setHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                            } else {
+                                timePickerStart.setCurrentMinute(Integer.parseInt(startTime.substring(startTime.indexOf(":") + 1)));
+                                timePickerStart.setCurrentHour(Integer.parseInt(startTime.substring(0, startTime.indexOf(":"))));
+                            }
+                        }
+                }
+            }
         });
+    }
+
+    private boolean equalsToTime(String t1,String t2){
+        if(DateUtils.getSecondTime(t1) >= DateUtils.getSecondTime(t2)){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void initView() {

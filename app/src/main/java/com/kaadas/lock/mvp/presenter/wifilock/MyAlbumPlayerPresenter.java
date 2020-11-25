@@ -54,6 +54,11 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     private int times = 4;
 
+    private static final long OVER_TIME_SECONDS = 30000;
+    private static final int OVER_TIME_TIMES = 10;
+    private long startTime = 0;
+    private int connectTimes = 0;
+
     private Handler postHandler = new Handler();
 
     @Override
@@ -85,8 +90,14 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
-            if(isSafe()){
-                mViewRef.get().onConnectFailed(paramInt);
+            if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
+
+                if(isSafe()){
+                    mViewRef.get().onConnectFailed(paramInt);
+                }
+            }else{
+                connectTimes++;
+                connectP2P();
             }
 
         }
@@ -137,6 +148,8 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
     public void release(){
         XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        this.startTime = 0;
+        this.connectTimes = 0;
     }
 
     public void stopConnect(){
@@ -154,8 +167,6 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
             @Override
             public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
-
-
             }
         });
 
@@ -263,5 +274,10 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
 
     public void stopRecordMP4(){
         XMP2PManager.getInstance().stopRecordMP4();
+    }
+
+    public void setStartTime() {
+        this.startTime = System.currentTimeMillis();
+        this.connectTimes = 0;
     }
 }

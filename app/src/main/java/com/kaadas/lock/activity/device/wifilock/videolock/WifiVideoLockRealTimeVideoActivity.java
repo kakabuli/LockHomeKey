@@ -59,7 +59,7 @@ public class WifiVideoLockRealTimeVideoActivity extends BaseActivity<IWifiLockRe
                 finish();
                 break;
             case R.id.iv_setting:
-                startActivity(new Intent(WifiVideoLockRealTimeVideoActivity.this, WifiVideoLockLockRealTimeActivity.class));
+                startActivity(new Intent(WifiVideoLockRealTimeVideoActivity.this, WifiVideoLockRealTimeActivity.class));
                 break;
             case R.id.iv_screenshot:
                 break;

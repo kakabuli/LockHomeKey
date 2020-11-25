@@ -134,8 +134,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.e("attachView  App启动 ");
         initALog();
+        LogUtils.e("attachView  App启动 ");
         instance = this;
         CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
