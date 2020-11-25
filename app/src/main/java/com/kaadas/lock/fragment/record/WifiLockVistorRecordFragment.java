@@ -126,7 +126,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                             Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try{
-                                fileName = DateUtils.getStrFromMillisecond2(record.getStartTime());
+                                fileName = DateUtils.getStrFromMillisecond2(record.getStartTime() - 28800000);
 
                             }catch (Exception e){
 
