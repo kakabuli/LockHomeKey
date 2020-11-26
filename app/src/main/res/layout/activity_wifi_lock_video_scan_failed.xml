@@ -114,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/wifi_lock_scan_failed_circle_blue"/>
+            <!--android:background="@drawable/edit_text_line_209afd"-->
             <TextView
                 android:id="@+id/notice"
                 android:layout_width="wrap_content"
@@ -122,7 +123,6 @@
                 android:text="确保连接的Wi-Fi路由器处于联网状态"
                 android:layout_gravity="left"
                 android:textColor="#1F96F7"
-                android:background="@drawable/edit_text_line_209afd"
                 android:textSize="@dimen/sp_13" />
         </LinearLayout>
     </LinearLayout>

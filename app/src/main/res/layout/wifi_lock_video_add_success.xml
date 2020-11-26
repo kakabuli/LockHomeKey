@@ -105,13 +105,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+        <!--android:background="@drawable/edit_text_line_209afd"-->
         <TextView
             android:id="@+id/tv_support_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/edit_text_line_209afd"
             android:gravity="center"
             android:text="@string/look_wifi_support_rout"
             android:textColor="#1F96F7"

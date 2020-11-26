@@ -54,20 +54,20 @@
 
         <TextView
             android:id="@+id/head"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_25"
             android:lineSpacingExtra="@dimen/dp_4"
             android:text="第四步：配置连接WI-FI"
+            android:layout_gravity="center_horizontal"
             android:textColor="#565656"
-            android:textSize="17sp"
+            android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dp_16"
             android:layout_marginBottom="@dimen/dp_25"
             android:text="@string/video_notice"
@@ -178,13 +178,12 @@
                 android:layout_marginBottom="@dimen/dp_18"
                 android:textSize="15sp" />
 
-
+        <!--android:background="@drawable/edit_text_line_209afd"-->
             <TextView
                 android:id="@+id/tv_support_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/edit_text_line_209afd"
                 android:gravity="center"
                 android:text="@string/look_wifi_support_rout"
                 android:textColor="#1F96F7"
