@@ -176,7 +176,7 @@
                 android:textColor="#fff"
                 android:layout_marginTop="@dimen/dp_20"
                 android:layout_marginBottom="@dimen/dp_18"
-                android:textSize="15sp" />
+                android:textSize="@dimen/sp_15" />
 
         <!--android:background="@drawable/edit_text_line_209afd"-->
             <TextView
@@ -188,7 +188,7 @@
                 android:text="@string/look_wifi_support_rout"
                 android:textColor="#1F96F7"
                 android:layout_marginBottom="@dimen/dp_40"
-                android:textSize="12sp" />
+                android:textSize="@dimen/sp_12" />
 
     </LinearLayout>
 
