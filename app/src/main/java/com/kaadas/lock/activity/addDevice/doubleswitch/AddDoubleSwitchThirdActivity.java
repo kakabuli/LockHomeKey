@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
-public class AddDoubleSwitchThirdActivity extends AppCompatActivity {
+public class AddDoubleSwitchThirdActivity extends BaseAddToApplicationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

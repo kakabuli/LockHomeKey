@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.gatewaylock;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;

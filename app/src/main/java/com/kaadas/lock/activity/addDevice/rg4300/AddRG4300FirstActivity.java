@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
-public class AddRG4300FirstActivity extends AppCompatActivity {
+public class AddRG4300FirstActivity extends BaseAddToApplicationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -13,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -25,7 +25,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends BaseAddToApplicationActivity {
 
     private TextView tv_content;
     private WebView webView;

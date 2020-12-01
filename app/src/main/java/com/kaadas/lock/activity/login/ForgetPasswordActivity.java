@@ -26,6 +26,7 @@ import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
+import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -67,6 +68,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.app_main_status_bar2);
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         btnRegister.setOnClickListener(this);

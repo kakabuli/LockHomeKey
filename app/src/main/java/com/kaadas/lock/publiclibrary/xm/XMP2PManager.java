@@ -25,6 +25,8 @@ import com.xmitech.sdk.interfaces.VideoPackagedListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import la.xiong.androidquick.tool.ToastUtil;
+
 
 public class XMP2PManager extends StreamListener  {
     private int handleSession;
@@ -794,4 +796,17 @@ public class XMP2PManager extends StreamListener  {
         getInstanceP2P().notifyGateWayNewVersion();
 
     }
+
+    public void getDeviceInformation(){
+        LogUtils.e("shulan xm--DeviceInformation-->" + getInstanceP2P().getDeviceInformation());
+    }
+
+    @Override
+    public void onGetDeviceInformationProcResult(JSONObject jsonObject) {
+        super.onGetDeviceInformationProcResult(jsonObject);
+        LogUtils.e("shulan onGetDeviceInformationProcResult-->" + jsonObject.toString());
+        this.jsonObject = jsonObject.toString();
+    }
+
+    public static String jsonObject;
 }

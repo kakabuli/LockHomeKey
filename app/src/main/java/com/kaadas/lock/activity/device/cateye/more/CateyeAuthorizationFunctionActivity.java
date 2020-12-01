@@ -2,10 +2,13 @@ package com.kaadas.lock.activity.device.cateye.more;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -71,6 +74,8 @@ public class CateyeAuthorizationFunctionActivity extends BaseActivity<ICatEyeFun
     BatteryView ivPower;
     @BindView(R.id.iv_number)
     TextView iv_number;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private CateEyeInfo cateEyeInfo;
     private String gwId;
     private String devId;
@@ -78,10 +83,17 @@ public class CateyeAuthorizationFunctionActivity extends BaseActivity<ICatEyeFun
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cateye_authorization_function);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         initListener();
         initData();
-
+        //动态设置状态栏高度
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     private void initListener() {
@@ -398,4 +410,13 @@ public class CateyeAuthorizationFunctionActivity extends BaseActivity<ICatEyeFun
         }
     }
 
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }

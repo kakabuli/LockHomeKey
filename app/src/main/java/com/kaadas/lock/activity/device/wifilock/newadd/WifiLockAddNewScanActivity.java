@@ -10,7 +10,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +20,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAutoConnectWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockApInputAdminPasswordActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockNoticeUserLinkWifiFirstActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
@@ -39,7 +39,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-public class WifiLockAddNewScanActivity extends AppCompatActivity {
+public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

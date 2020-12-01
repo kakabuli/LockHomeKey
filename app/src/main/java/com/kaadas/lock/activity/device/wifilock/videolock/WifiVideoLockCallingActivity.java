@@ -45,6 +45,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
+import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.BleLockUtils;
@@ -149,6 +150,10 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     TextView tvDoorbell;
     @BindView(R.id.iv_cache)
     ImageView ivCache;
+    @BindView(R.id.rl_title_bar)
+    RelativeLayout rlTitleBar;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
     private Bitmap myBitmap;
 
@@ -192,7 +197,10 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_wifi_lock_video_calling);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
 
@@ -246,6 +254,13 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         tvTemporaryPassword.setText("");
 
         initLinstener();
+        //动态设置状态栏高度
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
+        RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(rlTitleBar.getLayoutParams());
+        rllp.setMargins(0, getStatusBarHeight(), 0, 0);
+        rlTitleBar.setLayoutParams(lp);
     }
 
     private void changeIcon() {
@@ -494,13 +509,15 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         tvCallingTips.setTextColor(Color.parseColor("#333333"));
         registerBroadcast();
         if(isLastPirture){
-            if(myBitmap != null){
-                ivCache.setVisibility(View.VISIBLE);
-                ivCache.setImageBitmap(myBitmap);
+            if(myBitmap != null) {
+                if (ivCache != null) {
+                    ivCache.setVisibility(View.VISIBLE);
+                    ivCache.setImageBitmap(myBitmap);
+                }
             }
-
         }else{
-            ivCache.setVisibility(View.GONE);
+            if(ivCache != null)
+                ivCache.setVisibility(View.GONE);
         }
     }
 
@@ -682,11 +699,25 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     //开始视频回调，时间戳数据...
     @Override
     public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+
+        if(!isFirstAudio){
+            if(isCalling == 0 || !isDoorbelling){
+                if(isShowAudio && mPresenter.startAudioStream() >= 0) {
+                    if (!mPresenter.isEnableAudio()) {
+                        mPresenter.enableAudio(true);
+                        isMute = false;
+                        isShowAudio = false;
+                    }
+                }
+            }
+            isFirstAudio = true;
+        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 //                tvVideoTimeStamp.setText(DateUtils.getDateTimeFromMillisecond(paramAVStreamHeader.m_TimeStamp - 28800000));
-                ivCache.setVisibility(View.GONE);
+                if(ivCache!= null)
+                    ivCache.setVisibility(View.GONE);
                 if(isCalling == 0 || !isDoorbelling){
                     avi.hide();
                     tvTips.setVisibility(View.GONE);
@@ -697,19 +728,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             }
         });
 
-        if(isCalling == 0 || !isDoorbelling){
-            if(!isFirstAudio){
-
-                if(isShowAudio && mPresenter.startAudioStream() >= 0) {
-                    if (!mPresenter.isEnableAudio()) {
-                        mPresenter.enableAudio(true);
-                        isMute = false;
-                        isShowAudio = false;
-                    }
-                }
-                isFirstAudio = true;
-            }
-        }
 
     }
 
@@ -1000,4 +1018,13 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         }
 
 
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }

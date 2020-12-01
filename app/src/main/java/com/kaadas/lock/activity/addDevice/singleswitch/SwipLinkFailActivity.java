@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import butterknife.ButterKnife;
 
-public class SwipLinkFailActivity extends AppCompatActivity implements View.OnClickListener{
+public class SwipLinkFailActivity extends BaseAddToApplicationActivity implements View.OnClickListener{
     TextView tv_content,btn_cancel;
     Button btn_next;
     ImageView iv_back;

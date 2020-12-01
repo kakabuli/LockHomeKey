@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.addDevice.doubleswitch;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.EditTextWatcher;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDoubleSwitchSuccessActivity   extends AppCompatActivity {
+public class AddDoubleSwitchSuccessActivity   extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -13,6 +14,8 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,6 +80,8 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
     RelativeLayout rlBluetooth17;
     @BindView(R.id.device_image)
     ImageView deviceImage;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
@@ -90,6 +95,10 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_old_bluetooth_lock_detail);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         bleLockInfo = mPresenter.getBleLockInfo();
         ivBack.setOnClickListener(this);
@@ -123,6 +132,10 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
         }else{
             deviceImage.setImageResource(R.mipmap.bluetooth_lock_default);
         }
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
 
@@ -546,5 +559,15 @@ public class OldBleDetailActivity extends BaseBleActivity<IOldBleDetailView, Old
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+    }
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

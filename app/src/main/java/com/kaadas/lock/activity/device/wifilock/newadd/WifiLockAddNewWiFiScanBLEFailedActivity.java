@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,12 +9,13 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewWiFiScanBLEFailedActivity extends AppCompatActivity {
+public class WifiLockAddNewWiFiScanBLEFailedActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

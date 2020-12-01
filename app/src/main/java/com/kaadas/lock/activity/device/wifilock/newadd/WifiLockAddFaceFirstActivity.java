@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.SPUtils;
 
@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddFaceFirstActivity extends AppCompatActivity {
+public class WifiLockAddFaceFirstActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

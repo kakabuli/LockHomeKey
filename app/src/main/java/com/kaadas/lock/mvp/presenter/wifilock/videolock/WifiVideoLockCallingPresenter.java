@@ -117,7 +117,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
             if(isSafe()){
                 mViewRef.get().onConnectSuccess();
             }
-
+            XMP2PManager.getInstance().getDeviceInformation();
         }
 
         @Override

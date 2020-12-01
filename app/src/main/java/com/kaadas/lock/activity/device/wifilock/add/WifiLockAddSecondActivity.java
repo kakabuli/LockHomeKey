@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.WifiUtils;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.Disposable;
 
-public class WifiLockAddSecondActivity extends AppCompatActivity {
+public class WifiLockAddSecondActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

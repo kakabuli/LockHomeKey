@@ -31,6 +31,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
+import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
 import com.kaadas.lock.utils.ToastUtil;
@@ -95,6 +96,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         tvRegisterDefaultAgree.setOnClickListener(this);
         llUserProtocol.setOnClickListener(this);
         primary_user_protocol.setOnClickListener(this);
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.app_main_status_bar2);
     }
 
     @Override

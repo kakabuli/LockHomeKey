@@ -35,6 +35,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.ILoginView;
@@ -93,7 +94,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         initView();
 //        checkVpnService();
         LogUtils.e("LoginActivity启动完成 ");
-
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.app_main_status_bar1);
     }
 
     private void initView() {

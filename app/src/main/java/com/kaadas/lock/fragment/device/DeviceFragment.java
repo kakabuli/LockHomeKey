@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -104,6 +105,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     RelativeLayout noDeviceLayout;
     @BindView(R.id.device_add)
     ImageView deviceAdd;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
     private View mView;
 
@@ -142,6 +145,10 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
         initData(homeShowBeanList);
         initRefresh();
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
         return mView;
     }
 
@@ -825,5 +832,13 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         }
     }
 
-
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }

@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/transparent"
+        android:visibility="gone"
         >
 
         <SurfaceView
@@ -26,6 +27,7 @@
             android:id="@+id/iv_cache"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="fitXY"
             android:visibility="gone"/>
 
         <RelativeLayout
@@ -130,11 +132,15 @@
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_43"
                 android:orientation="vertical">
 
                 <ImageView
@@ -154,11 +160,14 @@
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_34"
                 android:layout_gravity="center_vertical">
 
                 <ImageView
@@ -176,11 +185,16 @@
                     android:layout_marginTop="@dimen/dp_38"
                     android:text="对讲"/>
             </RelativeLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_34"
                 android:orientation="vertical">
 
                 <ImageView
@@ -199,11 +213,16 @@
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_34"
+                android:layout_marginRight="@dimen/dp_13"
                 android:orientation="vertical">
 
                 <ImageView
@@ -313,7 +332,7 @@
         android:id="@+id/rl_mark_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+
         >
 
 
@@ -470,16 +489,19 @@
                 android:layout_width="@dimen/dp_63"
                 android:layout_height="@dimen/dp_63"
                 android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginTop="@dimen/dp_51"
+                android:layout_below="@id/rl_title_bar"
+                android:layout_marginTop="@dimen/dp_24"
                 android:src="@mipmap/default_head" />
             <View
                 android:id="@+id/view_head"
                 android:layout_width="@dimen/dp_63"
                 android:layout_height="@dimen/dp_63"
-                android:layout_marginTop="@dimen/dp_51"
+                android:layout_below="@id/rl_title_bar"
+                android:layout_marginTop="@dimen/dp_24"
                 />
 
             <RelativeLayout
+                android:id="@+id/rl_title_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_40">
                 <ImageView
@@ -511,7 +533,8 @@
             android:layout_width="@dimen/dp_87"
             android:layout_height="@dimen/dp_87"
             android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_51"
+            android:layout_below="@id/rl_title_bar"
+            android:layout_marginTop="@dimen/dp_24"
             android:scaleType="centerCrop"
             android:layout_centerHorizontal="true"
             android:src="@mipmap/default_head" />

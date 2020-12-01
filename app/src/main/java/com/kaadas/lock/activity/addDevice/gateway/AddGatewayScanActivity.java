@@ -9,10 +9,12 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -33,6 +35,8 @@ public class AddGatewayScanActivity extends CaptureActivity {
     ImageView back;
     @BindView(R.id.touch_light_layout)
     LinearLayout touchLightLayout;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private Camera.Parameters parameter;
     private Camera camera;
     private boolean falshLight=false;
@@ -45,9 +49,17 @@ public class AddGatewayScanActivity extends CaptureActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MyApplication.getInstance().addActivity(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         initView();
         checkVersion();
+        //动态设置状态栏高度
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     @OnClick({R.id.back, R.id.touch_light_layout})
@@ -172,4 +184,14 @@ public class AddGatewayScanActivity extends CaptureActivity {
             ToastUtil.getInstance().showShort(getString(R.string.scan_qr_failed));
         }
     };*/
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }

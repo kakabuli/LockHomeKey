@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.EditTextWatcher;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddPirSuccessActivity  extends AppCompatActivity {
+public class AddPirSuccessActivity  extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

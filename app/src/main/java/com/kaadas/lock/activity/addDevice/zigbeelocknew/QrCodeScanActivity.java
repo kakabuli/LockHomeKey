@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
@@ -26,6 +29,8 @@ import com.uuzuche.lib_zxing.activity.CaptureFragment;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 */
 
+import org.apache.commons.net.bsd.RLoginClient;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,6 +42,8 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
     ImageView back;
     @BindView(R.id.touch_light_layout)
     LinearLayout touchLightLayout;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private ZBarView mZBarView;
     private boolean isOpenLight = false;
     int scan = 0;
@@ -46,12 +53,20 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_scan_qrcode);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         MyApplication.getInstance().addActivity(this);
         ButterKnife.bind(this);
         checkVersion();
         scan = getIntent().getIntExtra(KeyConstants.SCAN_TYPE, 0);
         mZBarView = findViewById(R.id.zbarview);
         mZBarView.setDelegate(this);
+        //动态设置状态栏高度
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     @Override
@@ -202,5 +217,15 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
                 finish();
             }
         }
+    }
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

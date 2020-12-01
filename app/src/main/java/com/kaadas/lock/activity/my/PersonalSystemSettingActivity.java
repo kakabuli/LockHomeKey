@@ -189,6 +189,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
         if (MyApplication.getInstance().getMqttService()!=null){
             MyApplication.getInstance().getMqttService().httpMqttDisconnect();
         }
+        mPresenter.uploadpushmethod();
         MyApplication.getInstance().tokenInvalid(false);
     }
 

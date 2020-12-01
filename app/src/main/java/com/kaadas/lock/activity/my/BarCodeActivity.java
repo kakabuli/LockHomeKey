@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.my;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;

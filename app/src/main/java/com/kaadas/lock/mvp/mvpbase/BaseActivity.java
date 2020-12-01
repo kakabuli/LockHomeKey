@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +27,7 @@ import butterknife.Unbinder;
  * Describe Activity 基类
  */
 public abstract class BaseActivity<T extends IBaseView, V
-        extends BasePresenter<T>> extends AppCompatActivity implements IBaseView {
+        extends BasePresenter<T>> extends BaseAddToApplicationActivity implements IBaseView {
     protected V mPresenter;
     private LoadingDialog loadingDialog;
     private Handler bHandler = new Handler();

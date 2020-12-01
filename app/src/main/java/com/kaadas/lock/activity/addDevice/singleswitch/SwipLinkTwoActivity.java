@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
-public class SwipLinkTwoActivity extends AppCompatActivity implements View.OnClickListener{
+public class SwipLinkTwoActivity extends BaseAddToApplicationActivity implements View.OnClickListener{
     TextView tv_content;
     Button btn_next;
     ImageView swich_link_two_img,iv_back;

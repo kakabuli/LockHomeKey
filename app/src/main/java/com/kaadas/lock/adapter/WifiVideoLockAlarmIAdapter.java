@@ -90,10 +90,13 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
         }*/
 
         if(record.getThumbUrl() == null && !record.isThumbState()){
-//            if(record.getFileName() == null){
-            rlPic.setVisibility(View.GONE);
-            view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1),SizeUtils.dp2px(27)));
-//            }
+            if(record.getFileName() == null || record.getFileName().isEmpty()){
+                rlPic.setVisibility(View.GONE);
+                view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1),SizeUtils.dp2px(27)));
+            }else{
+                rlPic.setVisibility(View.VISIBLE);
+                view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1), SizeUtils.dp2px(70)));
+            }
         }else{
             rlPic.setVisibility(View.VISIBLE);
             view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1), SizeUtils.dp2px(70)));

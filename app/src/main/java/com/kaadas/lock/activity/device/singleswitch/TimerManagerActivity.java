@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.SingleSwitchTimerAdapter;
 import com.kaadas.lock.bean.SingleSwitchTimerShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -29,7 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimerManagerActivity extends AppCompatActivity {
+public class TimerManagerActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

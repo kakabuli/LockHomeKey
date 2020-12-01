@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.cateye;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 

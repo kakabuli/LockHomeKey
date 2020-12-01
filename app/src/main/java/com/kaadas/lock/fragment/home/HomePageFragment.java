@@ -20,6 +20,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -121,7 +122,10 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         initView();
         initData(devices);
         getScrollViewWidth();
-
+        //动态设置状态栏高度
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(llHasDevice.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        llHasDevice.setLayoutParams(lp);
         return view;
     }
 
@@ -427,5 +431,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             return 0;
         }
         return viewPager.getCurrentItem();
+    }
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

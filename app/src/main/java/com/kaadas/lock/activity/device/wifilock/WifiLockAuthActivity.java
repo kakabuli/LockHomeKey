@@ -5,15 +5,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -80,6 +82,8 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     ImageView ivLockIcon;
     @BindView(R.id.iv_delete)
     ImageView ivDelete;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private static final int TO_MORE_REQUEST_CODE = 101;
     private Handler handler = new Handler();
     private WifiLockInfo wifiLockInfo;
@@ -91,6 +95,10 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_authorization);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         productList = MyApplication.getInstance().getProductInfos();
 
@@ -110,6 +118,10 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         }catch (Exception e){
 
         }
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     private void showLockType() {
@@ -312,5 +324,15 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     public void onDeleteDeviceFailedServer(BaseResult result) {
         hiddenLoading();
         ToastUtil.getInstance().showLong(R.string.delete_fialed);
+    }
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

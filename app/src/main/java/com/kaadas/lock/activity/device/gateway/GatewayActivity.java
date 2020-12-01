@@ -3,14 +3,18 @@ package com.kaadas.lock.activity.device.gateway;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -63,6 +67,8 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     LinearLayout noDeviceLayout;
     @BindView(R.id.gateway_logo)
     ImageView gateway_logo;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
     private List<HomeShowBean> homeShowBeans;
     private boolean gatewayOnline = false;
@@ -72,10 +78,18 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         initView();
         initData();
         initListener();
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     private void initListener() {
@@ -446,5 +460,15 @@ public class GatewayActivity extends BaseActivity<GatewayView, GatewayPresenter<
                 }
             }
         }
+    }
+
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

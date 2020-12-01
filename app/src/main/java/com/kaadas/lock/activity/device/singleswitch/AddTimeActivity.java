@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.bluetooth.password.CycleRulesActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.TimeUtil;
@@ -20,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddTimeActivity extends AppCompatActivity {
+public class AddTimeActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

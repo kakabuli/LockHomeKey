@@ -58,6 +58,7 @@
         android:id="@+id/iv_cache"
         android:layout_below="@id/rly_head"
         android:layout_width="match_parent"
+        android:scaleType="fitXY"
         android:layout_height="match_parent"/>
 
     <ImageView

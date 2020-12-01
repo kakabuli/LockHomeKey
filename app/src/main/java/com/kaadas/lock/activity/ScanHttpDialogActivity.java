@@ -3,7 +3,6 @@ package com.kaadas.lock.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -18,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
@@ -26,7 +26,7 @@ import com.kaadas.lock.utils.ftp.Result;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ScanHttpDialogActivity extends AppCompatActivity {
+public class ScanHttpDialogActivity extends BaseAddToApplicationActivity {
 
     private WebView webView;
     private String url;

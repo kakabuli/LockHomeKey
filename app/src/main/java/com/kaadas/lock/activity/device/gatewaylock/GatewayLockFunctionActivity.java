@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.gatewaylock;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,9 +12,12 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
@@ -106,6 +110,8 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     ImageView gatewayLockImage;
     @BindView(R.id.tv_type)
     TextView tvType;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private String   gatewayId;
     private String deviceId;
     private HomeShowBean showBean;
@@ -126,13 +132,20 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gateway_lock_function);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         ButterKnife.bind(this);
         initView();
         initData();
         initClick();
         initListener();
 
-
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
     private void initListener() {
@@ -694,5 +707,13 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
 
     }
 
-
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 }

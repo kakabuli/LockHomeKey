@@ -49,6 +49,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.MyGridItemDecoration;
 
@@ -105,7 +106,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         setContentView(R.layout.activity_wi_fi_lock_detail);
         ButterKnife.bind(this);
         productList = MyApplication.getInstance().getProductInfos();
-
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.app_main_status_bar);
         Intent intent = getIntent();
         changeLockIcon(intent);
         ivBack.setOnClickListener(this);

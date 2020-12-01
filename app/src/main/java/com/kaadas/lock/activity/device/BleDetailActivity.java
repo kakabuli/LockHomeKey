@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -15,9 +16,12 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -141,6 +145,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
     RecyclerView detailFunctionRecyclerView;
     @BindView(R.id.detail_function_onLine)
     RecyclerView detailFunctionOnLine;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
     private BleLockInfo bleLockInfo;
     private static final int TO_MORE_REQUEST_CODE = 101;
     private boolean isOpening = false;
@@ -178,6 +184,10 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
         LogUtils.e("全功能界面   1");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_lock_function);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         LogUtils.e("全功能界面  2 ");
         ButterKnife.bind(this);
         productList = MyApplication.getInstance().getProductInfos();
@@ -189,6 +199,10 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
         showLockType();
         initClick();
         initRecycleview();
+        //动态设置状态栏高度
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(titleBar.getLayoutParams());
+        lp.setMargins(0, getStatusBarHeight(), 0, 0);
+        titleBar.setLayoutParams(lp);
     }
 
 
@@ -702,5 +716,14 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
                 }
             }
         }
+    }
+    //获取状态栏高度
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

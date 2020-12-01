@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSuccessToSetSwitchActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
 import android.content.Intent;
@@ -17,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SwipchLinkNo extends AppCompatActivity implements View.OnClickListener {
+public class SwipchLinkNo extends BaseAddToApplicationActivity implements View.OnClickListener {
 
     @BindView(R.id.btn_swipch_ok)
     RelativeLayout btn_swipch_ok;

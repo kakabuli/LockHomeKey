@@ -1,7 +1,6 @@
 package com.kaadas.lock.activity.device.wifilock.password;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.HomeShowBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -26,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockPasswordShareActivity extends AppCompatActivity {
+public class WifiLockPasswordShareActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.head_title)
     TextView headTitle;

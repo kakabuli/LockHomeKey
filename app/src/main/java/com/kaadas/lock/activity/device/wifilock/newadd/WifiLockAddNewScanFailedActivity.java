@@ -9,12 +9,13 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewScanFailedActivity extends AppCompatActivity {
+public class WifiLockAddNewScanFailedActivity extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;
