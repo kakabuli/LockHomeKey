@@ -409,8 +409,8 @@ public class WifiVideoLockOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
     }
 
     public void release(){
-        XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        XMP2PManager.getInstance().stopCodec();
     }
 
     public void stopConnect(){

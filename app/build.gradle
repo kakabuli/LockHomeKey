@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202011251
-        versionName "4.1.9"
+        versionCode 202011301
+        versionName "4.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -221,7 +221,7 @@ dependencies {
 
 
     //日志功能
-    implementation 'com.blankj:alog:1.9.1'
+//    implementation 'com.blankj:alog:1.9.1'
 
     //依赖商城
     implementation project(':Store')

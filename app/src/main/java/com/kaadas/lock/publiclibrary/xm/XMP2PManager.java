@@ -7,6 +7,7 @@ import android.view.SurfaceView;
 
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.p2p.pppp_api.st_PPCS_Session;
 import com.xm.sdk.apis.XMStreamComCtrl;
 import com.xm.sdk.bean.ParamConnectDev;
@@ -216,6 +217,7 @@ public class XMP2PManager extends StreamListener  {
         paramConnectP2P.setUdpPort(0);  // 默认
         // 连接模式
         paramConnectP2P.setConnectMode((byte) 126);//126  默认126
+//        paramConnectP2P.setConnectMode((byte) 30);//30   纯转发
         // 按p2p服务器地址
         paramConnectP2P.setServiceString(paramDeviceInfo.getServiceString());
         // 监听各个p2p 函数调用 数据回调
@@ -798,15 +800,13 @@ public class XMP2PManager extends StreamListener  {
     }
 
     public void getDeviceInformation(){
-        LogUtils.e("shulan xm--DeviceInformation-->" + getInstanceP2P().getDeviceInformation());
+        MyLog.getInstance().save("shulan xm--DeviceInformation-->" + getInstanceP2P().getDeviceInformation());
     }
 
     @Override
     public void onGetDeviceInformationProcResult(JSONObject jsonObject) {
         super.onGetDeviceInformationProcResult(jsonObject);
-        LogUtils.e("shulan onGetDeviceInformationProcResult-->" + jsonObject.toString());
-        this.jsonObject = jsonObject.toString();
+        MyLog.getInstance().save("shulan onGetDeviceInformationProcResult-->" + jsonObject.toString());
     }
 
-    public static String jsonObject;
 }

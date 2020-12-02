@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.publiclibrary.linphone.linphone.linphone.PhoneBean;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
 import com.kaadas.lock.utils.FileUtils;
@@ -87,7 +88,7 @@ public class LinphoneUtils {
 					proxyAddr.asStringUriOnly(), proxyAddr.asStringUriOnly(), true);
 				//打开log
 				LinphoneCoreFactory.instance().enableLogCollection(true);
-				LinphoneCoreFactory.instance().setDebugMode(true, "kaadasLinphone");
+				LinphoneCoreFactory.instance().setDebugMode(BuildConfig.DEBUG, "kaadasLinphone");
 				mLinphoneCore.enableIpv6(true);
 
 				prxCfg.enableAvpf(false);

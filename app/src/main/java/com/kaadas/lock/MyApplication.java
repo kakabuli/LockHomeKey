@@ -8,10 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-import com.blankj.ALog;
+/*import com.blankj.ALog;*/
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.igexin.sdk.PushManager;
@@ -134,7 +135,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     @Override
     public void onCreate() {
         super.onCreate();
-        initALog();
+//        initALog();
+        MyLog.getInstance().init(this);
         LogUtils.e("attachView  App启动 ");
         instance = this;
         CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
@@ -144,7 +146,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
-        MyLog.getInstance().init(this);
         listenerAppBackOrForge();
         //扫描二维码初始化
         /* ZXingLibrary.initDisplayOpinion(this);*/
@@ -982,7 +983,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     // startSendFile it in ur application
-    public void initALog() {
+   /* public void initALog() {
         ALog.Config config = ALog.init(this)
                 .setLogSwitch(BuildConfig.DEBUG)// 设置log总开关，包括输出到控制台和文件，默认开
                 .setConsoleSwitch(BuildConfig.DEBUG)// 设置是否输出到控制台开关，默认开
@@ -1008,13 +1009,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                     }
                 });
         ALog.e(config.toString());
-    }
+    }*/
 
     private void setRxJavaErrorHandler() {
         RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
-                ALog.e("Rxjava throwable-->" + throwable);
+                MyLog.getInstance().save("Rxjava throwable-->" + throwable);
             }
         });
     }

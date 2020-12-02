@@ -340,8 +340,8 @@ public class WifiVideoLockSafeModePresenter<T> extends BasePresenter<IWifiVideoL
 
 
     public void release(){
-        XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        XMP2PManager.getInstance().stopCodec();
     }
 
     public void stopConnect(){

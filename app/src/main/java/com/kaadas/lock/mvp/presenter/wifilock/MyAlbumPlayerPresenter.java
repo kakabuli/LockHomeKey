@@ -15,7 +15,6 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.widget.RelativeLayout;
 
-import com.blankj.ALog;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
@@ -146,8 +145,8 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
     }
 
     public void release(){
-        XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        XMP2PManager.getInstance().stopCodec();
         this.startTime = 0;
         this.connectTimes = 0;
     }

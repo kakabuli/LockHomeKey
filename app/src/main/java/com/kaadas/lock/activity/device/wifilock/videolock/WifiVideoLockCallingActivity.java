@@ -467,6 +467,8 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     protected void onResume() {
         super.onResume();
         mPresenter.attachView(this);
+        mSufaceView.setVisibility(View.GONE);
+        mSufaceView.setVisibility(View.VISIBLE);
         if(wifiLockInfo.getKeep_alive_status() == 1){
 
             new Thread(new Runnable() {
@@ -719,11 +721,18 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 if(ivCache!= null)
                     ivCache.setVisibility(View.GONE);
                 if(isCalling == 0 || !isDoorbelling){
-                    avi.hide();
-                    tvTips.setVisibility(View.GONE);
-                    rlVideoLayout.setVisibility(View.VISIBLE);
-                    rlMarkLayout.setVisibility(View.GONE);
-
+                    if(avi!=null){
+                        avi.hide();
+                    }
+                    if(tvTips != null){
+                        tvTips.setVisibility(View.GONE);
+                    }
+                    if(rlVideoLayout != null){
+                        rlVideoLayout.setVisibility(View.VISIBLE);
+                    }
+                    if(rlMarkLayout != null){
+                        rlMarkLayout.setVisibility(View.GONE);
+                    }
                 }
             }
         });

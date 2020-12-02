@@ -3,7 +3,6 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-import com.blankj.ALog;
 import com.kaadas.lock.BuildConfig;
 
 /**
@@ -143,7 +142,7 @@ public class LogUtils {
 	public static void e(String msg) {
 		if (mDebuggable >= LEVEL_ERROR) {
 			if (isOutFile){
-				ALog.e( msg);
+				MyLog.getInstance().save( msg);
 			}else {
 				if(DEBUG)
 					Log.e(mTag, msg);
@@ -157,7 +156,7 @@ public class LogUtils {
 
 		if (mDebuggable >= LEVEL_ERROR) {
 			if (isOutFile){
-				ALog.e(mTag+TAG, msg);
+				MyLog.getInstance().save(mTag+TAG+ msg);
 			}else {
 				if(DEBUG)
 					Log.e(mTag+TAG, msg);

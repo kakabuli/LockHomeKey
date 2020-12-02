@@ -2,7 +2,6 @@ package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 
 import android.view.SurfaceView;
 
-import com.blankj.ALog;
 import com.google.gson.Gson;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
@@ -14,6 +13,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MyLog;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.AudioFrame;
 import com.xmitech.sdk.H264Frame;
@@ -170,8 +170,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
 
     public void release(){
-        XMP2PManager.getInstance().stopCodec();
         XMP2PManager.getInstance().stopConnect();//
+        XMP2PManager.getInstance().stopCodec();
         this.startTime = 0;
         this.connectTimes = 0;
     }
@@ -222,7 +222,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 //                    time = h264Frame.frameTimeStamp;
 //                    h264Frame.getFrameRate();
 
-                    ALog.file("xmtest","FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
+                    MyLog.getInstance().save("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
                 }
 
                 @Override

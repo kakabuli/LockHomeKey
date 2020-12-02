@@ -72,6 +72,7 @@ public class WifiLockRealTimeVideoPresenter<T> extends BasePresenter<IWifiLockRe
     }
 
     public void release(){
+        XMP2PManager.getInstance().stopConnect();
         XMP2PManager.getInstance().stopCodec();
     }
 
