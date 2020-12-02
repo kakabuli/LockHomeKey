@@ -22,10 +22,12 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +45,8 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     AVLoadingIndicatorView avi;
     @BindView(R.id.tv_tips)
     TextView tvTips;
+    @BindView(R.id.tv_period_connect)
+    TextView tvPeriodConnect;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -87,7 +91,7 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                 snoozeStartTime = wifiLockInfo.getAlive_time().getKeep_alive_snooze();
 
             }
-
+            tvPeriodConnect.setText(setWeekPeriod(snoozeStartTime) + setTimePeriod(startTime,endTime));
         }
     }
 
@@ -193,6 +197,51 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
         return false;
     }
 
+    private String setWeekPeriod(int[] snoozeStartTime) {
+        if(snoozeStartTime != null && snoozeStartTime.length >0){
+
+            String str = "";
+            int sum = 0;
+            for(int i = 0 ; i<snoozeStartTime.length;i++){
+
+                sum += snoozeStartTime[i];
+                if(snoozeStartTime[i] == 1){
+                    str += " 周一";
+                }else if(snoozeStartTime[i] == 2){
+                    str += " 周二";
+                }else if(snoozeStartTime[i] == 3){
+                    str += " 周三";
+                }else if(snoozeStartTime[i] == 4){
+                    str += " 周四";
+                }else if(snoozeStartTime[i] == 5){
+                    str += " 周五";
+                }else if(snoozeStartTime[i] == 6){
+                    str += " 周六";
+                }else if(snoozeStartTime[i] == 7){
+                    str += " 周日";
+                }
+            }
+            if(sum == 28){
+                return "每天 ";
+            }else{
+                if(str.length() > 10){
+                    return str.substring(0,9) + "... ";
+                }
+                return str;
+            }
+        }else {
+            return "";
+        }
+    }
+
+    private String setTimePeriod(int startTime,int endTime){
+        if(endTime == 86400){
+            endTime = endTime -1;
+        }
+        return DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime);
+    }
+
+
     private void setRealTime() {
 
         try {
@@ -246,6 +295,7 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                     snoozeStartTime = data.getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
                     wifiSn = data.getStringExtra(KeyConstants.WIFI_SN);
                     wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+                    tvPeriodConnect.setText(setWeekPeriod(snoozeStartTime) + setTimePeriod(startTime,endTime));
                     break;
             }
         }

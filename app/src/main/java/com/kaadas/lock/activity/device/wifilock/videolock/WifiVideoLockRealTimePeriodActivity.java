@@ -19,6 +19,9 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.TimePickerDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,6 +37,8 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
     RelativeLayout rlRealTimeRuleRepet;
     @BindView(R.id.tv_video_time_setting)
     TextView tvVideoTimeSetting;
+    @BindView(R.id.tv_period_connect)
+    TextView tvPeriodConnect;
 
     private TimePickerDialog mTimePickerDialog;
     private String wifiSn;
@@ -64,6 +69,40 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
     private void initData() {
         time = DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime);
         tvVideoTimeSetting.setText(DateUtils.getStringTime2(startTime) + "-" + DateUtils.getStringTime2(endTime));
+        setWeekPeriod(snoozeStartTime);
+    }
+
+    private void setWeekPeriod(int[] snoozeStartTime) {
+        if(snoozeStartTime != null && snoozeStartTime.length >0){
+
+            String str = "";
+            int sum = 0;
+            for(int i = 0 ; i<snoozeStartTime.length;i++){
+
+                sum += snoozeStartTime[i];
+                if(snoozeStartTime[i] == 1){
+                    str += " 周一";
+                }else if(snoozeStartTime[i] == 2){
+                    str += " 周二";
+                }else if(snoozeStartTime[i] == 3){
+                    str += " 周三";
+                }else if(snoozeStartTime[i] == 4){
+                    str += " 周四";
+                }else if(snoozeStartTime[i] == 5){
+                    str += " 周五";
+                }else if(snoozeStartTime[i] == 6){
+                    str += " 周六";
+                }else if(snoozeStartTime[i] == 7){
+                    str += " 周日";
+                }
+            }
+            if(sum == 28){
+                tvPeriodConnect.setText("每天");
+            }else{
+                tvPeriodConnect.setText(str + "");
+            }
+        }
+
     }
 
     @Override
@@ -146,6 +185,7 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
                 case KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD_CODE:
                     snoozeStartTime = data.getIntArrayExtra(KeyConstants.WIFI_VIDEO_LOCK_REAL_TIME_PERIOD);
                     wifiSn = data.getStringExtra(KeyConstants.WIFI_SN);
+                    setWeekPeriod(snoozeStartTime);
                     break;
             }
         }
