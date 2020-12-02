@@ -68,40 +68,4 @@ public class SystemSettingPresenter<T> extends BasePresenter<ISystemSettingView>
 
     }
 
-    // 个推 2
-    // 华为 3
-    // 小米 4
-    public void uploadpushmethod() {
-        int type = 0;
-        if (Rom.isEmui()) {
-            type = 3;
-        } else if(Rom.isMiui()){
-            type = 4;
-        } else{
-            type = 2;
-        }
-        XiaokaiNewServiceImp.uploadPushId(MyApplication.getInstance().getUid(), "", type).subscribe(new BaseObserver<BaseResult>() {
-            @Override
-            public void onSuccess(BaseResult baseResult) {
-
-            }
-
-            @Override
-            public void onAckErrorCode(BaseResult baseResult) {
-                Log.e(GeTui.VideoLog, "pushid上传失败,服务返回:" + baseResult);
-            }
-
-            @Override
-            public void onFailed(Throwable throwable) {
-                Log.e(GeTui.VideoLog, "pushid上传失败");
-            }
-
-            @Override
-            public void onSubscribe1(Disposable d) {
-                compositeDisposable.add(d);
-            }
-        });
-
-    }
-
 }
