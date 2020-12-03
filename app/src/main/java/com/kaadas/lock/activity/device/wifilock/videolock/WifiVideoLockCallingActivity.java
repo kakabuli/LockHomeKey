@@ -948,7 +948,14 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ivMute.setImageResource(R.mipmap.real_time_video_mute);
+                isShowAudio = true;
+                isFirstAudio = false;
+                llyRecord.setVisibility(View.GONE);
+                ivRecoring.setSelected(false);
+                ivCalling.setSelected(false);
+                tvCallingTips.setText("对讲");
+                tvCallingTips.setTextColor(Color.parseColor("#333333"));
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 tvTips.setVisibility(View.VISIBLE);
