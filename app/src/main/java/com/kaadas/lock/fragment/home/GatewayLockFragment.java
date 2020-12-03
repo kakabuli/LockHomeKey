@@ -24,6 +24,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.GatewayEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
+import com.kaadas.lock.adapter.HomeBeanRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.fragment.home.HomePageFragment;
@@ -90,7 +91,7 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
     private GwLockInfo gatewayLockInfo;
     private String gatewayId;
     private String deviceId;
-    private BluetoothRecordAdapter openLockRecordAdapter;
+    private HomeBeanRecordAdapter openLockRecordAdapter;
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private boolean isOpening = false;
      private boolean isClosing = false;
@@ -192,10 +193,21 @@ public class GatewayLockFragment extends BaseFragment<IGatewayLockHomeView, Gate
 
 
     private void initRecycleView() {
-        openLockRecordAdapter = new BluetoothRecordAdapter(mOpenLockList); //网关
+        openLockRecordAdapter = new HomeBeanRecordAdapter(mOpenLockList); //网关
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(openLockRecordAdapter);
-
+        openLockRecordAdapter.setOnDataMoreListener(new HomeBeanRecordAdapter.onDataMoreListener() {
+            @Override
+            public void onClickMore() {
+                Intent intent = new Intent(getActivity(), GatewayEquipmentDynamicActivity.class);
+                if (!TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
+                    intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                    intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                    intent.putExtra(KeyConstants.GATEWAY_LOCK_INFO, gatewayLockInfo);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override

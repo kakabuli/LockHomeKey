@@ -240,7 +240,15 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         llyRecordBar.setOnClickListener(this);
         tvSynchronizedRecord.setOnClickListener(this);
         ivBackGround.setOnClickListener(this);
-
+        operationGroupRecordAdapter.setOnDataMoreListener(new WifiLockOperationGroupRecordAdapter.onDataMoreListener() {
+            @Override
+            public void onClickMore() {
+                //  跳转至记录界面
+                Intent intent = new Intent(getContext(), WifiLockRecordActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                startActivity(intent);
+            }
+        });
     }
 
 

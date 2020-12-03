@@ -20,6 +20,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.activity.home.CateyeEquipmentDynamicActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
+import com.kaadas.lock.adapter.HomeBeanRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.fragment.home.HomePageFragment;
@@ -80,7 +81,7 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     private HomePageFragment.ISelectChangeListener iSelectChangeListener;
     private String gatewayId;
     private String deviceId;
-    private BluetoothRecordAdapter bluetoothRecordAdapter;
+    private HomeBeanRecordAdapter bluetoothRecordAdapter;
     private HomePageFragment homePageFragment;
     @Nullable
     @Override
@@ -164,9 +165,18 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     }
 
     private void initRecycleView() {
-        bluetoothRecordAdapter = new BluetoothRecordAdapter(mCatEyeInfoList); //猫眼
+        bluetoothRecordAdapter = new HomeBeanRecordAdapter(mCatEyeInfoList); //猫眼
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
+        bluetoothRecordAdapter.setOnDataMoreListener(new HomeBeanRecordAdapter.onDataMoreListener() {
+            @Override
+            public void onClickMore() {
+                Intent intent = new Intent(getActivity(), CateyeEquipmentDynamicActivity.class);
+                intent.putExtra(KeyConstants.GATEWAY_ID, gatewayId);
+                intent.putExtra(KeyConstants.DEVICE_ID, deviceId);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

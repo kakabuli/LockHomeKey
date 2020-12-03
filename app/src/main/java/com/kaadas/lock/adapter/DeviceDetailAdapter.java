@@ -69,6 +69,11 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
 //        }
         BatteryView batteryView = helper.getView(R.id.horizontalBatteryView);
         TextView textView = helper.getView(R.id.device_name);
+        if(helper.getLayoutPosition() == 0){
+            helper.getView(R.id.view_1).setVisibility(View.VISIBLE);
+        }else{
+            helper.getView(R.id.view_1).setVisibility(View.GONE);
+        }
         if (HomeShowBean.TYPE_GATEWAY == item.getDeviceType()) {
             //隐藏
             helper.getView(R.id.power_layout).setVisibility(View.GONE);

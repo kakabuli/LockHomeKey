@@ -1,5 +1,6 @@
 package com.kaadas.lock.adapter;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.bean.WifiLockAlarmRecordGroup;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.publiclibrary.bean.WifiLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.utils.DateUtils;
+import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.List;
 
@@ -25,13 +28,24 @@ import java.util.List;
 
 public class WifiLockOperationGroupRecordAdapter extends BaseQuickAdapter<WifiLockOperationRecordGroup, BaseViewHolder> {
 
+    public interface onDataMoreListener{
+        void onClickMore();
+    }
+
+    private onDataMoreListener mOnDataMoreListener = null;
+
+    public void setOnDataMoreListener(onDataMoreListener listener){
+        this.mOnDataMoreListener = listener;
+    }
+
     public WifiLockOperationGroupRecordAdapter(@Nullable List<WifiLockOperationRecordGroup> data) {
-        super(R.layout.item_bluetooth_record, data);
+        super(R.layout.item_bluetooth_operation_record, data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, WifiLockOperationRecordGroup bean) {
         TextView tvTitle = helper.getView(R.id.tv_title);
+        TextView textView = helper.getView(R.id.tv_more);
         String time = bean.getTime();
         if (!TextUtils.isEmpty(time)) {
             if (time.equals(DateUtils.getCurrentYMD())){
@@ -39,8 +53,11 @@ public class WifiLockOperationGroupRecordAdapter extends BaseQuickAdapter<WifiLo
             }
             tvTitle.setText(time);
             tvTitle.setVisibility(View.VISIBLE);
+            if(helper.getLayoutPosition() == 0)
+                textView.setVisibility(View.VISIBLE);
         } else {
             tvTitle.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
         }
         RecyclerView recyclerView = helper.getView(R.id.item_recycleview);
         List<WifiLockOperationRecord> list = bean.getList();
@@ -48,6 +65,14 @@ public class WifiLockOperationGroupRecordAdapter extends BaseQuickAdapter<WifiLo
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(bluetoothItemRecordAdapter);
         helper.getView(R.id.view_line).setVisibility(helper.getPosition() == getData().size()-1 ? View.INVISIBLE : View.VISIBLE);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mOnDataMoreListener != null){
+                    mOnDataMoreListener.onClickMore();
+                }
+            }
+        });
     }
 
 

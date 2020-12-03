@@ -26,6 +26,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothRecordActivity;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
+import com.kaadas.lock.adapter.HomeBeanRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseBleFragment;
@@ -105,7 +106,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     private HomePageFragment homeFragment;
     private boolean isCurrentFragment;
     private int position;
-    BluetoothRecordAdapter bluetoothRecordAdapter;
+    HomeBeanRecordAdapter bluetoothRecordAdapter;
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private boolean isDestroy = false;
@@ -395,9 +396,16 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     }
 
     private void initRecycleView() {
-        bluetoothRecordAdapter = new BluetoothRecordAdapter(showDatas);
+        bluetoothRecordAdapter = new HomeBeanRecordAdapter(showDatas);
         recycleview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycleview.setAdapter(bluetoothRecordAdapter);
+        bluetoothRecordAdapter.setOnDataMoreListener(new HomeBeanRecordAdapter.onDataMoreListener() {
+            @Override
+            public void onClickMore() {
+                Intent intent = new Intent(getActivity(), BluetoothRecordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

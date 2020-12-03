@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/rly_head"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_height="@dimen/dp_44"
         android:background="#F8F8F8">
 
         <ImageView
@@ -38,7 +38,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:text="2018"
-            android:textSize="@dimen/sp_11"/>
+            android:textSize="@dimen/sp_10"/>
 
     </RelativeLayout>
 

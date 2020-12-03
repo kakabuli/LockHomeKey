@@ -117,6 +117,7 @@
                         android:layout_marginRight="@dimen/dp_12"
                         android:padding="@dimen/dp_18"
                         android:text="@string/more"
+                        android:visibility="gone"
                         android:textColor="#1F96F7"
                         android:textSize="@dimen/sp_12" />
 

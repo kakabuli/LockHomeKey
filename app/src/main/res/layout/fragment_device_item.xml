@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <View
+        android:id="@+id/view_1"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_10"
+        android:visibility="gone"/>
+<RelativeLayout
+
+    android:layout_width="match_parent"
     android:layout_height="@dimen/dp_132"
     android:background="#FFFFFF"
-    android:layout_margin="@dimen/dp_10"
+    android:layout_marginLeft="@dimen/dp_10"
+    android:layout_marginRight="@dimen/dp_10"
+    android:layout_marginBottom="@dimen/dp_10"
     >
     <LinearLayout
         android:id="@+id/device"
@@ -114,3 +126,4 @@
         android:layout_marginRight="@dimen/dp_12"
         />
 </RelativeLayout>
+</LinearLayout>
