@@ -122,6 +122,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private String TAG = "凯迪仕";
     private IWXAPI api;
     private List<HomeShowBean> homeShowDevices = new ArrayList<>();
+    private List<HomeShowBean> loclHomeShowDevices = new ArrayList<>();
     private List<ProductInfo> productLists = new ArrayList<>();
     private int listService = 0;
 
@@ -562,7 +563,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
                         if (!"200".equals(allBindDevices.getCode())) {  ///服务器获取设备列表失败
                             LogUtils.e("   获取列表失败  " + allBindDevices.getCode());
+                            useHomeShowDeviceFromLocal();
                             return;
+                        }
+
+                        //使用服务器的数据
+                        if(!loclHomeShowDevices.isEmpty()){
+                            loclHomeShowDevices.clear();
                         }
 
                         List<AllBindDevices.ReturnDataBean.GwListBean> gwList = allBindDevices.getData().getGwList();
@@ -605,9 +612,20 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        useHomeShowDeviceFromLocal();
                     }
                 });
+    }
+
+    private void useHomeShowDeviceFromLocal() {
+        if(!loclHomeShowDevices.isEmpty()){
+            for(HomeShowBean bean : loclHomeShowDevices){
+                HomeShowBean newBean = new HomeShowBean(bean.getDeviceType(), bean.getDeviceId(), bean.getDeviceNickName(), bean.getObject());
+                homeShowDevices.add(newBean);
+
+            }
+            loclHomeShowDevices.clear();
+        }
     }
 
     public WifiLockInfo searchVideoLock(String wifiSN){
@@ -711,7 +729,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     public void setHomeshowDevice(List<HomeShowBean> homeshowDeviceList) {
-        homeShowDevices = homeshowDeviceList;
+        loclHomeShowDevices = homeshowDeviceList;
+
     }
 
     public List<HomeShowBean> getHomeShowDevices() {
