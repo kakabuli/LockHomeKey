@@ -28,7 +28,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.MyAlbumPlayerPresenter;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.MyAlbumPlayerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;

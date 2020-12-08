@@ -3,6 +3,7 @@ package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 import android.view.SurfaceView;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
@@ -10,6 +11,7 @@ import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
@@ -99,6 +101,10 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
+            if(paramInt == XMP2PConnectError.XM_DYNAMIC_LIBRARY_NOT_INITIALIZED){
+                XMP2PManager.getInstance().initAPI(serviceString);
+                XMP2PManager.getInstance().init(MyApplication.getInstance());
+            }
             if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
 
                 if(isSafe()){

@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter.wifilock;
+package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.widget.RelativeLayout;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoFifthView;
@@ -22,6 +23,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
@@ -89,6 +91,10 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         @Override
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
+            if(paramInt == XMP2PConnectError.XM_DYNAMIC_LIBRARY_NOT_INITIALIZED){
+                XMP2PManager.getInstance().initAPI(serviceString);
+                XMP2PManager.getInstance().init(MyApplication.getInstance());
+            }
             if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
 
                 if(isSafe()){

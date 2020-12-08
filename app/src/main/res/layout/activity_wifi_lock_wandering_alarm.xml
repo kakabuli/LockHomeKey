@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_15"
-                android:text="开启后，可摄像头会侦测门外徘徊人员，比较耗电"
+                android:text="开启后，可视摄像头会侦测门外徘徊人员，比较耗电"
                 android:textColor="#999999"
                 android:textSize="@dimen/sp_10" />
 

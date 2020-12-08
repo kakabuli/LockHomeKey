@@ -35,7 +35,7 @@ public class MyLog {
 
     String newFileTime = null;
     String writeFileTime = null;
-    String dirPath = null;
+    String dirPath = "-凯迪仕-";
     File file = null;
     FileWriter filerWriter = null;
     BufferedWriter bufWriter = null;
