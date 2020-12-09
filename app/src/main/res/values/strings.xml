@@ -2,6 +2,9 @@
 <resources>
     <string name="select_coutroy">选择国家/地区</string>
     <string name="app_name">凯迪仕智能</string>
+    <string name="app_name_notificatoin_title">凯迪仕智能正在运行</string>
+    <!--<string name="app_name_notificatoin_content">可能导致系统卡顿，降低待机时间，点按关闭</string>-->
+    <string name="app_name_notificatoin_content">点按关闭</string>
     <string name="china">中国大陆</string>
     <string name="input_telephone_or_rmail">请输入手机号或邮箱</string>
     <string name="input_password">请输入密码</string>

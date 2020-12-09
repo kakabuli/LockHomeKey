@@ -20,6 +20,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DoorbellingResult;
+import com.kaadas.lock.utils.AppUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -603,6 +604,9 @@ public class MqttService extends Service {
         if(mDoorbellingResult.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) && mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
             if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
                 WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(mDoorbellingResult.getWfId());
+                if(!AppUtil.isAppOnForeground(MqttService.this)){
+                    return;
+                }
                 if(getRunningActivityName().equals(WifiVideoLockCallingActivity.class.getName())){
                     return;
                 }

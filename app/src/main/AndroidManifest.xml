@@ -742,6 +742,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <service android:name=".publiclibrary.xm.DoorbellingService"/>
         <service android:name=".publiclibrary.ble.BleService" />
         <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />
 

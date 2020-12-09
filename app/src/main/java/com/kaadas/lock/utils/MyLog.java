@@ -120,10 +120,12 @@ public class MyLog {
 //                }
 //                FileWriter filerWriter = new FileWriter(file, true);
 //                BufferedWriter bufWriter = new BufferedWriter(filerWriter);
-                if (file != null || !file.exists()) {
-                    file.createNewFile();
-                    filerWriter = new FileWriter(file, true);
-                    bufWriter = new BufferedWriter(filerWriter);
+                if (file != null) {
+                    if(!file.exists()){
+                        file.createNewFile();
+                        filerWriter = new FileWriter(file, true);
+                        bufWriter = new BufferedWriter(filerWriter);
+                    }
                 } else {
                     newFileTime = simpleDateFormat1.format(now);
 

@@ -1,4 +1,4 @@
-package com.ykun.live_library.config;
+package com.kaadas.lock.shulan.config;
 
 /**
  * 需要保活的服务

@@ -1,6 +1,6 @@
-package com.ykun.live_library.config;
+package com.kaadas.lock.shulan.config;
 
-import com.ykun.live_library.R;
+import com.kaadas.lock.shulan.R;
 
 /**
  * 进程保活需要配置的属性
@@ -29,11 +29,16 @@ public class KeepAliveConfig {
      * 广播通知的 action
      */
     public static String NOTIFICATION_ACTION = "NOTIFICATION_ACTION";
+    public static String ONE_PIXEL_FINISH_ACTIVITY = "ONE_PIXEL_FINISH_ACTIVITY";
+    public static String KAADAS_SHULAN_ACTION_SCRREN_OFF = "KAADAS_SHULAN_ACTION_SCRREN_OFF";
+    public static String KAADAS_SHULAN_ACTION_SCRREN_ON = "KAADAS_SHULAN_ACTION_SCRREN_ON";
+    public static String SYSTEM_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
+    public static String SYSTEM_SCREEN_ON = "android.intent.action.SCREEN_ON";
 
     public static String TITLE = "TITLE";
     public static String CONTENT = "CONTENT";
     public static String RES_ICON = "RES_ICON";
-    public static int DEF_ICONS = R.drawable.ic_launcher;
-    public static String SP_NAME = "KeepAliveConfig";
+    public static int DEF_ICONS = R.mipmap.ic_launcher;
+    public static String SP_NAME = "shulanKeepAliveConfig";
 
 }

@@ -1,0 +1,4 @@
+<resources>
+    <string name="sllocal_service_name">凯迪仕智能前台推送服务</string>
+    <string name="slremote_service_name">凯迪仕智能生活服务</string>
+</resources>

@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/transparent"
-        android:visibility="gone"
+
         >
 
         <SurfaceView
@@ -257,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_8"
-                android:textSize="@dimen/dp_11"
+                android:textSize="@dimen/sp_11"
                 android:text="注：远程临时密码30分钟有效"
                 android:textColor="#505050" />
 
@@ -269,7 +269,7 @@
                 android:letterSpacing="0.5"
                 android:text="12345678123"
                 android:textColor="#333"
-                android:textSize="@dimen/dp_18"
+                android:textSize="@dimen/sp_18"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -332,7 +332,7 @@
         android:id="@+id/rl_mark_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:visibility="gone"
         >
 
 

@@ -21,6 +21,7 @@
 /app/bugly
 /app/build
 /Core/build
+/keep_alive/build
 /linphoneLibrary/build/
 /tmpmob/ShareSDK/assets/
 /imagepicker/build/

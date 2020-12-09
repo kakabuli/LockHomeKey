@@ -1,1 +1,2 @@
+include ':keep_alive'
 include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker', ':push:pushsdk_huawei', ':push:pushsdk_xiaomi', ':pickerview', ':Store', ':refresh', ':Core', ':rxeasyhttp', ':countdownview'

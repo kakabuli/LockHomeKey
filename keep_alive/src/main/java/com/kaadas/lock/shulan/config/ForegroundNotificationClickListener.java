@@ -1,4 +1,4 @@
-package com.ykun.live_library.config;
+package com.kaadas.lock.shulan.config;
 
 import android.content.Context;
 import android.content.Intent;

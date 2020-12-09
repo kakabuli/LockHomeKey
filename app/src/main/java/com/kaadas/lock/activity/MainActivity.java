@@ -23,20 +23,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.flyco.tablayout.CommonTabLayout;
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
 import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
@@ -69,7 +63,6 @@ import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
@@ -80,7 +73,6 @@ import com.kaidishi.lock.push.NetEvevt;
 import com.kaidishi.lock.xiaomi.SPUtils2;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 import com.yun.software.kaadas.Comment.Constans;
-import com.yun.software.kaadas.UI.fragment.ShopFragment;
 import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.CMAPI;
@@ -105,7 +97,6 @@ import de.greenrobot.event.ThreadMode;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
-import static com.kaadas.lock.utils.PermissionUtil.REQUEST_PERMISSION_REQUEST_CODE;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
         implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener, NetEvevt {
@@ -256,8 +247,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         LogUtils.e("MainActivity启动完成 ");
 
         checkNotificatoinEnabled();
-
-
     }
 
     private void checkNotificatoinEnabled() {

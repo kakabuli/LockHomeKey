@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202012031
-        versionName "4.2.0"
+        versionCode 202012091
+        versionName "4.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -115,6 +115,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation files('libs\\Native_Libs2.jar')
+    implementation project(path: ':keep_alive')
 
 //    implementation 'androidx.appcompat:appcompat:1.1.0'
 //    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

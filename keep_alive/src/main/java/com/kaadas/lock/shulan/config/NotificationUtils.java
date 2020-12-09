@@ -1,4 +1,4 @@
-package com.ykun.live_library.config;
+package com.kaadas.lock.shulan.config;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,7 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
-import com.ykun.live_library.R;
+import com.kaadas.lock.shulan.R;
 
 public class NotificationUtils extends ContextWrapper {
     private NotificationManager manager;
@@ -60,7 +60,7 @@ public class NotificationUtils extends ContextWrapper {
           content = mContext.getApplicationInfo().name;
       }
         if (icon == 0) {
-            icon = R.drawable.ic_launcher;
+            icon = R.mipmap.ic_launcher;
         }
 
         return new Notification.Builder(mContext, id)
