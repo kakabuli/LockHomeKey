@@ -1,9 +1,16 @@
 package com.kaadas.lock.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.net.NetworkSpecifier;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
+import android.os.PatternMatcher;
 import android.util.Log;
 
 import java.util.List;
@@ -23,6 +30,34 @@ public class WifiUtil {
      * @return
      */
     public boolean changeToWifi(String wifiName, String wifiPwd){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            NetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
+                            .setSsidPattern(new PatternMatcher(wifiName, PatternMatcher.PATTERN_PREFIX))
+                            .setWpa2Passphrase(wifiPwd)
+                            .build();
+
+            NetworkRequest request = new NetworkRequest.Builder()
+                            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                            .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                            .setNetworkSpecifier(specifier)
+                            .build();
+
+            ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(Network network) {
+                    connectivityManager.bindProcessToNetwork(network);;
+                }
+
+                @Override
+                public void onUnavailable() {
+
+                }
+            };
+            connectivityManager.requestNetwork(request, networkCallback);
+
+            return true;
+        }
+
         if(mWifiManager == null){
             Log.i(TAG, " ***** init first ***** ");
             return false;
@@ -119,6 +154,7 @@ public class WifiUtil {
 
 
     private WifiManager mWifiManager;
+    private ConnectivityManager connectivityManager;
 
     // 单例
     private static final WifiUtil ourInstance = new WifiUtil();
@@ -129,5 +165,6 @@ public class WifiUtil {
 
     public void init(Context context) {
         mWifiManager = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 }

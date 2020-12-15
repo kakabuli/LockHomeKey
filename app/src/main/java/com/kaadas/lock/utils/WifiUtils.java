@@ -1,9 +1,16 @@
 package com.kaadas.lock.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.net.NetworkSpecifier;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
+import android.os.PatternMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +20,7 @@ public class WifiUtils {
 
     public WifiUtils(Context context){
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     public static WifiUtils getInstance(Context context){
@@ -31,6 +39,7 @@ public class WifiUtils {
     }
 
     private WifiManager wifiManager;
+    private ConnectivityManager connectivityManager;
 
     /**
      * wifi是否打开
@@ -83,9 +92,38 @@ public class WifiUtils {
      */
     public void connectWifiPws(String ssid, String pws){
         LogUtils.e("连接wifi   " +ssid);
-        wifiManager.disableNetwork(wifiManager.getConnectionInfo().getNetworkId());
-        int netId = wifiManager.addNetwork(getWifiConfig(ssid, pws, true));
-        wifiManager.enableNetwork(netId, true);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            NetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
+                    .setSsidPattern(new PatternMatcher(ssid, PatternMatcher.PATTERN_PREFIX))
+                    .setWpa2Passphrase(pws)
+                    .build();
+
+            NetworkRequest request = new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                    .setNetworkSpecifier(specifier)
+                    .build();
+
+            ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override
+                public void onAvailable(Network network) {
+                    connectivityManager.bindProcessToNetwork(network);
+
+                }
+
+                @Override
+                public void onUnavailable() {
+
+                }
+            };
+            connectivityManager.requestNetwork(request, networkCallback);
+
+            return ;
+        }else{
+            wifiManager.disableNetwork(wifiManager.getConnectionInfo().getNetworkId());
+            int netId = wifiManager.addNetwork(getWifiConfig(ssid, pws, true));
+            wifiManager.enableNetwork(netId, true);
+        }
     }
 
 
