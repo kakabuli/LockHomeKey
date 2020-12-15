@@ -14,6 +14,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
+import com.kaadas.lock.publiclibrary.xm.bean.XMConnectErrorBean;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.xm.sdk.struct.stream.AVStreamHeader;
@@ -38,6 +39,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     private static  String p2pPassword ="";//ut4D0mvz
 
     private static  String serviceString=XMP2PManager.serviceString;;
+
+    private static int errno = 0;
 
     private Disposable wifiVideoLockStatusListenDisposable;
 
@@ -105,6 +108,13 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                 XMP2PManager.getInstance().initAPI(serviceString);
                 XMP2PManager.getInstance().init(MyApplication.getInstance());
             }
+            if(errno > 0){
+                if(isSafe()){
+                    mViewRef.get().onConnectFailed(errno);
+                    errno = 0;
+                }
+                return;
+            }
             if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
 
                 if(isSafe()){
@@ -128,7 +138,6 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onStartConnect(String paramString) {
-
             if(isSafe()){
                 mViewRef.get().onStartConnect(paramString);
             }
@@ -137,7 +146,11 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
         @Override
         public void onErrorMessage(String message) {
-
+            try {
+                XMConnectErrorBean xmConnectErrorBean = new Gson().fromJson(message, XMConnectErrorBean.class);
+                errno = xmConnectErrorBean.getErrno();
+            }catch (Exception e){
+            }
 //            stopConnect();
             if(isSafe()){
                 mViewRef.get().onErrorMessage(message);

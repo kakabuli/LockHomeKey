@@ -588,7 +588,13 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                         tvTips.setVisibility(View.GONE);
                     isConnect = false;
                     LogUtils.e("shulan"+this + " paramInt=" + paramInt);
-                    String errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
+                    String errorStringWithCode;
+                    if(paramInt >0){
+                        errorStringWithCode = getString(R.string.xm_json_error_other_error) + "";
+                    }else{
+
+                        errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
+                    }
                     creteDialog(errorStringWithCode + "");
 
                 }
