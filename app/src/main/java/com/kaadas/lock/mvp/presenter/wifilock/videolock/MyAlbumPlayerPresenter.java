@@ -24,6 +24,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectJsonError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.utils.LogUtils;
@@ -214,7 +215,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
             @Override
             public void onPlayDeviceRecordVideoProcResult(JSONObject jsonObject) {
                 try {
-                    if(jsonObject.getInt("errno") == 116 && times>0){
+                    if(jsonObject.getInt("errno") == XMP2PConnectJsonError.XM_JSON_ERROR_T21_INITIALIZED && times>0){
                         postHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {

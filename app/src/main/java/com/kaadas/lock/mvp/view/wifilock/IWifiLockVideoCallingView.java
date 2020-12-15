@@ -14,7 +14,7 @@ public interface IWifiLockVideoCallingView extends IBaseView {
     //连接状态信息
     void onStartConnect(String paramString);
     //连接失败，错误信息
-    void onErrorMessage(String message);
+    void onErrorMessage(int errno);
     //通知设备OTA更新
    // void onNotifyGateWayNewVersion(String paramString);
     //重启设备

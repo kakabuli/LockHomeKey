@@ -45,6 +45,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectJsonError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
@@ -53,6 +54,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
@@ -590,7 +592,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     LogUtils.e("shulan"+this + " paramInt=" + paramInt);
                     String errorStringWithCode;
                     if(paramInt >0){
-                        errorStringWithCode = getString(R.string.xm_json_error_other_error) + "";
+                        errorStringWithCode = XMP2PConnectJsonError.checkP2PJSONErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
                     }else{
 
                         errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
@@ -630,8 +632,21 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     }
 
     @Override
-    public void onErrorMessage(String message) {
+    public void onErrorMessage(int errno) {
+        mPresenter.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(errno == XMP2PConnectJsonError.XM_JSON_ERROR_TALK_OCCUPIED){
+                    mPresenter.talkback(false);
+                    mPresenter.stopTalkback();
+                    ivCalling.setSelected(false);
+                    tvCallingTips.setText("对讲");
+                    tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                    showShort(getString(R.string.xm_json_error_talk_occupied) + "");
+                }
 
+            }
+        });
     }
 
     @Override

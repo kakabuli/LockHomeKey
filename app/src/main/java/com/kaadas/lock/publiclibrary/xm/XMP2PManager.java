@@ -534,7 +534,7 @@ public class XMP2PManager extends StreamListener  {
                 LogUtils.e("----->code");
                 return;
             }
-            if (paramJSONObject.getInt("errno") == 116)
+            if (paramJSONObject.getInt("errno") == XMP2PConnectJsonError.XM_JSON_ERROR_T21_INITIALIZED)
             {
                 //当116 时， T21视频模块无启动完成。继续发生命令
                 if(mConnectListener != null)
@@ -669,6 +669,8 @@ public class XMP2PManager extends StreamListener  {
         super.onStartTalkbackProcResult(jsonObject);
         //打开对讲语音的结果回调
         LogUtils.e("shulan onStartTalkbackProcResult--" + jsonObject.toString());
+        if(mConnectListener != null)
+            mConnectListener.onErrorMessage(jsonObject.toString());
     }
 
     public void startTalkback(){

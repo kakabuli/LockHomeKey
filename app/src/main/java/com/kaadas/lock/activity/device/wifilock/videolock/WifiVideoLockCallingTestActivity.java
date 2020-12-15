@@ -505,7 +505,7 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
     }
 
     @Override
-    public void onErrorMessage(String message) {
+    public void onErrorMessage(int errno) {
         /*runOnUiThread(new Runnable() {
             @Override
             public void run() {

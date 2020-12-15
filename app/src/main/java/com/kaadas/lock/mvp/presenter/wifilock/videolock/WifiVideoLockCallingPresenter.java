@@ -12,6 +12,7 @@ import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectJsonError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
 import com.kaadas.lock.publiclibrary.xm.bean.XMConnectErrorBean;
@@ -108,7 +109,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                 XMP2PManager.getInstance().initAPI(serviceString);
                 XMP2PManager.getInstance().init(MyApplication.getInstance());
             }
-            if(errno > 0){
+            if(errno == XMP2PConnectJsonError.XM_JSON_ERROR_ACCESS_PASSWORD_ERROR || errno == XMP2PConnectJsonError.XM_JSON_ERROR_CHANNEL_SESSION_FULL){
                 if(isSafe()){
                     mViewRef.get().onConnectFailed(errno);
                     errno = 0;
@@ -148,12 +149,14 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         public void onErrorMessage(String message) {
             try {
                 XMConnectErrorBean xmConnectErrorBean = new Gson().fromJson(message, XMConnectErrorBean.class);
-                errno = xmConnectErrorBean.getErrno();
+                if(xmConnectErrorBean.getResult().equals("failed")){
+                    errno = xmConnectErrorBean.getErrno();
+                }
             }catch (Exception e){
             }
 //            stopConnect();
             if(isSafe()){
-                mViewRef.get().onErrorMessage(message);
+                mViewRef.get().onErrorMessage(errno);
             }
 
         }
