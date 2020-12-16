@@ -1,6 +1,7 @@
 package com.kaadas.lock.utils;
 
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 
 import java.util.List;
@@ -25,17 +26,15 @@ public class AppUtil {
     }
 
     public static boolean isForeground(Context context) {
-        if (context != null) {
-            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
-            for (ActivityManager.RunningAppProcessInfo processInfo : processes) {
-                if (processInfo.processName.equals(context.getPackageName())) {
-                    if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                        return true;
-                    }
-                }
+        ActivityManager am = (ActivityManager) context.getSystemService("activity");
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (!tasks.isEmpty()) {
+            ComponentName topActivity = ((ActivityManager.RunningTaskInfo) tasks.get(0)).topActivity;
+            if (topActivity.getPackageName().equals(context.getPackageName())) {
+                return true;
             }
         }
+
         return false;
     }
 }

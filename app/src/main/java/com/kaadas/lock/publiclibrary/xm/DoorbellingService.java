@@ -43,7 +43,7 @@ public class DoorbellingService extends Service {
 
     private Disposable doorbellingDisposable;
 
-    private Disposable wanderingAlarmDisposable;
+    private Disposable appStatusDisposable;
 
     private Disposable listenerServiceDisposable;
 
@@ -102,26 +102,36 @@ public class DoorbellingService extends Service {
                                             if(mDoorbellingResult.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) && mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
                                                 if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL || mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
                                                     LogUtils.e("shulan +++++++++++++++++");
+                                                    Intent intent = new Intent(DoorbellingService.this, WifiVideoLockCallingActivity.class);
+                                                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
+                                                    intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
-                                                        Intent intent = new Intent(DoorbellingService.this, WifiVideoLockCallingActivity.class);
-                                                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
-                                                        intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
                                                             NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"有人按门铃，点击查看门外情况", R.mipmap.ic_launcher,intent);
                                                         }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
                                                             NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"徘徊报警，点击查看门外情况", R.mipmap.ic_launcher,intent);
                                                         }
+                                                    }else{
+                                                        if(!AppUtil.isForeground(DoorbellingService.this)){
+                                                            if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
+                                                                NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"有人按门铃，点击查看门外情况", R.mipmap.ic_launcher,intent);
+                                                            }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
+                                                                NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"徘徊报警，点击查看门外情况", R.mipmap.ic_launcher,intent);
+                                                            }
+                                                        }
                                                     }
                                                 }else{//报警消息
                                                     LogUtils.e("shulan ------------------");
                                                     String content = BleUtil.getAlarmByType(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
+                                                    Intent intent = new Intent(DoorbellingService.this, MainActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                     if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
-                                                        Intent intent = new Intent(DoorbellingService.this, MainActivity.class);
-//                                                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
-//                                                    intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
-                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),content, R.mipmap.ic_launcher,intent);
+                                                    }else{
+                                                        if(!AppUtil.isForeground(DoorbellingService.this)){
+                                                            NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),content, R.mipmap.ic_launcher,intent);
+                                                        }
                                                     }
                                                 }
                                             }
