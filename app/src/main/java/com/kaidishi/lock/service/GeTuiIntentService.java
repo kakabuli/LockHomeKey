@@ -1,9 +1,12 @@
 package com.kaidishi.lock.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.FeedbackCmdMessage;
@@ -11,9 +14,17 @@ import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.NotificationUtils;
+import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 继承 GTIntentService 接收来自个推的消息, 所有消息在线程中回调, 如果注册了该服务, 则务必要在 AndroidManifest中声明, 否则无法接受消息<br>
@@ -72,10 +83,54 @@ public class GeTuiIntentService extends GTIntentService {
                 cnt++;
             }
             sendMessage(data, 0);
+//            if(!Rom.isFlyme() || !Rom.isSmartisan()){
+                sendNotification(data);
+//            }
         }
 
         Log.d(TAG, "----------------------------------------------------------------------------------------------");
 
+    }
+
+    private void sendNotification(String data) {
+        TransmissionContentResult transmissionContentResult = new Gson().fromJson(data, TransmissionContentResult.class);
+        if(transmissionContentResult == null){
+            return;
+        }
+        String intentString = transmissionContentResult.getIntent();
+        String[] split = intentString.split(";");
+        for (int i = 0; i < split.length;i++){
+            LogUtils.e(TAG+"shulan"+i+"-->" + split[i]);
+            if(split[i].contains("S.stringType=")){
+                intentString = split[i].split("S.stringType=")[1];
+            }
+        }
+
+        LogUtils.e(TAG+"shulan intentString-->" + intentString);
+        intentString = new String(Base64.decode(intentString, Base64.DEFAULT));
+        LogUtils.e(TAG+"shulan intentString-->" + intentString);
+        Intent intent;
+        if(intentString.contains("\"func\":\"doorbell\"") && intentString.contains("wifiSN")){
+            JSONObject jsonObject = null;
+            String wifiSN = "";
+            try {
+                jsonObject = new JSONObject(intentString);
+                wifiSN = jsonObject.optString("wifiSN");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            intent = new Intent(GeTuiIntentService.this, WifiVideoLockCallingActivity.class);
+            intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
+            intent.putExtra("VIDEO_CALLING_IS_MAINACTIVITY",true);
+            intent.putExtra(KeyConstants.WIFI_SN,wifiSN);
+            LogUtils.e(TAG+"shulan WifiVideoLockCallingActivity-->");
+        }else{
+            intent = new Intent(GeTuiIntentService.this, MainActivity.class);
+            LogUtils.e(TAG+"shulan MainActivity-->");
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        NotificationUtils.sendNotification(GeTuiIntentService.this,transmissionContentResult.getTitle(),transmissionContentResult.getContent(), R.mipmap.ic_launcher,intent);
     }
 
     // App初始化以后会回调这个方法
