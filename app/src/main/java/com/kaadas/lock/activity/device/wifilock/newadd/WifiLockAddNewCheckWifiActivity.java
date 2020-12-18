@@ -277,17 +277,25 @@ public class WifiLockAddNewCheckWifiActivity extends BaseActivity<IWifiLockAPWif
 
                         break;
                     case 2:
-                        ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
-                        ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
-                        ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_wait);
+                        if(ivSendWifiInfo != null)
+                            ivSendWifiInfo.setImageResource(R.mipmap.wifi_lock_add_state_complete);
+                        if(ivSetSuccess != null)
+                            ivSetSuccess.setImageResource(R.mipmap.wifi_lock_add_state_refresh);
+                        if(ivBindSuccess != null)
+                            ivBindSuccess.setImageResource(R.mipmap.wifi_lock_add_state_wait);
+                        if(tvSendWifiInfo != null)
+                            tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
+                        if(tvSetSuccess != null)
+                            tvSetSuccess.setTextColor(getResources().getColor(R.color.color_333));
+                        if(tvBindSuccess != null)
+                            tvBindSuccess.setTextColor(getResources().getColor(R.color.color_cdcdcd));
 
-                        tvSendWifiInfo.setTextColor(getResources().getColor(R.color.color_333));
-                        tvSetSuccess.setTextColor(getResources().getColor(R.color.color_333));
-                        tvBindSuccess.setTextColor(getResources().getColor(R.color.color_cdcdcd));
-
-                        ivSendWifiInfo.clearAnimation();//開始动画
-                        ivSetSuccess.startAnimation(animation);
-                        ivBindSuccess.clearAnimation();
+                        if(ivSendWifiInfo != null)
+                            ivSendWifiInfo.clearAnimation();//開始动画
+                        if(ivSetSuccess != null)
+                            ivSetSuccess.startAnimation(animation);
+                        if(ivBindSuccess != null)
+                            ivBindSuccess.clearAnimation();
 
                         circleProgressBar2.setValue(40);
                         break;
