@@ -73,6 +73,12 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
             return;
         }
         File file = new File(path);
+        if(!file.exists()){
+            return;
+        }
+        if(file.isFile()){
+            return;
+        }
         File[] list = file.listFiles();
 
         List<FileItemBean> files = new ArrayList<>();
