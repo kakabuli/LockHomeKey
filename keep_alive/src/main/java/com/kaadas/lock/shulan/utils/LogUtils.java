@@ -10,7 +10,7 @@ import com.kaadas.lock.shulan.BuildConfig;
 public class LogUtils {
 	public static final boolean DEBUG = BuildConfig.DEBUG;
 
-	public static final boolean isOutFile = !BuildConfig.DEBUG;
+	public static final boolean isOutFile = BuildConfig.DEBUG;
 	/**
 	 * 日志输出级别NONE
 	 */
@@ -141,7 +141,7 @@ public class LogUtils {
 	public static void e(String msg) {
 		if (mDebuggable >= LEVEL_ERROR) {
 			if (isOutFile){
-				Logger.getInstance().save( msg);
+//				Logger.getInstance().save( msg);
 			}else {
 				if(DEBUG)
 					Log.e(mTag, msg);
@@ -155,7 +155,7 @@ public class LogUtils {
 
 		if (mDebuggable >= LEVEL_ERROR) {
 			if (isOutFile){
-				Logger.getInstance().save(mTag+TAG+ msg);
+//				Logger.getInstance().save(mTag+TAG+ msg);
 			}else {
 				if(DEBUG)
 					Log.e(mTag+TAG, msg);

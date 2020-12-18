@@ -20,7 +20,6 @@ import com.kaadas.lock.shulan.service.SLLocalService;
 import com.kaadas.lock.shulan.service.SLRemoteService;
 import com.kaadas.lock.shulan.utils.KeepAliveUtils;
 import com.kaadas.lock.shulan.utils.LogUtils;
-import com.kaadas.lock.shulan.utils.Logger;
 import com.kaadas.lock.shulan.utils.SPUtils;
 
 
@@ -38,8 +37,6 @@ public class KeepAliveManager {
      * @param foregroundNotification 前台服务
      */
     public static void toKeepAlive(@NonNull Application application, @NonNull int runMode, String title, String content, int res_icon, ForegroundNotification foregroundNotification) {
-//        if(!BuildConfig.DEBUG)
-            Logger.getInstance().init(application);
         if (KeepAliveUtils.isRunning(application)) {
             KeepAliveConfig.foregroundNotification = foregroundNotification;
             SPUtils.getInstance(application, KeepAliveConfig.SP_NAME).put(KeepAliveConfig.TITLE, title);

@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.kaadas.lock.shulan.KeepAliveAIDL;
 import com.kaadas.lock.shulan.KeepAliveRuning;
@@ -26,7 +25,6 @@ import com.kaadas.lock.shulan.config.RunMode;
 import com.kaadas.lock.shulan.receive.NotificationClickReceiver;
 import com.kaadas.lock.shulan.receive.OnepxReceiver;
 import com.kaadas.lock.shulan.utils.LogUtils;
-import com.kaadas.lock.shulan.utils.Logger;
 import com.kaadas.lock.shulan.utils.SPUtils;
 
 
@@ -43,13 +41,7 @@ public class SLLocalService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        try {
-            Logger.getInstance().init(this);
-            Logger.getInstance().save("本地服务"+ "：本地服务启动成功");
-            LogUtils.e("本地服务"+ "：本地服务启动成功");
-        }catch (Exception e){
-
-        }
+        LogUtils.e("本地服务"+ "：本地服务启动成功");
         if (mBilder == null) {
             mBilder = new SLLocalBinder();
         }
@@ -67,7 +59,6 @@ public class SLLocalService extends Service {
     }
 
     private void play() {
-        Logger.getInstance().save(TAG+ "播放音乐");
         LogUtils.e(TAG+ "播放音乐");
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
@@ -84,7 +75,6 @@ public class SLLocalService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //播放无声音乐
         KeepAliveConfig.runMode = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RUN_MODE);
-        Logger.getInstance().save(TAG+ "运行模式：" + KeepAliveConfig.runMode);
         LogUtils.e(TAG+ "运行模式：" + KeepAliveConfig.runMode);
         if (mediaPlayer == null && KeepAliveConfig.runMode == RunMode.HIGH_POWER_CONSUMPTION) {
             mediaPlayer = MediaPlayer.create(this, R.raw.novioce);
@@ -92,7 +82,6 @@ public class SLLocalService extends Service {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    Logger.getInstance().save(TAG+"循环播放音乐");
                     LogUtils.e(TAG+"循环播放音乐");
                     play();
                 }
@@ -123,7 +112,7 @@ public class SLLocalService extends Service {
             Intent intent3 = new Intent(this, SLRemoteService.class);
             this.bindService(intent3, connection, Context.BIND_ABOVE_CLIENT);
         } catch (Exception e) {
-            Logger.getInstance().save("RemoteService--"+ e.getMessage());
+
         }
         //隐藏服务通知
         try {
@@ -131,7 +120,6 @@ public class SLLocalService extends Service {
                 startService(new Intent(this, HideForegroundService.class));
             }
         } catch (Exception e) {
-            Logger.getInstance().save("HideForegroundService--"+ e.getMessage());
 
         }
         if (mKeepAliveRuning == null)
@@ -170,22 +158,26 @@ public class SLLocalService extends Service {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Intent remoteService = new Intent(SLLocalService.this,
-                    SLRemoteService.class);
-            if (Build.VERSION.SDK_INT >= 26) {
-                SLLocalService.this.startForegroundService(remoteService);
-            } else {
-                SLLocalService.this.startService(remoteService);
-            }
-            Intent intent = new Intent(SLLocalService.this, SLRemoteService.class);
-            SLLocalService.this.bindService(intent, connection,
-                    Context.BIND_ABOVE_CLIENT);
-            PowerManager pm = (PowerManager) SLLocalService.this.getSystemService(Context.POWER_SERVICE);
-            boolean isScreenOn = pm.isScreenOn();
-            if (isScreenOn) {
-                sendBroadcast(new Intent(KeepAliveConfig.KAADAS_SHULAN_ACTION_SCRREN_ON));
-            } else {
-                sendBroadcast(new Intent(KeepAliveConfig.KAADAS_SHULAN_ACTION_SCRREN_OFF));
+            try{
+                Intent remoteService = new Intent(SLLocalService.this,
+                        SLRemoteService.class);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    SLLocalService.this.startForegroundService(remoteService);
+                } else {
+                    SLLocalService.this.startService(remoteService);
+                }
+                Intent intent = new Intent(SLLocalService.this, SLRemoteService.class);
+                SLLocalService.this.bindService(intent, connection,
+                        Context.BIND_ABOVE_CLIENT);
+                PowerManager pm = (PowerManager) SLLocalService.this.getSystemService(Context.POWER_SERVICE);
+                boolean isScreenOn = pm.isScreenOn();
+                if (isScreenOn) {
+                    sendBroadcast(new Intent(KeepAliveConfig.KAADAS_SHULAN_ACTION_SCRREN_ON));
+                } else {
+                    sendBroadcast(new Intent(KeepAliveConfig.KAADAS_SHULAN_ACTION_SCRREN_OFF));
+                }
+            }catch (Exception e){
+
             }
         }
 
@@ -226,15 +218,12 @@ public class SLLocalService extends Service {
             KeepAliveConfig.CONTENT = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
             KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
             KeepAliveConfig.TITLE = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
-            String title = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
-            Logger.getInstance().save("JOB-->" + TAG+ "KeepAliveConfig.CONTENT_" + KeepAliveConfig.CONTENT + "    " + KeepAliveConfig.TITLE + "  " + title);
             if (!TextUtils.isEmpty(KeepAliveConfig.TITLE) && !TextUtils.isEmpty(KeepAliveConfig.CONTENT)) {
                 //启用前台服务，提升优先级
                 Intent intent2 = new Intent(getApplicationContext(), NotificationClickReceiver.class);
                 intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                 Notification notification = NotificationUtils.createNotification(SLLocalService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                 startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);
-                Logger.getInstance().save("JOB-->"+ TAG + "显示通知栏");
             }
         }
     }

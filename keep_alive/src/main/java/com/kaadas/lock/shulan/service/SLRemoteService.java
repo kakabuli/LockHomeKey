@@ -11,15 +11,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.kaadas.lock.shulan.KeepAliveAIDL;
 import com.kaadas.lock.shulan.R;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
 import com.kaadas.lock.shulan.config.NotificationUtils;
 import com.kaadas.lock.shulan.receive.NotificationClickReceiver;
-import com.kaadas.lock.shulan.utils.LogUtils;
-import com.kaadas.lock.shulan.utils.Logger;
 import com.kaadas.lock.shulan.utils.SPUtils;
 
 
@@ -40,8 +37,6 @@ public class SLRemoteService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Logger.getInstance().init(this);
-        Logger.getInstance().save(TAG+ " onCreate");
         if (mBilder == null) {
             mBilder = new SLRemoteBinder();
         }
@@ -55,7 +50,6 @@ public class SLRemoteService extends Service {
 
             shouDefNotify();
         } catch (Exception e) {
-            Logger.getInstance().save(TAG+ e.getMessage());
         }
         return START_STICKY;
     }
@@ -65,15 +59,12 @@ public class SLRemoteService extends Service {
             KeepAliveConfig.CONTENT = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
             KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
             KeepAliveConfig.TITLE = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
-            String title = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
-            Logger.getInstance().save("JOB-->"+TAG + "KeepAliveConfig.CONTENT_"+KeepAliveConfig.CONTENT+"    " + KeepAliveConfig.TITLE+"  "+title);
             if (!TextUtils.isEmpty(KeepAliveConfig.TITLE) && !TextUtils.isEmpty( KeepAliveConfig.CONTENT)) {
                 //启用前台服务，提升优先级
                 Intent intent2 = new Intent(getApplicationContext(), NotificationClickReceiver.class);
                 intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                 Notification notification = NotificationUtils.createNotification(SLRemoteService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                 startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);
-                Logger.getInstance().save("JOB-->"+ TAG + "显示通知栏");
             }
         }
     }
@@ -94,7 +85,6 @@ public class SLRemoteService extends Service {
 
         @Override
         public void wakeUp(String title, String discription, int iconRes) throws RemoteException {
-            Logger.getInstance().save(TAG+ " wakeUp");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (title != null || discription != null) {
                     KeepAliveConfig.CONTENT = title;
@@ -112,7 +102,6 @@ public class SLRemoteService extends Service {
                     intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                     Notification notification = NotificationUtils.createNotification(SLRemoteService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                     startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);
-                    Logger.getInstance().save("JOB-->"+ TAG + "2 显示通知栏");
                 }
             }
         }
