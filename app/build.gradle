@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202012092
-        versionName "4.2.1"
+        versionCode 202012181
+        versionName "4.2.1.97"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -116,6 +116,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation files('libs\\Native_Libs2.jar')
     implementation project(path: ':keep_alive')
+    implementation files('libs\\GetuiSDK-support-MZP-1.1.1.jar')
+    implementation files('libs\\GetuiSDK-support-STP-1.0.1.jar')
 
 //    implementation 'androidx.appcompat:appcompat:1.1.0'
 //    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -188,7 +190,7 @@ dependencies {
 //        implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'net.zetetic:android-database-sqlcipher:3.4.0@aar'
-    implementation 'com.getui:sdk:2.13.0.0'
+    implementation 'com.getui:sdk:2.14.1.0'
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
@@ -196,7 +198,7 @@ dependencies {
 
     //   implementation 'com.getui:hwp:1.0.4'
 //    implementation 'com.getui:xmp:1.0.3'
-    implementation files('libs/GetuiSDK-support-OPPO-1.0.2.jar')
+    implementation files('libs/GetuiSDK-support-OPPO-1.0.7.jar')
 //    implementation 'com.getui:mzp:1.0.7'
 
     //选择器控件
@@ -232,7 +234,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife-compiler:8.4.0'
 //    implementation files('libs/esptouch.aar')
     implementation(name: 'esptouch', ext: 'aar')
-    implementation files('libs/GetuiSDK-support-VIVO-1.0.3.jar')
+    implementation files('libs/GetuiSDK-support-VIVO-1.0.5.jar')
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'

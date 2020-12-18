@@ -2,9 +2,12 @@ package com.kaidishi.lock.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.heytap.msp.push.HeytapPushManager;
 import com.igexin.sdk.GTServiceManager;
 
 /**
@@ -13,46 +16,37 @@ import com.igexin.sdk.GTServiceManager;
  * PushManager.getInstance().initialize(this.getApplicationContext(), userPushService), 其中
  * userPushService 为 用户自定义服务 即 DemoPushService.
  */
-public class GeTuiPushService extends Service {
+public class GeTuiPushService extends com.igexin.sdk.PushService {
 
-    public static final String TAG = GeTuiPushService.class.getName();
+    private static Handler handler = new Handler();
+    private Runnable sRunnable = new RequestNotificationRunnable();
 
-    @Override
-    public void onCreate() {
-        // 该行日志在 release 版本去掉
-        Log.d(TAG, TAG + " call -> onCreate -------");
-
-        super.onCreate();
-        GTServiceManager.getInstance().onCreate(this);
+    protected static class RequestNotificationRunnable implements Runnable {
+        @Override
+        public void run() {
+            String regId = HeytapPushManager.getRegisterID();
+            if (TextUtils.isEmpty(regId)) {
+                handler.postDelayed(this, 2000);
+            } else {
+                HeytapPushManager.requestNotificationPermission();
+            }
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // 该行日志在 release 版本去掉
-        Log.d(TAG, TAG + " call -> onStartCommand -------");
-
-        super.onStartCommand(intent, flags, startId);
-        return GTServiceManager.getInstance().onStartCommand(this, intent, flags, startId);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // 该行日志在 release 版本去掉
-        Log.d(TAG, "onBind -------");
-        return GTServiceManager.getInstance().onBind(intent);
+        HeytapPushManager.init(getApplicationContext(), false);
+        if (HeytapPushManager.isSupportPush()) {
+            handler.postDelayed(sRunnable, 1000);
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        // 该行日志在 release 版本去掉
-        Log.d(TAG, "onDestroy -------");
         super.onDestroy();
-        GTServiceManager.getInstance().onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        GTServiceManager.getInstance().onLowMemory();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 }

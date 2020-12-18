@@ -41,6 +41,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 
+    <!-- 魅族辅助 SDK -->
+    <permission
+        android:name="${applicationId}.push.permission.MESSAGE"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="${applicationId}.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
+    <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="${applicationId}.push.permission.MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <application
         android:name=".MyApplication"
@@ -49,6 +60,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:name,android:allowBackup">
         <activity
             android:name=".activity.device.wifilock.videolock.WifiVideoLockCallingTestActivity"
@@ -894,7 +906,40 @@
         />
 
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
-        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" /> <!-- VIVO辅助 SDK -->
+        <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
+        <!-- 魅族辅助 SDK -->
+        <meta-data
+            android:name="MEIZUPUSH_APPID"
+            android:value="MZ_${MEIZU_APP_ID}" />
+        <meta-data
+            android:name="MEIZUPUSH_APPKEY"
+            android:value="MZ_${MEIZU_APP_KEY}" />
+        <service
+            android:name="com.meizu.cloud.pushsdk.NotificationService"
+            android:exported="true"
+            android:process=":pushservice" />
+        <receiver
+            android:name="com.meizu.cloud.pushsdk.SystemReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.igexin.sdk.FlymePushReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+        <!-- 魅族辅助 SDK -->
+        <!-- VIVO辅助 SDK -->
         <meta-data
             android:name="com.vivo.push.app_id"
             android:value="${VIVO_APP_ID}" />

@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 /*import com.blankj.ALog;*/
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
+import com.igexin.sdk.IUserLoggerInterface;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -161,15 +163,12 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
-        PushManager.getInstance().initialize(this, userPushService);
+//        PushManager.getInstance().initialize(this, userPushService);
+        PushManager.getInstance().initialize(this);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(this, GeTuiIntentService.class);
-        // 应用未启动, 个推 service已经被唤醒,显示该时间段内离线消息
-//        if (DemoApplication.payloadData != null) {
-//            tLogView.append(DemoApplication.payloadData);
-//        }
+//        PushManager.getInstance().registerPushIntentService(this, GeTuiIntentService.class);
         LogUtils.e("attachView  App启动完成 ");
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
