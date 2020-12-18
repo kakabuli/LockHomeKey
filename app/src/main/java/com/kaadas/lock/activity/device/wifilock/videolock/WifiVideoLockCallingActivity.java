@@ -471,7 +471,13 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         mPresenter.attachView(this);
         mSufaceView.setVisibility(View.GONE);
         mSufaceView.setVisibility(View.VISIBLE);
-        if(wifiLockInfo.getKeep_alive_status() == 1){
+        int keepAliveStatus = 0;
+        try{
+            keepAliveStatus = wifiLockInfo.getKeep_alive_status();
+        }catch (Exception e){
+
+        }
+        if(keepAliveStatus == 1){
 
             new Thread(new Runnable() {
                 @Override
