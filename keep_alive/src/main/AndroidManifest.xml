@@ -21,8 +21,8 @@
         <service android:name=".service.SLRemoteService"
             android:exported="true"
             android:label="@string/slremote_service_name"
-            android:process=":slremote"></service>
-
+            ></service>
+        <!--android:process=":slremote"-->
         <receiver android:name=".receive.NotificationClickReceiver">
             <intent-filter>
                 <action android:name="CLICK_NOTIFICATION"></action>
@@ -37,8 +37,8 @@
         <provider
             android:authorities="com.kaadas.lock.shulan.preference"
             android:name=".pro_sp.SharedPreferenceProvider"
-            android:process=":slremote"
-            android:exported="false"/>
 
+            android:exported="false"/>
+        <!--android:process=":slremote"-->
     </application>
 </manifest>

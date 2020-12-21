@@ -31,22 +31,23 @@ public class SLRemoteService extends Service {
     @android.support.annotation.Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBilder;
+//        return mBilder;
+        return null;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         if (mBilder == null) {
-            mBilder = new SLRemoteBinder();
+//            mBilder = new SLRemoteBinder();
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            this.bindService(new Intent(SLRemoteService.this, SLLocalService.class),
-                    connection, Context.BIND_ABOVE_CLIENT);
+            /*this.bindService(new Intent(SLRemoteService.this, SLLocalService.class),
+                    connection, Context.BIND_ABOVE_CLIENT);*/
 
             shouDefNotify();
         } catch (Exception e) {
@@ -72,7 +73,7 @@ public class SLRemoteService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(connection);
+//        unbindService(connection);
     }
 
     private final class SLRemoteBinder extends KeepAliveAIDL.Stub {

@@ -55,10 +55,10 @@ public class KeepAliveManager {
                 Intent guardIntent = new Intent(application, SLRemoteService.class);
                 if (Build.VERSION.SDK_INT >= 26) {
                     application.startForegroundService(localIntent);
-                    application.startForegroundService(guardIntent);
+//                    application.startForegroundService(guardIntent);
                 } else {
                     application.startService(localIntent);
-                    application.startService(guardIntent);
+//                    application.startService(guardIntent);
                 }
             }
         }
@@ -87,7 +87,7 @@ public class KeepAliveManager {
             //启动守护进程
             Intent guardIntent = new Intent(application, SLRemoteService.class);
             application.stopService(localIntent);
-            application.stopService(guardIntent);
+//            application.stopService(guardIntent);
             application.stopService(new Intent(application, JobHandlerService.class));
         } catch (Exception e) {
             LogUtils.e(TAG + "stopWork-->" + e.getMessage());

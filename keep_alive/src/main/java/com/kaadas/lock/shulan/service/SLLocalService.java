@@ -43,7 +43,7 @@ public class SLLocalService extends Service {
         super.onCreate();
         LogUtils.e("本地服务"+ "：本地服务启动成功");
         if (mBilder == null) {
-            mBilder = new SLLocalBinder();
+//            mBilder = new SLLocalBinder();
         }
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         isPause = pm.isScreenOn();
@@ -55,7 +55,8 @@ public class SLLocalService extends Service {
     @android.support.annotation.Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBilder;
+//        return mBilder;
+        return null;
     }
 
     private void play() {
@@ -109,8 +110,8 @@ public class SLLocalService extends Service {
         shouDefNotify();
         //绑定守护进程
         try {
-            Intent intent3 = new Intent(this, SLRemoteService.class);
-            this.bindService(intent3, connection, Context.BIND_ABOVE_CLIENT);
+//            Intent intent3 = new Intent(this, SLRemoteService.class);
+//            this.bindService(intent3, connection, Context.BIND_ABOVE_CLIENT);
         } catch (Exception e) {
 
         }
@@ -199,7 +200,7 @@ public class SLLocalService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbindService(connection);
+//        unbindService(connection);
         unregisterReceiver(mOnepxReceiver);
         unregisterReceiver(screenStateReceiver);
 

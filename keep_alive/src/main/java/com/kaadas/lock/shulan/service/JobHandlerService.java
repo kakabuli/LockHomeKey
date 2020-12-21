@@ -70,10 +70,10 @@ public class JobHandlerService extends JobService {
             Intent guardIntent = new Intent(context, SLRemoteService.class);
             if (Build.VERSION.SDK_INT >= 26) {
                 startForegroundService(localIntent);
-                startForegroundService(guardIntent);
+//                startForegroundService(guardIntent);
             } else {
                 startService(localIntent);
-                startService(guardIntent);
+//                startService(guardIntent);
             }
         } catch (Exception e) {
             LogUtils.e(TAG, e.getMessage());
