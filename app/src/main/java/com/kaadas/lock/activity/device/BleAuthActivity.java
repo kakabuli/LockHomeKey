@@ -168,6 +168,8 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     private void changeLockIcon(Intent intent) {
         String model = intent.getStringExtra(KeyConstants.DEVICE_TYPE);
+        String deviceSN = intent.getStringExtra(KeyConstants.BLE_DEVICE_SN);
+        if (model != null && deviceSN != null) {
         //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
 //        if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default){
             options = new RequestOptions()
@@ -179,14 +181,15 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 //                    .centerCrop();//指定图片的缩放类型为centerCrop （是一种“去除多余”的裁剪方式，它会把ImageView边界以外的部分裁剪掉。这样一来ImageView会被填充满，但是这张图片可能不会完整地显示出来(ps:因为超出部分都被裁剪掉了）
 
             for (ProductInfo productInfo:productList) {
-                if (productInfo.getDevelopmentModel().contentEquals(model)){
+//                if (productInfo.getDevelopmentModel().contentEquals(model)){
+                if (productInfo.getSnHead().equals(deviceSN.substring(0,3))) {
 
                     //匹配型号获取下载地址
                     Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);
                     return;
                 }
             }
-//        }
+        }
         ivLockIcon.setImageResource(BleLockUtils.getAuthorizationImageByModel(model));
 
     }

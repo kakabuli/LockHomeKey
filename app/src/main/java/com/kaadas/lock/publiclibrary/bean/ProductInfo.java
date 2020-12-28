@@ -17,6 +17,7 @@ public class ProductInfo implements Serializable {
      * "_id": "5d66619c497ecf326f25469b",
      * "developmentModel": "1",
      * "productModel": "k8",
+     * "snHead": "WF1",
      * "adminUrl": "47.106.94.189/deviceModelFiles/1566990166590/android_admin_xxx.png",
      * "deviceListUrl": "47.106.94.189/deviceModelFiles/1566990488685/android_device_list_xxx.png",
      * "authUrl": "47.106.94.189/deviceModelFiles/1566990492106/android_auth_xxx.png",
@@ -38,7 +39,9 @@ public class ProductInfo implements Serializable {
     private String deviceID;
     private String developmentModel;
     private String productModel;
-//    android图片地址
+    private String snHead;
+
+    //    android图片地址
     private String adminUrl;
     private String deviceListUrl;
     private String authUrl;
@@ -67,14 +70,15 @@ public class ProductInfo implements Serializable {
      */
     private String createTime;
 
-@Generated(hash = 1919237857)
-public ProductInfo(Long id, String deviceID, String developmentModel, String productModel, String adminUrl, String deviceListUrl, String authUrl,
-        String adminUrl1x, String deviceListUrl1x, String authUrl1x, String adminUrl2x, String deviceListUrl2x, String authUrl2x, String adminUrl3x,
-        String deviceListUrl3x, String authUrl3x, String createTime) {
+@Generated(hash = 1413390901)
+public ProductInfo(Long id, String deviceID, String developmentModel, String productModel, String snHead, String adminUrl, String deviceListUrl,
+        String authUrl, String adminUrl1x, String deviceListUrl1x, String authUrl1x, String adminUrl2x, String deviceListUrl2x, String authUrl2x,
+        String adminUrl3x, String deviceListUrl3x, String authUrl3x, String createTime) {
     this.id = id;
     this.deviceID = deviceID;
     this.developmentModel = developmentModel;
     this.productModel = productModel;
+    this.snHead = snHead;
     this.adminUrl = adminUrl;
     this.deviceListUrl = deviceListUrl;
     this.authUrl = authUrl;
@@ -252,6 +256,14 @@ public ProductInfo(Long id, String deviceID, String developmentModel, String pro
 
         public void setCreateTime(String createTime) {
             this.createTime = createTime;
+        }
+
+        public String getSnHead() {
+            return this.snHead;
+        }
+
+        public void setSnHead(String snHead) {
+            this.snHead = snHead;
         }
 
 }

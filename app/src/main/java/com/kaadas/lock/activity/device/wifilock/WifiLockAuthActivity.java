@@ -143,11 +143,13 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
 
     private void changeLockIcon() {
         String model = "";
+        String WifiSN = wifiLockInfo.getWifiSN();
+
         if(wifiLockInfo != null){
             model = wifiLockInfo.getProductModel();
         }
 
-        if (model != null) {
+        if (model != null && WifiSN != null) {
             //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
 //            if (BleLockUtils.getAuthorizationImageByModel(model) == R.mipmap.bluetooth_authorization_lock_default) {
                 options = new RequestOptions()
@@ -160,7 +162,8 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
 
                 for (ProductInfo productInfo : productList) {
                     try {
-                        if (productInfo.getDevelopmentModel().contentEquals(model)) {
+//                        if (productInfo.getDevelopmentModel().contentEquals(model)) {
+                        if (productInfo.getSnHead().equals(WifiSN.substring(0,3))) {
 
                             //匹配型号获取下载地址
                             Glide.with(this).load(productInfo.getAuthUrl()).apply(options).into(ivLockIcon);

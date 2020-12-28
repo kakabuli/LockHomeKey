@@ -201,7 +201,7 @@ public class MqttCommandFactory {
      */
     public static MqttMessage getAllBindDevice(String uid) {
         int messageId = getMessageId();
-        GetAllBindDeviceBean getAllBindDeviceBean = new GetAllBindDeviceBean(messageId, "request", MqttConstant.GET_ALL_BIND_DEVICE, uid);
+        GetAllBindDeviceBean getAllBindDeviceBean = new GetAllBindDeviceBean(messageId, "request", MqttConstant.GET_ALL_BIND_DEVICE, uid,2);
         return getMessage(getAllBindDeviceBean, messageId);
 
     }

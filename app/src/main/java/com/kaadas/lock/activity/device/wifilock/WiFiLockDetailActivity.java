@@ -208,7 +208,9 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         if (wifiLockInfo != null) {
             if (!TextUtils.isEmpty(wifiLockInfo.getProductModel())){
                 String model = wifiLockInfo.getProductModel();
-                if (model != null) {
+                String WifiSN = wifiLockInfo.getWifiSN();
+
+                if (model != null && WifiSN != null) {
                     //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
 //                    if (BleLockUtils.getDetailImageByModel(model) == R.mipmap.bluetooth_lock_default) {
                         options = new RequestOptions()
@@ -221,7 +223,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                         for (ProductInfo productInfo : productList) {
                             try {
-                                if (productInfo.getDevelopmentModel().contentEquals(model)) {
+//                                if (productInfo.getDevelopmentModel().contentEquals(model)) {
+                                if (productInfo.getSnHead().equals(WifiSN.substring(0,3))) {
 
                                     //匹配型号获取下载地址
                                     Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);

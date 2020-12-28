@@ -541,6 +541,8 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                     LogUtils.e("跳转   全功能  蓝牙");
                                     Intent detailIntent = new Intent(getActivity(), BleDetailActivity.class);
                                     String model = bleLockInfo.getServerLockInfo().getModel();
+                                    String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
+                                    detailIntent.putExtra(KeyConstants.BLE_DEVICE_SN, deviceSN);
                                     detailIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
                                     startActivityForResult(detailIntent, KeyConstants.GET_BLE_POWER);
                                 }
@@ -555,7 +557,11 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             LogUtils.e("跳转 授权  蓝牙");
                             Intent impowerIntent = new Intent(getActivity(), BleAuthActivity.class);
                             String model = bleLockInfo.getServerLockInfo().getModel();
+                            String deviceSN = bleLockInfo.getServerLockInfo().getDeviceSN();
+
                             impowerIntent.putExtra(KeyConstants.DEVICE_TYPE, model);
+                            impowerIntent.putExtra(KeyConstants.BLE_DEVICE_SN, deviceSN);
+
                             startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
                         }
                         break;
