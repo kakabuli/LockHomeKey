@@ -30,7 +30,7 @@ public class WifiUtil {
      * @return
      */
     public boolean changeToWifi(String wifiName, String wifiPwd){
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        if (android.os.Build.VERSION.SDK_INT >= /*android.os.Build.VERSION_CODES.Q*/50) {
             NetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                             .setSsidPattern(new PatternMatcher(wifiName, PatternMatcher.PATTERN_PREFIX))
                             .setWpa2Passphrase(wifiPwd)

@@ -92,7 +92,7 @@ public class WifiUtils {
      */
     public void connectWifiPws(String ssid, String pws){
         LogUtils.e("连接wifi   " +ssid);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        if (android.os.Build.VERSION.SDK_INT >= /*android.os.Build.VERSION_CODES.Q*/50) {
             NetworkSpecifier specifier = new WifiNetworkSpecifier.Builder()
                     .setSsidPattern(new PatternMatcher(ssid, PatternMatcher.PATTERN_PREFIX))
                     .setWpa2Passphrase(pws)
