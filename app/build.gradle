@@ -23,7 +23,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 202012291
-        versionName "4.2.4"
+        versionName "4.2.4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -67,10 +67,54 @@ android {
                                     amapkey            : "18230744482cbb9f608cc3d1c1ef2e6d"]
         }
     }
+    signingConfigs {
+        debug {
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        release {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    getSigningProperties()
+
+    //自定义输出包名的设置
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            // 输出apk名称为kaadas-1.0.apk
+            def fileName = "kaadas-${defaultConfig.versionName}.apk"
+            outputFileName = fileName
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true  //启用debug的buildType配置
+        }
+    }
+
+    //输出类型
+    applicationVariants.all {
+        //判断是release还是debug版本
+        def buildType = it.buildType.name
+        //获取当前时间的"YYYY-MM-dd"格式。
+        def createTime = new Date().format("YYYY-MM-dd", TimeZone.getTimeZone("GMT+08:00"))
+        //如果是正式包,将其输入到指定文件夹
+        if (buildType == "release") {
+            it.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/kaadas/release")
         }
     }
 
@@ -99,6 +143,32 @@ android {
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
+    }
+}
+
+//读取签名配置文件
+def getSigningProperties() {
+
+    def propFile = file('signing.properties')
+    if (propFile.canRead()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        if (props != null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+                props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+
+            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+            android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+
+        } else {
+
+            println 'signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties not found'
+        android.buildTypes.release.signingConfig = null
     }
 }
 
