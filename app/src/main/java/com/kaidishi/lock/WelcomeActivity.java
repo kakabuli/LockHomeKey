@@ -269,7 +269,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(bleServiceIntent);
         } else {
-            startService(intent);
+            startService(bleServiceIntent);
         }
 //        //启动linphoneService
         boolean isService = ServiceUtils.isServiceRunning(WelcomeActivity.this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");

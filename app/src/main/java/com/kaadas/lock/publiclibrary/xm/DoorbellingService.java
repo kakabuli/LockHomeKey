@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DoorbellingResult;
@@ -26,6 +28,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.NotificationUtils;
+import com.kaadas.lock.utils.ServiceAliveUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -189,6 +192,25 @@ public class DoorbellingService extends Service {
      *  开启蓝牙和Mqtt服务
      */
     private void initBleOrMqttService() {
+        if(!ServiceAliveUtils.isServiceRunning(this,BleService.class.getName())){
+            //        //启动bleService
+            Intent bleServiceIntent = new Intent(this, BleService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(bleServiceIntent);
+            } else {
+                startService(bleServiceIntent);
+            }
+        }
+
+        if(!ServiceAliveUtils.isServiceRunning(this,MqttService.class.getName())){
+            //启动mqttservice
+            Intent intent = new Intent(this, MqttService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent);
+            } else {
+                startService(intent);
+            }
+        }
 
     }
 
