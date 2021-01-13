@@ -24,6 +24,7 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -92,8 +93,13 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             tvDeviceModel.setText(TextUtils.isEmpty(productModel + "") ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
-                if (productInfo.getDevelopmentModel().contentEquals(productModel)){
-                    tvDeviceModel.setText(productInfo.getProductModel());
+
+                try {
+                    if (productInfo.getSnHead().equals(wifiSN.substring(0,3))) {
+                        tvDeviceModel.setText(productInfo.getProductModel());
+                    }
+                } catch (Exception e) {
+                    LogUtils.e("--kaadas--:" + e.getMessage());
                 }
             }
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());

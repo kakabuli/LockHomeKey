@@ -185,18 +185,22 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
             return;
         }
         lockType = wifiLockInfo.getProductModel();
+
         if (!TextUtils.isEmpty(lockType)) {
             tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
 
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
 
-                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
-                    LogUtils.e("--kaadas--productInfo.getProductModel()==" + productInfo.getProductModel());
-                    tvLockType.setText("型号："+productInfo.getProductModel());
+                try {
+                    if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
+                        tvLockType.setText("型号："+productInfo.getProductModel());
+                        return;
+                    }
+                } catch (Exception e) {
+                    LogUtils.e("--kaadas--:" + e.getMessage());
                 }
             }
-
         }
     }
 

@@ -132,10 +132,17 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
         }
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType));
+
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
-                if (productInfo.getDevelopmentModel().contentEquals(lockType)){
-                    tvType.setText(productInfo.getProductModel());
+
+                try {
+                    if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
+                        tvType.setText("型号："+productInfo.getProductModel());
+                        return;
+                    }
+                } catch (Exception e) {
+                    com.kaadas.lock.utils.LogUtils.e("--kaadas--:" + e.getMessage());
                 }
             }
         }

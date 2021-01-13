@@ -177,7 +177,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
         if (mDeviceList != null) {
 
             deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList,productList);
-//            deviceDetailAdapter = new DeviceDetailAdapter(mDeviceList);
+
             deviceRecycler.setAdapter(deviceDetailAdapter);
             deviceDetailAdapter.setOnItemClickListener(this);
             for (int i = 0; i < mDeviceList.size(); i++) {

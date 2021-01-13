@@ -227,6 +227,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
             return;
         }
         lockType = bleLockInfo.getServerLockInfo().getModel();
+
         if (!TextUtils.isEmpty(lockType)) {
             tvType.setText(StringUtil.getSubstringFive(lockType) );
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号

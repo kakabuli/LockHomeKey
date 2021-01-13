@@ -222,13 +222,14 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setVisible(R.id.device_type_text, false);
 
                     String model = wifiLockInfo.getProductModel();
+                    String deviceSN = wifiLockInfo.getWifiSN();
                     if (model != null) {
                         //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
 //                        if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon) {
                             for (ProductInfo productInfo : productList) {
                                 try {
-
-                                    if (productInfo.getDevelopmentModel().contentEquals(model)) {
+//                                    if (productInfo.getDevelopmentModel().contentEquals(model)) {
+                                    if (productInfo.getSnHead().equals(deviceSN.substring(0,3))) {
 //                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
 //                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
                                         //匹配型号获取下载地址

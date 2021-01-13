@@ -81,11 +81,15 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             tvDeviceModel.setText(TextUtils.isEmpty(productModel) ? "" : productModel.contentEquals("K13") ? getString(R.string.lan_bo_ji_ni) : productModel);
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
-                if (productInfo.getDevelopmentModel().contentEquals(productModel)){
-                    tvDeviceModel.setText(productInfo.getProductModel());
+
+                try {
+                    if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
+                        tvDeviceModel.setText(productInfo.getProductModel());
+                    }
+                } catch (Exception e) {
+                    LogUtils.e("--kaadas--:" + e.getMessage());
                 }
             }
-
             tvSerialNumber.setText(TextUtils.isEmpty(wifiLockInfo.getWifiSN()) ? "" : wifiLockInfo.getWifiSN());
 //            int func = Integer.parseInt(bleLockInfo.getServerLockInfo().getFunctionSet());
 
