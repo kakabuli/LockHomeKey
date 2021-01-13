@@ -628,31 +628,96 @@ public class AlertDialogUtil {
 
 
     //    hava_title_content_no_button
-public void haveTitleContentNoButtonDialog(Context context, String title, String content ,Integer disappearTime) {
-    View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_button_dialog, null);
-    TextView tvTitle = mView.findViewById(R.id.tv_title);
-    TextView tvContent = mView.findViewById(R.id.tv_content);
-    AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
-    if ("".equals(title)) {
-        tvTitle.setVisibility(View.GONE);
-    } else {
-        tvTitle.setText(title);
-        tvTitle.setVisibility(View.VISIBLE);
+    public void haveTitleContentNoButtonDialog(Context context, String title, String content ,Integer disappearTime) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setText(title);
+            tvTitle.setVisibility(View.VISIBLE);
+        }
+
+        tvContent.setText(content);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {  //延时5秒消失
+                alertDialog.dismiss();
+            }
+        }, disappearTime *1000);
+
     }
 
-    tvContent.setText(content);
+    //晾衣机风干弹窗
+    public void clothesHangerMachineDialog(Context context,String content,String left,String right,
+                                           String lefrColor,String rightColor,ClothesHangerMachineClickListener clothesHangerMachineClickListener){
+        View mView = LayoutInflater.from(context).inflate(R.layout.clothes_hanger_machine_two_button_dialog, null);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        TextView tv_time_long = mView.findViewById(R.id.tv_time_long);
+        TextView tv_time_short = mView.findViewById(R.id.tv_time_short);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_cancel.setTextColor(Color.parseColor(lefrColor));
+        tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
+        tv_time_short.setSelected(true);
+        tv_time_short.setTextColor(Color.parseColor("#ffffff"));
+        tv_time_long.setSelected(false);
+        tv_time_long.setTextColor(Color.parseColor("#333333"));
+        tv_time_short.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_time_short.setSelected(true);
+                tv_time_short.setTextColor(Color.parseColor("#ffffff"));
+                tv_time_long.setSelected(false);
+                tv_time_long.setTextColor(Color.parseColor("#333333"));
+            }
+        });
+        tv_time_long.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_time_long.setSelected(true);
+                tv_time_long.setTextColor(Color.parseColor("#ffffff"));
+                tv_time_short.setSelected(false);
+                tv_time_short.setTextColor(Color.parseColor("#333333"));
+            }
+        });
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clothesHangerMachineClickListener != null) {
+                    clothesHangerMachineClickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clothesHangerMachineClickListener != null) {
+                    if(tv_time_short.isSelected()){
+                        clothesHangerMachineClickListener.right(120);
+                    }else{
+                        clothesHangerMachineClickListener.right(240);
+                    }
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
 
-    new Handler().postDelayed(new Runnable() {
-        @Override
-        public void run() {  //延时5秒消失
-            alertDialog.dismiss();
-        }
-    }, disappearTime *1000);
-
-}
-
-
-
+    public interface ClothesHangerMachineClickListener{
+        void left();
+        void right(int time);
+    }
 
     public interface ClickListener {
         void left();

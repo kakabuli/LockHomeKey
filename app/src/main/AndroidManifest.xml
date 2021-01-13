@@ -161,6 +161,60 @@
         <activity android:name=".activity.device.wifilock.newadd.WifiLockWaitForSwitchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.device.clotheshangermachine.ClothesHangerMachineQrCodeScanActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddSecondActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddThirdActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddThirdFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddThirdSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddTourthActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddFifthActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddTourthFailedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddSuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineHelpActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineSettingNameActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

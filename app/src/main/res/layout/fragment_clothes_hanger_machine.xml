@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="33"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_external_big"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:background="@drawable/clothes_hanger_machine_home_big_img_3"/>
+
+        <TextView
+            android:id="@+id/tv_clothes_hanger_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_15"
+            android:text="@string/clothes_machine_hanger_status_normal"/>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1"/>
+
+            <ImageView
+                android:id="@+id/img_hanger_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/clothes_hanger_machine_home_up"/>
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1"/>
+
+            <ImageView
+                android:id="@+id/img_hanger_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/clothes_hanger_machine_home_pause"/>
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1"/>
+
+            <ImageView
+                android:id="@+id/img_hanger_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/clothes_hanger_machine_home_down"/>
+
+            <View
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:background="#F2F2F2">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_lighting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_41">
+                    <ImageView
+                        android:id="@+id/img_hanger_lighting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_machine_home_lighting_selector"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_hanger_lighting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="01:59"
+                        android:layout_marginTop="@dimen/dp_17"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#FFFFFF"
+                        android:visibility="gone"
+                        android:textSize="@dimen/sp_18"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_lighting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_centerHorizontal="true"
+                        android:text="照明"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_disinfect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_hanger_disinfect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_machine_home_disinfect_selector"/>
+
+                    <TextView
+                        android:id="@+id/tv_hanger_disinfect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="01:59"
+                        android:layout_marginTop="@dimen/dp_17"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#FFFFFF"
+                        android:visibility="gone"
+                        android:textSize="@dimen/sp_18"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_disinfect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_centerHorizontal="true"
+                        android:text="消毒"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_airdry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_41">
+
+                    <ImageView
+                        android:id="@+id/img_hanger_airdry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_machine_home_airdry_selector"/>
+
+                    <TextView
+                        android:id="@+id/tv_hanger_airdry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="01:59"
+                        android:layout_marginTop="@dimen/dp_17"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#FFFFFF"
+                        android:visibility="gone"
+                        android:textSize="@dimen/sp_18"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_airdry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_centerHorizontal="true"
+                        android:text="风干"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_25"
+                android:layout_marginBottom="@dimen/dp_30"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_baking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_41">
+                    <ImageView
+                        android:id="@+id/img_hanger_baking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_machine_home_baking_selector"/>
+
+                    <TextView
+                        android:id="@+id/tv_hanger_baking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="01:59"
+                        android:layout_marginTop="@dimen/dp_17"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="#FFFFFF"
+                        android:visibility="gone"
+                        android:textSize="@dimen/sp_18"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_baking"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="烘干"/>
+                </RelativeLayout>
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/img_hanger_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_home_switch_selector"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="语音"/>
+                </RelativeLayout>
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_1"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_hanger_lock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_41">
+
+                    <ImageView
+                        android:id="@+id/img_hanger_lock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/clothes_hanger_home_switch_selector"/>
+
+                    <TextView
+                        android:layout_below="@id/img_hanger_lock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="#333333"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:text="童锁"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

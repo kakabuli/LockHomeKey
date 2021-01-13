@@ -2,6 +2,9 @@ package com.kaadas.lock.publiclibrary.http;
 
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineBindResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineCheckBindingResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineUnBindResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
@@ -15,6 +18,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResu
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
@@ -503,6 +507,12 @@ public interface IXiaoKaiNewService {
     Observable<CheckOTAResult> getOtaInfo(@Body RequestBody info);
 
     /**
+     * OTA多固件升级查询ApI
+     */
+    @POST(HttpUrlConstants.OTA_MULTI_CHECK)
+    Observable<MultiCheckOTAResult> getOtaMultiCheck(@Body RequestBody info);
+
+    /**
      * OTA升级结果上报
      */
     @POST(HttpUrlConstants.OTA_RESULT_UPLOAD_URL)
@@ -670,4 +680,37 @@ public interface IXiaoKaiNewService {
      */
     @POST(HttpUrlConstants.WIFI_DEVICE_LIST)
     Observable<WifiDeviceListResult> wifiDeviceList(@Body RequestBody info);
+
+    ////////////////////////////////////////////           晾衣机api功能            ///////////////////////////////////////////////
+
+    /**
+     * 检查晾衣机设备是否被绑定
+     */
+    @POST(HttpUrlConstants.HANGER_CHECK_BINDING)
+    Observable<ClothesHangerMachineCheckBindingResult> clothesHangerMachineCheckBinding(@Body RequestBody info);
+
+    /**
+     * 检查晾衣机设备是否被绑定
+     */
+    @POST(HttpUrlConstants.HANGER_BIND)
+    Observable<ClothesHangerMachineBindResult> clothesHangerMachineBind(@Body RequestBody info);
+
+    /**
+     * 检查晾衣机设备是否被绑定
+     */
+    @POST(HttpUrlConstants.HANGER_UNBIND)
+    Observable<ClothesHangerMachineUnBindResult> clothesHangerMachineUnbind(@Body RequestBody info);
+
+    /**
+     * 修改晾衣机昵称
+     */
+    @POST(HttpUrlConstants.MODIFY_HANGER_NICK_NAME)
+    Observable<BaseResult> hangerUpdateNickname(@Body RequestBody info);
+
+    /**
+     * 多固件确认升级
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_UPLOAD_MULTI_OTA)
+    Observable<BaseResult> wifiDeviceUploadMultiOta(@Body RequestBody info);
+
 }

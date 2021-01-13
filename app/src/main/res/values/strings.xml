@@ -25,6 +25,7 @@
     <string name="sure_to_perform">确定执行</string>
     <string name="search">搜索</string>
     <string name="input_lock_product">请输入您的门锁型号</string>
+    <string name="input_clothes_product">请输入您的晾衣机型号</string>
     <string name="look_for_QRCode">在门锁后面板找到配网二维码</string>
     <string name="not_input_special_symbol">不能输入特殊符号</string>
     <string name="phone_not_right">手机号错误</string>
@@ -142,6 +143,9 @@
     <string name="gateway_light_setting">指示灯处于其它状态？</string>
     <string name="add_gateway">添加网关</string>
     <string name="add_next">下一步</string>
+    <string name="clothes_hanger_add_next">重新连接</string>
+    <string name="clothes_hanger_add_reconnect">取消连接</string>
+    <string name="clothes_hanger_add_success">配网成功，您可以体验产品了~</string>
     <string name="gateway_light_confirm">网线连接路由器LAN和网关WAN,\n接通电源,确认指示灯常亮</string>
     <string name="confirm_gateway_light_already">确认配网指示灯常亮</string>
     <string name="reset_key_two">（如指示灯处于其他状态，按复位键）</string>
@@ -175,6 +179,7 @@
     <string name="input_or_select_name">手动输入或从下面已有名称选择</string>
     <string name="save">保存</string>
     <string name="pair_fail">配对失败</string>
+    <string name="pair_success">配对成功</string>
     <string name="bluetooth_fail_first">确保门锁已按引导进入配对状态</string>
     <string name="bluetooth_fail_two">确保手机蓝牙处于开启状态</string>
     <string name="bluetooth_fail_three">确保手机配对时处于门锁周边</string>
@@ -991,6 +996,7 @@
     <string name="lan_ip_not_null">局域网ip不能为空</string>
     <string name="input_right_lan_ip">请输入正确的局域网ip</string>
     <string name="input_right_lock_product_or_scan">请输入正确的门锁型号，或者扫描添加</string>
+    <string name="input_right_clothes_machine_or_scan">请输入正确的晾衣机型号，或者扫描添加</string>
     <string name="recheck_wifi_password">请靠近路由器检查账号或密码是否输入正确</string>
     <string name="input_lan_ip">请输入局域网IP</string>
     <string name="lan_mask_not_null">子网掩码不能为空</string>
@@ -1506,6 +1512,7 @@
     <string name="iploading">正在上传服务器</string>
     <string name="video_notice">① 请输入要连接的Wi-Fi信息\n② 暂不支持5G频段的Wi-Fi以及\n酒店机场需认证的Wi-Fi</string>
     <string name="notice">目前暂不支持5G频段的Wi-Fi以及酒店机场需认证的Wi-Fi</string>
+    <string name="clothes_hanger_machine_notice">暂不支持5G频段的WiFi以及酒店、机场 \n需认证的WiFi</string>
     <string name="notice_wifi_update">注意观察Wi-Fi模块升级</string>
     <string name="notice_lock_update">注意观察Wi-Fi锁升级</string>
     <string name="notice_lock_update_uploadFailed">上传失败，请重试</string>
@@ -1536,6 +1543,8 @@
     <string name="_3d_lock">兰博基尼传奇\n3D人脸识别智能锁</string>
     <string name="other_device">其他智能家居</string>
     <string name="cateye2">猫 眼</string>
+    <string name="clothes_machine">晾衣机</string>
+    <string name="clothes_machine_my">我的晾衣机</string>
     <string name="single_switch">零火单键</string>
     <string name="double_switch">零火双键</string>
     <string name="device_list">设备列表</string>
@@ -1620,7 +1629,7 @@
     <string name="no_card_sync">门锁还没有门卡，请到门锁添加同步</string>
     <string name="scan_add">扫码添加</string>
     <string name="touch_light">轻触照亮</string>
-    <string name="qr_notice">在门锁后面板找到配网二维码\n将二维码放入框内</string>
+    <string name="qr_notice">请将二维码放入框内</string>
     <string name="open_camera_failed">打开相机失败，请检查是否拒绝了应用权限</string>
     <string name="wifi_lock_new_add_first_notice1">第一步：门锁配网准备</string>
     <string name="wifi_lock_new_add_first_notice2">① 按照说明书安装完门锁\n② 检查后面板Wi-Fi模块是否插紧\n③ 电池仓装上4节或8节电池</string>
@@ -1720,6 +1729,7 @@
     <string name="swipch_setting_pluease_dialog_title3">请输入键位3名称</string>
     <string name="unknow_qr">扫描的二维码不符合规定</string>
     <string name="did_not_discover_lock">未搜索到门锁，请重新扫描或返回添加设备扫码添加</string>
+    <string name="did_not_discover_hanger">未搜索到晾衣机，请重新扫描或返回添加设备扫码添加</string>
     <string name="to_change_wifi">更换网络</string>
     <string name="have_not_set_time">你还没有设置生效时段，请重新设置</string>
 
@@ -1906,4 +1916,18 @@
     <string name="xm_json_error_not_supported">不支持该功能</string>
     <string name="xm_json_error_other_error">视频访问错误</string>
 
+    <string name="clothes_machine_add_first_notice">① 确认晾衣机已安装好，并通电； \n② 如未安装，请联系经销商上门安装；</string>
+    <string name="clothes_machine_add_second_notice">① 请确认手机蓝牙已开启； \n② 长按遥控器“停止键”3秒； \n③ 请在10s内短按“照明键”，绿色 \n指示灯快闪进入配网模式.</string>
+    <string name="clothes_machine_serial_number">晾衣机序列号</string>
+    <string name="clothes_machine_module_number">模组序列号</string>
+    <string name="clothes_machine_version">晾衣机版本号</string>
+    <string name="clothes_machine_module_version">模组版本号</string>
+    <string name="clothes_machine_check_version">检查更新</string>
+    <string name="clothes_machine_hanger_status_normal">衣杆正常</string>
+    <string name="clothes_machine_hanger_status_top">已到顶端</string>
+    <string name="clothes_machine_hanger_status_bottom">已到底端</string>
+    <string name="clothes_machine_hanger_status_up">衣杆上升</string>
+    <string name="clothes_machine_hanger_status_down">衣杆下降</string>
+    <string name="clothes_machine_hanger_status_overload">衣杆过载</string>
+    <string name="clothes_machine_hanger_status_blocked">衣杆遇阻</string>
 </resources>

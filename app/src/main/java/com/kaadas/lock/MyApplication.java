@@ -8,15 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.text.TextUtils;
-import android.util.Log;
 
 /*import com.blankj.ALog;*/
 import com.google.gson.Gson;
 import com.huawei.android.hms.agent.HMSAgent;
-import com.igexin.sdk.IUserLoggerInterface;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -50,13 +47,14 @@ import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
+import com.kaadas.lock.utils.greenDao.db.ClothesHangerMachineAllBeanDao;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
 import com.kaadas.lock.utils.greenDao.db.DaoMaster;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
-import com.kaidishi.lock.service.GeTuiIntentService;
 import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -84,7 +82,6 @@ import net.sdvn.cmapi.Config;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.greendao.database.Database;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -598,6 +595,14 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                                 wifiLockInfoDao.insertInTx(wifiList);
                             }
 
+                            //缓存晾衣机设备信息到Dao
+                            if(allBindDevices.getData() != null && allBindDevices.getData().getHangerList() != null){
+                                List<ClothesHangerMachineAllBean> hangerList = allBindDevices.getData().getHangerList();
+                                ClothesHangerMachineAllBeanDao clothesHangerMachineAllBeanDao = getDaoWriteSession().getClothesHangerMachineAllBeanDao();
+                                clothesHangerMachineAllBeanDao.deleteAll();
+                                clothesHangerMachineAllBeanDao.insertInTx(hangerList);
+                            }
+
                             //缓存产品型号信息列表 到Dao，主要是图片下载地址（下载过的图片不再下载）
                             if (allBindDevices.getData() != null && allBindDevices.getData().getProductInfoList() != null) {
                                 productLists = allBindDevices.getData().getProductInfoList();
@@ -627,9 +632,42 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         }
     }
 
+    public ClothesHangerMachineAllBean searchClothesHangerMachine(String wifiSn){
+        DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
+        if(daoSession != null && daoSession.getClothesHangerMachineAllBeanDao() != null){
+            List<ClothesHangerMachineAllBean> hangerList = daoSession.getClothesHangerMachineAllBeanDao().loadAll();
+            if(hangerList != null && hangerList.size() > 0){
+                for(ClothesHangerMachineAllBean bean : hangerList){
+                    if(bean.getWifiSN().equals(wifiSn)){
+                        return bean;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public ClothesHangerMachineAllBean getClothesHangerMachineBySn(String sn){
+        if(sn.isEmpty()){
+            return null;
+        }
+        if(homeShowDevices != null){
+            for(int i = homeShowDevices.size() -1; i >= 0; i--){
+                HomeShowBean homeShowBean = homeShowDevices.get(i);
+                if(homeShowBean.getDeviceType() == HomeShowBean.TYPE_CLOTHES_HANGER){
+                    ClothesHangerMachineAllBean bean = (ClothesHangerMachineAllBean) homeShowBean.getObject();
+                    if(bean.getWifiSN().equals(sn)){
+                        return bean;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public WifiLockInfo searchVideoLock(String wifiSN){
         DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
-        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
+        if (daoSession != null && daoSession.getWifiLockInfoDao() != null) {
             List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
             if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
                 for (WifiLockInfo wifiLockInfo : wifiLockInfos) {

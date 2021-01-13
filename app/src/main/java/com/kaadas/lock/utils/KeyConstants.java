@@ -531,14 +531,30 @@ public class KeyConstants {
 
     public static final String WIFI_VIDEO_LOCK_XM_CONNECT = "wifi_video_lock_xm_connect";//讯美P2P是否连接
 
+    public static final String CLOTHES_HANGER_PASSWORD_TIMES = "clothes_hanger_password_times";//晾衣机wifi校验次数
+
     public static final String SCAN_TYPE = "scanType";  //扫描类型
     public static final String QR_URL = "qrUrl";  //扫描到的链接
     public static final String URL_RESULT = "urlResult";  //扫描到的链接
 
+    public static final String ClOTHES_HANGER_MACHINE_WIFI_SSID = "clothes_hanger_machine_wifi_ssid";
+
+    public static final String ClOTHES_HANGER_MACHINE_WIFI_PASSWORD = "clothes_hanger_machine_wifi_password";
 
     public static final int WIFI_VIDEO_LOCK_PIR_SEN_1 = 35;
     public static final int WIFI_VIDEO_LOCK_PIR_SEN_2 = 70;
     public static final int WIFI_VIDEO_LOCK_PIR_SEN_3 = 90;
+
+
+    /**
+     *  晾衣机功能
+     */
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_BAKING = 1001;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY = 1002;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP = 1003;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN = 1004;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE = 1005;
+
 
     /**
      * 传递网关Model

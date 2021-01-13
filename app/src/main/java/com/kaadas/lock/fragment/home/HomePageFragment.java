@@ -38,6 +38,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
 import java.util.ArrayList;
@@ -315,6 +316,15 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     wifiVideoBundle.putString(KeyConstants.WIFI_SN,wifiVideoLockInfo.getWifiSN());
                     wifiVideoLockFragment.setArguments(wifiVideoBundle);
                     fragments.add(wifiVideoLockFragment);
+                    break;
+                case HomeShowBean.TYPE_CLOTHES_HANGER:
+                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_hanger_drawable), null, null);
+                    ClothedHangerMachineFragment clothedHangerMachineFragment = new ClothedHangerMachineFragment();
+                    ClothesHangerMachineAllBean hangerInfo = (ClothesHangerMachineAllBean) devices.get(i).getObject();
+                    Bundle hangerBundle = new Bundle();
+                    hangerBundle.putString(KeyConstants.WIFI_SN,hangerInfo.getWifiSN());
+                    clothedHangerMachineFragment.setArguments(hangerBundle);
+                    fragments.add(clothedHangerMachineFragment);
                     break;
             }
             //根据需要设置显示初始标签的个数，这里显示3个

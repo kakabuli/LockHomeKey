@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/clothes_hanger_machine_home_big_img_3" android:duration="800" />
+    <item android:drawable="@drawable/clothes_hanger_machine_home_big_img_4" android:duration="800" />
+</animation-list>

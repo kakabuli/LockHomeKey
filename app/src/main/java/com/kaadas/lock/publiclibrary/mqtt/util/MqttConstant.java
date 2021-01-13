@@ -265,4 +265,61 @@ public class MqttConstant {
      *  设置门锁
      */
     public static final String SET_LOCK = "setLock";
+
+    //////////////////晾衣架////////////////////
+
+    /**
+     *  庆科晾衣机devtype
+     */
+    public static final String CLOTHES_HANGER_MACHINE_MX_CHIP = "KdsMxchipHanger";
+
+    /**
+     *  晾衣机在线离线 1在线，0离线
+     */
+    public static final String CLOTHES_HANGER_MACHINE_ONLINE = "hangerOnlineState";
+
+    /**
+     *  晾衣机状态
+     */
+    public static final String CLOTHES_HANGER_MACHINE_ALL_STATUS = "HangerState";
+
+    /**
+     * 设置晾衣机照明接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_LIGHTING = "setLight";
+
+    /**
+     * 设置晾衣机电机上升/暂停/下降接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_MOTOR = "setMotor";
+
+    /**
+     * 设置晾衣机烘干接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_BACKING = "setBaking";
+
+    /**
+     * 设置晾衣机风干接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_AIR_DRY = "setAirDry";
+
+    /**
+     * 设设置晾衣机消毒接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_UV = "setUV";
+
+    /**
+     * 设置晾衣机童锁接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_CHILD_LOCK = "setChildLock";
+
+    /**
+     * 设置晾衣机语音控制开关接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_SET_LOUD_SPEAKER = "setLoudspeaker";
+
+    /**
+     *  获取设备所有状态接口
+     */
+    public static final String CLOTHES_HANGER_MACHINE_GET_ALL_STATUS = "getAllStatus";
 }

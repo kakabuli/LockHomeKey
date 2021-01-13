@@ -11,6 +11,9 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindGatewayMemeBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CatEyeInfoBeanProperty;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.CateEyeInfoBeanPropertyUpdate;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.ClothesHangerMachineBean.GetHangerAllStatus;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.ClothesHangerMachineBean.SetHangerLightingBean;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.ClothesHangerMachineBean.SetHangerMotorBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeleteGatewayLockDeviceBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.DeviceShareUserBean;
@@ -1077,6 +1080,110 @@ public class MqttCommandFactory {
         SetVideoLockAmMode lockLang = new SetVideoLockAmMode(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
                 messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "");
         return getMessage(lockLang, messageId);
+    }
+
+    ////////////////////////////////晾衣机//////////////////////////////////////
+    /**
+     * 设置晾衣机照明接口
+     */
+    public static MqttMessage setClothesHangerMachineLighting(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_LIGHTING,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机电机上升/暂停/下降接口
+     */
+    public static MqttMessage setClothesHangerMachineMotor(String wifiID,int action){
+        int messageId = getMessageId();
+        SetHangerMotorBean.SetHangerMotorParam paramsBean = new SetHangerMotorBean.SetHangerMotorParam();
+        paramsBean.setAction(action);
+        SetHangerMotorBean setHangerLighting = new SetHangerMotorBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_MOTOR,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机风干接口
+     */
+    public static MqttMessage setClothesHangerMachineAirDry(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_AIR_DRY,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机烘干接口
+     */
+    public static MqttMessage setClothesHangerMachineBaking(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_BACKING,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机消毒接口
+     */
+    public static MqttMessage setClothesHangerMachineUV(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_UV,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机童锁接口
+     */
+    public static MqttMessage setClothesHangerMachineChildLock(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_CHILD_LOCK,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 设置晾衣机语音控制开关接口
+     */
+    public static MqttMessage setClothesHangerMachineLoudspeaker(String wifiID,int single){
+        int messageId = getMessageId();
+        SetHangerLightingBean.SetHangerLightingParam paramsBean = new SetHangerLightingBean.SetHangerLightingParam();
+        paramsBean.setSingle(single);
+        SetHangerLightingBean setHangerLighting = new SetHangerLightingBean(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_SET_LOUD_SPEAKER,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
+    }
+
+    /**
+     * 获取晾衣机所有状态接口
+     */
+    public static MqttMessage getHangerAllStatus(String wifiID){
+        int messageId = getMessageId();
+        GetHangerAllStatus.Params paramsBean = new GetHangerAllStatus.Params();
+        GetHangerAllStatus setHangerLighting = new GetHangerAllStatus(MqttConstant.MSG_TYPE_REQUEST,messageId,
+                MyApplication.getInstance().getUid(),wifiID,MqttConstant.CLOTHES_HANGER_MACHINE_GET_ALL_STATUS,
+                paramsBean,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,System.currentTimeMillis() + "");
+        return getMessage(setHangerLighting, messageId,0);
     }
 
     /**

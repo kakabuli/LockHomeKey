@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +128,16 @@ public class AllBindDevices {
         private List<GwListBean> gwList;
         private List<ServerBleDevice> devList;
         private List<WifiLockInfo> wifiList;
+        private List<ClothesHangerMachineAllBean> hangerList;
         private List<ProductInfo> productInfoList;
+
+        public List<ClothesHangerMachineAllBean> getHangerList() {
+            return hangerList;
+        }
+
+        public void setHangerList(List<ClothesHangerMachineAllBean> hangerList) {
+            this.hangerList = hangerList;
+        }
 
         public List<GwListBean> getGwList() {
             return gwList;
@@ -365,6 +375,14 @@ public class AllBindDevices {
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(), wifiLockInfo.getLockNickname(), wifiLockInfo));
                 }
 
+            }
+        }
+
+        //晾衣机
+        List<ClothesHangerMachineAllBean> hangerList = returnData.getHangerList();
+        if(hangerList != null){
+            for(ClothesHangerMachineAllBean hangerBean : hangerList){
+                homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CLOTHES_HANGER,hangerBean.getWifiSN(),hangerBean.getHangerNickName(),hangerBean));
             }
         }
 

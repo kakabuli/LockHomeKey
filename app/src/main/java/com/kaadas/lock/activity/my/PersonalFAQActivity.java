@@ -1,11 +1,15 @@
 package com.kaadas.lock.activity.my;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,8 +17,13 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.PersonalFAQAdapter;
+import com.kaadas.lock.fragment.help.PersonalFAQHangerHelpFragment;
+import com.kaadas.lock.fragment.help.PersonalFAQLockHelpFragment;
+import com.kaadas.lock.fragment.help.WifiVideoLockCommonProblemHelpFragment;
+import com.kaadas.lock.fragment.help.WifiVideoLockToConfigureHelpFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.FAQBean;
+import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalFAQPresenter;
 import com.kaadas.lock.publiclibrary.http.result.GetFAQResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -32,126 +41,104 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class PersonalFAQActivity extends BaseActivity<IPersonalFAQView, PersonalFAQPresenter<IPersonalFAQView>> implements IPersonalFAQView, View.OnClickListener {
+public class PersonalFAQActivity extends BaseAddToApplicationActivity {
 
 
-    @BindView(R.id.faq_recyclerView)
-    RecyclerView faqRecyclerView;
-    @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_content)
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
+    @BindView(R.id.v_left)
+    View vLeft;
+    @BindView(R.id.v_right)
+    View vRight;
+    @BindView(R.id.content)
+    FrameLayout content;
+    @BindView(R.id.tv_left)
+    TextView tvLeft;
+    @BindView(R.id.tv_right)
+    TextView tvRight;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+    private PersonalFAQLockHelpFragment mPersonalFAQLockHelpFragment;
+    private PersonalFAQHangerHelpFragment mPersonalFAQHangerHelpFragment;
 
-    private List<FAQBean> mFaqList;
-
-    private PersonalFAQAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.personal_faq);
         ButterKnife.bind(this);
-        mFaqList = new ArrayList<>();
-        initView();
-        initData();
-        initListener();
-        initRefresh();
-        ivBack.setOnClickListener(this);
+
         tvContent.setText(R.string.faq);
+        initFragment();
     }
 
-    private void initView() {
-        faqRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new PersonalFAQAdapter(mFaqList);
-        faqRecyclerView.setAdapter(adapter);
-    }
-
-    private void initRefresh() {
-        refreshLayout.setEnableLoadMore(false);
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (NetUtil.isNetworkAvailable()) {
-                    //todo 国际化的时候记得传入此时的语言类型
-                    mPresenter.getFAQList(1);
-                } else {
-                    ToastUtil.getInstance().showShort(R.string.noNet);
-                }
-                refreshLayout.finishRefresh(2000);
-            }
-        });
-    }
-
-    private void initData() {
-        String mFaq = CacheFloder.readFAQ(ACache.get(MyApplication.getInstance()), "FAQ");
-        if (mFaq != null) {
-            Gson gson = new Gson();
-            GetFAQResult getFAQResult = gson.fromJson(mFaq, GetFAQResult.class);
-            getData(getFAQResult.getData());
-        } else {
-            if (NetUtil.isNetworkAvailable()) {
-                //todo 国际化的时候记得传入此时的语言类型
-                mPresenter.getFAQList(1);
-            } else {
-                ToastUtil.getInstance().showShort(R.string.noNet);
-            }
-        }
-    }
-
-    @Override
-    protected PersonalFAQPresenter createPresent() {
-        return new PersonalFAQPresenter();
-    }
-
-
-    private void initListener() {
-
-    }
-
-
-    @Override
-    public void getFAQSuccessListView(GetFAQResult baseResult, String s) {
-        if (baseResult.getData() != null) {
-            CacheFloder.writeFAQ(ACache.get(MyApplication.getInstance()), "FAQ", s);
-            getData(baseResult.getData());
-        }
-    }
-
-    @Override
-    public void getFAQError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
-    }
-
-    @Override
-    public void getFAQFail(GetFAQResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
-    }
-
-
-    private void getData(List<GetFAQResult.DataBean> dataBeans) {
-        if (mFaqList != null) {
-            mFaqList.clear();
-        }
-        for (int i = 0; i < dataBeans.size(); i++) {
-            FAQBean faqBean = new FAQBean();
-            faqBean.setTitle(dataBeans.get(i).getQuestion());
-            faqBean.setContent(dataBeans.get(i).getAnswer());
-            mFaqList.add(faqBean);
-        }
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
+    @OnClick({R.id.iv_back,R.id.rl_left,R.id.rl_right})
     public void onClick(View v) {
+        FragmentTransaction fragmentTransaction;
         switch (v.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
+            case R.id.rl_left:
+                fragmentTransaction = manager.beginTransaction();
+                hideAll(fragmentTransaction);
+                vLeft.setVisibility(View.VISIBLE);
+                vRight.setVisibility(View.GONE);
+                tvLeft.setTextColor(Color.parseColor("#1F96F7"));
+                tvRight.setTextColor(Color.parseColor("#333333"));
+                if( mPersonalFAQLockHelpFragment != null){
+                    fragmentTransaction.show(mPersonalFAQLockHelpFragment);
+                }else{
+                    mPersonalFAQLockHelpFragment = new PersonalFAQLockHelpFragment();
+                    fragmentTransaction.add(R.id.content,mPersonalFAQLockHelpFragment);
+                }
+                fragmentTransaction.commit();
+                break;
+            case R.id.rl_right:
+                fragmentTransaction = manager.beginTransaction();
+                hideAll(fragmentTransaction);
+                vLeft.setVisibility(View.GONE);
+                vRight.setVisibility(View.VISIBLE);
+                tvRight.setTextColor(Color.parseColor("#1F96F7"));
+                tvLeft.setTextColor(Color.parseColor("#333333"));
+                if( mPersonalFAQHangerHelpFragment != null){
+                    fragmentTransaction.show(mPersonalFAQHangerHelpFragment);
+                }else{
+                    mPersonalFAQHangerHelpFragment = new PersonalFAQHangerHelpFragment();
+                    fragmentTransaction.add(R.id.content,mPersonalFAQHangerHelpFragment);
+                }
+                fragmentTransaction.commit();
+                break;
         }
+    }
+
+    private void hideAll(FragmentTransaction ft) {
+        if (ft == null) {
+            return;
+        }
+        if (mPersonalFAQLockHelpFragment != null) {
+            ft.hide(mPersonalFAQLockHelpFragment);
+        }
+        if (mPersonalFAQHangerHelpFragment != null) {
+            ft.hide(mPersonalFAQHangerHelpFragment);
+        }
+    }
+
+    private void initFragment() {
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        vLeft.setVisibility(View.VISIBLE);
+        vRight.setVisibility(View.GONE);
+        tvLeft.setTextColor(Color.parseColor("#1F96F7"));
+        tvRight.setTextColor(Color.parseColor("#333333"));
+        mPersonalFAQLockHelpFragment = new PersonalFAQLockHelpFragment();
+        transaction.add(R.id.content, mPersonalFAQLockHelpFragment);
+        transaction.commit();
     }
 }

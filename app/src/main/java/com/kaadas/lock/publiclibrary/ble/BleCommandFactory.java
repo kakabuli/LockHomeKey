@@ -591,11 +591,22 @@ public class BleCommandFactory {
      * @param subSSID：分包
      * @return
      */
-
     public static byte[] sendWiFiSSID(int index,byte[] key,byte[] subSSID) {
         byte cmd = (byte) 0x90;
         byte[] payload = new byte[16]; //负载数据
         payload[0] = Rsa.int2BytesArray(33)[0];//SSID总长度
+        payload[1] = Rsa.int2BytesArray(index)[0];//包序号
+        System.arraycopy(subSSID,0,payload,2,subSSID.length);
+        return groupPackage(cmd, payload, key);
+    }
+
+    /**
+     * 发送WIFI SSID
+     */
+    public static byte[] sendHangerWiFiSSID(int index,byte[] key,byte[] subSSID) {
+        byte cmd = (byte) 0x90;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = Rsa.int2BytesArray(32)[0];//SSID总长度
         payload[1] = Rsa.int2BytesArray(index)[0];//包序号
         System.arraycopy(subSSID,0,payload,2,subSSID.length);
         return groupPackage(cmd, payload, key);
@@ -607,7 +618,21 @@ public class BleCommandFactory {
      * @param subPWD：分包
      * @return
      */
+    public static byte[] sendHangerWiFiPWD(int index,byte[] key,byte[] subPWD) {
+        byte cmd = (byte) 0x91;
+        byte[] payload = new byte[16]; //负载数据
+        payload[0] = Rsa.int2BytesArray(64)[0];//SSID总长度
+        payload[1] = Rsa.int2BytesArray(index)[0];//包序号
+        System.arraycopy(subPWD,0,payload,2,subPWD.length);
+        return groupPackage(cmd, payload, key);
+    }
 
+    /**
+     *  发送WIFI PWD
+     * @param key
+     * @param subPWD：分包
+     * @return
+     */
     public static byte[] sendWiFiPWD(int index,byte[] key,byte[] subPWD) {
         byte cmd = (byte) 0x91;
         byte[] payload = new byte[16]; //负载数据

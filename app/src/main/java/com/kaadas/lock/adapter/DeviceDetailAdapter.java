@@ -80,6 +80,15 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
         } else {
             helper.getView(R.id.power_layout).setVisibility(View.VISIBLE);
         }
+        if(HomeShowBean.TYPE_CLOTHES_HANGER == item.getDeviceType()){
+            helper.getView(R.id.lly_lock_bar).setVisibility(View.GONE);
+            TextView clothesMachineName = helper.getView(R.id.clothes_machine_name);
+            clothesMachineName.setVisibility(View.VISIBLE);
+            clothesMachineName.setText(item.getDeviceNickName());
+        }else{
+            helper.getView(R.id.lly_lock_bar).setVisibility(View.VISIBLE);
+            helper.getView(R.id.clothes_machine_name).setVisibility(View.GONE);
+        }
 
         switch (item.getDeviceType()) {
             //猫眼
@@ -205,6 +214,10 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     helper.setImageResource(R.id.device_image, BleLockUtils.getSmallImageByModel(model));
 
                 }
+                break;
+            case HomeShowBean.TYPE_CLOTHES_HANGER:
+
+                helper.setImageResource(R.id.device_image, R.mipmap.clothes_hanger_machine_icon);
                 break;
 
             //wifi锁

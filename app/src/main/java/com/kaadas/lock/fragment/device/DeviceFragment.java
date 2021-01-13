@@ -29,6 +29,7 @@ import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.activity.device.BleAuthActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeFunctionActivity;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineDetailActivity;
 import com.kaadas.lock.activity.device.gateway.GatewayActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockAuthorizeFunctionActivity;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayLockFunctionActivity;
@@ -62,6 +63,7 @@ import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.bean.DevicePower;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.GatewayServiceInfo;
@@ -353,6 +355,9 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                             }
                             mDeviceList.add(homeShowBean);
                             break;
+                        case HomeShowBean.TYPE_CLOTHES_HANGER:
+                            mDeviceList.add(homeShowBean);
+                            break;
                         case HomeShowBean.TYPE_WIFI_LOCK:
                         case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
                             WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
@@ -564,6 +569,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
 
                             startActivityForResult(impowerIntent, KeyConstants.GET_BLE_POWER);
                         }
+                        break;
+                    case HomeShowBean.TYPE_CLOTHES_HANGER:
+                        ClothesHangerMachineAllBean hangerInfo = (ClothesHangerMachineAllBean) deviceDetailBean.getObject();
+                        Intent clothesIntent = new Intent(getActivity(), ClothesHangerMachineDetailActivity.class);
+                        clothesIntent.putExtra(KeyConstants.WIFI_SN,hangerInfo.getWifiSN());
+                        startActivity(clothesIntent);
                         break;
                     case HomeShowBean.TYPE_WIFI_LOCK:
                     case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:

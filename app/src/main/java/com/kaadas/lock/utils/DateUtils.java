@@ -243,6 +243,29 @@ public class DateUtils {
         return retStr;
     }
 
+    public static int getTimeToInt(String time){
+        if(time.contains(":")){
+
+            String[] split = time.split(":");
+            int sum = 0;
+            try {
+                sum = (Integer.parseInt(split[0]) * 60) + Integer.parseInt(split[1]);
+            }catch (Exception e){
+
+            }
+            return sum;
+        }else{
+            return 0;
+        }
+
+    }
+
+    public static String getStringTime3(int cnt){
+        int hour = cnt / 60;
+        int min = cnt % 60;
+        return String.format(Locale.CHINA,"%02d:%02d",hour,min);
+    }
+
     public static String getStringTime2(int cnt) {
         int hour = cnt/3600;
         int min = cnt % 3600 / 60;

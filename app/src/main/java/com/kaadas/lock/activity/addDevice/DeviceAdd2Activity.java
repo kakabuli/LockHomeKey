@@ -14,10 +14,10 @@ import android.widget.Toast;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAPAddFirstActivity;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddActivity;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -30,6 +30,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+import com.kaadas.lock.utils.clothesHangerMachineUtil.ClothesHangerMachineUtil;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.king.zxing.Intents;
 
@@ -100,7 +101,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
     }
 
     @OnClick({R.id.back, R.id.scan, R.id.ble_lock, R.id.wifi_lock, R.id.zigbee_lock, R.id.cat_eye, R.id.rg4300, R.id.gw6032, R.id.gw6010, R.id.single_switch,
-            R.id.double_switch,R.id.video_lock,R.id.face_lock,R.id.k20v_lock,R.id.k11f_lock,R.id._3d_lock})
+            R.id.double_switch,R.id.video_lock,R.id.face_lock,R.id.k20v_lock,R.id.k11f_lock,R.id._3d_lock,R.id.clothes_machine})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -235,6 +236,12 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 k20vIntent.putExtra("wifiModelType", k20vModelType);
                 startActivity(k20vIntent);
                 break;
+            case R.id.clothes_machine:
+                Intent clothesMachineAddIntent = new Intent(this, ClothesHangerMachineAddActivity.class);
+                clothesMachineAddIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                startActivityForResult(clothesMachineAddIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+
+                break;
         }
     }
 
@@ -280,6 +287,17 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                         wifiIntent.putExtra("wifiModelType", wifiModelType);
                         startActivity(wifiIntent);
                     }else if ( (result.contains("_WiFi&BLE_"))){  //5-11WiFi&BLE，蓝牙Wi-Fi模组配网
+                        String[] str = result.split("_");
+                        if(str.length > 0){
+                            if(str.length >= 4 && result.contains("SmartHanger")){
+                                if(ClothesHangerMachineUtil.pairMode(str[1]).equals(str[2])){
+                                    Intent clothesMachineIntent = new Intent(this, ClothesHangerMachineAddFirstActivity.class);
+                                    clothesMachineIntent.putExtra("wifiModelType",str[2]);
+                                    startActivity(clothesMachineIntent);
+                                    return;
+                                }
+                            }
+                        }
                         Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
                         String wifiModelType = "WiFi&BLE";
                         wifiIntent.putExtra("wifiModelType", wifiModelType);

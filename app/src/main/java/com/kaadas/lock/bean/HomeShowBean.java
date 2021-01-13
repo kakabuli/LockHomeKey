@@ -40,6 +40,11 @@ public class  HomeShowBean implements Serializable {
     public static final int TYPE_WIFI_VIDEO_LOCK = 6;
 
     /**
+     *  设备类型    晾衣机
+     */
+    public static final int TYPE_CLOTHES_HANGER = 7;
+
+    /**
      *  设备类型    unkown
      */
     public static final int TYPE_UNKOWN_LOCK = -99;

@@ -10,6 +10,7 @@ import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddUserBean;
+import com.kaadas.lock.publiclibrary.http.postbean.ClothesHangerMachineDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.DeleteDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.DeleteMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.DeletePasswordBean;
@@ -27,6 +28,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.GetSinglePasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetUserNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetUserProtocolContentBean;
 import com.kaadas.lock.publiclibrary.http.postbean.GetWarringRecordBean;
+import com.kaadas.lock.publiclibrary.http.postbean.HangerUpdateNickNameBean;
 import com.kaadas.lock.publiclibrary.http.postbean.LoginByEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.LoginByPhoneBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyFunctionSetBean;
@@ -35,6 +37,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyPasswordNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifySwitchNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ModifyUserNickBean;
+import com.kaadas.lock.publiclibrary.http.postbean.MultiOTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.OTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.PutMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.RegisterByPhoneBean;
@@ -44,6 +47,7 @@ import com.kaadas.lock.publiclibrary.http.postbean.SendEmailBean;
 import com.kaadas.lock.publiclibrary.http.postbean.SendMessageBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UpdateBleVersionBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UpdateSoftwareVersionBean;
+import com.kaadas.lock.publiclibrary.http.postbean.UpgradeMultiOTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadAppRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadBinRecordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.UploadOperationRecordBean;
@@ -67,6 +71,9 @@ import com.kaadas.lock.publiclibrary.http.postbean.WifiLockUpdateShareNickBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ZigBeenInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineBindResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineCheckBindingResult;
+import com.kaadas.lock.publiclibrary.http.result.ClothesHangerMachineUnBindResult;
 import com.kaadas.lock.publiclibrary.http.result.DeleteMessageResult;
 import com.kaadas.lock.publiclibrary.http.result.GetDeviceResult;
 import com.kaadas.lock.publiclibrary.http.result.GetHelpLogResult;
@@ -79,6 +86,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResul
 import com.kaadas.lock.publiclibrary.http.result.GetWifiVideoLockAlarmRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LockRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.OperationRecordResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.result.SinglePasswordResult;
@@ -97,6 +105,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 
 
 import java.io.File;
@@ -977,6 +986,18 @@ public class XiaokaiNewServiceImp {
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
+    /** 多固件检查更新
+     * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param deviceName 是	String	设备唯一编号
+     * @return
+     */
+    public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<MultiOTABean.OTAParams> params,String devtype) {
+        MultiOTABean helpLogBean = new MultiOTABean(customer, deviceName, params,devtype);
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .getOtaMultiCheck(new HttpUtils<MultiOTABean>().getBody(helpLogBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
 
     /**
      * @param sn
@@ -1354,5 +1375,59 @@ public class XiaokaiNewServiceImp {
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
 
+    }
+
+    ////////////////////////////////////////////           晾衣机api功能            ///////////////////////////////////////////////
+
+    /**
+     *  检查晾衣机设备是否被绑定
+     */
+    public static Observable<ClothesHangerMachineCheckBindingResult> clothesHangerMachineCheckBinding(String wifiSN){
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .clothesHangerMachineCheckBinding(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *   晾衣机绑定
+     */
+    public static Observable<ClothesHangerMachineBindResult> clothesHangerMachineBind(String wifiSN){
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .clothesHangerMachineBind(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  晾衣机解绑
+     */
+    public static Observable<ClothesHangerMachineUnBindResult> clothesHangerMachineUnBind(String wifiSN){
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .clothesHangerMachineUnbind(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     * 修改晾衣机昵称
+     */
+    public static Observable<BaseResult> hangerUpdateNickname(String wifiSN, String lockNickname) {
+        HangerUpdateNickNameBean wiFiLockUpdateNickNameBean = new HangerUpdateNickNameBean(wifiSN, MyApplication.getInstance().getUid(), lockNickname);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .hangerUpdateNickname(new HttpUtils<HangerUpdateNickNameBean>().getBody(wiFiLockUpdateNickNameBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  多固件确认升级
+     */
+    public static Observable<BaseResult> wifiDeviceUploadMultiOta(String wifiSN, String type,List<UpgradeMultiOTABean.UpgradeTaskBean> upgradeTask) {
+        UpgradeMultiOTABean wiFiLockUpdateNickNameBean = new UpgradeMultiOTABean(wifiSN, type, upgradeTask);
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiDeviceUploadMultiOta(new HttpUtils<UpgradeMultiOTABean>().getBody(wiFiLockUpdateNickNameBean))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 }

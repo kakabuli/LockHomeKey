@@ -358,7 +358,6 @@ public class BleService extends Service {
                     //设备名
                     String deviceName = device.getName();
 //                LogUtils.e("--kaadas--device.getName()==",device.getName());
-
 //                //新蓝牙广播协议带SN
                     if (hex16.size() > 0) {
 
@@ -563,6 +562,16 @@ public class BleService extends Service {
             LogUtils.e("--kaadas--收到蓝牙特征=="+characteristic.getUuid().toString()+"，数据==    " + Rsa.bytesToHexString(value));
 
             lastReceiveDataTime = System.currentTimeMillis();
+
+            if ((value[0] == 0 && value.length == 20)
+                    && ((value[3] & 0xff) == 0x97)){
+                sendCommand(BleCommandFactory.confirmCommand(value));
+                BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
+                bleDataBean.setDevice(gatt.getDevice());
+
+                dataChangeSubject.onNext(bleDataBean);
+            }
+
             if(characteristic.getUuid().toString().equals(BLeConstants.DISTRIBUTION_NETWORK_NOTIFY_CHAR)) {
 
                 /*
@@ -1150,7 +1159,8 @@ public class BleService extends Service {
         boolean isFFD0 = false; //Ti的OTA重启服务
         boolean is1802 = false; //P6的OTA重启服务
         boolean isFFE1 = false; //P6的App->蓝牙数据通道（最新版本才有的特征值UUID 2019年5月9日）
-        boolean isFFC0 = false; //P6的App->蓝牙配网通道（S110M 单火开关项目）
+        boolean isFFC0 = false; //P6的App->蓝牙配网通道（S110M 单火开关、晾衣机项目）
+        //5，蓝牙WiFi共用锁
 
         for (BluetoothGattService gattService : gattServices) {
 //            LogUtils.e("--kaadas--服务UUID  " + gattService.getUuid().toString());

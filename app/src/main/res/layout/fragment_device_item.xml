@@ -35,8 +35,23 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/clothes_machine_name"
+        android:layout_toRightOf="@+id/device"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="晾衣机"
+        android:textColor="#ff333333"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_marginRight="@dimen/dp_20"
+        android:visibility="gone"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
+        android:id="@+id/lly_lock_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/device"

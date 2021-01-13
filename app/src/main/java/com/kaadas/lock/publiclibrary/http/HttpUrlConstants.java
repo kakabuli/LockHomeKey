@@ -12,7 +12,12 @@ public class HttpUrlConstants {
     /**
      * OTA  升级  API地址
      */
-    public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL;  //测试OTA服务器
+    public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL + "otaUpgrade/check";  //测试OTA服务器
+
+    /**
+     *  OTA 多固件检查更新
+     */
+    public static final String OTA_MULTI_CHECK = ConstantConfig.OTA_INFO_URL + "otaUpgrade/multiCheck";
     /**
      * OTA  升级结果上报  API地址
      */
@@ -376,9 +381,14 @@ public class HttpUrlConstants {
 
 
     /**
-     * 获取开锁次数
+     * 确认升级（单组件）
      */
     public static final String WIFI_LOCK_UPLOAD_OTA = BASE_URL + "wifi/device/ota";
+
+    /**
+     * 确认升级（多组件）
+     */
+    public static final String WIFI_LOCK_UPLOAD_MULTI_OTA = BASE_URL + "wifi/device/multiOta";
 
 
     /**
@@ -428,4 +438,26 @@ public class HttpUrlConstants {
      *  查询wifi锁设备列表
      */
     public static final String WIFI_DEVICE_LIST = BASE_URL + "wifi/device/list";
+
+
+    //////////////////////////////////////////晾衣机 Api 功能 //////////////////////////////////////////////
+    /**
+     * 检查晾衣机设备是否被绑定
+     */
+    public static final String HANGER_CHECK_BINDING = BASE_URL + "wifi/hanger/checkadmind";
+
+    /**
+     * 晾衣机绑定
+     */
+    public static final String HANGER_BIND = BASE_URL + "wifi/hanger/bind";
+
+    /**
+     * 晾衣机解绑
+     */
+    public static final String HANGER_UNBIND = BASE_URL + "wifi/hanger/unbind";
+
+    /**
+     *  晾衣机设备修改昵称
+     */
+    public static final String MODIFY_HANGER_NICK_NAME = BASE_URL + "/wifi/hanger/updateNickName";
 }

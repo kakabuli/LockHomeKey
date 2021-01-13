@@ -19,6 +19,7 @@ import com.kaadas.lock.activity.login.GuidePageActivity;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyFingerPrintActivity;
 import com.kaadas.lock.activity.login.PersonalVerifyGesturePasswordActivity;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.VersionBean;
@@ -41,6 +42,8 @@ import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 
 public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<ISplashView>> implements ISplashView {
