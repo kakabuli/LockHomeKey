@@ -57,12 +57,12 @@ public class SLRemoteService extends Service {
 
     private void shouDefNotify() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            KeepAliveConfig.CONTENT = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
-            KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
-            KeepAliveConfig.TITLE = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
+            KeepAliveConfig.CONTENT = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
+            KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
+            KeepAliveConfig.TITLE = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
             if (!TextUtils.isEmpty(KeepAliveConfig.TITLE) && !TextUtils.isEmpty( KeepAliveConfig.CONTENT)) {
                 //启用前台服务，提升优先级
-                Intent intent2 = new Intent(getApplicationContext(), NotificationClickReceiver.class);
+                Intent intent2 = new Intent(SLRemoteService.this, NotificationClickReceiver.class);
                 intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                 Notification notification = NotificationUtils.createNotification(SLRemoteService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                 startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);
@@ -92,14 +92,14 @@ public class SLRemoteService extends Service {
                     KeepAliveConfig.DEF_ICONS = iconRes;
                     KeepAliveConfig.TITLE = discription;
                 } else {
-                    KeepAliveConfig.CONTENT = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
-                    KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
-                    KeepAliveConfig.TITLE = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
+                    KeepAliveConfig.CONTENT = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
+                    KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
+                    KeepAliveConfig.TITLE = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
 
                 }
                 if (KeepAliveConfig.TITLE != null && KeepAliveConfig.CONTENT != null) {
                     //启用前台服务，提升优先级
-                    Intent intent2 = new Intent(getApplicationContext(), NotificationClickReceiver.class);
+                    Intent intent2 = new Intent(SLRemoteService.this, NotificationClickReceiver.class);
                     intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                     Notification notification = NotificationUtils.createNotification(SLRemoteService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                     startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);

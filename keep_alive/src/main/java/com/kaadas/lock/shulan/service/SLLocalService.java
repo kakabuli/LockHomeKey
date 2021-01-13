@@ -75,7 +75,7 @@ public class SLLocalService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //播放无声音乐
-        KeepAliveConfig.runMode = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RUN_MODE);
+        KeepAliveConfig.runMode = SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RUN_MODE);
         LogUtils.e(TAG+ "运行模式：" + KeepAliveConfig.runMode);
         if (mediaPlayer == null && KeepAliveConfig.runMode == RunMode.HIGH_POWER_CONSUMPTION) {
             mediaPlayer = MediaPlayer.create(this, R.raw.novioce);
@@ -187,9 +187,9 @@ public class SLLocalService extends Service {
             try {
                 if (mBilder != null && KeepAliveConfig.foregroundNotification != null) {
                     KeepAliveAIDL guardAidl = KeepAliveAIDL.Stub.asInterface(service);
-                    guardAidl.wakeUp(SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE),
-                            SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT),
-                            SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON));
+                    guardAidl.wakeUp(SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE),
+                            SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT),
+                            SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON));
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -201,8 +201,12 @@ public class SLLocalService extends Service {
     public void onDestroy() {
         super.onDestroy();
 //        unbindService(connection);
-        unregisterReceiver(mOnepxReceiver);
-        unregisterReceiver(screenStateReceiver);
+        if(mOnepxReceiver != null){
+            unregisterReceiver(mOnepxReceiver);
+        }
+        if(screenStateReceiver != null){
+            unregisterReceiver(screenStateReceiver);
+        }
 
         if (mKeepAliveRuning != null) {
             mKeepAliveRuning.onStop();
@@ -216,12 +220,15 @@ public class SLLocalService extends Service {
 
     private void shouDefNotify() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            KeepAliveConfig.CONTENT = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
-            KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
-            KeepAliveConfig.TITLE = SPUtils.getInstance(getApplicationContext(), KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
+            try {
+                KeepAliveConfig.CONTENT = SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT) + "";
+                KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
+                KeepAliveConfig.TITLE = SPUtils.getInstance(SLLocalService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE) + "";
+            }catch (Exception e){
+            }
             if (!TextUtils.isEmpty(KeepAliveConfig.TITLE) && !TextUtils.isEmpty(KeepAliveConfig.CONTENT)) {
                 //启用前台服务，提升优先级
-                Intent intent2 = new Intent(getApplicationContext(), NotificationClickReceiver.class);
+                Intent intent2 = new Intent(SLLocalService.this, NotificationClickReceiver.class);
                 intent2.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
                 Notification notification = NotificationUtils.createNotification(SLLocalService.this, KeepAliveConfig.TITLE, KeepAliveConfig.CONTENT, KeepAliveConfig.DEF_ICONS, intent2);
                 startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);

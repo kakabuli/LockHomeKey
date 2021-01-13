@@ -89,8 +89,8 @@ public class JobHandlerService extends JobService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 startJob(this);
             }
-            if (!KeepAliveUtils.isServiceRunning(getApplicationContext(), getPackageName() + ":sllocal")
-                    || !KeepAliveUtils.isRunningTaskExist(getApplicationContext(), getPackageName() + ":slremote")) {
+            if (!KeepAliveUtils.isServiceRunning(JobHandlerService.this, getPackageName() + ":sllocal")
+                    || !KeepAliveUtils.isRunningTaskExist(JobHandlerService.this, getPackageName() + ":slremote")) {
                 LogUtils.e("JOB-->", " 重新开启了 服务 ");
                 startService(this);
             }
@@ -103,8 +103,8 @@ public class JobHandlerService extends JobService {
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
         LogUtils.e("JOB-->", " Job 停止");
-        if (!KeepAliveUtils.isServiceRunning(getApplicationContext(), getPackageName() + ":sllocal")
-                || !KeepAliveUtils.isRunningTaskExist(getApplicationContext(), getPackageName() + ":slremote")) {
+        if (!KeepAliveUtils.isServiceRunning(JobHandlerService.this, getPackageName() + ":sllocal")
+                || !KeepAliveUtils.isRunningTaskExist(JobHandlerService.this, getPackageName() + ":slremote")) {
             startService(this);
         }
         return false;
