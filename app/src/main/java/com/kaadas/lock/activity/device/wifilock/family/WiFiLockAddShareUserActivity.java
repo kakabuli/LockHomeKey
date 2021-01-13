@@ -133,6 +133,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
     @Override
     public void onAddUserFailedServer(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.add_failed);
+//        ToastUtil.getInstance().showLong(R.string.add_failed);
+        ToastUtil.getInstance().showLong(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 }

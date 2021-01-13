@@ -83,14 +83,15 @@ public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
         IntentFilter filter = new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
-        handler.postDelayed(timeoutRunnable, 20 * 1000);
+        handler.postDelayed(timeoutRunnable, 183 * 1000);
         progressDisposable = Observable
                 .interval(0, 1, TimeUnit.SECONDS)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        circleProgressBar2.setValue(aLong * 5);
+//                        circleProgressBar2.setValue(aLong * 5);
+                        circleProgressBar2.setValue(aLong % 61);
                     }
                 });
         WifiUtil.getIns().init(getApplicationContext());
