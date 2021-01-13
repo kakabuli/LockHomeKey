@@ -244,7 +244,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 //                    time = h264Frame.frameTimeStamp;
 //                    h264Frame.getFrameRate();
 
-                    MyLog.getInstance().save("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
+//                    MyLog.getInstance().save("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
+                    LogUtils.e("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
                 }
 
                 @Override

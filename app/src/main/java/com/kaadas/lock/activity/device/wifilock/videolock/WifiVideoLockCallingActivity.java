@@ -513,14 +513,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 },500);
             }
         }
-        ivMute.setImageResource(R.mipmap.real_time_video_mute);
-        isShowAudio = true;
-        isFirstAudio = false;
-        llyRecord.setVisibility(View.GONE);
-        ivRecoring.setSelected(false);
-        ivCalling.setSelected(false);
-        tvCallingTips.setText("对讲");
-        tvCallingTips.setTextColor(Color.parseColor("#333333"));
+        resetStatus();
         registerBroadcast();
         if(isLastPirture){
             if(myBitmap != null) {
@@ -579,12 +572,12 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void finish() {
-        if(getIntent().getBooleanExtra("VIDEO_CALLING_IS_MAINACTIVITY",false)){
-            startActivity(new Intent(this, MainActivity.class));
-        }
         super.finish();
         isCalling = 0;
         mPresenter.release();
+        if(getIntent().getBooleanExtra("VIDEO_CALLING_IS_MAINACTIVITY",false)){
+            startActivity(new Intent(this, MainActivity.class));
+        }
     }
 
     @Override
@@ -598,15 +591,22 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     }
                     if(tvTips != null)
                         tvTips.setVisibility(View.GONE);
-                    isConnect = false;
                     LogUtils.e("shulan"+this + " paramInt=" + paramInt);
                     String errorStringWithCode;
                     if(paramInt >0){
                         errorStringWithCode = XMP2PConnectJsonError.checkP2PJSONErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
                     }else{
-
+                        if(isConnect && (paramInt == -13 || paramInt == -12)){
+                            mPresenter.talkback(false);
+                            mPresenter.stopTalkback();
+                            resetStatus();
+                            mPresenter.setStartTime();
+                            mPresenter.connectP2P();
+                            return;
+                        }
                         errorStringWithCode = XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockCallingActivity.this,paramInt);
                     }
+                    isConnect = false;
                     creteDialog(errorStringWithCode + "");
 
                 }
@@ -615,6 +615,17 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         });
 
 
+    }
+
+    private void resetStatus() {
+        ivMute.setImageResource(R.mipmap.real_time_video_mute);
+        isShowAudio = true;
+        isFirstAudio = false;
+        llyRecord.setVisibility(View.GONE);
+        ivRecoring.setSelected(false);
+        ivCalling.setSelected(false);
+        tvCallingTips.setText("对讲");
+        tvCallingTips.setTextColor(Color.parseColor("#333333"));
     }
 
 
@@ -632,7 +643,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             }
         });*/
         mPresenter.startRealTimeVideo(mSufaceView);
-        this.isConnect = true;
 
     }
 
@@ -663,6 +673,9 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     public void onLastFrameRgbData(int[] ints, int width, int height, boolean b) {
         if(ints != null ){
             Bitmap bitmap = MyBitmapFactory.createMyBitmap(ints, width, height);
+            if(bitmap == null){
+                return;
+            }
             myBitmap = BitmapUtil.rotaingImageView(90,bitmap);
             if(!b){
                 runOnUiThread(new Runnable() {
@@ -767,7 +780,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 }
             }
         });
-
+        this.isConnect = true;
 
     }
 
@@ -979,14 +992,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ivMute.setImageResource(R.mipmap.real_time_video_mute);
-                isShowAudio = true;
-                isFirstAudio = false;
-                llyRecord.setVisibility(View.GONE);
-                ivRecoring.setSelected(false);
-                ivCalling.setSelected(false);
-                tvCallingTips.setText("对讲");
-                tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                resetStatus();
                 avi.setVisibility(View.VISIBLE);
                 avi.show();
                 tvTips.setVisibility(View.VISIBLE);
