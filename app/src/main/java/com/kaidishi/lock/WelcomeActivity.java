@@ -332,7 +332,17 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
                 Log.e(GeTui.VideoLog, "WelcomeActivity==>sip_time_json:" + sip_time_json + " diff_time:" + diff_time);
                 MyLog.getInstance().save("sip_time_json:" + sip_time_json + " diff_time:" + diff_time);
                 if (diff_time >= timeout && sip_time_json != 0) {
-                    Toast.makeText(WelcomeActivity.this, getResources().getString(R.string.cate_sleep), Toast.LENGTH_LONG).show();
+                    List<HomeShowBean> homeShowDevices = MyApplication.getInstance().getHomeShowDevices();
+                    if(homeShowDevices != null){
+                        if(homeShowDevices.size() > 0){
+                            for(int i = 0 ; i < homeShowDevices.size();i++){
+                                if(homeShowDevices.get(i).getDeviceType() == HomeShowBean.TYPE_CAT_EYE){
+                                    //验证猫眼设备是否打开
+                                    Toast.makeText(WelcomeActivity.this, getResources().getString(R.string.cate_sleep), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
                 } else if (diff_time < timeout && sip_time_json != 0) {
                     if (!TextUtils.isEmpty(sip_package_json)) {
                         //String sip_package= new String(Base64.decode(sip_package_json,Base64.DEFAULT));
