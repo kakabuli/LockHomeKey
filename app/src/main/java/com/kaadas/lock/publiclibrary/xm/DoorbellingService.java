@@ -12,18 +12,22 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DoorbellingResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.WifiLockRecordResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.WifiLockVideoBindBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.shulan.KeepAliveManager;
 import com.kaadas.lock.utils.AppUtil;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NotificationUtil;
@@ -38,6 +42,7 @@ import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 
 /**
  *  启动蓝牙服务和Mqtt服务
@@ -49,6 +54,8 @@ public class DoorbellingService extends Service {
     private Disposable appStatusDisposable;
 
     private Disposable listenerServiceDisposable;
+
+    private Disposable recordDisposable;
 
     protected CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -64,7 +71,31 @@ public class DoorbellingService extends Service {
         super.onCreate();
         LogUtils.e("shulan DoorbellingService onCreate");
         listenerServiceConnect();
+        getRecordNotification();
         getDoorbelling();
+    }
+
+    private void getRecordNotification() {
+        if(MyApplication.getInstance().getMqttService() != null){
+            LogUtils.e("shulan 2----DoorbellingService----mqtt != null");
+            toDisposable(recordDisposable);
+            recordDisposable = MyApplication.getInstance().getMqttService().listenerDataBack()
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            if(mqttData != null){
+
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
+
+        }
     }
 
     @Override
@@ -87,7 +118,7 @@ public class DoorbellingService extends Service {
 
     public void getDoorbelling(){
         if(MyApplication.getInstance().getMqttService() != null) {
-            LogUtils.e("shulan ----DoorbellingService----mqtt != null");
+            LogUtils.e("shulan 1----DoorbellingService----mqtt != null");
             toDisposable(doorbellingDisposable);
             doorbellingDisposable = MyApplication.getInstance().getMqttService().listenerDataBack()
                     .compose(RxjavaHelper.observeOnMainThread())
@@ -98,50 +129,8 @@ public class DoorbellingService extends Service {
 
                             if (mqttData != null) {
                                 if (mqttData.getFunc().equals(MqttConstant.FUNC_WFEVENT)) {
-                                    try {
-                                        DoorbellingResult mDoorbellingResult = new Gson().fromJson(mqttData.getPayload(), DoorbellingResult.class);
-                                        if(mDoorbellingResult != null){
-
-                                            if(mDoorbellingResult.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) && mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
-                                                if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL || mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
-                                                    LogUtils.e("shulan +++++++++++++++++");
-                                                    Intent intent = new Intent(DoorbellingService.this, WifiVideoLockCallingActivity.class);
-                                                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
-                                                    intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
-                                                        if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
-                                                            NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"有人按门铃，点击查看门外情况", R.mipmap.ic_launcher,intent);
-                                                        }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
-                                                            NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"徘徊报警，点击查看门外情况", R.mipmap.ic_launcher,intent);
-                                                        }
-                                                    }else{
-                                                        if(!AppUtil.isForeground(DoorbellingService.this)){
-                                                            if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
-                                                                NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"有人按门铃，点击查看门外情况", R.mipmap.ic_launcher,intent);
-                                                            }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
-                                                                NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),"徘徊报警，点击查看门外情况", R.mipmap.ic_launcher,intent);
-                                                            }
-                                                        }
-                                                    }
-                                                }else{//报警消息
-                                                    LogUtils.e("shulan ------------------");
-                                                    String content = BleUtil.getAlarmByType(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
-                                                    Intent intent = new Intent(DoorbellingService.this, MainActivity.class);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
-                                                        NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),content, R.mipmap.ic_launcher,intent);
-                                                    }else{
-                                                        if(!AppUtil.isForeground(DoorbellingService.this)){
-                                                            NotificationUtils.sendNotification(DoorbellingService.this,getString(R.string.app_name),content, R.mipmap.ic_launcher,intent);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }catch (Exception e){
-
-                                    }
+                                    sendAlarmNotification(mqttData);
+                                    sendRecordNotification(mqttData);
                                 }
 
                             }
@@ -156,6 +145,95 @@ public class DoorbellingService extends Service {
             compositeDisposable.add(doorbellingDisposable);
         }else{
             LogUtils.e("shulan ----DoorbellingService----mqtt null");
+        }
+    }
+
+    private void sendRecordNotification(MqttData mqttData) {
+        try {
+            WifiLockRecordResult result = new Gson().fromJson(mqttData.getPayload(),WifiLockRecordResult.class);
+            if(result != null){
+                LogUtils.e("shulan doorbellingservice--sendRecordNotification-->" + result.toString());
+                if(result.getDevtype().equals(MqttConstant.WIFI_LOCK_DEVTYPE) && result.getEventtype().equals(MqttConstant.WIFI_LOCK_RECORD)){
+                    Intent intent = new Intent(DoorbellingService.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    String title = "";
+                    String content = "";
+                    String timestamp = "";
+                    try {
+                        long l = Long.parseLong(result.getTimestamp() + "");
+                        timestamp = DateUtils.secondToDate2(l);
+                    }catch (Exception e){
+
+                    }
+                    content = BleUtil.getRecordNotificationContent(result.getEventparams().getEventType(),result.getEventparams().getEventCode(),
+                            result.getEventparams().getEventSource(),result.getEventparams().getUserID(),DoorbellingService.this);
+                    title = BleUtil.getRecordNotificationTitle(result.getEventparams().getEventType(),result.getEventparams().getEventCode(),
+                            result.getEventparams().getEventSource(),result.getEventparams().getUserID(),DoorbellingService.this);
+                    if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
+                        if(!content.isEmpty()){
+                            NotificationUtils.sendNotification(DoorbellingService.this,title,content + " " + timestamp, R.mipmap.ic_launcher,intent);
+                        }
+                    }else{
+                        if(!AppUtil.isForeground(DoorbellingService.this)){
+                            if(!content.isEmpty()){
+                                NotificationUtils.sendNotification(DoorbellingService.this,title,content + " " + timestamp, R.mipmap.ic_launcher,intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }catch (Exception e){
+
+        }
+    }
+
+    private void sendAlarmNotification(MqttData mqttData) {
+        try {
+            DoorbellingResult mDoorbellingResult = new Gson().fromJson(mqttData.getPayload(), DoorbellingResult.class);
+            if(mDoorbellingResult != null){
+                String content = "";
+                String title = "";
+                String timestamp = "";
+                LogUtils.e("shulan doorbellingservice--sendRecordNotification-->" + mDoorbellingResult.toString());
+                if(mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
+                    title = BleUtil.getAlarmNotificationTitle(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
+                    content = BleUtil.getAlarmNotificationContent(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
+                    try {
+                        long l = Long.parseLong(mDoorbellingResult.getTimestamp() + "");
+                        timestamp = DateUtils.secondToDate2(l);
+                    }catch (Exception e){
+
+                    }
+                    Intent intent = null;
+                    if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.DOOR_BELL){
+                        intent = new Intent(DoorbellingService.this, WifiVideoLockCallingActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,1);
+                        intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
+                        intent = new Intent(DoorbellingService.this, WifiLockRecordActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }else{
+                        intent = new Intent(DoorbellingService.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
+
+                    if(!AppUtil.isAppOnForeground(DoorbellingService.this)){
+                        if(!content.isEmpty())
+                            NotificationUtils.sendNotification(DoorbellingService.this,title,content + " " + timestamp, R.mipmap.ic_launcher,intent);
+                    }else{
+                        if(!AppUtil.isForeground(DoorbellingService.this)){
+                            if(!content.isEmpty())
+                                NotificationUtils.sendNotification(DoorbellingService.this,title,content + " " + timestamp, R.mipmap.ic_launcher,intent);
+                        }
+                    }
+
+                }
+            }
+        }catch (Exception e){
+
         }
     }
 
@@ -213,7 +291,6 @@ public class DoorbellingService extends Service {
         }
 
     }
-
 
 
 

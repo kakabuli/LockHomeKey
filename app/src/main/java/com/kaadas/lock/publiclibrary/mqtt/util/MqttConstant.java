@@ -226,6 +226,8 @@ public class MqttConstant {
     //wifi锁上报的  Function
     public static final String FUNC_WFEVENT = "wfevent";
 
+    public static final String WIFI_LOCK_DEVTYPE = "kdswflock";
+
     //视频锁 讯美
     public static final String WIFI_VIDEO_LOCK_XM ="xmkdswflock";
 
@@ -265,6 +267,11 @@ public class MqttConstant {
      *  设置门锁
      */
     public static final String SET_LOCK = "setLock";
+
+    /**
+     *  record
+     */
+    public static final String WIFI_LOCK_RECORD = "record";
 
     //////////////////晾衣架////////////////////
 

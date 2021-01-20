@@ -724,4 +724,205 @@ public class BleUtil {
         return content;
     }
 
+    public static String getRecordNotificationTitle(int eventtype,int eventcode,int eventsource,int userID,Context context) {
+        String title = context.getString(R.string.app_name);
+
+        if(eventtype == 1){//动作类
+            if(eventcode == 1){//上锁
+                title = context.getString(R.string.record_notification_title_1_1) + "";
+            }else if(eventcode == 2){//开锁
+                if(eventsource == 8){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 0){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 3) {
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 4){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 7){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 10){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }else if(eventsource == 11){
+                    title = context.getString(R.string.record_notification_title_1_2) + "";
+                }
+            }
+        }else if(eventtype == 2){//用户管理类
+            if(userID == 254){
+                if(eventcode == 1){
+                    if(eventsource == 4){
+                        title = context.getString(R.string.record_notification_title_2_1_4) + "";
+                    }else if(eventsource == 0){
+                        title = context.getString(R.string.record_notification_title_2_1_0) + "";
+                    }
+                }else if(eventcode == 2){
+                    if(eventsource == 4){
+                        title = context.getString(R.string.record_notification_title_2_2_4) + "";
+                    }else{
+                        title = context.getString(R.string.record_notification_title_2_2_0) + "";
+                    }
+                }else if(eventcode == 3){
+                    if(eventsource == 4){
+                        title = context.getString(R.string.record_notification_title_2_3_4) + "";
+                    }else{
+                        title = context.getString(R.string.record_notification_title_2_3_0) + "";
+                    }
+                }
+            }
+        }else if(eventtype == 3){//模式切换类
+            title = context.getString(R.string.record_notification_title_3) + "";
+
+        }
+
+        return title;
+    }
+
+    /**
+     *  eventtype=record事件
+     */
+    public static String getRecordNotificationContent(int eventtype,int eventcode,int eventsource,int userID,Context context) {
+        String content = "";
+
+        if(eventtype == 1){//动作类
+            if(eventcode == 1){//上锁
+                content = context.getString(R.string.record_notification_content_1_1) + "";
+            }else if(eventcode == 2){//开锁
+                if(eventsource == 8){
+                    content = context.getString(R.string.record_notification_content_1_2_8) + "";
+                }else if(eventsource == 0){
+                    content = context.getString(R.string.record_notification_content_1_2_0) + "";
+                }else if(eventsource == 3) {
+                    content = context.getString(R.string.record_notification_content_1_2_3) + "";
+                }else if(eventsource == 4){
+                    content = context.getString(R.string.record_notification_content_1_2_4) + "";
+                }else if(eventsource == 7){
+                    content = context.getString(R.string.record_notification_content_1_2_7) + "";
+                }else if(eventsource == 10){
+                    content = context.getString(R.string.record_notification_content_1_2_10) + "";
+                }else if(eventsource == 11){
+                    content = context.getString(R.string.record_notification_content_1_2_11) + "";
+                }
+            }
+        }else if(eventtype == 2){//用户管理类
+            if(userID == 254){
+                if(eventcode == 1){
+                    if(eventsource == 4){
+                        content = context.getString(R.string.record_notification_content_2_1_4) + "";
+                    }else if(eventsource == 0){
+                        content = context.getString(R.string.record_notification_content_2_1_0) + "";
+                    }
+                }else if(eventcode == 2){
+                    if(eventsource == 4){
+                        content = context.getString(R.string.record_notification_content_2_2_4) + "";
+                    }else{
+                        content = context.getString(R.string.record_notification_content_2_2_0) + "";
+                    }
+                }else if(eventcode == 3){
+                    if(eventsource == 4){
+                        content = context.getString(R.string.record_notification_content_2_3_4) + "";
+                    }else{
+                        content = context.getString(R.string.record_notification_content_2_3_0) + "";
+                    }
+                }
+            }
+        }else if(eventtype == 3){//模式切换类
+            if(eventcode == 3 ){
+                content = context.getString(R.string.record_notification_content_3_3) + "";
+            } else if(eventcode == 4){
+                content = context.getString(R.string.record_notification_content_3_4) + "";
+            } else if(eventcode == 5){
+                content = context.getString(R.string.record_notification_content_3_5) + "";
+            }else if(eventcode == 6){
+                content = context.getString(R.string.record_notification_content_3_6) + "";
+            }else if(eventcode == 7){
+                content = context.getString(R.string.record_notification_content_3_7) + "";
+            }else if(eventcode == 8){
+                content = context.getString(R.string.record_notification_content_3_8) + "";
+            }
+        }
+
+        return content;
+
+    }
+
+    public static String getAlarmNotificationTitle(int type,Context context) {
+        String title = "";
+        switch (type) {
+            case LOCK_WARRING: //锁定
+                title = context.getString(R.string.alarm_notification_title_1);
+                break;
+            case HIJACK: //2劫持
+                title = context.getString(R.string.alarm_notification_title_2);
+                break;
+            case THREE_TIMES_ERROR: //3三次错误
+                title = context.getString(R.string.alarm_notification_title_3);
+                break;
+            case BROKEN: //4防撬
+                title = context.getString(R.string.alarm_notification_title_4);
+                break;
+            case MECHANICAL_KEY://8机械方式报警
+                title = context.getString(R.string.alarm_notification_title_8);
+                break;
+            case LOW_POWER://16低电压
+                title = context.getString(R.string.alarm_notification_title_16);
+                break;
+            case DOOR_NOT_LOCK: //32锁体异常
+                title = context.getString(R.string.alarm_notification_title_32);
+                break;
+            case ARM://64布防
+                title = context.getString(R.string.alarm_notification_title_64);
+                break;
+            case CLOSE_FACE://128低电量关人脸
+                title = context.getString(R.string.alarm_notification_title_128);
+                break;
+            case PIR_ALARM:
+                title = context.getString(R.string.alarm_notification_title_112) ;
+                break;
+            case DOOR_BELL:
+                title = context.getString(R.string.alarm_notification_title_96) + "";
+                break;
+        }
+        return title;
+    }
+
+    public static String getAlarmNotificationContent(int type,Context context) {
+        String title = "";
+        switch (type) {
+            case LOCK_WARRING: //锁定
+                title = context.getString(R.string.alarm_notification_content_1);
+                break;
+            case HIJACK: //2劫持
+                title = context.getString(R.string.alarm_notification_content_2);
+                break;
+            case THREE_TIMES_ERROR: //3三次错误
+                title = context.getString(R.string.alarm_notification_content_3);
+                break;
+            case BROKEN: //4防撬
+                title = context.getString(R.string.alarm_notification_content_4);
+                break;
+            case MECHANICAL_KEY://8机械方式报警
+                title = context.getString(R.string.alarm_notification_content_8);
+                break;
+            case LOW_POWER://16低电压
+                title = context.getString(R.string.alarm_notification_content_16);
+                break;
+            case DOOR_NOT_LOCK: //32锁体异常
+                title = context.getString(R.string.alarm_notification_content_32);
+                break;
+            case ARM://64布防
+                title = context.getString(R.string.alarm_notification_content_64);
+                break;
+            case CLOSE_FACE://128低电量关人脸
+                title = context.getString(R.string.alarm_notification_content_128);
+                break;
+            case PIR_ALARM:
+                title = context.getString(R.string.alarm_notification_content_112) ;
+                break;
+            case DOOR_BELL:
+                title = context.getString(R.string.alarm_notification_content_96) + "";
+                break;
+        }
+        return title;
+    }
+
 }
