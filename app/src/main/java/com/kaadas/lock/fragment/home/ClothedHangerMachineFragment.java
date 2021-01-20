@@ -86,11 +86,14 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
 
     private int motorStatus = 0;
 
+    private boolean isFirst = true;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_clothes_hanger_machine, null);
         ButterKnife.bind(this, view);
+        isFirst = true;
         wifiSn = (String) getArguments().getSerializable(KeyConstants.WIFI_SN);
         hangerInfo= MyApplication.getInstance().getClothesHangerMachineBySn(wifiSn);
         if(hangerInfo != null){
@@ -139,9 +142,12 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
         view.getViewTreeObserver().addOnWindowFocusChangeListener(new ViewTreeObserver.OnWindowFocusChangeListener() {
             @Override
             public void onWindowFocusChanged(boolean hasFocus) {
-                if(hangerInfo.getMotor() != null){
-                    motorStatus = hangerInfo.getMotor().getStatus();
-                    setHangerMotorAction(hangerInfo.getMotor().getAction(),hangerInfo.getMotor().getStatus());
+                if(isFirst){
+                    if(hangerInfo.getMotor() != null){
+                        motorStatus = hangerInfo.getMotor().getStatus();
+                        setHangerMotorAction(hangerInfo.getMotor().getAction(),hangerInfo.getMotor().getStatus());
+                    }
+                    isFirst = false;
                 }
             }
         });
@@ -258,18 +264,30 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
         }
     }
 
+    private long time = 0;
+    private final int TIME_INTERVAL = 0;
+
     @OnClick({R.id.img_hanger_up,R.id.img_hanger_down,R.id.img_hanger_pause,R.id.rl_hanger_lighting,R.id.rl_hanger_disinfect,
                 R.id.rl_hanger_airdry,R.id.rl_hanger_baking,R.id.rl_hanger_voice,R.id.rl_hanger_lock})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.img_hanger_up://2
-                mPresenter.setHangerMotor(wifiSn,2);
+                if(System.currentTimeMillis() - time > TIME_INTERVAL){
+                    mPresenter.setHangerMotor(wifiSn,2);
+                    time = System.currentTimeMillis();
+                }
                 break;
             case R.id.img_hanger_down://1
-                mPresenter.setHangerMotor(wifiSn,1);
+                if(System.currentTimeMillis() - time > TIME_INTERVAL){
+                    mPresenter.setHangerMotor(wifiSn,1);
+                    time = System.currentTimeMillis();
+                }
                 break;
             case R.id.img_hanger_pause://0
-                mPresenter.setHangerMotor(wifiSn,0);
+                if(System.currentTimeMillis() - time > TIME_INTERVAL){
+                    mPresenter.setHangerMotor(wifiSn,0);
+                    time = System.currentTimeMillis();
+                }
                 break;
             case R.id.rl_hanger_lighting:
                 if(imgHangerLighting.isSelected()){

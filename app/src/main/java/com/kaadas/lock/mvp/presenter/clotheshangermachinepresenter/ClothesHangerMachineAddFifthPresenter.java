@@ -288,7 +288,6 @@ public class ClothesHangerMachineAddFifthPresenter<T> extends BasePresenter<IClo
 
     public void bindDevice(String wifiSN) {
         LogUtils.e("shulan ----------bindDevice");
-        wifiSN = "KV51203710106";
         XiaokaiNewServiceImp.clothesHangerMachineBind(wifiSN).subscribe(new BaseObserver<ClothesHangerMachineBindResult>() {
             @Override
             public void onSuccess(ClothesHangerMachineBindResult clothesHangerMachineBindResult) {

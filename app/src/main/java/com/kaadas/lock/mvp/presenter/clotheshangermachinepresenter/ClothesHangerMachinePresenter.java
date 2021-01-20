@@ -264,7 +264,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                         public void accept(MqttData mqttData) throws Exception {
                             SetHangerAirDryResult result = new Gson().fromJson(mqttData.getPayload(), SetHangerAirDryResult.class);
                             LogUtils.e("shulan CLOTHES_HANGER_MACHINE_SET_BACKING-->" + result.toString());
-                            if ("200".equals(result.getCode() + "")) { //请求成功
+                            /*if ("200".equals(result.getCode() + "")) { //请求成功
                                 if(isSafe()){
                                     mViewRef.get().setBakingTimeSuccess(result.getParams().getSingle(),result.getParams().getCountdown());
                                 }
@@ -272,7 +272,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                                 if(isSafe()){
                                     mViewRef.get().setBakingTimeFailed();
                                 }
-                            }
+                            }*/
 
                         }
                     }, new Consumer<Throwable>() {
@@ -317,7 +317,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                         public void accept(MqttData mqttData) throws Exception {
                             SetHangerAirDryResult result = new Gson().fromJson(mqttData.getPayload(), SetHangerAirDryResult.class);
                             LogUtils.e("shulan CLOTHES_HANGER_MACHINE_SET_AIR_DRY-->" + result.toString());
-                            if ("200".equals(result.getCode() + "")) { //请求成功
+                            /*if ("200".equals(result.getCode() + "")) { //请求成功
                                 if(isSafe()){
                                     mViewRef.get().setAirDryTimeSuccess(result.getParams().getSingle(),result.getParams().getCountdown());
                                 }
@@ -325,7 +325,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                                 if(isSafe()){
                                     mViewRef.get().setAirDryTimeFailed();
                                 }
-                            }
+                            }*/
 
                         }
                     }, new Consumer<Throwable>() {
@@ -452,7 +452,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                         public void accept(MqttData mqttData) throws Exception {
                             SetHangerAirDryResult result = new Gson().fromJson(mqttData.getPayload(), SetHangerAirDryResult.class);
                             LogUtils.e("shulan CLOTHES_HANGER_MACHINE_SET_UV-->" + result.toString());
-                            if ("200".equals(result.getCode() + "")) { //请求成功
+                            /*if ("200".equals(result.getCode() + "")) { //请求成功
                                 if(isSafe()){
                                     mViewRef.get().setUVSuccess(result.getParams().getSingle(),result.getParams().getCountdown());
                                 }
@@ -460,7 +460,7 @@ public class ClothesHangerMachinePresenter<T> extends BasePresenter<IClothesHang
                                 if(isSafe()){
                                     mViewRef.get().setUVFailed();
                                 }
-                            }
+                            }*/
 
                         }
                     }, new Consumer<Throwable>() {
