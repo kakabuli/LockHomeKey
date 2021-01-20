@@ -132,5 +132,29 @@ public class DoorbellingResult implements Serializable {
         public void setClusterID(int clusterID) {
             this.clusterID = clusterID;
         }
+
+        @Override
+        public String toString() {
+            return "DoorbellingBean{" +
+                    "alarmCode=" + alarmCode +
+                    ", clusterID=" + clusterID +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "DoorbellingResult{" +
+                "msgtype='" + msgtype + '\'' +
+                ", func='" + func + '\'' +
+                ", msgId=" + msgId +
+                ", devtype='" + devtype + '\'' +
+                ", eventtype='" + eventtype + '\'' +
+                ", wfId='" + wfId + '\'' +
+                ", timestamp='" + timestamp + '\'' +
+                ", eventId='" + eventId + '\'' +
+                ", thumbUrl='" + thumbUrl + '\'' +
+                ", eventparams=" + eventparams +
+                '}';
     }
 }

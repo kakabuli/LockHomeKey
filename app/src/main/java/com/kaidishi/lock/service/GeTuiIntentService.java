@@ -62,12 +62,6 @@ public class GeTuiIntentService extends GTIntentService {
         String cid = msg.getClientId();
 
 
-        // 第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
-        boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
-        Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
-
-        Log.d(TAG, "onReceiveMessageData -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nmessageid = " + messageid + "\npkg = " + pkg
-                + "\ncid = " + cid);
 
         if (payload == null) {
             Log.e(TAG, "receiver payload = null");
@@ -84,9 +78,17 @@ public class GeTuiIntentService extends GTIntentService {
             }
             sendMessage(data, 0);
 //            if(!Rom.isFlyme() || !Rom.isSmartisan()){
-                sendNotification(data);
+            sendNotification(data);
 //            }
         }
+
+        // 第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
+        boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
+        Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
+        Log.d("shulan", "onReceiveMessageData call sendFeedbackMessage = " + (result ? "success" : "failed"));
+
+        Log.d(TAG, "onReceiveMessageData -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nmessageid = " + messageid + "\npkg = " + pkg
+                + "\ncid = " + cid);
 
         Log.d(TAG, "----------------------------------------------------------------------------------------------");
 
@@ -98,11 +100,15 @@ public class GeTuiIntentService extends GTIntentService {
             return;
         }
         String intentString = transmissionContentResult.getIntent();
+        String longString = "";
         String[] split = intentString.split(";");
         for (int i = 0; i < split.length;i++){
             LogUtils.e(TAG+"shulan"+i+"-->" + split[i]);
             if(split[i].contains("S.stringType=")){
                 intentString = split[i].split("S.stringType=")[1];
+            }
+            if(split[i].contains("l.longType=")){
+                longString = split[i].split("l.longType=")[1];
             }
         }
 
@@ -128,9 +134,16 @@ public class GeTuiIntentService extends GTIntentService {
             intent = new Intent(GeTuiIntentService.this, MainActivity.class);
             LogUtils.e(TAG+"shulan MainActivity-->");
         }
+        long time = 0;
+        try {
+            time = Long.parseLong(longString);
+        }catch (Exception e){
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        NotificationUtils.sendNotification(GeTuiIntentService.this,transmissionContentResult.getTitle(),transmissionContentResult.getContent(), R.mipmap.ic_launcher,intent);
+        }
+        if(System.currentTimeMillis() - time < 18000 ){
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            NotificationUtils.sendNotification(GeTuiIntentService.this,transmissionContentResult.getTitle(),transmissionContentResult.getContent(), R.mipmap.ic_launcher,intent);
+        }
     }
 
     // App初始化以后会回调这个方法
@@ -147,11 +160,13 @@ public class GeTuiIntentService extends GTIntentService {
     @Override
     public void onReceiveOnlineState(Context context, boolean online) {
         Log.d(TAG, "onReceiveOnlineState -> " + (online ? "online" : "offline"));
+        LogUtils.e( "shulan onReceiveOnlineState -> " + (online ? "online" : "offline"));
     }
 
     @Override
     public void onReceiveCommandResult(Context context, GTCmdMessage cmdMessage) {
         Log.d(TAG, "onReceiveCommandResult -> " + cmdMessage);
+        LogUtils.e("shulan onReceiveCommandResult -> " + cmdMessage);
 
         int action = cmdMessage.getAction();
 
@@ -166,16 +181,24 @@ public class GeTuiIntentService extends GTIntentService {
 //        }
     }
 
+    //在线通知接收
     @Override
     public void onNotificationMessageArrived(Context context, GTNotificationMessage message) {
         Log.d(TAG, "onNotificationMessageArrived -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
                         + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
                         + message.getTitle() + "\ncontent = " + message.getContent());
+
+        LogUtils.e("shulan onNotificationMessageArrived -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
+                + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
+                + message.getTitle() + "\ncontent = " + message.getContent());
     }
 
     @Override
     public void onNotificationMessageClicked(Context context, GTNotificationMessage message) {
         Log.d(TAG, "onNotificationMessageClicked -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
+                + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
+                + message.getTitle() + "\ncontent = " + message.getContent());
+        LogUtils.e("shulan onNotificationMessageClicked -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
                 + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
                 + message.getTitle() + "\ncontent = " + message.getContent());
     }
