@@ -766,8 +766,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     }
 
     public void setHomeshowDevice(List<HomeShowBean> homeshowDeviceList) {
+        homeShowDevices = homeshowDeviceList;
         loclHomeShowDevices = homeshowDeviceList;
-
     }
 
     public List<HomeShowBean> getHomeShowDevices() {

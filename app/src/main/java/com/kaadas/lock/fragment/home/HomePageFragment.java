@@ -120,6 +120,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
         hasDevice = false;
         changePage();
         devices = MyApplication.getInstance().getHomeShowDevices();
+        LogUtils.e("shulan onCreateView 首页  设备个数是    " + devices.size());
         initView();
         initData(devices);
         getScrollViewWidth();
@@ -404,7 +405,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
     @Override
     public void onDeviceRefresh(AllBindDevices allBindDevices) {
         devices = MyApplication.getInstance().getHomeShowDevices();
-        LogUtils.e("首页  设备个数是    " + devices.size());
+        LogUtils.e("shulan onDeviceRefresh 首页  设备个数是    " + devices.size());
         initData(devices);
     }
 

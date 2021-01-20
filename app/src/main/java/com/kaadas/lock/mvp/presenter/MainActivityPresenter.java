@@ -64,6 +64,7 @@ import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockAlarmEventDao;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockServiceInfo;
@@ -967,6 +968,76 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
         DaoSession daoSession = MyApplication.getInstance().getDaoWriteSession();
         String uid = MyApplication.getInstance().getUid();
         List<HomeShowBean> homeShowBeans = new ArrayList<>();
+        //获取WiFi锁
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
+            List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
+            if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
+                for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
+                    if(!TextUtils.isEmpty(wifiLockInfo.getDevice_did()) && !TextUtils.isEmpty(wifiLockInfo.getP2p_password())
+                            && !TextUtils.isEmpty(wifiLockInfo.getDevice_sn()) && !TextUtils.isEmpty(wifiLockInfo.getMac())){
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_VIDEO_LOCK, wifiLockInfo.getWifiSN(),
+                                wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    }else{
+                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(),
+                                wifiLockInfo.getLockNickname(), wifiLockInfo));
+                    }
+                }
+            }
+        }
+        //获取晾衣机
+        if(daoSession != null && daoSession.getClothesHangerMachineAllBeanDao() != null){
+            List<ClothesHangerMachineAllBean> clothesHangerMachineAllBeans = daoSession.getClothesHangerMachineAllBeanDao().loadAll();
+            if(clothesHangerMachineAllBeans != null && clothesHangerMachineAllBeans.size() > 0){
+                for(ClothesHangerMachineAllBean clothesHangerMachineAllBean : clothesHangerMachineAllBeans){
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CLOTHES_HANGER,clothesHangerMachineAllBean.getWifiSN(),
+                            clothesHangerMachineAllBean.getHangerNickName(),clothesHangerMachineAllBean));
+                }
+            }
+        }
+        //获取猫眼
+        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
+            List<CatEyeServiceInfo> catEyeServiceList = daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (catEyeServiceList != null && catEyeServiceList.size() > 0) {
+                for (CatEyeServiceInfo catEyeService : catEyeServiceList) {
+                    CateEyeInfo cateEyeInfo = new CateEyeInfo(catEyeService.getGatewayId(),
+                            new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(),
+                                    catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(),
+                                    catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()
+                                    , "", catEyeService.getDelectTime(), catEyeService.getLockversion(), catEyeService.getModuletype()
+                                    , catEyeService.getNwaddr(), catEyeService.getOfflineTime(), catEyeService.getOnlineTime(), catEyeService.getShareFlag()
+                                    , catEyeService.getPushSwitch()
+                            ));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
+                            catEyeService.getNickName(), cateEyeInfo));
+                }
+            }
+        }
+        //获取网关锁
+        if (daoSession != null && daoSession.getGatewayLockServiceInfoDao() != null) {
+            List<GatewayLockServiceInfo> gatewayLockList = daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (gatewayLockList != null && gatewayLockList.size() > 0) {
+                for (GatewayLockServiceInfo gwLock : gatewayLockList) {
+                    GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(),
+                            gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(),
+                            gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()
+                            , "", gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype()
+                            , gwLock.getNwaddr(), gwLock.getOfflineTime(), gwLock.getOnlineTime(), gwLock.getShareFlag(), gwLock.getPushSwitch()
+                    ));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
+                            gwLock.getNickName(), gwLockInfo));
+                }
+            }
+        }
+        //获取网关
+        if (daoSession != null && daoSession.getGatewayServiceInfoDao() != null) {
+            List<GatewayServiceInfo> gatewayServiceInfoList = daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
+            if (gatewayServiceInfoList != null && gatewayServiceInfoList.size() > 0) {
+                for (GatewayServiceInfo gatewayServiceInfo : gatewayServiceInfoList) {
+                    GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), gatewayServiceInfo.getAdminuid(), gatewayServiceInfo.getAdminName(), gatewayServiceInfo.getAdminNickname(), gatewayServiceInfo.getIsAdmin(), gatewayServiceInfo.getMeUsername(), gatewayServiceInfo.getMePwd(), gatewayServiceInfo.getMeBindState()));
+                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
+                }
+            }
+        }
         //获取蓝牙
         if (daoSession != null && daoSession.getBleLockServiceInfoDao() != null) {
             List<BleLockServiceInfo> bleLockList = daoSession.getBleLockServiceInfoDao().queryBuilder().where(BleLockServiceInfoDao.Properties.Uid.eq(uid)).list();
@@ -996,67 +1067,6 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
                     BleLockInfo bleLockInfo = new BleLockInfo(serverBleDevice);
                     homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_BLE_LOCK, bleDevice.getLockName(), bleDevice.getLockNickName(), bleLockInfo));
-                }
-            }
-        }
-        //获取网关
-        if (daoSession != null && daoSession.getGatewayServiceInfoDao() != null) {
-            List<GatewayServiceInfo> gatewayServiceInfoList = daoSession.getGatewayServiceInfoDao().queryBuilder().where(GatewayServiceInfoDao.Properties.Uid.eq(uid)).list();
-            if (gatewayServiceInfoList != null && gatewayServiceInfoList.size() > 0) {
-                for (GatewayServiceInfo gatewayServiceInfo : gatewayServiceInfoList) {
-                    GatewayInfo newGatewayInfo = new GatewayInfo(new ServerGatewayInfo(gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), gatewayServiceInfo.getAdminuid(), gatewayServiceInfo.getAdminName(), gatewayServiceInfo.getAdminNickname(), gatewayServiceInfo.getIsAdmin(), gatewayServiceInfo.getMeUsername(), gatewayServiceInfo.getMePwd(), gatewayServiceInfo.getMeBindState()));
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY, gatewayServiceInfo.getDeviceSN(), gatewayServiceInfo.getDeviceNickName(), newGatewayInfo));
-                }
-            }
-        }
-
-        //获取网关锁
-        if (daoSession != null && daoSession.getGatewayLockServiceInfoDao() != null) {
-            List<GatewayLockServiceInfo> gatewayLockList = daoSession.getGatewayLockServiceInfoDao().queryBuilder().where(GatewayLockServiceInfoDao.Properties.Uid.eq(uid)).list();
-            if (gatewayLockList != null && gatewayLockList.size() > 0) {
-                for (GatewayLockServiceInfo gwLock : gatewayLockList) {
-                    GwLockInfo gwLockInfo = new GwLockInfo(gwLock.getGatewayId(), new ServerGwDevice(gwLock.getSW(), gwLock.getDeviceId(),
-                            gwLock.getDevice_type(), gwLock.getEvent_str(), gwLock.getIpaddr(),
-                            gwLock.getMacaddr(), gwLock.getNickName(), gwLock.getTime()
-                            , "", gwLock.getDelectTime(), gwLock.getLockversion(), gwLock.getModuletype()
-                            , gwLock.getNwaddr(), gwLock.getOfflineTime(), gwLock.getOnlineTime(), gwLock.getShareFlag(), gwLock.getPushSwitch()
-                    ));
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_GATEWAY_LOCK, gwLock.getDeviceId(),
-                            gwLock.getNickName(), gwLockInfo));
-                }
-            }
-        }
-        //获取猫眼
-        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
-            List<CatEyeServiceInfo> catEyeServiceList = daoSession.getCatEyeServiceInfoDao().queryBuilder().where(CatEyeServiceInfoDao.Properties.Uid.eq(uid)).list();
-            if (catEyeServiceList != null && catEyeServiceList.size() > 0) {
-                for (CatEyeServiceInfo catEyeService : catEyeServiceList) {
-                    CateEyeInfo cateEyeInfo = new CateEyeInfo(catEyeService.getGatewayId(),
-                            new ServerGwDevice(catEyeService.getSW(), catEyeService.getDeviceId(),
-                                    catEyeService.getDevice_type(), catEyeService.getEvent_str(), catEyeService.getIpaddr(),
-                                    catEyeService.getMacaddr(), catEyeService.getNickName(), catEyeService.getTime()
-                                    , "", catEyeService.getDelectTime(), catEyeService.getLockversion(), catEyeService.getModuletype()
-                                    , catEyeService.getNwaddr(), catEyeService.getOfflineTime(), catEyeService.getOnlineTime(), catEyeService.getShareFlag()
-                                    , catEyeService.getPushSwitch()
-                            ));
-                    homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_CAT_EYE, catEyeService.getDeviceId(),
-                            catEyeService.getNickName(), cateEyeInfo));
-                }
-            }
-        }
-        //获取WiFi锁
-        if (daoSession != null && daoSession.getCatEyeServiceInfoDao() != null) {
-            List<WifiLockInfo> wifiLockInfos = daoSession.getWifiLockInfoDao().loadAll();
-            if (wifiLockInfos != null && wifiLockInfos.size() > 0) {
-                for (WifiLockInfo wifiLockInfo : wifiLockInfos) {
-                    if(!TextUtils.isEmpty(wifiLockInfo.getDevice_did()) && !TextUtils.isEmpty(wifiLockInfo.getP2p_password())
-                            && !TextUtils.isEmpty(wifiLockInfo.getDevice_sn()) && !TextUtils.isEmpty(wifiLockInfo.getMac())){
-                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_VIDEO_LOCK, wifiLockInfo.getWifiSN(),
-                                wifiLockInfo.getLockNickname(), wifiLockInfo));
-                    }else{
-                        homeShowBeans.add(new HomeShowBean(HomeShowBean.TYPE_WIFI_LOCK, wifiLockInfo.getWifiSN(),
-                                wifiLockInfo.getLockNickname(), wifiLockInfo));
-                    }
                 }
             }
         }
