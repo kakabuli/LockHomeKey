@@ -38,6 +38,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.widget.UnderLineRadioBtn;
 
@@ -244,7 +245,7 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
             HomeShowBean homeShowBean = devices.get(i);
 
             String deviceNickName = homeShowBean.getDeviceNickName();
-            rb.setText(TextUtils.isEmpty(deviceNickName)?homeShowBean.getDeviceId():deviceNickName);
+            rb.setText(StringUtil.getSubString(5,TextUtils.isEmpty(deviceNickName)?homeShowBean.getDeviceId():deviceNickName));
             rb.setTextSize(13);
             rb.setGravity(Gravity.CENTER);
             //设置图片   根据类型不同显示不同的图片

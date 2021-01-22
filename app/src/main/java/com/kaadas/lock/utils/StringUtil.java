@@ -375,4 +375,15 @@ public class StringUtil {
         return filename;
 
     }
+
+    public static String getSubString(int num,String str){
+        try {
+            if(str.length() > num){
+                return str.substring(0,num) + "...";
+            }
+        }catch (Exception e){
+
+        }
+        return str;
+    }
 }
