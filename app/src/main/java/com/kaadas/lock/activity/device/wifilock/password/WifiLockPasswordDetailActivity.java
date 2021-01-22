@@ -70,6 +70,7 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
         ButterKnife.bind(this);
         back.setOnClickListener(this);
         ivEditor.setOnClickListener(this);
+        tvName.setOnClickListener(this);
 
         pwdType = getIntent().getIntExtra(KeyConstants.PASSWORD_TYPE, 1);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
@@ -173,52 +174,57 @@ public class WifiLockPasswordDetailActivity extends BaseActivity<IWifiLockNickNa
                 finish();
                 break;
             case R.id.iv_editor:
-                View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
-                TextView tvTitle = mView.findViewById(R.id.tv_title);
-                EditText editText = mView.findViewById(R.id.et_name);
-                if (nickName != null) {
-                    editText.setText(nickName);
-                    editText.setSelection(nickName.length());
-                }
-                TextView tv_cancel = mView.findViewById(R.id.tv_left);
-                TextView tv_query = mView.findViewById(R.id.tv_right);
-                AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
-                if (pwdType == 1) {
-                    tvTitle.setText(getString(R.string.please_input_password_name));
-                } else if (pwdType == 2) {
-                    tvTitle.setText(getString(R.string.input_fingerprint_name));
-                } else if (pwdType == 3) {
-                    tvTitle.setText(getString(R.string.input_door_card_name));
-                }else if (pwdType == 4) {
-                    tvTitle.setText(getString(R.string.input_door_face_name));
-                }
-
-                tv_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                tv_query.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String name = editText.getText().toString().trim();
-                        if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
-                            return;
-                        }
-                        if (StringUtil.judgeNicknameWhetherSame(nickName, name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
-                            alertDialog.dismiss();
-                            return;
-                        }
-                        alertDialog.dismiss();
-                        mPresenter.updateNickName(wifiSn, pwdType, num, name, adminNickName);
-                        showLoading(getString(R.string.is_modifing));
-                    }
-                });
+            case R.id.tv_name:
+                setPasswordNickNameDialog();
                 break;
         }
+    }
+
+    private void setPasswordNickNameDialog() {
+        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        EditText editText = mView.findViewById(R.id.et_name);
+        if (nickName != null) {
+            editText.setText(nickName);
+            editText.setSelection(nickName.length());
+        }
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+        if (pwdType == 1) {
+            tvTitle.setText(getString(R.string.please_input_password_name));
+        } else if (pwdType == 2) {
+            tvTitle.setText(getString(R.string.input_fingerprint_name));
+        } else if (pwdType == 3) {
+            tvTitle.setText(getString(R.string.input_door_card_name));
+        }else if (pwdType == 4) {
+            tvTitle.setText(getString(R.string.input_door_face_name));
+        }
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = editText.getText().toString().trim();
+                if (!StringUtil.nicknameJudge(name)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    return;
+                }
+                if (StringUtil.judgeNicknameWhetherSame(nickName, name)) {
+                    ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
+                    alertDialog.dismiss();
+                    return;
+                }
+                alertDialog.dismiss();
+                mPresenter.updateNickName(wifiSn, pwdType, num, name, adminNickName);
+                showLoading(getString(R.string.is_modifing));
+            }
+        });
     }
 
 
