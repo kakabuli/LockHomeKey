@@ -51,6 +51,12 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     TextView tvHardwareVersion;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.iv_child_system_firware_number)
+    ImageView ivChildSystemFirwareNumber;
+    @BindView(R.id.iv_lock_wifi_firware_number)
+    ImageView ivLockWifiFirwareNumber;
+    @BindView(R.id.iv_lock_firware_number)
+    ImageView ivLockFirwareNimner;
 
     private String wifiSN ;
 
@@ -79,6 +85,15 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     private void initData() {
         if(wifiLockInfo != null){
+            if(wifiLockInfo.getIsAdmin() == 1){
+                ivChildSystemFirwareNumber.setVisibility(View.VISIBLE);
+                ivLockWifiFirwareNumber.setVisibility(View.VISIBLE);
+                ivLockFirwareNimner.setVisibility(View.VISIBLE);
+            }else{
+                ivChildSystemFirwareNumber.setVisibility(View.GONE);
+                ivLockWifiFirwareNumber.setVisibility(View.GONE);
+                ivLockFirwareNimner.setVisibility(View.GONE);
+            }
             tvSerialNumber.setText(wifiLockInfo.getDevice_sn());
             if(wifiLockInfo.getCamera_version() != null){
                 tvLockFirwareNumber.setText(wifiLockInfo.getCamera_version() + "");
@@ -112,21 +127,27 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
                 finish();
                 break;
             case R.id.rl_child_system_firware_number:
-                if(avi.isShow()){
-                    if(wifiLockInfo.getWifiVersion() != null)
-                        updateOTA(wifiSN,wifiLockInfo.getWifiVersion() + "",1);
+                if(wifiLockInfo.getIsAdmin() == 1){
+                    if(avi.isShow()){
+                        if(wifiLockInfo.getWifiVersion() != null)
+                            updateOTA(wifiSN,wifiLockInfo.getWifiVersion() + "",1);
+                    }
                 }
                 break;
             case R.id.rl_lock_wifi_firware_number:
-                if(avi.isShow()){
-                    if(wifiLockInfo.getMcu_version() != null)
-                        updateOTA(wifiSN,wifiLockInfo.getMcu_version() + "",5);
+                if(wifiLockInfo.getIsAdmin() == 1){
+                    if(avi.isShow()){
+                        if(wifiLockInfo.getMcu_version() != null)
+                            updateOTA(wifiSN,wifiLockInfo.getMcu_version() + "",5);
+                    }
                 }
                 break;
             case R.id.rl_tv_lock_firware_number:
-                if(avi.isShow()){
-                    if(wifiLockInfo.getCamera_version() != null)
-                        updateOTA(wifiSN,wifiLockInfo.getCamera_version() + "",4);
+                if(wifiLockInfo.getIsAdmin() == 1){
+                    if(avi.isShow()){
+                        if(wifiLockInfo.getCamera_version() != null)
+                            updateOTA(wifiSN,wifiLockInfo.getCamera_version() + "",4);
+                    }
                 }
                 break;
 
@@ -352,7 +373,7 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version,int type) {
-        if(System.currentTimeMillis() - time > 15000){
+        if(System.currentTimeMillis() - time > 5000){
             if(type == 1){
                 updateDialog(appInfo,"WIFI固件版本" + version,SN);
             }else if(type ==4){
