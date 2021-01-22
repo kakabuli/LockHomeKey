@@ -53,36 +53,31 @@ public class WifiVideoLockWanderingJudgeTimeActivity extends BaseActivity<IWifiL
         setContentView(R.layout.activity_wifi_lock_wandering_judge_time);
         ButterKnife.bind(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        stay_time = getIntent().getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,30);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-
         initData();
     }
 
     private void initData() {
-        if(wifiLockInfo != null){
-            if(wifiLockInfo.getSetPir() != null){
-                stay_time = wifiLockInfo.getSetPir().getStay_time();
-                if(stay_time == 10){
-                    setJudgeTimeInit(R.id.rl_judge_time_1);
-                }else if(stay_time == 20){
-                    setJudgeTimeInit(R.id.rl_judge_time_2);
-                }else if(stay_time == 30){
-                    setJudgeTimeInit(R.id.rl_judge_time_3);
-                }else if(stay_time == 40){
-                    setJudgeTimeInit(R.id.rl_judge_time_4);
-                }else if(stay_time == 50){
-                    setJudgeTimeInit(R.id.rl_judge_time_5);
-                }else if(stay_time == 60){
-                    setJudgeTimeInit(R.id.rl_judge_time_6);
-                }
-                ivJudgeTime1.setClickable(false);
-                ivJudgeTime2.setClickable(false);
-                ivJudgeTime3.setClickable(false);
-                ivJudgeTime4.setClickable(false);
-                ivJudgeTime5.setClickable(false);
-                ivJudgeTime6.setClickable(false);
-            }
+        if(stay_time == 10){
+            setJudgeTimeInit(R.id.rl_judge_time_1);
+        }else if(stay_time == 20){
+            setJudgeTimeInit(R.id.rl_judge_time_2);
+        }else if(stay_time == 30){
+            setJudgeTimeInit(R.id.rl_judge_time_3);
+        }else if(stay_time == 40){
+            setJudgeTimeInit(R.id.rl_judge_time_4);
+        }else if(stay_time == 50){
+            setJudgeTimeInit(R.id.rl_judge_time_5);
+        }else if(stay_time == 60){
+            setJudgeTimeInit(R.id.rl_judge_time_6);
         }
+        ivJudgeTime1.setClickable(false);
+        ivJudgeTime2.setClickable(false);
+        ivJudgeTime3.setClickable(false);
+        ivJudgeTime4.setClickable(false);
+        ivJudgeTime5.setClickable(false);
+        ivJudgeTime6.setClickable(false);
     }
 
     @Override

@@ -84,8 +84,13 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
             stayStatus = wifiLockInfo.getStay_status();
             if(wifiLockInfo.getStay_status() == 1){
                 ivWanderingAlarm.setSelected(true);
+                rlWanderingPIRSensitivity.setVisibility(View.VISIBLE);
+                rlWanderingJudgeTime.setVisibility(View.VISIBLE);
             }else if(wifiLockInfo.getStay_status() ==0){
                 ivWanderingAlarm.setSelected(false);
+                rlWanderingPIRSensitivity.setVisibility(View.GONE);
+                rlWanderingJudgeTime.setVisibility(View.GONE);
+
             }
 
             if(wifiLockInfo.getSetPir() != null){
@@ -117,7 +122,7 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
             case R.id.back:
                 if(wifiLockInfo.getPowerSave() == 0){
                     if(avi.isShow())
-                    setWanderingAlarm();
+                        setWanderingAlarm();
                 }else {
 
                     finish();
@@ -148,9 +153,13 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
                     if(wifiLockInfo.getPowerSave() == 0){
                         if(ivWanderingAlarm.isSelected()){
                             ivWanderingAlarm.setSelected(false);
+                            rlWanderingPIRSensitivity.setVisibility(View.GONE);
+                            rlWanderingJudgeTime.setVisibility(View.GONE);
                             stayStatus = 0;
                         }else{
                             ivWanderingAlarm.setSelected(true);
+                            rlWanderingPIRSensitivity.setVisibility(View.VISIBLE);
+                            rlWanderingJudgeTime.setVisibility(View.VISIBLE);
                             stayStatus = 1;
                         }
                     }else{
@@ -166,6 +175,11 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
             stayStatus = 1;
         }else{
             stayStatus = 0;
+        }
+
+        if(wifiLockInfo.getStay_status() == 0 && stayStatus == 0){
+            finish();
+            return;
         }
 
         try {

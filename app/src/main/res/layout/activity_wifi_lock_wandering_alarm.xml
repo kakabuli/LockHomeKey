@@ -39,7 +39,7 @@
         android:layout_below="@id/title"
         android:id="@+id/rl_wandering_alarm"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="@dimen/dp_68"
         android:background="#FFFFFF"
         >
 
@@ -91,7 +91,7 @@
         android:layout_below="@id/rl_wandering_alarm"
         android:id="@+id/rl_wandering_pir_sensitivity"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="@dimen/dp_68"
         android:background="#FFFFFF">
 
         <ImageView
@@ -150,7 +150,7 @@
         android:layout_below="@id/rl_wandering_pir_sensitivity"
         android:id="@+id/rl_wandering_judge_time"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="@dimen/dp_68"
         android:background="#FFFFFF">
 
         <ImageView
