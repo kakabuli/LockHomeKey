@@ -38,6 +38,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,6 +111,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         String fileName = path +  File.separator + record.get_id() + ".mp4";
                         if (new File(fileName).exists()){
                             Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
+                            intent.putExtra(KeyConstants.VIDO_SHOW_DELETE,1);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
                             try{
                                 fileName = DateUtils.getStrFromMillisecond2(record.getStartTime() - 28800000);
@@ -123,6 +125,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         }else{
                             Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
                             intent.putExtra(KeyConstants.VIDEO_PIC_PATH,fileName);
+                            intent.putExtra(KeyConstants.VIDO_SHOW_DELETE,1);
                             try {
 
                                 fileName = DateUtils.getStrFromMillisecond2(record.getStartTime() - 28800000);

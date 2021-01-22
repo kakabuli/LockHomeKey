@@ -36,6 +36,7 @@
                 android:textColor="#FFFFFF"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:maxEms="8"
                 android:text=""
                 android:textSize="@dimen/sp_17" />
         </RelativeLayout>

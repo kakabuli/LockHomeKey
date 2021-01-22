@@ -20,6 +20,10 @@ public class FileItemBean implements Serializable {
 
     private String suffix;
 
+    private boolean isSelect;//是否选中删除
+
+    private boolean isShowDelete;
+
     public FileItemBean(String name , String path , URI uri, long lastModified,String suffix, int type){
         this.name = name;
         this.path = path;
@@ -27,6 +31,22 @@ public class FileItemBean implements Serializable {
         this.lastModified = lastModified;
         this.type = type;
         this.suffix = suffix;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public boolean isShowDelete() {
+        return isShowDelete;
+    }
+
+    public void setShowDelete(boolean showDelete) {
+        isShowDelete = showDelete;
     }
 
     public String getSuffix() {
@@ -82,10 +102,12 @@ public class FileItemBean implements Serializable {
         return "FileItemBean{" +
                 "uri=" + uri +
                 ", name='" + name + '\'' +
-                ", lastModified=" + DateUtils.getDateTimeFromMillisecond(lastModified) +
+                ", lastModified=" + lastModified +
                 ", path='" + path + '\'' +
                 ", type=" + type +
                 ", suffix='" + suffix + '\'' +
+                ", isSelect=" + isSelect +
+                ", isShowDelete=" + isShowDelete +
                 '}';
     }
 }

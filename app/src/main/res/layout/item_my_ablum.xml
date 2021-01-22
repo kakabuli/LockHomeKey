@@ -22,11 +22,25 @@
          />
 
      <ImageView
+         android:id="@+id/iv_icon_background"
+         android:layout_width="@dimen/dp_120"
+         android:layout_height="@dimen/dp_120"
+         android:background="#66000000"/>
+
+     <ImageView
          android:id="@+id/iv_icon_paly"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:src="@mipmap/item_icon_play"
          android:layout_centerInParent="true"/>
 
+     <ImageView
+         android:id="@+id/iv_icon_delete"
+         android:layout_alignRight="@id/iv_pic"
+         android:layout_marginTop="@dimen/dp_7"
+         android:layout_marginRight="@dimen/dp_8"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/myablum_icon_delete_selector"/>
 
 </RelativeLayout>

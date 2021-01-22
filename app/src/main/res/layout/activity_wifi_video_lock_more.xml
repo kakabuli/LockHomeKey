@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F2F2F2"
     android:orientation="vertical">
 
@@ -600,7 +601,7 @@
         android:layout_height="@dimen/dp_35"
         android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/dp_150"
-        android:background="#99000000"/>
+        app:indicatorColor="#333333"/>
     <TextView
         android:id="@+id/tv_tips"
         android:layout_width="wrap_content"

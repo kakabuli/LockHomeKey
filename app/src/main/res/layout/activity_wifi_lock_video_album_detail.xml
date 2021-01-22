@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/rly_head"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_44"
+        android:layout_height="@dimen/dp_46"
         android:background="#F8F8F8">
 
         <ImageView
@@ -40,6 +40,15 @@
             android:text="2018"
             android:textSize="@dimen/sp_10"/>
 
+        <ImageView
+            android:id="@+id/iv_myalbum_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/dp_14"
+            android:src="@mipmap/icon_activity_myalbum_delete"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
     <SurfaceView
@@ -54,6 +63,16 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/iv_icon_background"
+        android:layout_below="@id/rly_head"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#66000000"/>
+
     <ImageView
         android:id="@+id/iv_cache"
         android:layout_below="@id/rly_head"
@@ -65,7 +84,7 @@
         android:id="@+id/iv_play_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/play_start"
+        android:src="@mipmap/activity_myalbum_play_start"
         android:layout_centerInParent="true"/>
 
     <com.kaadas.lock.widget.AVLoadingIndicatorView
@@ -91,7 +110,7 @@
         android:id="@+id/lly_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
-        android:background="#9F2D2D2D"
+        android:background="#C8000000"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_marginBottom="@dimen/dp_11"
@@ -100,7 +119,7 @@
             android:id="@+id/iv_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/plagback_selector"
+            android:src="@drawable/activity_myalbum_play_small_selector"
             android:layout_marginLeft="@dimen/dp_15"/>
 
         <TextView

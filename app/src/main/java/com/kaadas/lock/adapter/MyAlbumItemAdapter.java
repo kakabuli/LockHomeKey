@@ -25,11 +25,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Create By denganzhi  on 2019/4/2
- * Describe
- */
-
 public class MyAlbumItemAdapter extends BaseQuickAdapter<FileItemBean, BaseViewHolder> {
 
     Context context;
@@ -49,12 +44,27 @@ public class MyAlbumItemAdapter extends BaseQuickAdapter<FileItemBean, BaseViewH
 
             helper.getView(R.id.duration).setVisibility(View.VISIBLE);
             helper.setText(R.id.duration,getVideoDuration(item.getPath()));
+            helper.getView(R.id.iv_icon_background).setVisibility(View.VISIBLE);
             helper.getView(R.id.iv_icon_paly).setVisibility(View.VISIBLE);
         }else{
             helper.getView(R.id.duration).setVisibility(View.GONE);
+            helper.getView(R.id.iv_icon_background).setVisibility(View.GONE);
             helper.getView(R.id.iv_icon_paly).setVisibility(View.GONE);
         }
         Glide.with(context).load(item.getPath()).into((ImageView) helper.getView(R.id.iv_pic));
+
+        if(item.isShowDelete()){
+            helper.getView(R.id.iv_icon_delete).setVisibility(View.VISIBLE);
+            if(item.isSelect()){
+                helper.getView(R.id.iv_icon_delete).setSelected(true);
+            }else{
+                helper.getView(R.id.iv_icon_delete).setSelected(false);
+            }
+        }else{
+            helper.getView(R.id.iv_icon_delete).setVisibility(View.GONE);
+            item.setSelect(false);
+        }
+
 
     }
 

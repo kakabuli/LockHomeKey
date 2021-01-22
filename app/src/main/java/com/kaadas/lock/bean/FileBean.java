@@ -8,6 +8,8 @@ public class FileBean implements Serializable {
 
     private String date;
 
+    private boolean isFirst = true;
+
     private List<FileItemBean> item = new ArrayList<>();
 
     public FileBean(){
@@ -20,6 +22,14 @@ public class FileBean implements Serializable {
               this.item.clear();
               this.item.addAll(item);
           }
+    }
+
+    public boolean isFirst() {
+        return isFirst;
+    }
+
+    public void setFirst(boolean first) {
+        isFirst = first;
     }
 
     public String getDate() {

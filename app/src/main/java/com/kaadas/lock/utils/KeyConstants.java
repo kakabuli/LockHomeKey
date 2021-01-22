@@ -599,6 +599,11 @@ public class KeyConstants {
     public static final String VIDEO_PIC_PATH = "video_pic_path";
 
     /**
+     *  是否显示删除按钮
+     */
+    public static final String VIDO_SHOW_DELETE = "isShowDelete";
+
+    /**
      *  呼叫或者实时视频
      */
     public static final String WIFI_VIDEO_LOCK_CALLING = "wifi_video_lock_calling";

@@ -27,6 +27,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockChangeAdminPasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.MyAlbumPlayerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
@@ -87,6 +89,10 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     TextView tvTips;
     @BindView(R.id.iv_cache)
     ImageView ivCache;
+    @BindView(R.id.iv_icon_background)
+    ImageView ivIconBackground;
+    @BindView(R.id.iv_myalbum_delete)
+    ImageView ivMyAlbumDelete;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -150,7 +156,13 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             isPlay = false;
             ivCache.setVisibility(View.GONE);
             isRecordSuccess = true;
+            if(getIntent().getIntExtra(KeyConstants.VIDO_SHOW_DELETE,0) == 0){
+                ivMyAlbumDelete.setVisibility(View.VISIBLE);
+            }
         }else{
+            if(wifiSn.isEmpty()){
+                finish();
+            }
             record = (WifiVideoLockAlarmRecord) getIntent().getSerializableExtra("record");
             wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
             path = FileTool.getVideoCacheFolder(this,wifiSn).getPath();
@@ -172,7 +184,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             isRecordSuccess = false;
             realTimeOperation();
             ivCache.setVisibility(View.VISIBLE);
-
+            ivMyAlbumDelete.setVisibility(View.GONE);
         }
 
     }
@@ -363,6 +375,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     }
 
     private void reset() {
+        ivIconBackground.setVisibility(View.VISIBLE);
         ivPlayStart.setVisibility(View.VISIBLE);
 //        pause();
         updateStartValueView(0);
@@ -384,6 +397,13 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         stopRepeatTimer();
         if (mediaPlayer != null && statusHelper.getMediaStatus() == MediaStatus.PLAYING) {
             mediaPlayer.pauseByUser();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ivPlayStart.setVisibility(View.VISIBLE);
+                    ivIconBackground.setVisibility(View.VISIBLE);
+                }
+            });
             updateButtonController();
         }
     }
@@ -397,7 +417,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         }
     }
 
-    @OnClick({R.id.back,R.id.iv_play_start,R.id.iv_pause})
+    @OnClick({R.id.back,R.id.iv_play_start,R.id.iv_pause,R.id.iv_myalbum_delete})
     public void onViewClicked(View view) {
         switch (view.getId()){
             case R.id.back:
@@ -408,6 +428,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 //                    pause();
                 } else {
                     ivPlayStart.setVisibility(View.GONE);
+                    ivIconBackground.setVisibility(View.GONE);
                     if(!isPlay){
 
                         play();
@@ -421,10 +442,10 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 break;
             case R.id.iv_pause:
                 if (mediaPlayer != null && statusHelper.getMediaStatus() == MediaStatus.PLAYING) {
-                    ivPlayStart.setVisibility(View.VISIBLE);
                     pause();
                 } else {
                     ivPlayStart.setVisibility(View.GONE);
+                    ivIconBackground.setVisibility(View.GONE);
                     if(!isPlay){
 
                         play();
@@ -436,7 +457,53 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                     }
                 }
                 break;
+            case R.id.iv_myalbum_delete:
+                pause();
+                if(!filepath.isEmpty() && new File(filepath).exists()){
+                    mPresenter.handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showDeleteDialog(filepath);
+                        }
+                    },100);
+                }
+                break;
         }
+    }
+
+    private void showDeleteDialog(String filepath) {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
+                WifiVideoLockAlbumDetailActivity.this
+                , "确定删除视频吗？",
+                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        Intent intent = new Intent(WifiVideoLockAlbumDetailActivity.this,WifiVideoLockAlbumActivity.class);
+                        intent.putExtra(KeyConstants.VIDEO_PIC_PATH,filepath);
+                        intent.putExtra("NAME",tvName.getText().toString());
+                        setResult(RESULT_OK,intent);
+                        finish();
+                        if(!filepath.isEmpty()){
+                            if(new File(filepath).exists()){
+                                new File(filepath).delete();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     @Override
@@ -660,7 +727,12 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         // home键
+                        try {
+                            if(!isPlay)
+                                pause();
+                        }catch (Exception e){
 
+                        }
                         try{
                             if(!isRecordSuccess){
                                 if(!filepath.isEmpty()){
@@ -677,6 +749,12 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
+                        try {
+                            if(!isPlay)
+                                pause();
+                        }catch (Exception e){
+
+                        }
                         try{
                             if(!isRecordSuccess){
                                 if(!filepath.isEmpty()){
@@ -695,8 +773,13 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 }
             }else if(action.equals(Intent.ACTION_SCREEN_ON)){
             }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
-                try{
+                try {
+                    if(isPlay)
+                        pause();
+                }catch (Exception e){
 
+                }
+                try{
                     if(!isRecordSuccess){
                         if(!filepath.isEmpty()){
 

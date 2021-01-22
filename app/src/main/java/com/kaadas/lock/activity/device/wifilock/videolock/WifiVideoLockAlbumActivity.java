@@ -1,20 +1,24 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.MyAlbumAdapter;
+import com.kaadas.lock.adapter.MyAlbumItemAdapter;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.StringUtil;
 import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -36,12 +41,20 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
     ImageView back;
     @BindView(R.id.recycleview)
     RecyclerView recycleview;
+    @BindView(R.id.tv_cancel)
+    TextView tvCancel;
+    @BindView(R.id.iv_myalbum_delete)
+    ImageView ivMyAlbumDelete;
 
     private MyAlbumAdapter adapter;
 
-    List<FileBean> items = new ArrayList<>();
+    private List<FileBean> items = new ArrayList<>();
 
-    String wifiSn = "";
+    private String wifiSn = "";
+
+    private boolean showDeleteItem ;
+
+    private final int DELETE_MYALBUM_PIC_VIDEO = 10100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +79,192 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
         adapter = new MyAlbumAdapter(items, WifiVideoLockAlbumActivity.this);
         recycleview.setLayoutManager(new LinearLayoutManager(WifiVideoLockAlbumActivity.this));
         recycleview.setAdapter(adapter);
+        adapter.setOnMyAlbumItemClickListener(new MyAlbumAdapter.onMyAlbumItemClickListener() {
+            @Override
+            public void onMyAlbumItemClick(MyAlbumItemAdapter adapter, List<FileItemBean> data, int position) {
+                if(showDeleteItem){
+                    if(data.get(position).isSelect()){
+                        data.get(position).setSelect(false);
+                    }else{
+                        data.get(position).setSelect(true);
+                    }
+                    adapter.notifyItemChanged(position);
+                    return;
+                }
+                if(data.get(position).getType() == 1){
+                    Intent intent = new Intent(WifiVideoLockAlbumActivity.this, WifiVideoLockPreViewActivity.class);
+                    intent.putExtra(KeyConstants.VIDEO_PIC_PATH,data.get(position).getPath());
+                    String filename = data.get(position).getName();
+                    filename = StringUtil.getFileNameNoEx(filename);
+                    try {
+                        filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    intent.putExtra("NAME",filename);
+                    startActivityForResult(intent,DELETE_MYALBUM_PIC_VIDEO);
+                }else if(data.get(position).getType() == 2){
+                    Intent intent = new Intent(WifiVideoLockAlbumActivity.this, WifiVideoLockAlbumDetailActivity.class);
+                    String filename = data.get(position).getName();
+                    filename = StringUtil.getFileNameNoEx(filename);
+                    try{
+                        filename = DateUtils.getStrFromMillisecond2(Long.parseLong(filename));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    intent.putExtra("NAME",filename);
+                    intent.putExtra(KeyConstants.VIDEO_PIC_PATH,data.get(position).getPath());
+                    startActivityForResult(intent,DELETE_MYALBUM_PIC_VIDEO);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if(requestCode == DELETE_MYALBUM_PIC_VIDEO){
+                String stringExtra = data.getStringExtra(KeyConstants.VIDEO_PIC_PATH);
+                if(stringExtra.isEmpty()){
+                    return;
+                }
+                String name = "";
+                try{
+                    name = data.getStringExtra("NAME");
+                    name = name.split(" ")[0];
+                    name = name.replace("-","/");
+                }catch (Exception e){
+
+                }
+                if(!name.isEmpty()){
+                    deleteFileItem(stringExtra, name);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    private void deleteFileItem(String stringExtra, String name) {
+        try{
+            Iterator<FileBean> it = items.iterator();
+            boolean flag = false;
+            while (it.hasNext()){
+                FileBean list = (FileBean)it.next();
+                list.setFirst(false);
+                if(list.getDate().equals(name)){
+                    flag = true;
+                    Iterator<FileItemBean> oa = list.getItem().iterator();
+                    while (oa.hasNext()){
+                        FileItemBean next = oa.next();
+                        if(next.getPath().equals(stringExtra)){
+                            if(list.getItem().size() == 1){
+                                it.remove();
+                            }else{
+                                oa.remove();
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if(!flag){
+                int[] position = new int[3];
+                for(int i = 0 ; i<items.size();i++){
+                    items.get(i).setFirst(false);
+                    for(int j =0 ; j<items.get(i).getItem().size();j++){
+                        if(stringExtra.equals(items.get(i).getItem().get(j).getPath())){
+                            position[0] = i;
+                            position[1] = j;
+                            if(items.get(i).getItem().size() == 1){
+                                position[2] = 1;
+                            }
+                            break;
+                        }
+                    }
+                }
+                if(position[2] == 1){
+                    items.remove(position[0]);
+                }else{
+                    items.get(position[0]).getItem().remove(position[1]);
+                }
+            }
+        }catch (Exception e){
+        }
+    }
+
+    @OnClick({R.id.back,R.id.tv_cancel,R.id.iv_myalbum_delete})
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.back:
+                finish();
+                break;
+            case R.id.tv_cancel:
+                revoke();
+                break;
+            case R.id.iv_myalbum_delete:
+                if(tvCancel.getVisibility() == View.VISIBLE){
+                    deleteSelectFileItem();
+                    revoke();
+                }else if(tvCancel.getVisibility() == View.GONE){
+                    showDeleteItem = true;
+                    back.setVisibility(View.GONE);
+                    tvCancel.setVisibility(View.VISIBLE);
+                    showDeleteItem(true);
+                }
+                break;
+        }
+    }
+
+    private void revoke() {
+        tvCancel.setVisibility(View.GONE);
+        back.setVisibility(View.VISIBLE);
+        showDeleteItem(false);
+        showDeleteItem = false;
+    }
+
+    private void deleteSelectFileItem() {
+        try {
+            Iterator<FileBean> it = items.iterator();
+            while (it.hasNext()){
+                FileBean list = (FileBean)it.next();
+                list.setFirst(false);
+                int size = list.getItem().size();
+                Iterator<FileItemBean> oa = list.getItem().iterator();
+                while (oa.hasNext()){
+                    FileItemBean next = oa.next();
+                    if(next.isSelect()){
+                        File file = new File(next.getPath());
+                        if(file.exists()){
+                            file.delete();
+                        }
+                        oa.remove();
+                        size--;
+                    }
+                    continue;
+                }
+                if(size == 0){
+                    it.remove();
+                }
+                continue;
+            }
+        }catch (Exception e){
+
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void showDeleteItem(boolean b) {
+        for(FileBean item :items){
+            item.setFirst(false);
+            for(FileItemBean list : item.getItem()){
+                list.setShowDelete(b);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     private void searchFiles(String path) {
@@ -110,7 +309,7 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                 if(date1.before(date2)){
                     return 1;
                 }else{
-                   return -1;
+                    return -1;
                 }
             }
         });
@@ -149,15 +348,4 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
             LogUtils.e(i.toString());
         }
     }
-
-    @OnClick(R.id.back)
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.back:
-                finish();
-                break;
-
-        }
-    }
-
 }
