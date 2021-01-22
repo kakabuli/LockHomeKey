@@ -1,12 +1,21 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -15,6 +24,7 @@ import com.kaadas.lock.adapter.MyAlbumItemAdapter;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -55,6 +65,8 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
     private boolean showDeleteItem ;
 
     private final int DELETE_MYALBUM_PIC_VIDEO = 10100;
+
+    private Dialog deleteSelectFileItemDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -207,8 +219,7 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                 break;
             case R.id.iv_myalbum_delete:
                 if(tvCancel.getVisibility() == View.VISIBLE){
-                    deleteSelectFileItem();
-                    revoke();
+                    showDeleteSelectFileItemDialog();
                 }else if(tvCancel.getVisibility() == View.GONE){
                     showDeleteItem = true;
                     back.setVisibility(View.GONE);
@@ -217,6 +228,51 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                 }
                 break;
         }
+    }
+
+    private void showDeleteSelectFileItemDialog() {
+        if(deleteSelectFileItemDialog == null){
+            deleteSelectFileItemDialog = new Dialog(this, R.style.MyDialog);
+        }
+        // 获取Dialog布局
+        View mView = LayoutInflater.from(this).inflate(R.layout.dialog_bottom_two_button, null);
+        TextView delete = mView.findViewById(R.id.tv_top);
+        TextView cancel = mView.findViewById(R.id.tv_bottom);
+        deleteSelectFileItemDialog.setContentView(mView);
+
+        Window window = deleteSelectFileItemDialog.getWindow();
+        window.setWindowAnimations(R.style.Animation_Bottom_Rising);
+        window.setGravity(Gravity.BOTTOM);
+        window.setDimAmount(0f);
+
+        WindowManager.LayoutParams params = window.getAttributes();
+        WindowManager windowManager = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        int width = display.getWidth();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        params.width = (int) width;
+        window.setAttributes(params);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revoke();
+                deleteSelectFileItemDialog.dismiss();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteSelectFileItem();
+                revoke();
+                deleteSelectFileItemDialog.dismiss();
+            }
+        });
+        if(!WifiVideoLockAlbumActivity.this.isFinishing()){
+            deleteSelectFileItemDialog.show();
+        }
+
     }
 
     private void revoke() {
