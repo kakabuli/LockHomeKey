@@ -41,6 +41,8 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     RelativeLayout rlRealTimePeriod;
     @BindView(R.id.iv_video_connect_open)
     ImageView ivVideoConnectOpen;
+    @BindView(R.id.iv_video_connect_power)
+    ImageView ivVideoConnectPower;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
     @BindView(R.id.tv_tips)
@@ -80,10 +82,12 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
             keepAliveStatus = wifiLockInfo.getKeep_alive_status();
             if(keepAliveStatus == 1){
                 ivVideoConnectOpen.setSelected(true);
-                rlRealTimePeriod.setVisibility(View.VISIBLE);
+//                rlRealTimePeriod.setVisibility(View.VISIBLE);
+                ivVideoConnectPower.setSelected(false);
             }else{
                 ivVideoConnectOpen.setSelected(false);
-                rlRealTimePeriod.setVisibility(View.GONE);
+//                rlRealTimePeriod.setVisibility(View.GONE);
+                ivVideoConnectPower.setSelected(true);
             }
             if(wifiLockInfo.getAlive_time() != null){
                 startTime = wifiLockInfo.getAlive_time().getSnooze_start_time();
@@ -96,14 +100,13 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     }
 
 
-    @OnClick({R.id.back,R.id.rl_real_time_period,R.id.rl_video_connect_open})
+    @OnClick({R.id.back,R.id.rl_real_time_period,R.id.rl_video_connect_open,R.id.rl_video_connect_power})
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back:
                 if(wifiLockInfo.getPowerSave() == 0){
                     if(avi.isShow())
                         setRealTime();
-
                 }else{
                     finish();
                 }
@@ -133,17 +136,32 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                     if(wifiLockInfo.getPowerSave() == 0){
                         if(ivVideoConnectOpen.isSelected()){
                             createKeepAliveDialog();
-
                         }else{
                             ivVideoConnectOpen.setSelected(true);
-                            rlRealTimePeriod.setVisibility(View.VISIBLE);
+                            ivVideoConnectPower.setSelected(false);
+//                            rlRealTimePeriod.setVisibility(View.VISIBLE);
                             keepAliveStatus = 1;
                         }
                     }else{
                         powerStatusDialog();
                     }
                 }
-
+                break;
+            case R.id.rl_video_connect_power:
+                if(avi.isShow()){
+                    if(wifiLockInfo.getPowerSave() == 0){
+                        if(!ivVideoConnectPower.isSelected()){
+                            createKeepAliveDialog();
+                        }else{
+                            ivVideoConnectOpen.setSelected(true);
+                            ivVideoConnectPower.setSelected(false);
+//                            rlRealTimePeriod.setVisibility(View.VISIBLE);
+                            keepAliveStatus = 0;
+                        }
+                    }else{
+                        powerStatusDialog();
+                    }
+                }
                 break;
         }
     }
@@ -160,7 +178,8 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                     public void right() {
                         ivVideoConnectOpen.setSelected(false);
                         keepAliveStatus = 0;
-                        rlRealTimePeriod.setVisibility(View.GONE);
+                        ivVideoConnectPower.setSelected(true);
+//                        rlRealTimePeriod.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -245,7 +264,6 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     private void setRealTime() {
 
         try {
-
             if(keepAliveStatus != wifiLockInfo.getKeep_alive_status() || startTime != wifiLockInfo.getAlive_time().getSnooze_start_time()
                     || endTime != wifiLockInfo.getAlive_time().getSnooze_end_time() || isEqual(snoozeStartTime,wifiLockInfo.getAlive_time().getKeep_alive_snooze())){
                 tvTips.setVisibility(View.VISIBLE);
@@ -254,7 +272,8 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+//                        mPresenter.setConnectRealTime(keepAliveStatus,startTime,endTime,snoozeStartTime,wifiSn);
+                        mPresenter.setConnectRealTime(keepAliveStatus,0,86400,new int[]{1,2,3,4,5,6,7},wifiSn);
                     }
                 }).start();
 

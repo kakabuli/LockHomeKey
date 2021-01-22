@@ -128,8 +128,6 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
 
     private int setVolume = 0;
 
-    Handler mainHandler = new Handler(Looper.getMainLooper());
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -802,7 +800,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     public void onSettingCallBack(boolean flag,int code) {
         if(!WifiVideoLockMoreActivity.this.isFinishing()){
             mPresenter.setMqttCtrl(0);
-            mainHandler.post(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if(flag){
