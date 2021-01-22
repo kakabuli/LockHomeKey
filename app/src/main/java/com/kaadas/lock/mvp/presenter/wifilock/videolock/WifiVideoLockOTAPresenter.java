@@ -241,7 +241,6 @@ public class WifiVideoLockOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
 
-                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     notifyGateWayNewVersion();
                                 }else{
                                     if(isSafe()){
@@ -284,7 +283,7 @@ public class WifiVideoLockOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
         int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
     }
 
-    public void notifyGateWayNewVersion(){
+    private void notifyGateWayNewVersion(){
 
         XMP2PManager.getInstance().notifyGateWayNewVersion();
     }
@@ -297,6 +296,7 @@ public class WifiVideoLockOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
     public void checkOtaInfo(String SN, String version, int type) {
         //请求成功
         otaDisposable = XiaokaiNewServiceImp.getOtaInfo(1, SN, version, type)
+                .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new Consumer<CheckOTAResult>() {
                     @Override
                     public void accept(CheckOTAResult otaResult) throws Exception {

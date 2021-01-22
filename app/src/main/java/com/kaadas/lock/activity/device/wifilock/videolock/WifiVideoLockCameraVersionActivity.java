@@ -237,8 +237,7 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
                     @Override
                     public void right() {
                         mPresenter.uploadOta(appInfo,wifiSN);
-                        //升级
-                        mPresenter.connectNotifyGateWayNewVersion();
+
                     }
 
                     @Override
@@ -349,22 +348,20 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     }
 
+    private long time = 0;
+
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version,int type) {
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(type == 1){
-                    updateDialog(appInfo,"WIFI固件版本" + version,SN);
-                }else if(type ==4){
-                    updateDialog(appInfo,"视频模组版本" + version,SN);
-                }else if(type == 5){
-                    updateDialog(appInfo,"视频模组微控制器版本" + version,SN);
-                }
-
+        if(System.currentTimeMillis() - time > 15000){
+            if(type == 1){
+                updateDialog(appInfo,"WIFI固件版本" + version,SN);
+            }else if(type ==4){
+                updateDialog(appInfo,"视频模组版本" + version,SN);
+            }else if(type == 5){
+                updateDialog(appInfo,"视频模组微控制器版本" + version,SN);
             }
-        });
+            time = System.currentTimeMillis();
+        }
     }
 
     @Override
@@ -380,7 +377,15 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     @Override
     public void uploadSuccess(int type) {
 //        mPresenter.release();
-        updataSuccess = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updataSuccess = true;
+                //升级
+                mPresenter.connectNotifyGateWayNewVersion();
+            }
+        }).start();
+
     }
 
     @Override
