@@ -644,6 +644,11 @@ public class KeyConstants {
     public static final String WIFI_VIDEO_LOCK_WANDERING_ALARM = "wifi_video_lock_wandering_alarm";
 
     /**
+     * 徘徊报警
+     */
+    public static final String WIFI_VIDEO_LOCK_WANDERING_ALARM_PIR_FLAG = "wifi_video_lock_wandering_alarm_pir_flag";
+
+    /**
      *  开始时间
      */
     public static final String WIFI_VIDEO_LOCK_REAL_TIME_SETTING_START = "wifi_video_lock_real_time_setting_start";

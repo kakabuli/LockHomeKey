@@ -152,8 +152,8 @@ public class DoorbellingService extends Service {
         try {
             WifiLockRecordResult result = new Gson().fromJson(mqttData.getPayload(),WifiLockRecordResult.class);
             if(result != null){
-                LogUtils.e("shulan doorbellingservice--sendRecordNotification-->" + result.toString());
                 if(result.getDevtype().equals(MqttConstant.WIFI_LOCK_DEVTYPE) && result.getEventtype().equals(MqttConstant.WIFI_LOCK_RECORD)){
+                    LogUtils.e("shulan doorbellingservice--sendRecordNotification-->" + result.toString());
                     Intent intent = new Intent(DoorbellingService.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     String title = "";
@@ -195,8 +195,8 @@ public class DoorbellingService extends Service {
                 String content = "";
                 String title = "";
                 String timestamp = "";
-                LogUtils.e("shulan doorbellingservice--sendRecordNotification-->" + mDoorbellingResult.toString());
                 if(mDoorbellingResult.getEventtype().equals(MqttConstant.VIDEO_LOCK_DOORBELLING)){
+                    LogUtils.e("shulan doorbellingservice--sendAlarmNotification-->" + mDoorbellingResult.toString());
                     title = BleUtil.getAlarmNotificationTitle(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
                     content = BleUtil.getAlarmNotificationContent(mDoorbellingResult.getEventparams().getAlarmCode(),DoorbellingService.this);
                     try {
@@ -214,6 +214,7 @@ public class DoorbellingService extends Service {
                     }else if(mDoorbellingResult.getEventparams().getAlarmCode() == BleUtil.PIR_ALARM){
                         intent = new Intent(DoorbellingService.this, WifiLockRecordActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN,mDoorbellingResult.getWfId());
+                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_PIR_FLAG,1);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     }else{
                         intent = new Intent(DoorbellingService.this, MainActivity.class);
