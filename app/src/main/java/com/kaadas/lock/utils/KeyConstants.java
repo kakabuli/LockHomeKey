@@ -592,6 +592,10 @@ public class KeyConstants {
      */
     public static final String CHOOSE_WIFI_NAME = "choose_wifi_name";
 
+    /**
+     *  显示首页
+     */
+    public static final String WIFI_LOCK_SHOW_HOME_PAGE = "wifi_lock_show_home_page";
 
     /**
      *  Video的路径
@@ -644,7 +648,7 @@ public class KeyConstants {
     public static final String WIFI_VIDEO_LOCK_WANDERING_ALARM = "wifi_video_lock_wandering_alarm";
 
     /**
-     * 徘徊报警
+     * 徘徊报警-预警信息
      */
     public static final String WIFI_VIDEO_LOCK_WANDERING_ALARM_PIR_FLAG = "wifi_video_lock_wandering_alarm_pir_flag";
 

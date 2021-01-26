@@ -293,7 +293,6 @@ public class ClothesHangerMachineAddFifthPresenter<T> extends BasePresenter<IClo
             public void onSuccess(ClothesHangerMachineBindResult clothesHangerMachineBindResult) {
                 LogUtils.e("shulan clothesHangerMachineBind---");
                 if(clothesHangerMachineBindResult.getCode().equals("200") || clothesHangerMachineBindResult.getCode().equals("202")){
-                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                     if(isSafe()){
                         mViewRef.get().onBindDeviceSuccess();
                     }

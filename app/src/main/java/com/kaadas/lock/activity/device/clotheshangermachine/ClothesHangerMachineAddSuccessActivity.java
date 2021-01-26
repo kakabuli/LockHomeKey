@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -61,10 +62,12 @@ public class ClothesHangerMachineAddSuccessActivity extends BaseAddToApplication
             @Override
             public void run() {
                 Intent data = new Intent(ClothesHangerMachineAddSuccessActivity.this, MainActivity.class);
+                data.putExtra(KeyConstants.WIFI_LOCK_SHOW_HOME_PAGE,1);
                 startActivity(data);
                 finish();
             }
         },3000);
+        MyApplication.getInstance().getAllDevicesByMqtt(true);
     }
 
     @Override
