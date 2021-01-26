@@ -27,61 +27,72 @@ public class SPUtils2 {
 	 * @param object
 	 */
 	public static void put(Context context, String key, Object object) {
-		SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sp.edit();
+        /*SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();*/
 		if (object instanceof String) {
-			editor.putString(key, (String) object);
+//            editor.putString(key, (String) object);
+			MMKVUtils.setMMKV(FILE_NAME,key,(String) object);
 		} else if (object instanceof Integer) {
-			editor.putInt(key, (Integer) object);
+//            editor.putInt(key, (Integer) object);
+			MMKVUtils.setMMKV(FILE_NAME,key,(int) object);
 		} else if (object instanceof Boolean) {
-			editor.putBoolean(key, (Boolean) object);
+//            editor.putBoolean(key, (Boolean) object);
+			MMKVUtils.setMMKV(FILE_NAME,key,(boolean) object);
 		} else if (object instanceof Float) {
-			editor.putFloat(key, (Float) object);
+//            editor.putFloat(key, (Float) object);
+			MMKVUtils.setMMKV(FILE_NAME,key,(float) object);
 		} else if (object instanceof Long) {
-			editor.putLong(key, (Long) object);
+//            editor.putLong(key, (Long) object);
+			MMKVUtils.setMMKV(FILE_NAME,key,(long) object);
 		} else {
-			editor.putString(key, object.toString());
+//            editor.putString(key, object.toString());
+			MMKVUtils.setMMKV(FILE_NAME,key,object.toString());
 		}
-		editor.commit();
-		SharedPreferencesCompat.apply(editor);
+//        SharedPreferencesCompat.apply(editor);
 	}
 	public static void putProtect(Context context, String key, Object object) {
-		SharedPreferences sp = context.getSharedPreferences(PROTECT_FILE_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sp.edit();
+//        SharedPreferences sp = context.getSharedPreferences(PROTECT_FILE_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
 		if (object instanceof String) {
-			editor.putString(key, (String) object);
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,(String) object);
 		} else if (object instanceof Integer) {
-			editor.putInt(key, (Integer) object);
+//            editor.putInt(key, (Integer) object);
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,(int) object);
 		} else if (object instanceof Boolean) {
-			editor.putBoolean(key, (Boolean) object);
+//            editor.putBoolean(key, (Boolean) object);
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,(boolean) object);
 		} else if (object instanceof Float) {
-			editor.putFloat(key, (Float) object);
+//            editor.putFloat(key, (Float) object);
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,(float) object);
 		} else if (object instanceof Long) {
-			editor.putLong(key, (Long) object);
+//            editor.putLong(key, (Long) object);
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,(long) object);
 		} else {
-			editor.putString(key, object.toString());
+//            editor.putString(key, object.toString());
+			MMKVUtils.setMMKV(PROTECT_FILE_NAME,key,object.toString());
 		}
-		editor.commit();
-		SharedPreferencesCompat.apply(editor);
+//        SharedPreferencesCompat.apply(editor);
 	}
 	/**
 	 * 保存byte数组
 	 */
 	public static void putByte(Context cnt,byte [] data,String key){
-		SharedPreferences sharedPreferences = cnt.getSharedPreferences(FILE_NAME, Activity.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		String imageString = new String(Base64.encode(data,Base64.DEFAULT));
-		editor.putString(key, imageString);
-		editor.commit();
+        /*SharedPreferences sharedPreferences = cnt.getSharedPreferences(FILE_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String imageString = new String(Base64.encode(data, Base64.DEFAULT));
+        editor.putString(key, imageString);
+        editor.commit();*/
+		MMKVUtils.setMMKV(FILE_NAME,key,data);
 	}
 	/**
 	 * 取出byte数组
 	 */
 	public static byte[] getByte(Context cnt,String key){
-		SharedPreferences sharedPreferences = cnt.getSharedPreferences(FILE_NAME,Activity.MODE_PRIVATE);
-		String string = sharedPreferences.getString(key, "");
-		byte[] b = Base64.decode(string.getBytes(), Base64.DEFAULT);
-		return b;
+        /*SharedPreferences sharedPreferences = cnt.getSharedPreferences(FILE_NAME, Activity.MODE_PRIVATE);
+        String string = sharedPreferences.getString(key, "");
+        byte[] b = Base64.decode(string.getBytes(), Base64.DEFAULT);
+        return b;*/
+		return MMKVUtils.getBytesMMKV(FILE_NAME,key);
 	}
 	/**
 	 * 得到保存数据的方法，我们根据默认值得到保存的数据的具体类型，然后调用相对于的方法获取值
@@ -92,33 +103,42 @@ public class SPUtils2 {
 	 * @return
 	 */
 	public static Object get(Context context, String key, Object defaultObject) {
-
-		SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
 		if (defaultObject instanceof String) {
-			return sp.getString(key, (String) defaultObject);
+//            return sp.getString(key, (String) defaultObject);
+			return MMKVUtils.getStringMMKV(FILE_NAME,key,(String) defaultObject);
 		} else if (defaultObject instanceof Integer) {
-			return sp.getInt(key, (Integer) defaultObject);
+//            return sp.getInt(key, (Integer) defaultObject);
+			return MMKVUtils.getIntMMKV(FILE_NAME,key,(int)defaultObject);
 		} else if (defaultObject instanceof Boolean) {
-			return sp.getBoolean(key, (Boolean) defaultObject);
+//            return sp.getBoolean(key, (Boolean) defaultObject);
+			return MMKVUtils.getBoolMMKV(FILE_NAME,key,(boolean)defaultObject);
 		} else if (defaultObject instanceof Float) {
-			return sp.getFloat(key, (Float) defaultObject);
+//            return sp.getFloat(key, (Float) defaultObject);
+			return MMKVUtils.getFloatMMKV(FILE_NAME,key,(float)defaultObject);
 		} else if (defaultObject instanceof Long) {
-			return sp.getLong(key, (Long) defaultObject);
+//            return sp.getLong(key, (Long) defaultObject);
+			return MMKVUtils.getLongMMKV(FILE_NAME,key,(long)defaultObject);
 		}
 		return null;
 	}
 	public static Object getProtect(Context context, String key, Object defaultObject) {
-		SharedPreferences sp = context.getSharedPreferences(PROTECT_FILE_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences sp = context.getSharedPreferences(PROTECT_FILE_NAME, Context.MODE_PRIVATE);
 		if (defaultObject instanceof String) {
-			return sp.getString(key, (String) defaultObject);
+//            return sp.getString(key, (String) defaultObject);
+			return MMKVUtils.getStringMMKV(PROTECT_FILE_NAME,key,(String) defaultObject);
 		} else if (defaultObject instanceof Integer) {
-			return sp.getInt(key, (Integer) defaultObject);
+//            return sp.getInt(key, (Integer) defaultObject);
+			return MMKVUtils.getIntMMKV(PROTECT_FILE_NAME,key,(int)defaultObject);
 		} else if (defaultObject instanceof Boolean) {
-			return sp.getBoolean(key, (Boolean) defaultObject);
+//            return sp.getBoolean(key, (Boolean) defaultObject);
+			return MMKVUtils.getBoolMMKV(PROTECT_FILE_NAME,key,(boolean)defaultObject);
 		} else if (defaultObject instanceof Float) {
-			return sp.getFloat(key, (Float) defaultObject);
+//            return sp.getFloat(key, (Float) defaultObject);
+			return MMKVUtils.getFloatMMKV(PROTECT_FILE_NAME,key,(float)defaultObject);
 		} else if (defaultObject instanceof Long) {
-			return sp.getLong(key, (Long) defaultObject);
+//            return sp.getLong(key, (Long) defaultObject);
+			return MMKVUtils.getLongMMKV(PROTECT_FILE_NAME,key,(long)defaultObject);
 		}
 		return null;
 	}
@@ -130,11 +150,12 @@ public class SPUtils2 {
 	 * @param key
 	 */
 	public static void remove(Context context, String key) {
-		SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+		MMKVUtils.removeKeyById(FILE_NAME,key);
+		/*SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 		editor.remove(key);
 		editor.commit();
-		SharedPreferencesCompat.apply(editor);
+		SharedPreferencesCompat.apply(editor);*/
 	}
 	
 	
@@ -144,13 +165,14 @@ public class SPUtils2 {
 	 * @param context
 	 */
 	public static void clear(Context context) {
-		SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+		MMKVUtils.clearAllById(FILE_NAME);
+		/*SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 		editor.clear();
 		if (!editor.commit()){ //如果commit失败则使用apply
 			editor.commit();
 			SharedPreferencesCompat.apply(editor);
-		}
+		}*/
 	}
 	
 	
@@ -162,8 +184,9 @@ public class SPUtils2 {
 	 * @return
 	 */
 	public static boolean contains(Context context, String key) {
-		SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-		return sp.contains(key);
+		/*SharedPreferences sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+		return sp.contains(key);*/
+		return MMKVUtils.containsKeyById(FILE_NAME,key);
 	}
 	
 	

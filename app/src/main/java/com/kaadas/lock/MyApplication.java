@@ -42,6 +42,7 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
@@ -68,6 +69,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.mmkv.MMKV;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xm.sdk.log.XMLog;
 import com.xmitech.sdk.log.LogCodec;
@@ -142,7 +144,8 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
         initMqttService();//启动MqttService
-        SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
+        initMMKV(this);
+//        SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
@@ -172,8 +175,13 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         setRxJavaErrorHandler();
     }
 
+    private void initMMKV(MyApplication myApplication) {
+        String rootDir = MMKV.initialize(myApplication);
+        LogUtils.e("shulan mmkv root: " + rootDir);
+    }
+
     private void initXMP2PManager() {
-        XMP2PManager.getInstance().initAPI(XMP2PManager.serviceString);
+        XMP2PManager.getInstance().initAPI(getApplicationContext(),XMP2PManager.serviceString);
         XMP2PManager.getInstance().init(getApplicationContext());
         XMLog.DEBUG=false;
         LogCodec.DEBUG=false;
@@ -335,8 +343,10 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
     public void initTokenAndUid() {
         try{
-            token = (String) SPUtils.get(SPUtils.TOKEN, "");//类型转换有崩溃
-            uid = (String) SPUtils.get(SPUtils.UID, "");
+            token = MMKVUtils.getStringMMKV(SPUtils.TOKEN);
+            uid = MMKVUtils.getStringMMKV(SPUtils.UID);
+//            token = (String) SPUtils.get(SPUtils.TOKEN, "");//类型转换有崩溃
+//            uid = (String) SPUtils.get(SPUtils.UID, "");
             RetrofitServiceManager.updateToken();
         } catch (Exception e) {
             e.printStackTrace();

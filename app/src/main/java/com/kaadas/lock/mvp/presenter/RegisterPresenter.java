@@ -8,6 +8,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.RegisterResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.IRegisterView;
 import com.yun.software.kaadas.Utils.UserUtils;
@@ -88,8 +89,10 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
                             @Override
                             public void onSuccess(RegisterResult result) {
                                 LogUtils.e("注册成功  " + result.getData().toString());
-                                SPUtils.put(SPUtils.TOKEN, result.getData().getToken());
-                                SPUtils.put(SPUtils.UID, result.getData().getUid());
+                                MMKVUtils.setMMKV(SPUtils.TOKEN,result.getData().getToken());
+                                MMKVUtils.setMMKV(SPUtils.UID,result.getData().getUid());
+//                                SPUtils.put(SPUtils.TOKEN, result.getData().getToken());
+//                                SPUtils.put(SPUtils.UID, result.getData().getUid());
                                 MyApplication.getInstance().setToken(result.getData().getToken());
                                 MyApplication.getInstance().setUid(result.getData().getUid());
                                 UserUtils.setToken(result.getData().getStoreToken());
@@ -128,8 +131,10 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
                             @Override
                             public void onSuccess(RegisterResult result) {
                                 LogUtils.e("注册成功  " + result.getData().toString());
-                                SPUtils.put(SPUtils.TOKEN, result.getData().getToken());
-                                SPUtils.put(SPUtils.UID, result.getData().getUid());
+//                                SPUtils.put(SPUtils.TOKEN, result.getData().getToken());
+//                                SPUtils.put(SPUtils.UID, result.getData().getUid());
+                                MMKVUtils.setMMKV(SPUtils.TOKEN,result.getData().getToken());
+                                MMKVUtils.setMMKV(SPUtils.UID,result.getData().getUid());
                                 MyApplication.getInstance().setToken(result.getData().getToken());
                                 MyApplication.getInstance().setUid(result.getData().getUid());
                                 UserUtils.setToken(result.getData().getStoreToken());

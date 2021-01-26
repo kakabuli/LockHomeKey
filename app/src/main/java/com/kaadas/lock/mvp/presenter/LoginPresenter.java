@@ -13,6 +13,7 @@ import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MD5Utils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
 import com.kaadas.lock.utils.SPUtils2;
@@ -121,8 +122,10 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         }
         LogUtils.e("登陆成功  数据是  " + loginResult.toString());
         //保存数据到本地  以及 内存
-        SPUtils.put(SPUtils.TOKEN, loginResult.getData().getToken());
-        SPUtils.put(SPUtils.UID, loginResult.getData().getUid());
+//        SPUtils.put(SPUtils.TOKEN, loginResult.getData().getToken());
+//        SPUtils.put(SPUtils.UID, loginResult.getData().getUid());
+        MMKVUtils.setMMKV(SPUtils.TOKEN,loginResult.getData().getToken());
+        MMKVUtils.setMMKV(SPUtils.UID,loginResult.getData().getUid());
         SPUtils.put(SPUtils.PHONEN, phone);
         SPUtils.put(SPUtils.PASSWORD, MD5Utils.encode(pwd));
 
