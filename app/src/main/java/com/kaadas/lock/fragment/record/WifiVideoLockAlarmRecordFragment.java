@@ -121,6 +121,8 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                             }
 
                             intent.putExtra("NAME",fileName);
+                            intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+                            intent.putExtra("record",record);
                             startActivity(intent);
                         }else{
                             Intent intent = new Intent(getActivity(), WifiVideoLockAlbumDetailActivity.class);
