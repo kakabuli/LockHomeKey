@@ -133,7 +133,6 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
 
                             }
 
-
                             intent.putExtra("NAME",fileName);
                             intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
                             intent.putExtra("record",record);

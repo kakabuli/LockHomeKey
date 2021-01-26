@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/dp_21"
             android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_33"
             android:layout_height="match_parent"
             android:gravity="top|center_horizontal"
             android:text="16:40"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginLeft="@dimen/dp_21"
+            android:layout_marginLeft="@dimen/dp_18"
             android:orientation="vertical">
 
 
