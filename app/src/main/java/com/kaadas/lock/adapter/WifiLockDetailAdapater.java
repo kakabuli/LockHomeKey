@@ -20,6 +20,13 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
     private List<WifiLockFunctionBean> data;
     private OnItemClickListener onItemClickListener;
     private Context context;
+    private boolean isHome = false;
+
+    public WifiLockDetailAdapater(List<WifiLockFunctionBean> data,boolean isHome, OnItemClickListener onItemClickListener) {
+        this.data = data;
+        this.onItemClickListener = onItemClickListener;
+        this.isHome = isHome;
+    }
 
     public WifiLockDetailAdapater(List<WifiLockFunctionBean> data, OnItemClickListener onItemClickListener) {
         this.data = data;
@@ -31,9 +38,12 @@ public class WifiLockDetailAdapater extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.item_wifilock_detail, parent, false);
-        view.getLayoutParams().height = parent.getHeight() / 2;
+        if(!isHome){
+            view.getLayoutParams().height = parent.getHeight() / 2;
+        }
         return new MyHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
