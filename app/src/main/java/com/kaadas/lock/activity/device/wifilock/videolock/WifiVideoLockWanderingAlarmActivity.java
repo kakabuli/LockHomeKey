@@ -103,11 +103,11 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
 
                 pirSen = wifiLockInfo.getSetPir().getPir_sen();
                 if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
-                    tvWanderingPirSensitivityRight.setText("低");
+                    tvWanderingPirSensitivityRight.setText("近");
                 }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
                     tvWanderingPirSensitivityRight.setText("中");
                 }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
-                    tvWanderingPirSensitivityRight.setText("高");
+                    tvWanderingPirSensitivityRight.setText("远");
                 }
 
             }

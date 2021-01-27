@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock.videolock;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
@@ -21,6 +22,8 @@ public class WifiVideoLockFirwareNumberActivity extends BaseAddToApplicationActi
     TextView tvHardwareVersion;
     @BindView(R.id.tv_hard_version)
     TextView tvHardVersion;
+    @BindView(R.id.iv_hard_version)
+    ImageView ivHardVersion;
 
     private String wifiSN;
     private WifiLockInfo wifiLockInfoBySn;
@@ -43,6 +46,12 @@ public class WifiVideoLockFirwareNumberActivity extends BaseAddToApplicationActi
 
             if(wifiLockInfoBySn.getWifiVersion() != null){
                 tvHardwareVersion.setText(wifiLockInfoBySn.getWifiVersion());
+            }
+
+            if(wifiLockInfoBySn.getIsAdmin() == 1){
+                ivHardVersion.setVisibility(View.VISIBLE);
+            }else{
+                ivHardVersion.setVisibility(View.GONE);
             }
         }
 
