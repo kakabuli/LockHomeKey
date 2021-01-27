@@ -93,7 +93,7 @@ public class MyAlbumPlayerPresenter<T> extends BasePresenter<IMyAlbumPlayerView>
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
             if(paramInt == XMP2PConnectError.XM_DYNAMIC_LIBRARY_NOT_INITIALIZED){
-                XMP2PManager.getInstance().initAPI(serviceString);
+                XMP2PManager.getInstance().initAPI(MyApplication.getInstance(),serviceString);
                 XMP2PManager.getInstance().init(MyApplication.getInstance());
             }
             if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){

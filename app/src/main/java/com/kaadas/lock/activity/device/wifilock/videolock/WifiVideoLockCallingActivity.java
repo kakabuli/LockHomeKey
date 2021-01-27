@@ -453,6 +453,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             case R.id.iv_temporary_pwd:
                 if(!isPasswordShow){
                     tvTemporaryPassword.setText(getPassword() + "");
+//                    tvTemporaryPassword.setText(XMP2PManager.getInstance().getMode() + "");//test查看讯美p2p连接直连还是转发
                     llyTemporaryPassword.setVisibility(View.VISIBLE);
                     isPasswordShow = true;
                 }else{
@@ -626,6 +627,8 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         ivCalling.setSelected(false);
         tvCallingTips.setText("对讲");
         tvCallingTips.setTextColor(Color.parseColor("#333333"));
+        llyTemporaryPassword.setVisibility(View.GONE);
+        tvTemporaryPassword.setText("");
     }
 
 

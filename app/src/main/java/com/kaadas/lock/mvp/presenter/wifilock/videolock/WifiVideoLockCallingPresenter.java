@@ -80,7 +80,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                             String payload = mqttData.getPayload();
                             WifiLockOperationBean wifiLockOperationBean = new Gson().fromJson(payload, WifiLockOperationBean.class);
                             if (wifiLockOperationBean != null) {
-                                if(wifiLockOperationBean.getDevtype().equals("xmkdswflock") && wifiLockOperationBean.getEventtype().equals("record")){
+                                if(wifiLockOperationBean.getDevtype().equals(MqttConstant.WIFI_VIDEO_LOCK_XM) &&
+                                        wifiLockOperationBean.getEventtype().equals(MqttConstant.WIFI_LOCK_RECORD)){
                                     if( wifiLockOperationBean.getEventparams() != null){
                                         if(wifiLockOperationBean.getEventparams().getEventType() == 1){
                                             if(isSafe()){
@@ -106,7 +107,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         public void onConnectFailed(int paramInt) {
             XMP2PManager.getInstance().stopCodec();//
             if(paramInt == XMP2PConnectError.XM_DYNAMIC_LIBRARY_NOT_INITIALIZED){
-                XMP2PManager.getInstance().initAPI(serviceString);
+                XMP2PManager.getInstance().initAPI(MyApplication.getInstance(),serviceString);
                 XMP2PManager.getInstance().init(MyApplication.getInstance());
             }
             if(errno == XMP2PConnectJsonError.XM_JSON_ERROR_ACCESS_PASSWORD_ERROR || errno == XMP2PConnectJsonError.XM_JSON_ERROR_CHANNEL_SESSION_FULL){
@@ -238,6 +239,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                     int ret = XMP2PManager.getInstance().sendTalkBackAudioData(audioFrame);
                 }
                 long time=0;
+                int n = 0 ;
                 @Override
                 public void onVideoFrameUsed(H264Frame h264Frame) {
                     // 1000 判断是不是都是16帧
@@ -245,7 +247,14 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 //                    h264Frame.getFrameRate();
 
 //                    MyLog.getInstance().save("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
-                    LogUtils.e("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + h264Frame.getFrameRate());
+                    if(h264Frame.frameTimeStamp - time >= 1000){
+
+                        LogUtils.e("xmtest"+"FrameTimeStamp = " + h264Frame.frameTimeStamp + "--FrameRate = " + n);
+                        n = 0;
+                        time = h264Frame.frameTimeStamp;
+                    }else{
+                        n++;
+                    }
                 }
 
                 @Override

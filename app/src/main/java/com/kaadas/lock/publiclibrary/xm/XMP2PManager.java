@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
+import com.kaadas.lock.utils.ConstantConfig;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.p2p.pppp_api.st_PPCS_Session;
@@ -240,8 +241,8 @@ public class XMP2PManager extends StreamListener  {
         return handleSession;
     }
 
-    public void initAPI(String s){
-        getInstanceP2P().initAPI(s);
+    public void initAPI(Context context,String s){
+        getInstanceP2P().initAPI(context,s);
     }
 
     public void init(Context context){
@@ -477,6 +478,12 @@ public class XMP2PManager extends StreamListener  {
         getCodecInstance().releaseAudio();
     }
 
+    public static int getMode(){
+        st_PPCS_Session st_ppcs_session = getInstanceP2P().getSeesionInfo();
+        return st_ppcs_session.getMode();
+    }
+
+
     /**
      * 获取当前p2p session信息
      *      如： p2p，relay模式
@@ -489,8 +496,8 @@ public class XMP2PManager extends StreamListener  {
             return;
         }
 
-        LogUtils.e( "p2p----->DID=" + st_ppcs_session.getDID());
-        LogUtils.e( "p2p----->Mode=" + st_ppcs_session.getMode());
+        LogUtils.e("p2p----->DID=" + st_ppcs_session.getDID());
+        LogUtils.e("p2p----->Mode=" + st_ppcs_session.getMode());
         LogUtils.e("p2p----->MyLocal IP=" + st_ppcs_session.getMyLocalIP());
         LogUtils.e("p2p----->MyWan IP=" + st_ppcs_session.getMyWanIP());
         LogUtils.e("p2p----->Remote IP=" + st_ppcs_session.getRemoteIP());
