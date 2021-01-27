@@ -1,5 +1,6 @@
 package com.kaadas.lock.utils;
 
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
@@ -169,6 +170,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0xC8, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 36});
         FUNCTION_SET.put(0xC9, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 36});
 
+        FUNCTION_SET.put(0xA0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 33, 34, 36, 38, 40, 44, 49, 50, 60, 61, 62, 63});  //2021年1月27 X9功能集
 
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
     }
@@ -376,6 +378,53 @@ public class BleLockUtils {
         return integers.contains(7);
     }
 
+    /**
+     * 门锁方向设置显示（上报，查询）
+     */
+    public static boolean isSupportDoorDirection(int functionSet){
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(60);
+    }
+
+    /**
+     * 开门力量设置显示（上报，查询）
+     */
+    public static boolean isSupportOpenDoorPower(int functionSet){
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(61);
+    }
+
+    /**
+     * 上锁方式设置显示（上报，查询）
+     */
+    public static boolean isSupportLockType(int functionSet){
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(62);
+    }
+
+    /**
+     * 后面板版本与升级
+     */
+    public static boolean isSupportAfterPanel(String functionSet){
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(63);
+    }
 
     /**
      * 根据功能集判断  授权用户 是否需要带密码开门

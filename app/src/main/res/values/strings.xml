@@ -1619,6 +1619,9 @@
     <string name="camera__version">摄像头版本</string>
     <string name="camera_firmware_version">摄像头固件版本</string>
     <string name="am_mode">A-M自动/手动模式</string>
+    <string name="lock_type">上锁方式</string>
+    <string name="open_power">开门力量</string>
+    <string name="door_direction">开门方向</string>
     <string name="power_Save_mode">节能模式</string>
     <string name="face_function">面容识别功能</string>
     <string name="open">开启</string>

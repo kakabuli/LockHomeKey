@@ -98,6 +98,12 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     RelativeLayout rlWanderingAlarm;
     @BindView(R.id.rl_real_time_video)
     RelativeLayout rlRealTimeVideo;
+    @BindView(R.id.rl_lock_type)
+    RelativeLayout rlLockType;
+    @BindView(R.id.rl_open_power)
+    RelativeLayout rlOpenPower;
+    @BindView(R.id.rl_door_direction)
+    RelativeLayout rlDoorDirection;
 
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
@@ -184,6 +190,24 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 rlWanderingAlarm.setVisibility(View.VISIBLE);
             }else {
                 rlWanderingAlarm.setVisibility(View.GONE);
+            }
+
+            if(BleLockUtils.isSupportDoorDirection(func)){
+                rlDoorDirection.setVisibility(View.VISIBLE);
+            }else{
+                rlDoorDirection.setVisibility(View.GONE);
+            }
+
+            if(BleLockUtils.isSupportOpenDoorPower(func)){
+                rlOpenPower.setVisibility(View.VISIBLE);
+            }else{
+                rlOpenPower.setVisibility(View.GONE);
+            }
+
+            if(BleLockUtils.isSupportLockType(func)){
+                rlLockType.setVisibility(View.VISIBLE);
+            }else{
+                rlLockType.setVisibility(View.GONE);
             }
 
             //面容识别功能
