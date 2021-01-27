@@ -390,10 +390,34 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         break;
                     case R.id.rl_wifi_name: //WiFi名称
 
-                        Intent setWifiIntent = new Intent(this,WifiLockWifiDetailActivity.class);
+                        /*Intent setWifiIntent = new Intent(this,WifiLockWifiDetailActivity.class);
                         setWifiIntent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivity(setWifiIntent);
+                        startActivity(setWifiIntent);*/
 
+                        //老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2
+                        LogUtils.e("--kaadas--老的wifi锁不存在这个字段，为wifi配网1，wifi&ble为2--->" + wifiLockInfo.getDistributionNetwork());
+                        if (TextUtils.isEmpty(String.valueOf(wifiLockInfo.getDistributionNetwork()))) {
+                            Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                            //startActivity(new Intent(this, WifiLockOldUserFirstActivity.class));
+                        } else if (wifiLockInfo.getDistributionNetwork() == 0 || wifiLockInfo.getDistributionNetwork() == 1) {
+                            Intent wifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+                            String wifiModelType = "WiFi";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        } else if (wifiLockInfo.getDistributionNetwork() == 2) {
+                            Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+                            String wifiModelType = "WiFi&BLE";
+                            wifiIntent.putExtra("wifiModelType", wifiModelType);
+                            startActivity(wifiIntent);
+                        } else if(wifiLockInfo.getDistributionNetwork() == 3){
+                            showWifiDialog();
+                        }else {
+                            LogUtils.e("--kaadas--wifiLockInfo.getDistributionNetwork()为" + wifiLockInfo.getDistributionNetwork());
+
+                        }
 
                         break;
                     case R.id.rl_message_push:
@@ -547,5 +571,32 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
     }
 
+    private void showWifiDialog() {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "更换WIFI需重新进入添加门锁步骤",
+                "取消", "确定", "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
 
+                    }
+
+                    @Override
+                    public void right() {
+                        Intent wifiIntent = new Intent(WifiLockMoreActivity.this, WifiLockAddNewThirdActivity.class);
+                        String wifiModelType = "WiFi&VIDEO";
+                        wifiIntent.putExtra("wifiModelType", wifiModelType);
+                        wifiIntent.putExtra("distribution_again", true);
+                        startActivity(wifiIntent);
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 }
