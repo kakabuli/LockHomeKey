@@ -54,7 +54,7 @@ public class BaseAddToApplicationActivity extends AppCompatActivity {
                             @Override
                             public void foregroundNotificationClick(Context context, Intent intent) {
                                 LogUtils.e("JOB-->", " foregroundNotificationClick");
-                                stopKeepAlive();
+//                                stopKeepAlive();
                             }
                         })
         );

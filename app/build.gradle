@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202101131
-        versionName "4.2.5"
+        versionCode 202101211
+        versionName "4.2.5.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -319,4 +319,5 @@ dependencies {
 //    implementation 'com.jaredrummler:material-spinner:1.3.1'
     //okhttp
 //    implementation 'com.blankj:utilcodex:1.26.0'
+    implementation 'com.tencent:mmkv-static:1.2.7'
 }

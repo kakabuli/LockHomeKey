@@ -256,6 +256,8 @@ public class DoorbellingService extends Service {
                     public void accept(Integer integer) throws Exception {
                         if (integer == 2) {
                             toDisposable(listenerServiceDisposable);
+                        }else{
+                            initBleOrMqttService();
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -271,6 +273,7 @@ public class DoorbellingService extends Service {
      *  开启蓝牙和Mqtt服务
      */
     private void initBleOrMqttService() {
+        LogUtils.e("shulan initBleOrMqttService");
         if(!ServiceAliveUtils.isServiceRunning(this,BleService.class.getName())){
             //        //启动bleService
             Intent bleServiceIntent = new Intent(this, BleService.class);
@@ -289,10 +292,29 @@ public class DoorbellingService extends Service {
             } else {
                 startService(intent);
             }
-        }
 
+//            reconnectMqtt();
+        }else{
+//            reconnectMqtt();
+        }
     }
 
+    private void reconnectMqtt() {
+        MyApplication.getInstance().initTokenAndUid();
+        MqttService mqttService = MyApplication.getInstance().getMqttService();
+        if (mqttService != null) {
+            boolean connected = false;
+            try {
+                connected = mqttService.getMqttClient().isConnected();
+            } catch (Exception e) {
+                LogUtils.e("doorbellingservice  mqtt 获取连接状态失败  " + e.getMessage());
+                connected = false;
+            }
+            if (mqttService.getMqttClient() == null || !connected) {
+                MyApplication.getInstance().getMqttService().mqttConnection(); //连接mqtt
+            }
+        }
+    }
 
 
 }

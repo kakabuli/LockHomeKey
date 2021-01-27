@@ -160,11 +160,12 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
                 ivMyAlbumDelete.setVisibility(View.VISIBLE);
             }
         }else{
-            if(wifiSn.isEmpty()){
-                finish();
-            }
             record = (WifiVideoLockAlarmRecord) getIntent().getSerializableExtra("record");
             wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+            if(wifiSn.isEmpty()){
+                finish();
+                return;
+            }
             path = FileTool.getVideoCacheFolder(this,wifiSn).getPath();
             wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 
