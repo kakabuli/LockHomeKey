@@ -12,12 +12,12 @@ public class HttpUrlConstants {
     /**
      * OTA  升级  API地址
      */
-    public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL + "otaUpgrade/check";  //测试OTA服务器
+    public static final String OTA_INFO_URL = ConstantConfig.OTA_INFO_URL + "ota/checkUpgrade";  //测试OTA服务器 otaUpgrade/check
 
     /**
      *  OTA 多固件检查更新
      */
-    public static final String OTA_MULTI_CHECK = ConstantConfig.OTA_INFO_URL + "otaUpgrade/multiCheck";
+    public static final String OTA_MULTI_CHECK = ConstantConfig.OTA_INFO_URL + "ota/multiCheckUpgrade";//otaUpgrade/multiCheck
     /**
      * OTA  升级结果上报  API地址
      */
@@ -167,6 +167,11 @@ public class HttpUrlConstants {
      */
     public static final String GET_SINGLE_PASSWORD = BASE_URL + "adminlock/pwd/getNickname";
 
+    /**
+     * 判断锁是否被绑定 post
+     */
+    public static final String CHECK_LOCK_BIND = BASE_URL + "adminlock/edit/checkadmindev";
+
 
     ////////////////////////////////////////////用户管理////////////////////////////////////////////////
 
@@ -279,7 +284,7 @@ public class HttpUrlConstants {
 
     public static final String UPLOAD_PUSH_ID = BASE_URL + "user/upload/pushId";
 
-    public static final String UPLOAD_PHONE_MSG = "http://47.106.94.189:9111/api/mobile/add";
+    public static final String UPLOAD_PHONE_MSG = ConstantConfig.OTA_INFO_URL + "mobile/add";
 
     public static final String GET_PUSH_SWITch = BASE_URL + "user/get/getPushSwitch";
     public static final String UPDATE_PUSH_SWITch = BASE_URL + "user/edit/postPushSwitch";

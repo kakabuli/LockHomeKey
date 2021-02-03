@@ -13,6 +13,7 @@ import retrofit2.http.POST;
  * Create By lxj  on 2019/1/10
  * Describe
  */
+@Deprecated
 public interface ILockService {
 
     /**

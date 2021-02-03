@@ -53,6 +53,24 @@ public class LoginResult extends BaseResult {
         private Object meUsername;
         private Object mePwd;
         private String storeToken;
+        private int restrictCount;
+        private int restrictTime;
+
+        public int getRestrictCount() {
+            return restrictCount;
+        }
+
+        public void setRestrictCount(int restrictCount) {
+            this.restrictCount = restrictCount;
+        }
+
+        public int getRestrictTime() {
+            return restrictTime;
+        }
+
+        public void setRestrictTime(int restrictTime) {
+            this.restrictTime = restrictTime;
+        }
 
         public String getUid() {
             return uid;

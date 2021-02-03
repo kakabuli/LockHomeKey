@@ -16,6 +16,7 @@ import retrofit2.http.Streaming;
  * Create By lxj  on 2019/1/8
  * Describe
  */
+@Deprecated
 public interface IUserService {
 
 

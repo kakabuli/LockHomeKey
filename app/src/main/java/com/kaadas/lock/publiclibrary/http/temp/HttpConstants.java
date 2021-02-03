@@ -6,6 +6,7 @@ import com.kaadas.lock.publiclibrary.http.HttpUrlConstants;
  * Create By lxj  on 2019/1/8
  * Describe
  */
+@Deprecated
 public class HttpConstants {
 
     public static final String BASE_URL = HttpUrlConstants.BASE_URL;

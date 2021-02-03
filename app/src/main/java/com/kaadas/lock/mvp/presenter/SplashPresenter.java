@@ -20,6 +20,7 @@ public class SplashPresenter<T> extends BasePresenter<ISplashView> {
 
 
     //请求App的版本信息
+    @Deprecated
     public void getAppVersion() {
         XiaokaiNewServiceImp.getAppVersion().subscribe(new Observer<VersionBean>() {
             @Override
