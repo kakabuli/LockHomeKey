@@ -30,6 +30,7 @@ import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkActivity;
 import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
 import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockAuthActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
@@ -107,6 +108,10 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
     RecyclerView detailFunctionRecyclerView;
     @BindView(R.id.detail_function_onLine)
     RecyclerView detailFunctionOnLine;
+    @BindView(R.id.rll_share_user_layout)
+    LinearLayout rllShareUserLayout;
+    @BindView(R.id.rll_share_user_function_layout)
+    LinearLayout rllShareUserFunctionLayout;
     private WifiLockDetailAdapater adapater;
     private WifiLockDetailOneLineAdapater oneLineAdapater;
 
@@ -133,6 +138,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             mPresenter.getOperationRecord(wifiSN, false);
             initData();
             initFuncRecycleView();
+            initShareLayout();
         }
 
         rlIcon.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +155,23 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
             }
         });
         return view;
+    }
+
+    private void initShareLayout() {
+        if(wifiLockInfo != null){
+            if (wifiLockInfo.getIsAdmin() == 1) { //主用户
+                detailFunctionRecyclerView.setVisibility(detailFunctionRecyclerView.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+                detailFunctionOnLine.setVisibility(detailFunctionOnLine.getVisibility() == View.VISIBLE ? View.VISIBLE : View.GONE);
+
+                rllShareUserLayout.setVisibility(View.GONE);
+            }else{
+                detailFunctionRecyclerView.setVisibility(View.GONE);
+                detailFunctionOnLine.setVisibility(View.GONE);
+
+                rllShareUserLayout.setVisibility(View.VISIBLE);
+                rllShareUserLayout.setOnClickListener(this);
+            }
+        }
     }
 
 
@@ -685,6 +708,11 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
                 builder.show();
 
+                break;
+            case R.id.rll_share_user_function_layout:
+                Intent shareIntent = new Intent(getActivity(), WifiLockAuthActivity.class);
+                shareIntent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                startActivity(shareIntent);
                 break;
         }
     }
