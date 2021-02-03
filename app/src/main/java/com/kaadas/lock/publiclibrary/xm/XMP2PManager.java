@@ -69,12 +69,12 @@ public class XMP2PManager extends StreamListener  {
         }
     }*/
 
-    private static XmMovieViewController codecInstance = null;
-    private static XMP2PManager instance = null;
-    private static XMStreamComCtrl xmStreamComCtrl = null;
+    private volatile static XmMovieViewController codecInstance = null;
+    private volatile static XMP2PManager instance = null;
+    private volatile static XMStreamComCtrl xmStreamComCtrl = null;
 
 //    public static  String serviceString="EBGDEIBIKEJPGDJMEBHLFFEJHPNFHGNMGBFHBPCIAOJJLGLIDEABCKOOGILMJFLJAOMLLMDIOLMGBMCGIO";
-    public static  String serviceString="EBGDEJBJKEJLGHJKEIHCFMEDHENOHINHHHFOBCCGAAJOLJKNDIAFDDPGGELGIGLNAJNDKJCNPJNDAL";
+    public static String serviceString="EBGDEJBJKEJLGHJKEIHCFMEDHENOHINHHHFOBCCGAAJOLJKNDIAFDDPGGELGIGLNAJNDKJCNPJNDAL";
 
     /**
      * 获取 单例 对象操作
@@ -179,7 +179,7 @@ public class XMP2PManager extends StreamListener  {
         return getInstanceP2P().isConnected(handleSession);
     }
 
-    public int connectDevice(DeviceInfo paramDeviceInfo){
+    public synchronized int connectDevice(DeviceInfo paramDeviceInfo){
         LogUtils.e("connectDevice: did=" + paramDeviceInfo.getDeviceDid());
         LogUtils.e("connectDevice: serverString=" + paramDeviceInfo.getServiceString());
         LogUtils.e("connectDevice: sn=" + paramDeviceInfo.getDeviceSn());
@@ -223,8 +223,9 @@ public class XMP2PManager extends StreamListener  {
         paramConnectP2P.setServiceString(paramDeviceInfo.getServiceString());
         // 监听各个p2p 函数调用 数据回调
         getInstanceP2P().setStreamListener(this);
+        LogUtils.e("shulan getInstanceP2P()--->" + getInstanceP2P());
         // 开始连接
-        handleSession=getInstanceP2P().startConnectDevice(paramConnectDev, paramConnectP2P);
+        handleSession = getInstanceP2P().startConnectDevice(paramConnectDev, paramConnectP2P);
         LogUtils.e("handleSession==" + handleSession);
         // session>0时，则建立成功
         if(handleSession<0){

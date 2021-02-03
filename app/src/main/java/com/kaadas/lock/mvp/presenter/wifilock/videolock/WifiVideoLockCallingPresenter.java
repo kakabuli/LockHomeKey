@@ -118,11 +118,12 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                 return;
             }
             if((startTime > 0 && System.currentTimeMillis() - startTime > OVER_TIME_SECONDS) || connectTimes > OVER_TIME_TIMES){
-
+                LogUtils.e("shulan 111---------->onConnectFailed=" + paramInt);
                 if(isSafe()){
                     mViewRef.get().onConnectFailed(paramInt);
                 }
             }else{
+                LogUtils.e("shulan 222---------->onConnectFailed=" + paramInt);
                 connectTimes++;
                 connectP2P();
             }
@@ -178,7 +179,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         super.detachView();
     }
 
-    public int connectP2P(){
+    public synchronized int connectP2P(){
 
         DeviceInfo deviceInfo=new DeviceInfo();
         deviceInfo.setDeviceDid(did);
@@ -186,8 +187,8 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         deviceInfo.setDeviceSn(sn);
         deviceInfo.setServiceString(serviceString);
         XMP2PManager.getInstance().setOnConnectStatusListener(listener);
+        LogUtils.e("shulan XMP2PManager.getInstance()------->" + XMP2PManager.getInstance());
         int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
-
         return param;
     }
 

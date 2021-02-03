@@ -62,6 +62,8 @@ import com.xmitech.sdk.MP4Info;
 import com.yun.software.kaadas.Utils.FileTool;
 import com.yuv.display.MyBitmapFactory;
 
+import org.linphone.core.TunnelConfig;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.MessageDigest;
@@ -483,23 +485,10 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
         }
         if(keepAliveStatus == 1){
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mPresenter.setStartTime();
-                    mPresenter.connectP2P();
-                }
-            }).start();
+            switchBackConnectP2P();
         }else{
             if(isCalling == 1){
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPresenter.setStartTime();
-                        mPresenter.connectP2P();
-                    }
-                }).start();
+                switchBackConnectP2P();
             }else{
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -1000,13 +989,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 avi.show();
                 tvTips.setVisibility(View.VISIBLE);
                 dialog.dismiss();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPresenter.setStartTime();
-                        mPresenter.connectP2P();
-                    }
-                }).start();
+                connectP2P();
             }
         });
 
@@ -1014,6 +997,26 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             dialog.show();
         }
 
+    }
+
+    private void switchBackConnectP2P(){
+        if(dialog != null){
+            if(!dialog.isShowing()){
+                connectP2P();
+            }
+        }else{
+            connectP2P();
+        }
+    }
+
+    private void connectP2P(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.setStartTime();
+                mPresenter.connectP2P();
+            }
+        }).start();
     }
 
     private void registerBroadcast(){
@@ -1054,7 +1057,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                         mPresenter.release();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                         //多任务
-
                         isLastPirture = true;
                         mPresenter.release();
                     }
