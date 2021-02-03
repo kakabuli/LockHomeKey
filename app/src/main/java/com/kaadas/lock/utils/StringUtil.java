@@ -386,4 +386,18 @@ public class StringUtil {
         }
         return str;
     }
+
+    public static String getTimeToString(int time){
+        if(time == 60){
+            return "1分钟";
+        }else if(time == 900){
+            return "15分钟";
+        }else if(time == 3600){
+            return "1小时";
+        }else if(time == 86400){
+            return "1个自然日";
+        }else {
+            return "";
+        }
+    }
 }

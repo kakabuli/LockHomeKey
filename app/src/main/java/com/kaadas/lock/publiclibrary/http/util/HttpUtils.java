@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.huawei.hms.core.aidl.RequestHeader;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
+import com.kaadas.lock.utils.AES;
 import com.kaadas.lock.utils.LogUtils;
 
 
@@ -19,6 +21,38 @@ import okhttp3.RequestBody;
 import retrofit2.HttpException;
 
 public class HttpUtils<T> {
+
+    public RequestBody getBodyToken(T t,String timestamp) {
+        String obj = new Gson().toJson(t);
+        LogUtils.e("shulan getBodyToken http body 加密前--->" + obj);
+        LogUtils.e("shulan getBodyToken timestamp--->" + timestamp);
+        try {
+            obj = AES.Encrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp));
+
+            LogUtils.e("shulan getBodyToken http body 加密后--->" + obj);
+            LogUtils.e("shulan getBodyToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), obj);
+        return body;
+    }
+
+    public RequestBody getBodyNoToken(T t,String timestamp){
+        String obj = new Gson().toJson(t);
+        LogUtils.e("shulan getBodyNoToken http body 加密前--->" + obj);
+        LogUtils.e("shulan getBodyNoToken timestamp--->" + timestamp);
+        try {
+            obj = AES.Encrypt(obj,AES.keyNoToken(AES.key,timestamp));
+
+            LogUtils.e("shulan getBodyNoToken http body 加密后--->" + obj);
+            LogUtils.e("shulan getBodyNoToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyNoToken(AES.key,timestamp)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), obj);
+        return body;
+    }
 
     public RequestBody getBody(T t) {
         String obj = new Gson().toJson(t);
@@ -41,6 +75,9 @@ public class HttpUtils<T> {
                 break;
             case 801:
                 errorMsg = activity.getString(R.string.e_yi_login);
+                break;
+            case 595:
+                errorMsg = activity.getString(R.string.information_verification_fail);
                 break;
             case 500:
                 errorMsg = activity.getString(R.string.server_error);

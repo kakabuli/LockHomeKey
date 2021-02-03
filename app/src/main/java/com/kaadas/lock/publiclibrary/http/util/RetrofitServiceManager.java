@@ -1,7 +1,6 @@
 package com.kaadas.lock.publiclibrary.http.util;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 
 import com.kaadas.lock.MyApplication;
@@ -15,7 +14,9 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -64,7 +65,6 @@ public class RetrofitServiceManager {
                 }
             });
             builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-
             addInterceptor(builder, true);
             mRetrofit = new Retrofit.Builder()
                     .client(builder.build())
@@ -76,7 +76,6 @@ public class RetrofitServiceManager {
         }
         return mRetrofit;
     }
-
 
     public static Retrofit getNoTokenInstance() {
         if (noRetrofit == null) {
@@ -103,7 +102,7 @@ public class RetrofitServiceManager {
                     }
                 }
             });
-            noBuilder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+//            noBuilder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
             addInterceptor(noBuilder, false);
             noRetrofit = new Retrofit.Builder()
                     .client(noBuilder.build())
@@ -119,7 +118,14 @@ public class RetrofitServiceManager {
     public static class HttpLogger implements HttpLoggingInterceptor.Logger {
         @Override
         public void log(String message) {
-           LogUtils.e("网络请求   ", message);
+           LogUtils.e("网络请求体   ", message);
+        }
+    }
+
+    public static class HttpHeadLogger implements HttpLoggingInterceptor.Logger {
+        @Override
+        public void log(String message) {
+            LogUtils.e("网络请求头   ", message);
         }
     }
 
@@ -138,7 +144,8 @@ public class RetrofitServiceManager {
 //                .response()
 //                .responseTag("网络请求 response")
 //                .build();
-
+        HttpLoggingInterceptor logInterceptor1 = new HttpLoggingInterceptor(new HttpHeadLogger());
+        logInterceptor1.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
         logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -156,6 +163,7 @@ public class RetrofitServiceManager {
             builder.addInterceptor(httpHeaderInterceptor);
         }
 
+        builder.addInterceptor(logInterceptor1);
         builder.addInterceptor(logInterceptor);
     }
 

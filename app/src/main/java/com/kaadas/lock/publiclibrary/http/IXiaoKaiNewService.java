@@ -30,14 +30,18 @@ import com.kaadas.lock.publiclibrary.http.result.WifiDeviceListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
+import com.kaadas.lock.publiclibrary.http.temp.resultbean.CheckBindResult;
 
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -50,7 +54,6 @@ import retrofit2.http.Url;
  * Describe
  */
 public interface IXiaoKaiNewService {
-
     //////////////////////////////////////// 注册登陆/////////////////////////////////////////////////
 
     /**
@@ -59,7 +62,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.REGISTER_BY_PHONE)
-    Observable<RegisterResult> registerByPhone(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<RegisterResult> registerByPhone(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 通过邮箱注册
@@ -67,7 +71,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.EMAIL_REGISTER)
-    Observable<RegisterResult> registerByEmail(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<RegisterResult> registerByEmail(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 通过手机号登陆
@@ -75,7 +80,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.LOGIN_BY_PHONE)
-    Observable<LoginResult> loginByPhone(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<LoginResult> loginByPhone(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 通过邮箱登陆
@@ -83,7 +89,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.EMAIL_LOGIN)
-    Observable<LoginResult> loginByEmail(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<LoginResult> loginByEmail(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 忘记密码
@@ -91,7 +98,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.FORGET_PASSWORD)
-    Observable<BaseResult> forgetPassword(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> forgetPassword(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改密码   APP内  需要token
@@ -99,7 +107,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.MODIFY_PASSWORD)
-    Observable<BaseResult> modifyPassword(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyPassword(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 退出登陆
@@ -118,7 +127,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_USER_NICK_NAME)
-    Observable<UserNickResult> getUserNick(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<UserNickResult> getUserNick(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改用户昵称
@@ -126,7 +136,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.MODIFY_USER_NICK_NAME)
-    Observable<BaseResult> modifyUserNick(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyUserNick(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 上传用户头像
@@ -150,19 +161,22 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.PUT_MESSAGE)
-    Observable<BaseResult> putMessage(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> putMessage(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取指定设备的普通管理员
      */
     @POST(HttpUrlConstants.GET_NORMALS_DEVLIST)
-    Observable<String> getDeviceGeneralAdministrator(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<String> getDeviceGeneralAdministrator(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 删除设备的普通用户
      */
     @POST(HttpUrlConstants.DELETE_NORMALDEV)
-    Observable<BaseResult> deleteDeviceNormalUser(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> deleteDeviceNormalUser(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取用户协议版本
@@ -178,7 +192,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_USER_PROTOCOL_CONTENT)
-    Observable<UserProtocolResult> getUserProtocolContent(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<UserProtocolResult> getUserProtocolContent(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     ////////////////////////////////////////////////门锁管理/////////////////////////////////////////////////////////////
@@ -189,7 +204,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.ADD_DEVICE)
-    Observable<BaseResult> addDevice(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> addDevice(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 查询列表设备列表
@@ -197,7 +213,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_DEVICES)
-    Observable<GetDeviceResult> getDevices(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetDeviceResult> getDevices(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 删除设备
@@ -205,7 +222,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.DELETE_DEVICE)
-    Observable<BaseResult> deleteDevice(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> deleteDevice(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改门锁昵称
@@ -213,7 +231,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.MODIFY_LOCK_NICK_NAME)
-    Observable<BaseResult> modifyLockNick(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyLockNick(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 根据SN获取pwd
@@ -221,7 +240,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_PWD_BY_SN)
-    Observable<GetPwdBySnResult> getpwdBySN(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetPwdBySnResult> getpwdBySN(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 三方重置门锁   解绑门锁
@@ -229,7 +249,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.RESET_DEVICE)
-    Observable<BaseResult> resetDevice(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> resetDevice(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 门锁密钥添加
@@ -237,7 +258,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.ADD_PASSWORD)
-    Observable<BaseResult> addPassword(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> addPassword(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 删除秘钥
@@ -245,7 +267,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.DELETE_PASSWORD)
-    Observable<BaseResult> deletePassword(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> deletePassword(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改秘钥昵称
@@ -253,7 +276,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.MODIFY_PASSWORD_NICK)
-    Observable<BaseResult> modifyPasswordNick(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyPasswordNick(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 查询秘钥列表
@@ -261,7 +285,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_PASSWORDS)
-    Observable<GetPasswordResult> getPasswords(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetPasswordResult> getPasswords(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 查询单个秘钥
@@ -269,7 +294,16 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_SINGLE_PASSWORD)
-    Observable<SinglePasswordResult> getSinglePassword(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<SinglePasswordResult> getSinglePassword(@Header("timestamp") String timestamp,@Body RequestBody info);
+
+    /**
+     * 检查所是否绑定
+     * @return
+     */
+    @POST(HttpUrlConstants.CHECK_LOCK_BIND)
+    @Headers({"version: 1"})
+    Observable<CheckBindResult> checkLockBind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     ////////////////////////////////////////////用户管理////////////////////////////////////////////////
 
@@ -279,7 +313,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.ADD_USER)
-    Observable<BaseResult> addUser(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> addUser(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改普通用户昵称
@@ -287,7 +322,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.MODIFY_COMMON_USER_NICKNAME)
-    Observable<BaseResult> modifyCommonUserNickname(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyCommonUserNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 删除普通用户
@@ -295,7 +331,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.DELETE_USER)
-    Observable<BaseResult> deleteUser(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> deleteUser(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 查询普通用户列表
@@ -303,7 +340,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.SEARCH_USER)
-    Observable<BaseResult> searchUser(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> searchUser(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     //////////////////////////////////////开门记录///////////////////////////////////////////////
@@ -314,7 +352,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_APP_RECORD)
-    Observable<BaseResult> uploadAppRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadAppRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 上传秘钥开门记录
@@ -322,7 +361,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_BIN_RECORD)
-    Observable<BaseResult> uploadBinRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadBinRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取开门记录
@@ -330,7 +370,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_LOCK_RECORD)
-    Observable<LockRecordResult> getLockRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<LockRecordResult> getLockRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取操作记录
@@ -338,7 +379,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_OPERATION_RECORD)
-    Observable<OperationRecordResult> getOperationRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<OperationRecordResult> getOperationRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     ////////////////////////////////////////////预警记录////////////////////////////////////////////
 
@@ -348,7 +390,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_WARRING_RECORD)
-    Observable<BaseResult> uploadWarringRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadWarringRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -357,7 +400,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_OPERATION_RECORD)
-    Observable<BaseResult> uploadOperationRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadOperationRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取预警记录
@@ -365,7 +409,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_WARRING_RECORD)
-    Observable<GetWarringRecordResult> getWarringRecord(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetWarringRecordResult> getWarringRecord(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 发送短信验证码
@@ -373,7 +418,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.SEND_MSG)
-    Observable<BaseResult> sendMessage(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> sendMessage(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 发送邮箱验证码
@@ -381,7 +427,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_EMAIL_YZM)
-    Observable<BaseResult> sendEamilYZM(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> sendEamilYZM(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 上传头像
@@ -405,7 +452,8 @@ public interface IXiaoKaiNewService {
      * 获取消息列表
      */
     @POST(HttpUrlConstants.SYSTEM_MESSAGE)
-    Observable<String> getMessageList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<String> getMessageList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -418,17 +466,20 @@ public interface IXiaoKaiNewService {
      * 删除消息列表
      */
     @POST(HttpUrlConstants.SYSTEM_MESSAGE_DELETE)
-    Observable<DeleteMessageResult> deleteMessage(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<DeleteMessageResult> deleteMessage(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 查询帮助日志列表
      */
     @POST(HttpUrlConstants.SYSTEM_HELP_LOG)
-    Observable<GetHelpLogResult> getHelpLog(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetHelpLogResult> getHelpLog(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取APP的版本信息
      */
+    @Deprecated
     @GET(HttpUrlConstants.GET_APP_VERSION)
     Observable<VersionBean> getAppVersion();
 
@@ -437,7 +488,8 @@ public interface IXiaoKaiNewService {
      * 开锁鉴权
      */
     @POST(HttpUrlConstants.USER_OPEN_LOCK_AUTHORITY)
-    Observable<BaseResult> openLockAuth(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> openLockAuth(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 上传PushId
@@ -446,7 +498,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_PUSH_ID)
-    Observable<BaseResult> uploadPushId(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadPushId(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -456,7 +509,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPLOAD_PHONE_MSG)
-    Observable<BaseResult> uploadPushMsg(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadPushMsg(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -466,7 +520,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.GET_PUSH_SWITch)
-    Observable<SwitchStatusResult> getPushSwitch(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<SwitchStatusResult> getPushSwitch(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -476,47 +531,54 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPDATE_PUSH_SWITch)
-    Observable<SwitchStatusResult> updatePushSwitch(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<SwitchStatusResult> updatePushSwitch(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 上传版本号和SN到服务器
      */
     @POST(HttpUrlConstants.UPDATE_SOFTWARE_VERSION)
-    Observable<BaseResult> updateSoftwareVersion(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> updateSoftwareVersion(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 上传版本号和SN到服务器
      */
     @POST(HttpUrlConstants.UPDATE_BLE_VERSION)
-    Observable<BaseResult> updateBleVersion(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> updateBleVersion(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 上传版本号和SN到服务器
      */
     @POST(HttpUrlConstants.MODIFY_FUNCTION_SET)
-    Observable<BaseResult> modifyFunctionSet(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> modifyFunctionSet(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * OTA升级查询ApI
      */
     @POST(HttpUrlConstants.OTA_INFO_URL)
-    Observable<CheckOTAResult> getOtaInfo(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<CheckOTAResult> getOtaInfo(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * OTA多固件升级查询ApI
      */
     @POST(HttpUrlConstants.OTA_MULTI_CHECK)
-    Observable<MultiCheckOTAResult> getOtaMultiCheck(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<MultiCheckOTAResult> getOtaMultiCheck(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * OTA升级结果上报
      */
     @POST(HttpUrlConstants.OTA_RESULT_UPLOAD_URL)
-    Observable<BaseResult> uploadOtaResult(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> uploadOtaResult(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     ////////////////////////////////////////////           WiFi锁api功能            ///////////////////////////////////////////////
@@ -525,89 +587,103 @@ public interface IXiaoKaiNewService {
      * 绑定WiFi锁
      */
     @POST(HttpUrlConstants.WIFI_LOCK_BIND)
-    Observable<BaseResult> wifiLockBind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockBind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 解绑WiFi锁
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UNBIND)
-    Observable<BaseResult> wifiLockUnbind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUnbind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 修改WiFi锁昵称
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_NICK_NAME)
-    Observable<BaseResult> wifiLockUpdateNickname(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUpdateNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 更改推送开关
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_PUSH)
-    Observable<BaseResult> wifiLockUpdatePush(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUpdatePush(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 获取wifi锁密码列表
      */
     @POST(HttpUrlConstants.WIFI_LOCK_GET_PWD_LIST)
-    Observable<WifiLockGetPasswordListResult> wifiLockGetPwdList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockGetPasswordListResult> wifiLockGetPwdList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改wifi密码昵称
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_PWD_NICKNAME)
-    Observable<BaseResult> wifiLockUpdatePwdNickName(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUpdatePwdNickName(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * wifi锁授权用户
      */
     @POST(HttpUrlConstants.WIFI_LOCK_SHARE)
-    Observable<BaseResult> wifiLockShare(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockShare(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * wifi锁删除授权用户
      */
     @POST(HttpUrlConstants.WIFI_LOCK_DELETE_SHARE)
-    Observable<BaseResult> wifiLockDeleteShareUser(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockDeleteShareUser(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * wifi锁修改授权用户昵称
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_SHARE_NICKNAME)
-    Observable<BaseResult> wifiLockUpdateShareUserNickname(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUpdateShareUserNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * wifi锁授权用户列表
      */
     @POST(HttpUrlConstants.WIFI_LOCK_GET_SHARE_LIST)
-    Observable<WifiLockShareResult> wifiLockGetShareUserList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockShareResult> wifiLockGetShareUserList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取wifi锁操作记录
      */
     @POST(HttpUrlConstants.WIFI_LOCK_OPERATION_LIST)
-    Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取wifi报警记录
      */
     @POST(HttpUrlConstants.WIFI_LOCK_ALARM_LIST)
-    Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(@Header("timestamp") String timestamp,@Body RequestBody info);
     /**
      * 开锁次数
      */
     @POST(HttpUrlConstants.WIFI_LOCK_OPEN_COUNT)
-    Observable<GetOpenCountResult> wifiLockGetOpenCount(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetOpenCountResult> wifiLockGetOpenCount(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
      * 更新wifi信息
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPDATE_INFO)
-    Observable<BaseResult> wifiLockUpdateInfo(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUpdateInfo(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
 
@@ -615,7 +691,8 @@ public interface IXiaoKaiNewService {
      * 更新wifi信息
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPLOAD_OTA)
-    Observable<BaseResult> wifiLockUploadOta(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiLockUploadOta(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 
     /**
@@ -627,7 +704,9 @@ public interface IXiaoKaiNewService {
 
 
     @POST(HttpUrlConstants.GET_ZIGBEEN_INFO)
-    Observable<String> GET_ZIGBEEN_INFO_CONTEXT(@Body RequestBody info);
+    @Headers({"version: 1"})
+
+    Observable<String> GET_ZIGBEEN_INFO_CONTEXT(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 单火开关设备联动开关昵称修改
@@ -635,7 +714,8 @@ public interface IXiaoKaiNewService {
      * @return
      */
     @POST(HttpUrlConstants.UPDATE_SWITCH_NICK_NAME)
-    Observable<BaseResult> updateSwitchNickname(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> updateSwitchNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
 
@@ -643,43 +723,50 @@ public interface IXiaoKaiNewService {
      * 绑定视频锁
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_BIND)
-    Observable<WifiLockVideoBindResult> wifiVideoLockBind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockVideoBindResult> wifiVideoLockBind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 解绑视频锁
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_UNBIND)
-    Observable<WifiLockVideoBindResult> wifiVideoLockUnbind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockVideoBindResult> wifiVideoLockUnbind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 解绑视频锁失败
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_BIND_FAIL)
-    Observable<WifiLockVideoBindResult> wifiVideoLockBindFail(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockVideoBindResult> wifiVideoLockBindFail(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      *  更新视频锁
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_UPDATE_BIND)
-    Observable<WifiLockVideoBindResult> wifiVideoLockUpdateBind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiLockVideoBindResult> wifiVideoLockUpdateBind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取视频锁报警记录
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_ALARM_LIST)
-    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetAlarmList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetAlarmList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 获取分页查询门铃记录
      */
     @POST(HttpUrlConstants.WIFI_VIDEO_LOCK_DOORBELL_LIST)
-    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetDoorbellList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetDoorbellList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      *  查询wifi锁设备列表
      */
     @POST(HttpUrlConstants.WIFI_DEVICE_LIST)
-    Observable<WifiDeviceListResult> wifiDeviceList(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<WifiDeviceListResult> wifiDeviceList(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     ////////////////////////////////////////////           晾衣机api功能            ///////////////////////////////////////////////
 
@@ -687,30 +774,35 @@ public interface IXiaoKaiNewService {
      * 检查晾衣机设备是否被绑定
      */
     @POST(HttpUrlConstants.HANGER_CHECK_BINDING)
-    Observable<ClothesHangerMachineCheckBindingResult> clothesHangerMachineCheckBinding(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<ClothesHangerMachineCheckBindingResult> clothesHangerMachineCheckBinding(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 检查晾衣机设备是否被绑定
      */
     @POST(HttpUrlConstants.HANGER_BIND)
-    Observable<ClothesHangerMachineBindResult> clothesHangerMachineBind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<ClothesHangerMachineBindResult> clothesHangerMachineBind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 检查晾衣机设备是否被绑定
      */
     @POST(HttpUrlConstants.HANGER_UNBIND)
-    Observable<ClothesHangerMachineUnBindResult> clothesHangerMachineUnbind(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<ClothesHangerMachineUnBindResult> clothesHangerMachineUnbind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 修改晾衣机昵称
      */
     @POST(HttpUrlConstants.MODIFY_HANGER_NICK_NAME)
-    Observable<BaseResult> hangerUpdateNickname(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> hangerUpdateNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
     /**
      * 多固件确认升级
      */
     @POST(HttpUrlConstants.WIFI_LOCK_UPLOAD_MULTI_OTA)
-    Observable<BaseResult> wifiDeviceUploadMultiOta(@Body RequestBody info);
+    @Headers({"version: 1"})
+    Observable<BaseResult> wifiDeviceUploadMultiOta(@Header("timestamp") String timestamp,@Body RequestBody info);
 
 }

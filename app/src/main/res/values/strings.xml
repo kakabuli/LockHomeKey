@@ -103,6 +103,7 @@
     <string name="operation_fail">操作失败</string>
     <string name="open_lock_fail">开锁失败！</string>
     <string name="e_yi_login">恶意登录</string>
+    <string name="information_verification_fail">信息校验失败</string>
     <string name="open_lock_fail_not_permission">开锁失败,当前时间没有权限</string>
     <string name="illegal_data">非法数据</string>
     <string name="has_nodification_manager_confirm">已经通知管理员确认</string>

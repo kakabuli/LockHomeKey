@@ -205,6 +205,40 @@ public class Rsa {
 
     }
 
+    /**
+     * 将二进制转换为16进制
+     * @param buf byte数组
+     * @return
+     */
+    public static String parseByte2HexStr(byte[] buf) {
+        StringBuffer buffer = new StringBuffer();
+        for (byte b : buf) {
+            String hex = Integer.toHexString(b & 0xFF);
+            if (hex.length() == 1) {
+                hex = '0' + hex;
+            }
+            buffer.append(hex.toUpperCase());
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * 将16进制转换为二进制
+     * @param hexStr 16进制
+     */
+    public static byte[] parseHexStr2Byte(String hexStr) {
+        if (hexStr.length() < 1){
+            return null;
+        }
+        byte[] result = new byte[hexStr.length()/2];
+        for (int i = 0;i< hexStr.length()/2; i++) {
+            int high = Integer.parseInt(hexStr.substring(i*2, i*2+1), 16);
+            int low = Integer.parseInt(hexStr.substring(i*2+1, i*2+2), 16);
+            result[i] = (byte) (high * 16 + low);
+        }
+        return result;
+    }
+
     public static String toHexString(byte[] value) {
         StringBuffer mToHexString = new StringBuffer();
         for (int i = 0; i < value.length; i++) {

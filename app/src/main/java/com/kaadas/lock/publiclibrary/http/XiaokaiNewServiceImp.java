@@ -98,28 +98,26 @@ import com.kaadas.lock.publiclibrary.http.result.WifiDeviceListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
+import com.kaadas.lock.publiclibrary.http.temp.postbean.CheckBind;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.DeleteDeviceNormalUserBean;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.GetDeviceGeneralAdministratorBean;
 import com.kaadas.lock.publiclibrary.http.temp.postbean.OpenLockAuth;
+import com.kaadas.lock.publiclibrary.http.temp.resultbean.CheckBindResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
+import com.kaadas.lock.utils.LogUtils;
 
 
 import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
 
 
 /**
@@ -140,8 +138,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<RegisterResult> registerByPhone(String name, String password, String tokens) {
         RegisterByPhoneBean registerByPhoneBean = new RegisterByPhoneBean(name, password, tokens);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .registerByPhone(new HttpUtils<RegisterByPhoneBean>().getBody(registerByPhoneBean))
+                .registerByPhone(timestamp,new HttpUtils<RegisterByPhoneBean>().getBodyNoToken(registerByPhoneBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -156,8 +155,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<RegisterResult> registerByEmail(String name, String password, String tokens) {
         RegisterByPhoneBean registerByPhoneBean = new RegisterByPhoneBean(name, password, tokens);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .registerByEmail(new HttpUtils<RegisterByPhoneBean>().getBody(registerByPhoneBean))
+                .registerByEmail(timestamp,new HttpUtils<RegisterByPhoneBean>().getBodyToken(registerByPhoneBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -171,8 +171,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<LoginResult> loginByPhone(String tel, String password) {
         LoginByPhoneBean loginByPhoneBean = new LoginByPhoneBean(tel, password);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .loginByPhone(new HttpUtils<LoginByPhoneBean>().getBody(loginByPhoneBean))
+                .loginByPhone(timestamp,new HttpUtils<LoginByPhoneBean>().getBodyNoToken(loginByPhoneBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -187,8 +188,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<LoginResult> loginByEmail(String Email, String password) {
         LoginByEmailBean loginByEmailBean = new LoginByEmailBean(Email, password);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .loginByEmail(new HttpUtils<LoginByEmailBean>().getBody(loginByEmailBean))
+                .loginByEmail(timestamp,new HttpUtils<LoginByEmailBean>().getBodyNoToken(loginByEmailBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -205,8 +207,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> forgetPassword(String name, String pwd, int type, String tokens) {
         ForgetPasswordBean forgetPasswordBean = new ForgetPasswordBean(name, pwd, type, tokens);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .forgetPassword(new HttpUtils<ForgetPasswordBean>().getBody(forgetPasswordBean))
+                .forgetPassword(timestamp,new HttpUtils<ForgetPasswordBean>().getBodyNoToken(forgetPasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -222,8 +225,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> modifyPassword(String uid, String newpwd, String oldpwd) {
         ModifyPasswordBean modifyPasswordBean = new ModifyPasswordBean(uid, newpwd, oldpwd);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyPassword(new HttpUtils<ModifyPasswordBean>().getBody(modifyPasswordBean))
+                .modifyPassword(timestamp,new HttpUtils<ModifyPasswordBean>().getBodyToken(modifyPasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -252,8 +256,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<UserNickResult> getUserNick(String uid) {
         GetUserNickBean getUserNickBean = new GetUserNickBean(uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getUserNick(new HttpUtils<GetUserNickBean>().getBody(getUserNickBean))
+                .getUserNick(timestamp,new HttpUtils<GetUserNickBean>().getBodyToken(getUserNickBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -265,8 +270,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> modifyUserNick(String uid, String nickname) {
         ModifyUserNickBean modifyUserNickBean = new ModifyUserNickBean(uid, nickname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyUserNick(new HttpUtils<ModifyUserNickBean>().getBody(modifyUserNickBean))
+                .modifyUserNick(timestamp,new HttpUtils<ModifyUserNickBean>().getBodyToken(modifyUserNickBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -282,8 +288,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> putMessage(String uid, String suggest) {
         PutMessageBean putMessageBean = new PutMessageBean(uid, suggest);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .putMessage(new HttpUtils<PutMessageBean>().getBody(putMessageBean))
+                .putMessage(timestamp,new HttpUtils<PutMessageBean>().getBodyToken(putMessageBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -293,8 +300,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<String> getDeviceGeneralAdministrator(String user_id, String devname) {
         GetDeviceGeneralAdministratorBean getDeviceGeneralAdministratorBean = new GetDeviceGeneralAdministratorBean(user_id, devname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getDeviceGeneralAdministrator(new HttpUtils<GetDeviceGeneralAdministratorBean>().getBody(getDeviceGeneralAdministratorBean))
+                .getDeviceGeneralAdministrator(timestamp,new HttpUtils<GetDeviceGeneralAdministratorBean>().getBodyToken(getDeviceGeneralAdministratorBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -304,8 +312,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> deleteDeviceNormalUser(String adminid, String dev_username, String devname) {
         DeleteDeviceNormalUserBean deleteDeviceNormalUserBean = new DeleteDeviceNormalUserBean(adminid, dev_username, devname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .deleteDeviceNormalUser(new HttpUtils<DeleteDeviceNormalUserBean>().getBody(deleteDeviceNormalUserBean))
+                .deleteDeviceNormalUser(timestamp,new HttpUtils<DeleteDeviceNormalUserBean>().getBodyToken(deleteDeviceNormalUserBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -330,8 +339,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<UserProtocolResult> getUserProtocolContent(String protocolId) {
         GetUserProtocolContentBean getUserProtocolContentBean = new GetUserProtocolContentBean(protocolId);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getUserProtocolContent(new HttpUtils<GetUserProtocolContentBean>().getBody(getUserProtocolContentBean))
+                .getUserProtocolContent(timestamp,new HttpUtils<GetUserProtocolContentBean>().getBodyToken(getUserProtocolContentBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -352,8 +362,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> addDevice(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSn, String functionSet) {
         //(String devmac, String devname, String user_id, String password1, String password2, String model, String bleVersion, String deviceSN, String peripheralId, String softwareVersion, String functionSet)
         AddDeviceBean addDeviceBean = new AddDeviceBean(devmac, devname, user_id, password1, password2, model, bleVersion, deviceSn, "", "", functionSet);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .addDevice(new HttpUtils<AddDeviceBean>().getBody(addDeviceBean))
+                .addDevice(timestamp,new HttpUtils<AddDeviceBean>().getBodyToken(addDeviceBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -366,8 +377,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetDeviceResult> getDevices(String user_id) {
         GetDevicesBean getDevicesBean = new GetDevicesBean(user_id);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getDevices(new HttpUtils<GetDevicesBean>().getBody(getDevicesBean))
+                .getDevices(timestamp,new HttpUtils<GetDevicesBean>().getBodyToken(getDevicesBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -382,8 +394,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> deleteDevice(String adminid, String devname) {
         DeleteDeviceBean deleteDeviceBean = new DeleteDeviceBean(adminid, devname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .deleteDevice(new HttpUtils<DeleteDeviceBean>().getBody(deleteDeviceBean))
+                .deleteDevice(timestamp,new HttpUtils<DeleteDeviceBean>().getBodyToken(deleteDeviceBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -398,10 +411,10 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<OperationRecordResult> getOperationRecord(String device_name, int pagenum) {
         GetOperationRecordBean getOperationRecordBean = new GetOperationRecordBean(device_name, pagenum);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getOperationRecord(new HttpUtils<GetOperationRecordBean>().getBody(getOperationRecordBean))
-                .compose(RxjavaHelper.observeOnMainThread())
-                ;
+                .getOperationRecord(timestamp,new HttpUtils<GetOperationRecordBean>().getBodyToken(getOperationRecordBean,timestamp))
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 
     /**
@@ -415,8 +428,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> modifyLockNick(String devname, String user_id, String lockNickName) {
         ModifyLockNickBean modifyLockNickBean = new ModifyLockNickBean(devname, user_id, lockNickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyLockNick(new HttpUtils<ModifyLockNickBean>().getBody(modifyLockNickBean))
+                .modifyLockNick(timestamp,new HttpUtils<ModifyLockNickBean>().getBodyToken(modifyLockNickBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
 
     }
@@ -431,8 +445,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetPwdBySnResult> getPwdBySn(String SN) {
         GetPwdBySNBean getPwdBySNBean = new GetPwdBySNBean(SN);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getpwdBySN(new HttpUtils<GetPwdBySNBean>().getBody(getPwdBySNBean))
+                .getpwdBySN(timestamp,new HttpUtils<GetPwdBySNBean>().getBodyToken(getPwdBySNBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -449,8 +464,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> resetDevice(String adminid, String devname) {
         ResetDeviceBean resetDeviceBean = new ResetDeviceBean(adminid, devname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .resetDevice(new HttpUtils<ResetDeviceBean>().getBody(resetDeviceBean))
+                .resetDevice(timestamp,new HttpUtils<ResetDeviceBean>().getBodyToken(resetDeviceBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -474,8 +490,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> addPassword(
             String uid, String devName, List<AddPasswordBean.Password> pwdList) {
         AddPasswordBean addPasswordBean = new AddPasswordBean(uid, devName, pwdList);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .addPassword(new HttpUtils<AddPasswordBean>().getBody(addPasswordBean))
+                .addPassword(timestamp,new HttpUtils<AddPasswordBean>().getBodyToken(addPasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -493,8 +510,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> deletePassword(String uid, String devName, List<DeletePasswordBean.DeletePassword> pwdList) {
         DeletePasswordBean deletePasswordBean = new DeletePasswordBean(uid, devName, pwdList);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .deletePassword(new HttpUtils<DeletePasswordBean>().getBody(deletePasswordBean))
+                .deletePassword(timestamp,new HttpUtils<DeletePasswordBean>().getBodyToken(deletePasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
 
     }
@@ -513,8 +531,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> modifyPasswordNick(String uid, String devName, int pwdType, String num, String nickName) {
 //        String uid, String devName, int pwdType, String num, String nickName
         ModifyPasswordNickBean modifyPasswordNickBean = new ModifyPasswordNickBean(uid, devName, pwdType, num, nickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyPasswordNick(new HttpUtils<ModifyPasswordNickBean>().getBody(modifyPasswordNickBean))
+                .modifyPasswordNick(timestamp,new HttpUtils<ModifyPasswordNickBean>().getBodyToken(modifyPasswordNickBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -529,8 +548,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetPasswordResult> getPasswords(String uid, String devName, int pwdType) {
         GetPasswordBean getPasswordBean = new GetPasswordBean(uid, devName, pwdType);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getPasswords(new HttpUtils<GetPasswordBean>().getBody(getPasswordBean))
+                .getPasswords(timestamp,new HttpUtils<GetPasswordBean>().getBodyToken(getPasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -548,10 +568,25 @@ public class XiaokaiNewServiceImp {
 
     public static Observable<SinglePasswordResult> getSinglePassword(String uid, String devName, int pwdType, String num) {
         GetSinglePasswordBean getSinglePasswordBean = new GetSinglePasswordBean(uid, devName, pwdType, num);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getSinglePassword(new HttpUtils<GetSinglePasswordBean>().getBody(getSinglePasswordBean))
+                .getSinglePassword(timestamp,new HttpUtils<GetSinglePasswordBean>().getBodyToken(getSinglePasswordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
+    /**
+     * 检查锁是否绑定
+     */
+    public static Observable<CheckBindResult> checkLockBind(String deviceName) {
+        CheckBind checkBind = new CheckBind();
+        checkBind.setUser_id(MyApplication.getInstance().getUid());
+        checkBind.setDevname(deviceName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .checkLockBind(timestamp,new HttpUtils<CheckBind>().getBodyToken(checkBind,timestamp))
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
 
     ////////////////////////////////////////////用户管理////////////////////////////////////////////////
 
@@ -573,8 +608,9 @@ public class XiaokaiNewServiceImp {
     addUser(String admin_id, String device_username, String devicemac, String devname, String end_time, String lockNickName,
             String open_purview, String start_time, List<String> items) {
         AddUserBean addUserBean = new AddUserBean(admin_id, device_username, devicemac, devname, end_time, lockNickName, open_purview, start_time, items);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .addUser(new HttpUtils<AddUserBean>().getBody(addUserBean))
+                .addUser(timestamp,new HttpUtils<AddUserBean>().getBodyToken(addUserBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -590,8 +626,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult>
     modifyCommonUserNickname(String ndId, String userNickName) {
         ModifyCommonUserNicknameBean modifyCommonUserNicknameBean = new ModifyCommonUserNicknameBean(ndId, userNickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyCommonUserNickname(new HttpUtils<ModifyCommonUserNicknameBean>().getBody(modifyCommonUserNicknameBean))
+                .modifyCommonUserNickname(timestamp,new HttpUtils<ModifyCommonUserNicknameBean>().getBodyToken(modifyCommonUserNicknameBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -607,8 +644,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> deleteUser(String dev_username, String adminid, String devname) {
         DeleteUserBean deleteUserBean = new DeleteUserBean(dev_username, adminid, devname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .deleteUser(new HttpUtils<DeleteUserBean>().getBody(deleteUserBean))
+                .deleteUser(timestamp,new HttpUtils<DeleteUserBean>().getBodyToken(deleteUserBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -620,8 +658,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> searchUser(String devname, String user_id) {
         SearchUSerBean searchUSerBean = new SearchUSerBean(devname, user_id);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .searchUser(new HttpUtils<SearchUSerBean>().getBody(searchUSerBean))
+                .searchUser(timestamp,new HttpUtils<SearchUSerBean>().getBodyToken(searchUSerBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -647,8 +686,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> uploadBinRecord(String device_name, String device_nickname,
                                                          String user_id, List<UploadBinRecordBean.OpenLockRecordBle> openLockList) {
         UploadBinRecordBean uploadBinRecordBean = new UploadBinRecordBean(device_name, device_nickname, user_id, openLockList);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadBinRecord(new HttpUtils<UploadBinRecordBean>().getBody(uploadBinRecordBean))
+                .uploadBinRecord(timestamp,new HttpUtils<UploadBinRecordBean>().getBodyToken(uploadBinRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -667,8 +707,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> uploadAppRecord(String devname, String is_admin, String open_type, String user_id, String nickName) {
         UploadAppRecordBean uploadAppRecordBean = new UploadAppRecordBean(devname, is_admin, open_type, user_id, nickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadAppRecord(new HttpUtils<UploadAppRecordBean>().getBody(uploadAppRecordBean))
+                .uploadAppRecord(timestamp,new HttpUtils<UploadAppRecordBean>().getBodyToken(uploadAppRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -685,8 +726,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<LockRecordResult> getLockRecord(String device_name, String user_id, String openType, String pagenum) {
         GetLockRecordBean getLockRecordBean = new GetLockRecordBean(device_name, user_id, openType, pagenum);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getLockRecord(new HttpUtils<GetLockRecordBean>().getBody(getLockRecordBean))
+                .getLockRecord(timestamp,new HttpUtils<GetLockRecordBean>().getBodyToken(getLockRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -702,8 +744,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetWarringRecordResult> getWarringRecord(String devName, int pageNum) {
         GetWarringRecordBean getWarringRecordBean = new GetWarringRecordBean(devName, pageNum);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getWarringRecord(new HttpUtils<GetWarringRecordBean>().getBody(getWarringRecordBean))
+                .getWarringRecord(timestamp,new HttpUtils<GetWarringRecordBean>().getBodyToken(getWarringRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -719,8 +762,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> sendMessage(String tel, String code) {
         SendMessageBean sendMessageBean = new SendMessageBean(tel, code);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .sendMessage(new HttpUtils<SendMessageBean>().getBody(sendMessageBean))
+                .sendMessage(timestamp,new HttpUtils<SendMessageBean>().getBodyToken(sendMessageBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -735,8 +779,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> sendEmailYZM(String email) {
         SendEmailBean sendEmailBean = new SendEmailBean(email);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .sendEamilYZM(new HttpUtils<SendEmailBean>().getBody(sendEmailBean))
+                .sendEamilYZM(timestamp,new HttpUtils<SendEmailBean>().getBodyToken(sendEmailBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -786,8 +831,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<String> getMessageList(String uid, int page) {
         GetMessageBean bean = new GetMessageBean(uid, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getMessageList(new HttpUtils<GetMessageBean>().getBody(bean))
+                .getMessageList(timestamp,new HttpUtils<GetMessageBean>().getBodyToken(bean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -797,8 +843,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<DeleteMessageResult> deleteMessage(String uid, String mid) {
         DeleteMessageBean messageBean = new DeleteMessageBean(uid, mid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .deleteMessage(new HttpUtils<DeleteMessageBean>().getBody(messageBean))
+                .deleteMessage(timestamp,new HttpUtils<DeleteMessageBean>().getBodyToken(messageBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -808,8 +855,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetHelpLogResult> getHelpLog(String uid, int page) {
         GetHelpLogBean helpLogBean = new GetHelpLogBean(uid, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getHelpLog(new HttpUtils<GetHelpLogBean>().getBody(helpLogBean))
+                .getHelpLog(timestamp,new HttpUtils<GetHelpLogBean>().getBodyToken(helpLogBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -817,6 +865,7 @@ public class XiaokaiNewServiceImp {
     /**
      * 请求App版本
      */
+    @Deprecated
     public static Observable<VersionBean> getAppVersion() {
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getAppVersion()
@@ -838,8 +887,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> uploadWarringRecord(String devName, List<WarringRecord> warningList) {
         UploadWarringRecordBean uploadWarringRecordBean = new UploadWarringRecordBean(devName, warningList);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadWarringRecord(new HttpUtils<UploadWarringRecordBean>().getBody(uploadWarringRecordBean))
+                .uploadWarringRecord(timestamp,new HttpUtils<UploadWarringRecordBean>().getBodyToken(uploadWarringRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -847,16 +897,18 @@ public class XiaokaiNewServiceImp {
 
     public static Observable<BaseResult> openLockAuth(String devname, String is_admin, String open_type, String user_id) {
         OpenLockAuth openLockAuth = new OpenLockAuth(devname, is_admin, open_type, user_id);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .openLockAuth(new HttpUtils<OpenLockAuth>().getBody(openLockAuth))
+                .openLockAuth(timestamp,new HttpUtils<OpenLockAuth>().getBodyToken(openLockAuth,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
 
     public static Observable<BaseResult> uploadPushId(String uid, String jpushId, int type) {
         PushBean pushBean = new PushBean(uid, jpushId, type);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadPushId(new HttpUtils<PushBean>().getBody(pushBean))
+                .uploadPushId(timestamp,new HttpUtils<PushBean>().getBodyToken(pushBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
@@ -872,16 +924,18 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> uploadPushPhoneMsg(String uid, String account, String model, String manufacturer, String version) {
         PhoneMessage phoneMessage = new PhoneMessage(uid, account, model, manufacturer, version);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadPushMsg(new HttpUtils<PhoneMessage>().getBody(phoneMessage))
+                .uploadPushMsg(timestamp,new HttpUtils<PhoneMessage>().getBodyToken(phoneMessage,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
 
     public static Observable<SwitchStatusResult> getPushSwitch(String uid) {
         PushSwitch pushSwitch = new PushSwitch(uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .getPushSwitch(new HttpUtils<PushSwitch>().getBody(pushSwitch))
+                .getPushSwitch(timestamp,new HttpUtils<PushSwitch>().getBodyToken(pushSwitch,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -889,8 +943,9 @@ public class XiaokaiNewServiceImp {
 
     public static Observable<SwitchStatusResult> updatePushSwitch(String uid, boolean openlockPushSwitch) {
         PushSwitchBean pushSwitchBean = new PushSwitchBean(uid, openlockPushSwitch);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .updatePushSwitch(new HttpUtils<PushSwitchBean>().getBody(pushSwitchBean))
+                .updatePushSwitch(timestamp,new HttpUtils<PushSwitchBean>().getBodyToken(pushSwitchBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -912,8 +967,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> uploadOperationRecord(String device_name, List<UploadOperationRecordBean.OperationListBean> operationListBeanList) {
         UploadOperationRecordBean uploadOperationRecordBean = new UploadOperationRecordBean(device_name, operationListBeanList);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .uploadOperationRecord(new HttpUtils<UploadOperationRecordBean>().getBody(uploadOperationRecordBean))
+                .uploadOperationRecord(timestamp,new HttpUtils<UploadOperationRecordBean>().getBodyToken(uploadOperationRecordBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -930,8 +986,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> updateSoftwareVersion(String devname, String user_id, String softwareVersion, String deviceSN) {
         UpdateSoftwareVersionBean updateSoftwareVersionBean = new UpdateSoftwareVersionBean(devname, user_id, softwareVersion, deviceSN, "");
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .updateSoftwareVersion(new HttpUtils<UpdateSoftwareVersionBean>().getBody(updateSoftwareVersionBean))
+                .updateSoftwareVersion(timestamp,new HttpUtils<UpdateSoftwareVersionBean>().getBodyToken(updateSoftwareVersionBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -947,8 +1004,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> updateBleVersion(String devname, String user_id, String bleVersion) {
         UpdateBleVersionBean updateSoftwareVersionBean = new UpdateBleVersionBean(devname, user_id, bleVersion);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .updateBleVersion(new HttpUtils<UpdateBleVersionBean>().getBody(updateSoftwareVersionBean))
+                .updateBleVersion(timestamp,new HttpUtils<UpdateBleVersionBean>().getBodyToken(updateSoftwareVersionBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -964,8 +1022,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> modifyFunctionSet(String devname, String user_id, String functionSet) {
         ModifyFunctionSetBean updateSoftwareVersionBean = new ModifyFunctionSetBean(devname, user_id, functionSet);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .modifyFunctionSet(new HttpUtils<ModifyFunctionSetBean>().getBody(updateSoftwareVersionBean))
+                .modifyFunctionSet(timestamp,new HttpUtils<ModifyFunctionSetBean>().getBodyToken(updateSoftwareVersionBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -980,8 +1039,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<CheckOTAResult> getOtaInfo(int customer, String deviceName, String version, int type) {
         OTABean helpLogBean = new OTABean(customer, deviceName, version, type);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .getOtaInfo(new HttpUtils<OTABean>().getBody(helpLogBean))
+                .getOtaInfo(timestamp,new HttpUtils<OTABean>().getBodyNoToken(helpLogBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -993,8 +1053,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<MultiOTABean.OTAParams> params,String devtype) {
         MultiOTABean helpLogBean = new MultiOTABean(customer, deviceName, params,devtype);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .getOtaMultiCheck(new HttpUtils<MultiOTABean>().getBody(helpLogBean))
+                .getOtaMultiCheck(timestamp,new HttpUtils<MultiOTABean>().getBodyNoToken(helpLogBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1009,8 +1070,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> uploadOtaResult(String sn, String version, int customer, String resultCode, int devNum) {
         UploadOtaResultBean uploadOtaResultBean = new UploadOtaResultBean(sn, version, customer, resultCode, devNum);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .uploadOtaResult(new HttpUtils<UploadOtaResultBean>().getBody(uploadOtaResultBean))
+                .uploadOtaResult(timestamp,new HttpUtils<UploadOtaResultBean>().getBodyNoToken(uploadOtaResultBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1028,8 +1090,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockBind(String wifiSN, String lockNickName, String uid, String randomCode, String wifiName,int func, int distributionNetwork) {
         WiFiLockBindBean wiFiLockBindBean = new WiFiLockBindBean(wifiSN, lockNickName, uid, randomCode, wifiName,func, distributionNetwork);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockBind(new HttpUtils<WiFiLockBindBean>().getBody(wiFiLockBindBean))
+                .wifiLockBind(timestamp,new HttpUtils<WiFiLockBindBean>().getBodyToken(wiFiLockBindBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1043,8 +1106,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUnbind(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUnbind(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
+                .wifiLockUnbind(timestamp,new HttpUtils<WiFiLockWifiSNAndUid>().getBodyToken(wiFiLockUnbind,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1059,8 +1123,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdateNickname(String wifiSN, String uid, String lockNickname) {
         WiFiLockUpdateNickNameBean wiFiLockUpdateNickNameBean = new WiFiLockUpdateNickNameBean(wifiSN, uid, lockNickname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdateNickname(new HttpUtils<WiFiLockUpdateNickNameBean>().getBody(wiFiLockUpdateNickNameBean))
+                .wifiLockUpdateNickname(timestamp,new HttpUtils<WiFiLockUpdateNickNameBean>().getBodyToken(wiFiLockUpdateNickNameBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1075,8 +1140,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdatePush(String wifiSN, String uid, int switchX) {
         WifiLockUpdatePushSwitchBean wifiLockUpdatePushSwitchBean = new WifiLockUpdatePushSwitchBean(wifiSN, uid, switchX);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdatePush(new HttpUtils<WifiLockUpdatePushSwitchBean>().getBody(wifiLockUpdatePushSwitchBean))
+                .wifiLockUpdatePush(timestamp,new HttpUtils<WifiLockUpdatePushSwitchBean>().getBodyToken(wifiLockUpdatePushSwitchBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1088,8 +1154,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<WifiLockGetPasswordListResult> wifiLockGetPwdList(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockGetPwdList(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
+                .wifiLockGetPwdList(timestamp,new HttpUtils<WiFiLockWifiSNAndUid>().getBodyToken(wiFiLockUnbind,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1106,8 +1173,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdatePwdNickName(String uid, String wifiSN, int pwdType, int num, String nickName) {
         WifiLockUpdatePwdNickBean wifiLockUpdatePwdNickBean = new WifiLockUpdatePwdNickBean(uid, wifiSN, pwdType, num, nickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdatePwdNickName(new HttpUtils<WifiLockUpdatePwdNickBean>().getBody(wifiLockUpdatePwdNickBean))
+                .wifiLockUpdatePwdNickName(timestamp,new HttpUtils<WifiLockUpdatePwdNickBean>().getBodyToken(wifiLockUpdatePwdNickBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1124,8 +1192,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdatePwdNickName(String uid, String wifiSN, int pwdType, int num, String nickName,String userNickName) {
         WifiLockUpdatePwdNickBean wifiLockUpdatePwdNickBean = new WifiLockUpdatePwdNickBean(uid, wifiSN, pwdType, num, nickName,userNickName);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdatePwdNickName(new HttpUtils<WifiLockUpdatePwdNickBean>().getBody(wifiLockUpdatePwdNickBean))
+                .wifiLockUpdatePwdNickName(timestamp,new HttpUtils<WifiLockUpdatePwdNickBean>().getBodyToken(wifiLockUpdatePwdNickBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1142,8 +1211,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockAddShareUser(String wifiSN, String uid, String uname, String userNickname, String adminNickname) {
         WifiLockShareBean wifiLockShareBean = new WifiLockShareBean(wifiSN, uid, uname, userNickname, adminNickname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockShare(new HttpUtils<WifiLockShareBean>().getBody(wifiLockShareBean))
+                .wifiLockShare(timestamp,new HttpUtils<WifiLockShareBean>().getBodyToken(wifiLockShareBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1157,8 +1227,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockDeleteShareUser(String shareId, String uid, String adminNickname) {
         WifiLockDeleteShareBean wifiLockDeleteShareBean = new WifiLockDeleteShareBean(shareId, uid, adminNickname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockDeleteShareUser(new HttpUtils<WifiLockDeleteShareBean>().getBody(wifiLockDeleteShareBean))
+                .wifiLockDeleteShareUser(timestamp,new HttpUtils<WifiLockDeleteShareBean>().getBodyToken(wifiLockDeleteShareBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1172,8 +1243,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdateShareUserNickname(String shareId, String nickName, String uid) {
         WifiLockUpdateShareNickBean wifiLockUpdateShareNickBean = new WifiLockUpdateShareNickBean(shareId, nickName, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdateShareUserNickname(new HttpUtils<WifiLockUpdateShareNickBean>().getBody(wifiLockUpdateShareNickBean))
+                .wifiLockUpdateShareUserNickname(timestamp,new HttpUtils<WifiLockUpdateShareNickBean>().getBodyToken(wifiLockUpdateShareNickBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1187,8 +1259,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<WifiLockShareResult> wifiLockGetShareUserList(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockWifiSNAndUid = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockGetShareUserList(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockWifiSNAndUid))
+                .wifiLockGetShareUserList(timestamp,new HttpUtils<WiFiLockWifiSNAndUid>().getBodyToken(wiFiLockWifiSNAndUid,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1202,8 +1275,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetWifiLockOperationRecordResult> wifiLockGetOperationList(String wifiSN, int page) {
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSN, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockGetOperationList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .wifiLockGetOperationList(timestamp,new HttpUtils<WifiLockRecordBean>().getBodyToken(wiFiLockWifiSNAndUid,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1215,8 +1289,9 @@ public class XiaokaiNewServiceImp {
 
     public static Observable<GetWifiLockAlarmRecordResult> wifiLockGetAlarmList(String wifiSN, int page) {
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSN, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockGetAlarmList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .wifiLockGetAlarmList(timestamp,new HttpUtils<WifiLockRecordBean>().getBodyToken(wiFiLockWifiSNAndUid,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1227,8 +1302,9 @@ public class XiaokaiNewServiceImp {
 
     public static Observable<GetOpenCountResult> wifiLockGetOpenCount(String wifiSN) {
         GetOpenCountBean getOpenCountBean = new GetOpenCountBean(wifiSN);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockGetOpenCount(new HttpUtils<GetOpenCountBean>().getBody(getOpenCountBean))
+                .wifiLockGetOpenCount(timestamp,new HttpUtils<GetOpenCountBean>().getBodyToken(getOpenCountBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1241,8 +1317,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiLockUpdateInfo(String uid, String wifiSN, String randomCode, String wifiName,int func) {
         WifiLockUpdateInfoBean updateInfoBean = new WifiLockUpdateInfoBean(uid, wifiSN, randomCode, wifiName,func);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUpdateInfo(new HttpUtils<WifiLockUpdateInfoBean>().getBody(updateInfoBean))
+                .wifiLockUpdateInfo(timestamp,new HttpUtils<WifiLockUpdateInfoBean>().getBodyToken(updateInfoBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1255,8 +1332,9 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> wifiLockUploadOta( CheckOTAResult.UpdateFileInfo updateFileInfo,String wifiSN) {
         UploadOtaBean uploadOtaBean = new UploadOtaBean(  wifiSN, updateFileInfo.getFileLen(), updateFileInfo .getFileUrl(),
                 updateFileInfo.getFileMd5(),updateFileInfo.getDevNum(), updateFileInfo.getFileVersion());
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiLockUploadOta(new HttpUtils<UploadOtaBean>().getBody(uploadOtaBean))
+                .wifiLockUploadOta(timestamp,new HttpUtils<UploadOtaBean>().getBodyToken(uploadOtaBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1278,9 +1356,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<String> getZIGBEENINFO(String uid,String gwSN,String zigbeeSN) {
         ZigBeenInfo uploadOtaBean = new ZigBeenInfo(  zigbeeSN, uid, gwSN);
-
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .GET_ZIGBEEN_INFO_CONTEXT(new HttpUtils<ZigBeenInfo>().getBody(uploadOtaBean))
+                .GET_ZIGBEEN_INFO_CONTEXT(timestamp,new HttpUtils<ZigBeenInfo>().getBodyToken(uploadOtaBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1291,9 +1369,9 @@ public class XiaokaiNewServiceImp {
      * @return
      */
     public static Observable<BaseResult> updateSwitchNickname(ModifySwitchNickBean modifySwitchNickBean) {
-
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .updateSwitchNickname(new HttpUtils<ModifySwitchNickBean>().getBody(modifySwitchNickBean))
+                .updateSwitchNickname(timestamp,new HttpUtils<ModifySwitchNickBean>().getBodyToken(modifySwitchNickBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
     }
@@ -1305,8 +1383,9 @@ public class XiaokaiNewServiceImp {
      * 绑定视频锁
      */
     public static Observable<WifiLockVideoBindResult> wifiVideoLockBind(WiFiLockVideoBindBean wiFiLockBindBean) {
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockBind(new HttpUtils<WiFiLockVideoBindBean>().getBody(wiFiLockBindBean))
+                .wifiVideoLockBind(timestamp,new HttpUtils<WiFiLockVideoBindBean>().getBodyToken(wiFiLockBindBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1316,8 +1395,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<WifiLockVideoBindResult> wifiVideoLockUnbind(String wifiSN, String uid) {
         WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockUnbind(new HttpUtils<WiFiLockWifiSNAndUid>().getBody(wiFiLockUnbind))
+                .wifiVideoLockUnbind(timestamp,new HttpUtils<WiFiLockWifiSNAndUid>().getBodyToken(wiFiLockUnbind,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1327,8 +1407,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<WifiLockVideoBindResult> wifiVideoLockBindFail(String wifiSN, int result) {
         WiFiLockViewBindFailBean wiFiLockUnbind = new WiFiLockViewBindFailBean(wifiSN, result);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockBindFail(new HttpUtils<WiFiLockViewBindFailBean>().getBody(wiFiLockUnbind))
+                .wifiVideoLockBindFail(timestamp,new HttpUtils<WiFiLockViewBindFailBean>().getBodyToken(wiFiLockUnbind,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1337,8 +1418,9 @@ public class XiaokaiNewServiceImp {
      *  更新视频锁
      */
     public static Observable<WifiLockVideoBindResult> wifiVideoLockUpdateBind(WiFiLockVideoUpdateBindBean wiFiLockBindBean) {
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockUpdateBind(new HttpUtils<WiFiLockVideoUpdateBindBean>().getBody(wiFiLockBindBean))
+                .wifiVideoLockUpdateBind(timestamp,new HttpUtils<WiFiLockVideoUpdateBindBean>().getBodyToken(wiFiLockBindBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1348,8 +1430,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetAlarmList(String wifiSn, int page) {
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockGetAlarmList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .wifiVideoLockGetAlarmList(timestamp,new HttpUtils<WifiLockRecordBean>().getBodyToken(wiFiLockWifiSNAndUid,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1359,8 +1442,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<GetWifiVideoLockAlarmRecordResult> wifiVideoLockGetDoorbellList(String wifiSn,int page){
         WifiLockRecordBean wiFiLockWifiSNAndUid = new WifiLockRecordBean(wifiSn, page);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiVideoLockGetDoorbellList(new HttpUtils<WifiLockRecordBean>().getBody(wiFiLockWifiSNAndUid))
+                .wifiVideoLockGetDoorbellList(timestamp,new HttpUtils<WifiLockRecordBean>().getBodyToken(wiFiLockWifiSNAndUid,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1369,9 +1453,9 @@ public class XiaokaiNewServiceImp {
      *  查询wifi锁设备列表
      */
     public static Observable<WifiDeviceListResult> wifiDeviceLisst(){
-
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiDeviceList(new HttpUtils<WifiLockDeviceBean>().getBody(new WifiLockDeviceBean(MyApplication.getInstance().getUid())))
+                .wifiDeviceList(timestamp,new HttpUtils<WifiLockDeviceBean>().getBodyToken(new WifiLockDeviceBean(MyApplication.getInstance().getUid()),timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
 
@@ -1383,8 +1467,9 @@ public class XiaokaiNewServiceImp {
      *  检查晾衣机设备是否被绑定
      */
     public static Observable<ClothesHangerMachineCheckBindingResult> clothesHangerMachineCheckBinding(String wifiSN){
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .clothesHangerMachineCheckBinding(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .clothesHangerMachineCheckBinding(timestamp,new HttpUtils<ClothesHangerMachineDeviceBean>().getBodyToken(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid()),timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1393,8 +1478,9 @@ public class XiaokaiNewServiceImp {
      *   晾衣机绑定
      */
     public static Observable<ClothesHangerMachineBindResult> clothesHangerMachineBind(String wifiSN){
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .clothesHangerMachineBind(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .clothesHangerMachineBind(timestamp,new HttpUtils<ClothesHangerMachineDeviceBean>().getBodyToken(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid()),timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1403,8 +1489,9 @@ public class XiaokaiNewServiceImp {
      *  晾衣机解绑
      */
     public static Observable<ClothesHangerMachineUnBindResult> clothesHangerMachineUnBind(String wifiSN){
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .clothesHangerMachineUnbind(new HttpUtils<ClothesHangerMachineDeviceBean>().getBody(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid())))
+                .clothesHangerMachineUnbind(timestamp,new HttpUtils<ClothesHangerMachineDeviceBean>().getBodyToken(new ClothesHangerMachineDeviceBean(wifiSN,MyApplication.getInstance().getUid()),timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1414,8 +1501,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> hangerUpdateNickname(String wifiSN, String lockNickname) {
         HangerUpdateNickNameBean wiFiLockUpdateNickNameBean = new HangerUpdateNickNameBean(wifiSN, MyApplication.getInstance().getUid(), lockNickname);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .hangerUpdateNickname(new HttpUtils<HangerUpdateNickNameBean>().getBody(wiFiLockUpdateNickNameBean))
+                .hangerUpdateNickname(timestamp,new HttpUtils<HangerUpdateNickNameBean>().getBodyToken(wiFiLockUpdateNickNameBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1425,8 +1513,9 @@ public class XiaokaiNewServiceImp {
      */
     public static Observable<BaseResult> wifiDeviceUploadMultiOta(String wifiSN, String type,List<UpgradeMultiOTABean.UpgradeTaskBean> upgradeTask) {
         UpgradeMultiOTABean wiFiLockUpdateNickNameBean = new UpgradeMultiOTABean(wifiSN, type, upgradeTask);
+        String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .wifiDeviceUploadMultiOta(new HttpUtils<UpgradeMultiOTABean>().getBody(wiFiLockUpdateNickNameBean))
+                .wifiDeviceUploadMultiOta(timestamp,new HttpUtils<UpgradeMultiOTABean>().getBodyToken(wiFiLockUpdateNickNameBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
