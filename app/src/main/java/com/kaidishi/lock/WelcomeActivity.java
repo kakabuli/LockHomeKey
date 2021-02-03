@@ -142,7 +142,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     private void initData() {
         getCheckVersion();
         if (NetUtil.isNetworkAvailable()) {
-            mPresenter.getAppVersion();
+//            mPresenter.getAppVersion();
         } else {
             ToastUtil.getInstance().showShort(R.string.noNet);
         }
