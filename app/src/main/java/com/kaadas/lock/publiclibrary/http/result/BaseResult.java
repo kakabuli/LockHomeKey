@@ -29,7 +29,7 @@ public class BaseResult implements Serializable {
 
 
     public boolean isSuccess(){
-        if ("200".equals(getCode()) || "201".equals(getCode()) || "202".equals(getCode())){
+        if ("200".equals(getCode() + "") || "201".equals(getCode() + "") || "202".equals(getCode() + "")){
             return true;
         }
 

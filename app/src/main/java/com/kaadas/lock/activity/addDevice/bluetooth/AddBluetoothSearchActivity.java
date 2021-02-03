@@ -338,6 +338,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void onNoBind(BluetoothDevice device) {
+        hiddenLoading();
         binding(device, true, getResources().getString(R.string.device_not_bind_to_bind));
     }
 

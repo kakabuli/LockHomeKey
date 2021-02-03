@@ -177,101 +177,69 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                 mViewRef.get().onStopScan();
             }
         }
-
-        XiaokaiNewServiceImp.checkLockBind(device.getName()).subscribe(new BaseObserver<CheckBindResult>() {
-            @Override
-            public void onSuccess(CheckBindResult checkBindResult) {
-                if (checkBindResult == null) {
-                    if (mViewRef != null) {
-                        mViewRef.get().checkBindFailed();
-                    }
-                    return;
-                }
-                if ("202".equals(checkBindResult.getCode() + "")) {
-                    if (mViewRef != null) {
-                        if (checkBindResult != null) {
-                            mViewRef.get().onAlreadyBind(device, checkBindResult.getData().getAdminname());
-                        } else {
-                            mViewRef.get().onAlreadyBind(device, "");
-                        }
-                    }
-                } else if ("201".equals(checkBindResult.getCode() + "")) {
-                    if (mViewRef != null) {
-                        mViewRef.get().onNoBind(device);
-                    }
-                } else if ("444".equals(checkBindResult.getCode() + "")) {
-                    if (mqttService != null) {
-                        mqttService.httpMqttDisconnect();
-                    }
-                    MyApplication.getInstance().tokenInvalid(true);
-                    return;
-                } else {
-                    if (mViewRef != null) {
-                        mViewRef.get().onCheckBindFailedServer(checkBindResult.getCode() + "");
-                    }
-                }
-            }
-
-            @Override
-            public void onAckErrorCode(BaseResult baseResult) {
-                if (mViewRef != null) {
-                    mViewRef.get().onCheckBindFailedServer(baseResult.getCode() + "");
-                }
-            }
-
-            @Override
-            public void onFailed(Throwable e) {
-                if (e instanceof OtherException) {
-                    OtherException exception = (OtherException) e;
-                    if (exception.getResponse().getCode() == 444) {
-                        if (mqttService != null) {
-                            mqttService.httpMqttDisconnect();
-                        }
-                        MyApplication.getInstance().tokenInvalid(true);
-                        return;
-                    }
-                }
-                if (mViewRef != null) {
-                    mViewRef.get().onCheckBindFailed(e);
-                }
-            }
-
-            @Override
-            public void onSubscribe1(Disposable d) {
-                compositeDisposable.add(d);
-            }
-        });
-/*
-        CheckBind checkBind = new CheckBind();
-        checkBind.setUser_id(MyApplication.getInstance().getUid());
-        checkBind.setDevname(device.getName());
-
-        String obj = new Gson().toJson(checkBind);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), obj);
-
-        RetrofitServiceManager.getInstance().create(ILockService.class).checkLockBind(body)
+        XiaokaiNewServiceImp.checkLockBind(device.getName())
                 .compose(RxjavaHelper.observeOnMainThread())
-                .subscribe(new Observer<Response<CheckBindResult>>() {
+                .subscribe(new Observer<CheckBindResult>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        compositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onNext(Response<CheckBindResult> stringResponse) {
-
+                    public void onNext(CheckBindResult checkBindResult) {
+                        if (checkBindResult == null) {
+                            if (mViewRef != null) {
+                                mViewRef.get().checkBindFailed();
+                            }
+                            return;
+                        }
+                        if ("202".equals(checkBindResult.getCode() + "")) {
+                            if (mViewRef != null) {
+                                if (checkBindResult.getData() != null) {
+                                    mViewRef.get().onAlreadyBind(device, checkBindResult.getData().getAdminname());
+                                } else {
+                                    mViewRef.get().onAlreadyBind(device, "");
+                                }
+                            }
+                        } else if ("201".equals(checkBindResult.getCode() + "")) {
+                            if (mViewRef != null) {
+                                mViewRef.get().onNoBind(device);
+                            }
+                        } else if ("444".equals(checkBindResult.getCode() + "")) {
+                            if (mqttService != null) {
+                                mqttService.httpMqttDisconnect();
+                            }
+                            MyApplication.getInstance().tokenInvalid(true);
+                            return;
+                        } else {
+                            if (mViewRef != null) {
+                                mViewRef.get().onCheckBindFailedServer(checkBindResult.getCode());
+                            }
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (e instanceof OtherException) {
+                            OtherException exception = (OtherException) e;
+                            if (exception.getResponse().getCode() == 444) {
+                                if (mqttService != null) {
+                                    mqttService.httpMqttDisconnect();
+                                }
+                                MyApplication.getInstance().tokenInvalid(true);
+                                return;
+                            }
+                        }
+                        if (mViewRef != null) {
+                            mViewRef.get().onCheckBindFailed(e);
+                        }
                     }
 
                     @Override
                     public void onComplete() {
 
                     }
-                });*/
+                });
     }
 
 

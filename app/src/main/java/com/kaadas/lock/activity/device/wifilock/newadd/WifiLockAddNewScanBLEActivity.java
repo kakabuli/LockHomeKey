@@ -366,6 +366,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void onNoBind(BluetoothDevice device) {
+        hiddenLoading();
         binding(device, true, getResources().getString(R.string.device_not_bind_to_bind));
     }
 
