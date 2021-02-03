@@ -8,9 +8,11 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.LoginErrorResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
+import com.kaadas.lock.publiclibrary.http.util.LoginObserver;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MD5Utils;
 import com.kaadas.lock.utils.MMKVUtils;
@@ -23,6 +25,8 @@ import com.yun.software.kaadas.Utils.UserUtils;
 
 import net.sdvn.cmapi.ConnectionService;
 
+import org.linphone.mediastream.Log;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -33,17 +37,19 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
 
 
     public void loginByPhone(String phone, String pwd, String noCounturyPhone) {
+        LogUtils.e("shulan -------------?loginByPhone");
         XiaokaiNewServiceImp.loginByPhone(phone, pwd)
-                .subscribe(new BaseObserver<LoginResult>() {
+                .subscribe(new LoginObserver<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         loginSuccess(loginResult, noCounturyPhone, pwd);
+                        LogUtils.e("shulan ---------->" + loginResult.toString());
                     }
 
                     @Override
-                    public void onAckErrorCode(BaseResult result) {
+                    public void onAckErrorCode(LoginResult result) {
                         mViewRef.get().onLoginFailedServer(result);
-                        LogUtils.e("登陆失败   " + result.toString());
+                        LogUtils.e("shulan ---------->登陆失败   " + result.toString());
                     }
 
                     @Override
@@ -53,21 +59,21 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
 
                     @Override
                     public void onSubscribe1(Disposable d) {
-                        compositeDisposable.add(d);
+
                     }
                 });
     }
 
     public void loginByEmail(String Email, String pwd) {
         XiaokaiNewServiceImp.loginByEmail(Email, pwd)
-                .subscribe(new BaseObserver<LoginResult>() {
+                .subscribe(new LoginObserver<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         loginSuccess(loginResult, Email, pwd);
                     }
 
                     @Override
-                    public void onAckErrorCode(BaseResult result) {
+                    public void onAckErrorCode(LoginResult result) {
                         mViewRef.get().onLoginFailedServer(result);
                         LogUtils.e("登陆失败   " + result.toString());
                     }

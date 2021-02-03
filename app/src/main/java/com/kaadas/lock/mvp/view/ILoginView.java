@@ -2,6 +2,7 @@ package com.kaadas.lock.mvp.view;
 
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 
 
 /**
@@ -14,7 +15,7 @@ public interface ILoginView extends IBaseView {
 
     void onLoginFailed(Throwable e);
 
-    void onLoginFailedServer(BaseResult result);
+    void onLoginFailedServer(LoginResult result);
 
 
 

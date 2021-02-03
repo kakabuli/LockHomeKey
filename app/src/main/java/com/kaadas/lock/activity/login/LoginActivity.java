@@ -26,7 +26,10 @@ import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.mvp.presenter.LoginPresenter;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.result.LoginErrorResult;
+import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.AES;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DetectionEmailPhone;
@@ -83,7 +86,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.e("LoginActivity启动 ");
+        LogUtils.e("shulan LoginActivity启动 ");
 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -344,15 +347,25 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     }
 
     @Override
-    public void onLoginFailedServer(BaseResult result) {
+    public void onLoginFailedServer(LoginResult result) {
         btnLogin.setBackgroundResource(R.drawable.login_button_shape);
         hiddenLoading();
-        if ("101".equals(result.getCode())){
-            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+        if ("101".equals(result.getCode() + "")){
+            if(result.getData() != null){
+                if(result.getData().getRestrictCount() >= 5){
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, "输错" + result.getData().getRestrictCount() + "次，限制" + StringUtil.getTimeToString(result.getData().getRestrictTime()));
+                }else{
+                    AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+                }
+            }else{
+                AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
+            }
         }else {
             ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         }
     }
+
+
 
 
     //检查vpn授权
