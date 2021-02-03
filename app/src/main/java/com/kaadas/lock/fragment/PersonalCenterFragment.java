@@ -31,6 +31,7 @@ import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
@@ -120,7 +121,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             headPortraitName.setText(userName);
         }else {
             //获取昵称
-            String uid = (String) SPUtils.get(SPUtils.UID, "");
+            String uid = MMKVUtils.getStringMMKV(SPUtils.UID);
             mPresenter.getUserName(uid);
         }
         String photoPath = (String) SPUtils.get(KeyConstants.HEAD_PATH, "");

@@ -54,6 +54,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.Rom;
@@ -805,7 +806,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
     // 华为 3
     // 小米 4
     public void uploadpushmethod(int type , String JpushId) {
-        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        String uid = MMKVUtils.getStringMMKV(SPUtils.UID);
     //    String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
         //uploadPushId(String uid, String jpushId, int type)
         // 个推
@@ -859,7 +860,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
 
 
     public void uploadPhoneMessage() {
-        String uid = (String) SPUtils.get(SPUtils.UID, "");
+        String uid = MMKVUtils.getStringMMKV(SPUtils.UID);
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
         // 获取Android系统版本号 android8.0
         String version = android.os.Build.VERSION.RELEASE;

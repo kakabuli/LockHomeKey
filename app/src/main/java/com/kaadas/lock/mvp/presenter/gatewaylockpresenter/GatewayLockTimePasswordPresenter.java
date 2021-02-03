@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockPwd;
@@ -100,7 +101,7 @@ public class GatewayLockTimePasswordPresenter<T> extends BasePresenter<IGatewayL
 
     public void getPushSwitch(){
   //      toDisposable(compositeDisposable);
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
+        String uid= MMKVUtils.getStringMMKV(SPUtils.UID);
         Log.e(GeTui.VideoLog,"uid:"+uid);
         //uploadPushId(String uid, String jpushId, int type)
         if(!TextUtils.isEmpty(uid)){
@@ -134,7 +135,7 @@ public class GatewayLockTimePasswordPresenter<T> extends BasePresenter<IGatewayL
 
     public void updatePushSwitch(boolean openlockPushSwitch){
         //      toDisposable(compositeDisposable);
-        String uid= (String) SPUtils.get(SPUtils.UID,"");
+        String uid= MMKVUtils.getStringMMKV(SPUtils.UID);
         Log.e(GeTui.VideoLog,"uid:"+uid);
         //uploadPushId(String uid, String jpushId, int type)
         if(!TextUtils.isEmpty(uid)){
