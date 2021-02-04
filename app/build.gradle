@@ -22,8 +22,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202101272
-        versionName "4.2.6"
+        versionCode 202102041
+        versionName "4.2.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -61,6 +61,7 @@ android {
         kaadas {
             applicationId "com.kaidishi.lock"
             buildConfigField('String', 'HTTP_HOST', '"https://app1.orangeiot.cn:8008"')
+            buildConfigField('String', 'HTTP_VERSION', '"1"')
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
                                     appname            : "@string/app_name"
                                     , app_icon         : "@drawable/logo",
