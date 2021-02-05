@@ -1,5 +1,6 @@
 package com.kaadas.lock.utils;
 
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 
 /**
@@ -9,6 +10,9 @@ import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
  * 每个Key都需要注释有什么作用
  */
 public class KeyConstants {
+
+    public static final String VERSION = "version: " + BuildConfig.HTTP_VERSION;
+
     /**
      * Intent 传递值的常量Key
      */

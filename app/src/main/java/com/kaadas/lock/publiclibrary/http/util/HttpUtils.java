@@ -1,10 +1,12 @@
 package com.kaadas.lock.publiclibrary.http.util;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.huawei.hms.core.aidl.RequestHeader;
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.rxutils.TimeOutException;
@@ -24,33 +26,45 @@ public class HttpUtils<T> {
 
     public RequestBody getBodyToken(T t,String timestamp) {
         String obj = new Gson().toJson(t);
-        LogUtils.e("shulan getBodyToken http body 加密前--->" + obj);
-        LogUtils.e("shulan getBodyToken timestamp--->" + timestamp);
-        try {
-            obj = AES.Encrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp));
-
-            LogUtils.e("shulan getBodyToken http body 加密后--->" + obj);
-            LogUtils.e("shulan getBodyToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp)));
-        } catch (Exception e) {
-            e.printStackTrace();
+        String contentType = "application/json; charset=utf-8";
+        if(Integer.parseInt(BuildConfig.HTTP_VERSION) > 0){
+            LogUtils.e("shulan getBodyToken http body 加密前--->" + obj);
+            LogUtils.e("shulan getBodyToken timestamp--->" + timestamp);
+            try {
+                if (!TextUtils.isEmpty(MyApplication.getInstance().getToken())) {
+                    obj = AES.Encrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp));
+                }else{
+                    obj = AES.Encrypt(obj,AES.keyNoToken(AES.key,timestamp));
+                }
+                if(!TextUtils.isEmpty(obj))
+                    contentType = "text/plain; charset=utf-8";
+                LogUtils.e("shulan getBodyToken http body 加密后--->" + obj);
+                LogUtils.e("shulan getBodyToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), obj);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse(contentType), obj);
         return body;
     }
 
     public RequestBody getBodyNoToken(T t,String timestamp){
         String obj = new Gson().toJson(t);
-        LogUtils.e("shulan getBodyNoToken http body 加密前--->" + obj);
-        LogUtils.e("shulan getBodyNoToken timestamp--->" + timestamp);
-        try {
-            obj = AES.Encrypt(obj,AES.keyNoToken(AES.key,timestamp));
-
-            LogUtils.e("shulan getBodyNoToken http body 加密后--->" + obj);
-            LogUtils.e("shulan getBodyNoToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyNoToken(AES.key,timestamp)));
-        } catch (Exception e) {
-            e.printStackTrace();
+        String contentType = "application/json; charset=utf-8";
+        if(Integer.parseInt(BuildConfig.HTTP_VERSION) > 0){
+            LogUtils.e("shulan getBodyNoToken http body 加密前--->" + obj);
+            LogUtils.e("shulan getBodyNoToken timestamp--->" + timestamp);
+            try {
+                obj = AES.Encrypt(obj,AES.keyNoToken(AES.key,timestamp));
+                if(!TextUtils.isEmpty(obj))
+                    contentType = "text/plain; charset=utf-8";
+                LogUtils.e("shulan getBodyNoToken http body 加密后--->" + obj);
+                LogUtils.e("shulan getBodyNoToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyNoToken(AES.key,timestamp)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), obj);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse(contentType), obj);
         return body;
     }
 

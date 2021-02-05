@@ -763,8 +763,8 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> sendMessage(String tel, String code) {
         SendMessageBean sendMessageBean = new SendMessageBean(tel, code);
         String timestamp = System.currentTimeMillis() /1000 + "";
-        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .sendMessage(timestamp,new HttpUtils<SendMessageBean>().getBodyToken(sendMessageBean,timestamp))
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .sendMessage(timestamp,new HttpUtils<SendMessageBean>().getBodyNoToken(sendMessageBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
@@ -780,8 +780,8 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> sendEmailYZM(String email) {
         SendEmailBean sendEmailBean = new SendEmailBean(email);
         String timestamp = System.currentTimeMillis() /1000 + "";
-        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
-                .sendEamilYZM(timestamp,new HttpUtils<SendEmailBean>().getBodyToken(sendEmailBean,timestamp))
+        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
+                .sendEamilYZM(timestamp,new HttpUtils<SendEmailBean>().getBodyNoToken(sendEmailBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread())
                 ;
 
