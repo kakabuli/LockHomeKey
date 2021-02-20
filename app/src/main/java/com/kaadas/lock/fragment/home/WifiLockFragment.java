@@ -31,6 +31,8 @@ import com.kaadas.lock.activity.addDevice.singleswitch.SwipchLinkNo;
 import com.kaadas.lock.activity.device.gatewaylock.GatewayDeviceInformationActivity;
 import com.kaadas.lock.activity.device.wifilock.WiFiLockDetailActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockAuthActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockAuthDeviceInfoActivity;
+import com.kaadas.lock.activity.device.wifilock.WifiLockDeviceInfoActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.activity.device.wifilock.family.WifiLockFamilyManagerActivity;
@@ -169,7 +171,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
                 detailFunctionOnLine.setVisibility(View.GONE);
 
                 rllShareUserLayout.setVisibility(View.VISIBLE);
-                rllShareUserLayout.setOnClickListener(this);
+                rllShareUserFunctionLayout.setOnClickListener(this);
             }
         }
     }
@@ -710,9 +712,17 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
                 break;
             case R.id.rll_share_user_function_layout:
-                Intent shareIntent = new Intent(getActivity(), WifiLockAuthActivity.class);
-                shareIntent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                startActivity(shareIntent);
+                //先拿本地的数据    然后拿读取到的数据
+                Intent shareIntent;
+                if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSN) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                    shareIntent = new Intent(getActivity(), WifiLockDeviceInfoActivity.class);
+                    shareIntent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+                    startActivity(shareIntent);
+                }else{
+                    shareIntent = new Intent(getActivity(), WifiLockAuthDeviceInfoActivity.class);
+                    shareIntent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+                    startActivity(shareIntent);
+                }
                 break;
         }
     }
