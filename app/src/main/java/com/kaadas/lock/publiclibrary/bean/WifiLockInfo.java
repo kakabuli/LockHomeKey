@@ -137,7 +137,6 @@ public class WifiLockInfo implements Serializable {
     private String device_did;
     private String device_sn;
     private String p2p_password;
-    private String mac;
 
     @Convert(converter = SingleFireSwitchInfoConvert.class , columnType = String.class)
     @SerializedName("switch")
@@ -154,17 +153,25 @@ public class WifiLockInfo implements Serializable {
 
     private int keep_alive_status;
 
-    @Generated(hash = 666757199)
-    public WifiLockInfo() {
-    }
+    private String mac;
+    private String lockMac;
+    private String RSSI;
+    private int wifiStrength;
 
-    @Generated(hash = 222985687)
-    public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid, String adminName, String productSN, String productModel, int appId, String lockNickname,
-            String lockSoftwareVersion, String functionSet, String uid, String uname, int pushSwitch, int amMode, int safeMode, int powerSave, int faceStatus, int defences,
-            String language, int operatingMode, int volume, String bleVersion, String wifiVersion, String mqttVersion, String faceVersion, String lockFirmwareVersion,
-            String randomCode, int distributionNetwork, long createTime, String wifiName, int power, long updateTime, int openStatus, long openStatusTime, String device_did,
-            String device_sn, String p2p_password, String mac, SingleFireSwitchInfo singleFireSwitchInfo, WifiVideoLockSetPirBean setPir, WifiVideoLockAliveTimeBean alive_time,
-            int stay_status, String camera_version, String mcu_version, String device_model, int keep_alive_status) {
+    @Generated(hash = 1135326471)
+    public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
+            String adminName, String productSN, String productModel, int appId,
+            String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
+            String uname, int pushSwitch, int amMode, int safeMode, int powerSave,
+            int faceStatus, int defences, String language, int operatingMode, int volume,
+            String bleVersion, String wifiVersion, String mqttVersion, String faceVersion,
+            String lockFirmwareVersion, String randomCode, int distributionNetwork,
+            long createTime, String wifiName, int power, long updateTime, int openStatus,
+            long openStatusTime, String device_did, String device_sn, String p2p_password,
+            SingleFireSwitchInfo singleFireSwitchInfo, WifiVideoLockSetPirBean setPir,
+            WifiVideoLockAliveTimeBean alive_time, int stay_status, String camera_version,
+            String mcu_version, String device_model, int keep_alive_status, String mac,
+            String lockMac, String RSSI, int wifiStrength) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -204,7 +211,6 @@ public class WifiLockInfo implements Serializable {
         this.device_did = device_did;
         this.device_sn = device_sn;
         this.p2p_password = p2p_password;
-        this.mac = mac;
         this.singleFireSwitchInfo = singleFireSwitchInfo;
         this.setPir = setPir;
         this.alive_time = alive_time;
@@ -213,8 +219,23 @@ public class WifiLockInfo implements Serializable {
         this.mcu_version = mcu_version;
         this.device_model = device_model;
         this.keep_alive_status = keep_alive_status;
+        this.mac = mac;
+        this.lockMac = lockMac;
+        this.RSSI = RSSI;
+        this.wifiStrength = wifiStrength;
     }
 
+    @Generated(hash = 666757199)
+    public WifiLockInfo() {
+    }
+
+    public String getLockMac() {
+        return lockMac;
+    }
+
+    public void setLockMac(String lockMac) {
+        this.lockMac = lockMac;
+    }
 
     public int getKeep_alive_status() {
         return keep_alive_status;
@@ -601,7 +622,7 @@ public class WifiLockInfo implements Serializable {
         this.singleFireSwitchInfo = singleFireSwitchInfo;
     }
 
-   
+
 
     public Long getId() {
         return this.id;
@@ -650,5 +671,21 @@ public class WifiLockInfo implements Serializable {
 
     public void setMac(String mac) {
         this.mac = mac;
+    }
+
+    public String getRSSI() {
+        return this.RSSI;
+    }
+
+    public void setRSSI(String RSSI) {
+        this.RSSI = RSSI;
+    }
+
+    public int getWifiStrength() {
+        return this.wifiStrength;
+    }
+
+    public void setWifiStrength(int wifiStrength) {
+        this.wifiStrength = wifiStrength;
     }
 }

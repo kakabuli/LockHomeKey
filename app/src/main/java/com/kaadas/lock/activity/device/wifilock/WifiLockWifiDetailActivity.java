@@ -36,8 +36,8 @@ public class WifiLockWifiDetailActivity extends BaseAddToApplicationActivity {
     TextView tvWifiStrength;
     @BindView(R.id.tv_rssid)
     TextView tvRssid;
-    @BindView(R.id.tv_bssid)
-    TextView tvBssid;
+    @BindView(R.id.tv_mac)
+    TextView tvMAC;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -56,7 +56,12 @@ public class WifiLockWifiDetailActivity extends BaseAddToApplicationActivity {
     private void initData() {
         if(wifiLockInfo != null){
             tvWifiName.setText(wifiLockInfo.getWifiName() + "");
-
+            if(wifiLockInfo.getWifiStrength() != 0)
+                tvWifiStrength.setText(wifiLockInfo.getWifiStrength() + "%");
+            if(wifiLockInfo.getRSSI() != null)
+                tvRssid.setText(wifiLockInfo.getRSSI() + "");
+            if(wifiLockInfo.getLockMac() != null)
+                tvMAC.setText(wifiLockInfo.getLockMac() + "");
         }
     }
 

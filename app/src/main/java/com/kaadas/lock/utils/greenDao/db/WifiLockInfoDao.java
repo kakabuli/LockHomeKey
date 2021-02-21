@@ -70,15 +70,18 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property Device_did = new Property(36, String.class, "device_did", false, "DEVICE_DID");
         public final static Property Device_sn = new Property(37, String.class, "device_sn", false, "DEVICE_SN");
         public final static Property P2p_password = new Property(38, String.class, "p2p_password", false, "P2P_PASSWORD");
-        public final static Property Mac = new Property(39, String.class, "mac", false, "MAC");
-        public final static Property SingleFireSwitchInfo = new Property(40, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
-        public final static Property SetPir = new Property(41, String.class, "setPir", false, "SET_PIR");
-        public final static Property Alive_time = new Property(42, String.class, "alive_time", false, "ALIVE_TIME");
-        public final static Property Stay_status = new Property(43, int.class, "stay_status", false, "STAY_STATUS");
-        public final static Property Camera_version = new Property(44, String.class, "camera_version", false, "CAMERA_VERSION");
-        public final static Property Mcu_version = new Property(45, String.class, "mcu_version", false, "MCU_VERSION");
-        public final static Property Device_model = new Property(46, String.class, "device_model", false, "DEVICE_MODEL");
-        public final static Property Keep_alive_status = new Property(47, int.class, "keep_alive_status", false, "KEEP_ALIVE_STATUS");
+        public final static Property SingleFireSwitchInfo = new Property(39, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
+        public final static Property SetPir = new Property(40, String.class, "setPir", false, "SET_PIR");
+        public final static Property Alive_time = new Property(41, String.class, "alive_time", false, "ALIVE_TIME");
+        public final static Property Stay_status = new Property(42, int.class, "stay_status", false, "STAY_STATUS");
+        public final static Property Camera_version = new Property(43, String.class, "camera_version", false, "CAMERA_VERSION");
+        public final static Property Mcu_version = new Property(44, String.class, "mcu_version", false, "MCU_VERSION");
+        public final static Property Device_model = new Property(45, String.class, "device_model", false, "DEVICE_MODEL");
+        public final static Property Keep_alive_status = new Property(46, int.class, "keep_alive_status", false, "KEEP_ALIVE_STATUS");
+        public final static Property Mac = new Property(47, String.class, "mac", false, "MAC");
+        public final static Property LockMac = new Property(48, String.class, "lockMac", false, "LOCK_MAC");
+        public final static Property RSSI = new Property(49, String.class, "RSSI", false, "RSSI");
+        public final static Property WifiStrength = new Property(50, int.class, "wifiStrength", false, "WIFI_STRENGTH");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -136,15 +139,18 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"DEVICE_DID\" TEXT," + // 36: device_did
                 "\"DEVICE_SN\" TEXT," + // 37: device_sn
                 "\"P2P_PASSWORD\" TEXT," + // 38: p2p_password
-                "\"MAC\" TEXT," + // 39: mac
-                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT," + // 40: singleFireSwitchInfo
-                "\"SET_PIR\" TEXT," + // 41: setPir
-                "\"ALIVE_TIME\" TEXT," + // 42: alive_time
-                "\"STAY_STATUS\" INTEGER NOT NULL ," + // 43: stay_status
-                "\"CAMERA_VERSION\" TEXT," + // 44: camera_version
-                "\"MCU_VERSION\" TEXT," + // 45: mcu_version
-                "\"DEVICE_MODEL\" TEXT," + // 46: device_model
-                "\"KEEP_ALIVE_STATUS\" INTEGER NOT NULL );"); // 47: keep_alive_status
+                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT," + // 39: singleFireSwitchInfo
+                "\"SET_PIR\" TEXT," + // 40: setPir
+                "\"ALIVE_TIME\" TEXT," + // 41: alive_time
+                "\"STAY_STATUS\" INTEGER NOT NULL ," + // 42: stay_status
+                "\"CAMERA_VERSION\" TEXT," + // 43: camera_version
+                "\"MCU_VERSION\" TEXT," + // 44: mcu_version
+                "\"DEVICE_MODEL\" TEXT," + // 45: device_model
+                "\"KEEP_ALIVE_STATUS\" INTEGER NOT NULL ," + // 46: keep_alive_status
+                "\"MAC\" TEXT," + // 47: mac
+                "\"LOCK_MAC\" TEXT," + // 48: lockMac
+                "\"RSSI\" TEXT," + // 49: RSSI
+                "\"WIFI_STRENGTH\" INTEGER NOT NULL );"); // 50: wifiStrength
     }
 
     /** Drops the underlying database table. */
@@ -288,42 +294,53 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(39, p2p_password);
         }
  
-        String mac = entity.getMac();
-        if (mac != null) {
-            stmt.bindString(40, mac);
-        }
- 
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(41, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(40, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
  
         WifiVideoLockSetPirBean setPir = entity.getSetPir();
         if (setPir != null) {
-            stmt.bindString(42, setPirConverter.convertToDatabaseValue(setPir));
+            stmt.bindString(41, setPirConverter.convertToDatabaseValue(setPir));
         }
  
         WifiVideoLockAliveTimeBean alive_time = entity.getAlive_time();
         if (alive_time != null) {
-            stmt.bindString(43, alive_timeConverter.convertToDatabaseValue(alive_time));
+            stmt.bindString(42, alive_timeConverter.convertToDatabaseValue(alive_time));
         }
-        stmt.bindLong(44, entity.getStay_status());
+        stmt.bindLong(43, entity.getStay_status());
  
         String camera_version = entity.getCamera_version();
         if (camera_version != null) {
-            stmt.bindString(45, camera_version);
+            stmt.bindString(44, camera_version);
         }
  
         String mcu_version = entity.getMcu_version();
         if (mcu_version != null) {
-            stmt.bindString(46, mcu_version);
+            stmt.bindString(45, mcu_version);
         }
  
         String device_model = entity.getDevice_model();
         if (device_model != null) {
-            stmt.bindString(47, device_model);
+            stmt.bindString(46, device_model);
         }
-        stmt.bindLong(48, entity.getKeep_alive_status());
+        stmt.bindLong(47, entity.getKeep_alive_status());
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(48, mac);
+        }
+ 
+        String lockMac = entity.getLockMac();
+        if (lockMac != null) {
+            stmt.bindString(49, lockMac);
+        }
+ 
+        String RSSI = entity.getRSSI();
+        if (RSSI != null) {
+            stmt.bindString(50, RSSI);
+        }
+        stmt.bindLong(51, entity.getWifiStrength());
     }
 
     @Override
@@ -461,42 +478,53 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(39, p2p_password);
         }
  
-        String mac = entity.getMac();
-        if (mac != null) {
-            stmt.bindString(40, mac);
-        }
- 
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(41, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(40, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
  
         WifiVideoLockSetPirBean setPir = entity.getSetPir();
         if (setPir != null) {
-            stmt.bindString(42, setPirConverter.convertToDatabaseValue(setPir));
+            stmt.bindString(41, setPirConverter.convertToDatabaseValue(setPir));
         }
  
         WifiVideoLockAliveTimeBean alive_time = entity.getAlive_time();
         if (alive_time != null) {
-            stmt.bindString(43, alive_timeConverter.convertToDatabaseValue(alive_time));
+            stmt.bindString(42, alive_timeConverter.convertToDatabaseValue(alive_time));
         }
-        stmt.bindLong(44, entity.getStay_status());
+        stmt.bindLong(43, entity.getStay_status());
  
         String camera_version = entity.getCamera_version();
         if (camera_version != null) {
-            stmt.bindString(45, camera_version);
+            stmt.bindString(44, camera_version);
         }
  
         String mcu_version = entity.getMcu_version();
         if (mcu_version != null) {
-            stmt.bindString(46, mcu_version);
+            stmt.bindString(45, mcu_version);
         }
  
         String device_model = entity.getDevice_model();
         if (device_model != null) {
-            stmt.bindString(47, device_model);
+            stmt.bindString(46, device_model);
         }
-        stmt.bindLong(48, entity.getKeep_alive_status());
+        stmt.bindLong(47, entity.getKeep_alive_status());
+ 
+        String mac = entity.getMac();
+        if (mac != null) {
+            stmt.bindString(48, mac);
+        }
+ 
+        String lockMac = entity.getLockMac();
+        if (lockMac != null) {
+            stmt.bindString(49, lockMac);
+        }
+ 
+        String RSSI = entity.getRSSI();
+        if (RSSI != null) {
+            stmt.bindString(50, RSSI);
+        }
+        stmt.bindLong(51, entity.getWifiStrength());
     }
 
     @Override
@@ -546,15 +574,18 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36), // device_did
             cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37), // device_sn
             cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38), // p2p_password
-            cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39), // mac
-            cursor.isNull(offset + 40) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 40)), // singleFireSwitchInfo
-            cursor.isNull(offset + 41) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 41)), // setPir
-            cursor.isNull(offset + 42) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 42)), // alive_time
-            cursor.getInt(offset + 43), // stay_status
-            cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44), // camera_version
-            cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // mcu_version
-            cursor.isNull(offset + 46) ? null : cursor.getString(offset + 46), // device_model
-            cursor.getInt(offset + 47) // keep_alive_status
+            cursor.isNull(offset + 39) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 39)), // singleFireSwitchInfo
+            cursor.isNull(offset + 40) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 40)), // setPir
+            cursor.isNull(offset + 41) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 41)), // alive_time
+            cursor.getInt(offset + 42), // stay_status
+            cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43), // camera_version
+            cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44), // mcu_version
+            cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // device_model
+            cursor.getInt(offset + 46), // keep_alive_status
+            cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47), // mac
+            cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48), // lockMac
+            cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49), // RSSI
+            cursor.getInt(offset + 50) // wifiStrength
         );
         return entity;
     }
@@ -600,15 +631,18 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setDevice_did(cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36));
         entity.setDevice_sn(cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37));
         entity.setP2p_password(cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38));
-        entity.setMac(cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39));
-        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 40) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 40)));
-        entity.setSetPir(cursor.isNull(offset + 41) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 41)));
-        entity.setAlive_time(cursor.isNull(offset + 42) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 42)));
-        entity.setStay_status(cursor.getInt(offset + 43));
-        entity.setCamera_version(cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44));
-        entity.setMcu_version(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
-        entity.setDevice_model(cursor.isNull(offset + 46) ? null : cursor.getString(offset + 46));
-        entity.setKeep_alive_status(cursor.getInt(offset + 47));
+        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 39) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 39)));
+        entity.setSetPir(cursor.isNull(offset + 40) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 40)));
+        entity.setAlive_time(cursor.isNull(offset + 41) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 41)));
+        entity.setStay_status(cursor.getInt(offset + 42));
+        entity.setCamera_version(cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43));
+        entity.setMcu_version(cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44));
+        entity.setDevice_model(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
+        entity.setKeep_alive_status(cursor.getInt(offset + 46));
+        entity.setMac(cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47));
+        entity.setLockMac(cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48));
+        entity.setRSSI(cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49));
+        entity.setWifiStrength(cursor.getInt(offset + 50));
      }
     
     @Override
