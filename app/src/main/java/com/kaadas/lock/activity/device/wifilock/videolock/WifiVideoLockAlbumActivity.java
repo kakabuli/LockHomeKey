@@ -223,6 +223,7 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                     if(isSelectFileItem()){
                         showDeleteSelectFileItemDialog();
                     }else{
+                        revoke();
                         ToastUtil.getInstance().showShort("没有要删除的哦~");
                     }
                 }else if(tvCancel.getVisibility() == View.GONE){
