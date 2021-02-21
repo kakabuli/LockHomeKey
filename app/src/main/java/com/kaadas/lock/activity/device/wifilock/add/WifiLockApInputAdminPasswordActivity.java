@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +33,9 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
     EditText etAdminPassword;
     @BindView(R.id.tv_next)
     TextView tvNext;
+    @BindView(R.id.iv_password_status)
+    ImageView ivPasswordStatus;//密码状态图标
+    boolean passwordHide = true;//密码图标
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,7 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
     }
 
 
-    @OnClick({R.id.back, R.id.help, R.id.et_admin_password, R.id.tv_next})
+    @OnClick({R.id.back, R.id.help, R.id.et_admin_password, R.id.tv_next,R.id.iv_password_status})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -85,6 +90,22 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
                 break;
             case R.id.help:
                 startActivity(new Intent(this, WifiLockHelpActivity.class));
+                break;
+            case R.id.iv_password_status:
+                passwordHide = !passwordHide;
+                if (passwordHide) {
+                    etAdminPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    /* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
+                    etAdminPassword.setSelection(etAdminPassword.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.eye_close_has_color);
+
+                } else {
+                    //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    //etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    etAdminPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    etAdminPassword.setSelection(etAdminPassword.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.eye_open_has_color);
+                }
                 break;
         }
     }

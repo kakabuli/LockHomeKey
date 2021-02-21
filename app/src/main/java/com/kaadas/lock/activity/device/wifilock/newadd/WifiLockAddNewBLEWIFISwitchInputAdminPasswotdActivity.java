@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,6 +41,9 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
     EditText apPasswordEdit;
     @BindView(R.id.button_next)
     TextView buttonNext;
+    @BindView(R.id.iv_password_status)
+    ImageView ivPasswordStatus;//密码状态图标
+    boolean passwordHide = true;//密码图标
     int times = 1;//已经校验次数
     byte[] data;
     private static final int TO_CHECK_ADMIN_PASSWORD = 10104;
@@ -74,7 +79,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
         return new BindBleWiFiSwitchPresenter<>();
     }
 
-    @OnClick({R.id.back, R.id.help, R.id.button_next})
+    @OnClick({R.id.back, R.id.help, R.id.button_next,R.id.iv_password_status})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -102,6 +107,22 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
                 intent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
 //                startActivity(intent);
                 startActivityForResult(intent,TO_CHECK_ADMIN_PASSWORD);
+                break;
+            case R.id.iv_password_status:
+                passwordHide = !passwordHide;
+                if (passwordHide) {
+                    apPasswordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    /* etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);*/
+                    apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.eye_close_has_color);
+
+                } else {
+                    //默认状态显示密码--设置文本 要一起写才能起作用 InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    //etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    apPasswordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
+                    ivPasswordStatus.setImageResource(R.mipmap.eye_open_has_color);
+                }
                 break;
         }
     }
