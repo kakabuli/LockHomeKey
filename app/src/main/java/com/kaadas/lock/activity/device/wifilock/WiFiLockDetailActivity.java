@@ -345,7 +345,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         );
         if ((System.currentTimeMillis() - readDeviceInfoTime) < 60 * 60 * 1000) {
             //小于一小时
-            tvDate.setText(getString(R.string.device_detail_power_date));
+//            tvDate.setText(getString(R.string.device_detail_power_date));//去掉刚刚
+            tvDate.setText("");
         } else if ((System.currentTimeMillis() - readDeviceInfoTime) < 24 * 60 * 60 * 1000) {
             //小于一天
             if (readDeviceInfoTime > todayMillions) {

@@ -1649,7 +1649,7 @@
     <string name="lock_activated">门锁已激活</string>
     <string name="lock_not_activa">门锁未激活</string>
     <string name="wifi_lock_add_new_second_notice1">第二步：门锁激活</string>
-    <string name="wifi_lock_add_new_lock_activate_notice">①微信搜索【凯迪仕智能门锁】公众号并关注 \n②进入公众号－【售后服务】，点击【产品激活】 \n③扫描包装盒产品序列号，获取激活码 \n④唤醒门锁，输入激活码，按“＃”确认</string>
+    <string name="wifi_lock_add_new_lock_activate_notice">①微信搜索【凯迪仕智能锁】公众号并关注 \n②进入公众号－【售后服务】，点击【产品激活】 \n③扫描电池盖产品序列号，获取激活码 \n④唤醒门锁，输入激活码，按“＃”确认</string>
     <string name="long_save_qr_code">长按保存二维码</string>
     <string name="wifi_lock_add_new_third_notice1">第三步：修改初始管理密码</string>
     <string name="wifi_lock_add_new_third_notice1_1">第三步：已进入管理配置模式</string>

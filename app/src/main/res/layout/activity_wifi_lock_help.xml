@@ -108,7 +108,7 @@
                     android:lineSpacingExtra="5dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="① 微信搜索【凯迪仕智能门锁】公众号并关注\n② 进入公众号－【售后服务】，点击【产品激活】\n③ 扫描包装盒产品序列号，获取激活码\n④ 唤醒门锁，输入激活码，按“＃”确认"
+                    android:text="① 微信搜索【凯迪仕智能锁】公众号并关注\n② 进入公众号－【售后服务】，点击【产品激活】\n③ 扫描电池盖产品序列号，获取激活码\n④ 唤醒门锁，输入激活码，按“＃”确认"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>

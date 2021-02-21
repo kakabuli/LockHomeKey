@@ -28,6 +28,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
+import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.mvp.view.IPersonalDataView;
 import com.kaadas.lock.widget.BottomMenuDialog;
@@ -119,7 +120,7 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
         //获取手机号码
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
         if (!TextUtils.isEmpty(phone)) {
-            headTelNum.setText(phone);
+            headTelNum.setText(StringUtil.phoneToHide(phone));
         }
     }
 
