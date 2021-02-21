@@ -29,6 +29,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
+import com.kaadas.lock.utils.ToastUtil;
 import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
@@ -219,7 +220,11 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                 break;
             case R.id.iv_myalbum_delete:
                 if(tvCancel.getVisibility() == View.VISIBLE){
-                    showDeleteSelectFileItemDialog();
+                    if(isSelectFileItem()){
+                        showDeleteSelectFileItemDialog();
+                    }else{
+                        ToastUtil.getInstance().showShort("没有要删除的哦~");
+                    }
                 }else if(tvCancel.getVisibility() == View.GONE){
                     showDeleteItem = true;
                     back.setVisibility(View.GONE);
@@ -273,6 +278,27 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
             deleteSelectFileItemDialog.show();
         }
 
+    }
+
+    private boolean isSelectFileItem(){
+        try {
+            Iterator<FileBean> it = items.iterator();
+            while (it.hasNext()){
+                FileBean list = it.next();
+                int size = list.getItem().size();
+                Iterator<FileItemBean> oa = list.getItem().iterator();
+                while (oa.hasNext()){
+                    FileItemBean next = oa.next();
+                    if(next.isSelect()){
+                        return true;
+                    }
+                    continue;
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return false;
     }
 
     private void revoke() {
