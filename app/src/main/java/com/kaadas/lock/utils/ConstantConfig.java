@@ -2,10 +2,9 @@ package com.kaadas.lock.utils;
 
 public class ConstantConfig {
 
-//    public static final String HTTP_BASE_URL = "https://app-kaadas.juziwulian.com:34000/";//凯迪仕正式服务器
     public static final String HTTP_BASE_URL = "https://app.kaadas.com:34000/";//凯迪仕正式服务器
-    public static final String OTA_INFO_URL = "http://ota.juziwulian.com:9111/api/";  //正式OTA服务器
-    public static final String OTA_RESULT_UPLOAD_URL = "http://ota.juziwulian.com:9111/api/deviceDevupRecord/bt/add";  //正式OTA上报服务器
+    public static final String OTA_INFO_URL = "https://app.kaadas.com:34000/";//凯迪仕正式服务器
+    public static final String OTA_RESULT_UPLOAD_URL = OTA_INFO_URL + "ota/btResultAdd";  //正式OTA上报服务器
     public static final String MQTT_BASE_URL = "tcp://mqtt-kaadas.juziwulian.com:1883";//正式服务器
     public static final String LINPHONE_URL = "sip-kaadas.juziwulian.com:5061";//正式sip
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.huawei.hms.core.aidl.RequestHeader;
 import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;

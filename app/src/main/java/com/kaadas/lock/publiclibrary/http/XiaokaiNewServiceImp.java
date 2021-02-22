@@ -1040,8 +1040,8 @@ public class XiaokaiNewServiceImp {
     public static Observable<CheckOTAResult> getOtaInfo(int customer, String deviceName, String version, int type) {
         OTABean helpLogBean = new OTABean(customer, deviceName, version, type);
         String timestamp = System.currentTimeMillis() /1000 + "";
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .getOtaInfo(timestamp,new HttpUtils<OTABean>().getBodyNoToken(helpLogBean,timestamp))
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getOtaInfo(timestamp,new HttpUtils<OTABean>().getBodyToken(helpLogBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1054,8 +1054,8 @@ public class XiaokaiNewServiceImp {
     public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<MultiOTABean.OTAParams> params,String devtype) {
         MultiOTABean helpLogBean = new MultiOTABean(customer, deviceName, params,devtype);
         String timestamp = System.currentTimeMillis() /1000 + "";
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .getOtaMultiCheck(timestamp,new HttpUtils<MultiOTABean>().getBodyNoToken(helpLogBean,timestamp))
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getOtaMultiCheck(timestamp,new HttpUtils<MultiOTABean>().getBodyToken(helpLogBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
@@ -1071,8 +1071,8 @@ public class XiaokaiNewServiceImp {
     public static Observable<BaseResult> uploadOtaResult(String sn, String version, int customer, String resultCode, int devNum) {
         UploadOtaResultBean uploadOtaResultBean = new UploadOtaResultBean(sn, version, customer, resultCode, devNum);
         String timestamp = System.currentTimeMillis() /1000 + "";
-        return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .uploadOtaResult(timestamp,new HttpUtils<UploadOtaResultBean>().getBodyNoToken(uploadOtaResultBean,timestamp))
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .uploadOtaResult(timestamp,new HttpUtils<UploadOtaResultBean>().getBodyToken(uploadOtaResultBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
