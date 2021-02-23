@@ -217,6 +217,16 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
+                boolean falg = false;
+                for(WifiVideoLockAlarmRecord li : list){
+                    if(li.get_id().equals(record.get_id()) ){
+                        falg = true;
+                        break;
+                    }
+                }
+                if(falg){
+                    continue;
+                }
                 long openTime = 0;
                 try{
                     openTime = Long.parseLong(record.getTime());
@@ -235,18 +245,6 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 }
                 list.add(record);
 
-            }
-            removeGroupData();
-        }
-    }
-
-    private void removeGroupData() {
-        for(int i = 0 ; i < list.size();i++){
-//            String id = list.get(i).get_id();
-            for(int j = list.size() - 1 ; j > i; j--){
-                if(list.get(i).get_id() == list.get(j).get_id()){
-                    list.remove(j);
-                }
             }
         }
     }

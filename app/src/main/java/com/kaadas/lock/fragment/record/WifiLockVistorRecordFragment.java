@@ -18,6 +18,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
 import com.kaadas.lock.adapter.WifiLockVistorIAdapter;
+import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockVistorRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVistorRecordView;
@@ -39,6 +40,7 @@ import com.yun.software.kaadas.Utils.FileTool;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -220,6 +222,16 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
+                boolean falg = false;
+                for(WifiVideoLockAlarmRecord list : records){
+                    if(list.get_id().equals(record.get_id()) ){
+                        falg = true;
+                        break;
+                    }
+                }
+                if(falg){
+                    continue;
+                }
                 long openTime = 0;
                 try {
                     openTime = Long.parseLong(record.getTime());
@@ -239,20 +251,9 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                 records.add(record);
 
             }
-            removeGroupData();
         }
     }
 
-    private void removeGroupData() {
-        for(int i = 0 ; i < records.size();i++){
-//            String id = records.get(i).get_id();
-            for(int j = records.size() - 1 ; j > i; j--){
-                if(records.get(i).get_id() == records.get(j).get_id()){
-                    records.remove(j);
-                }
-            }
-        }
-    }
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
