@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import de.greenrobot.event.EventBus;
+
+import org.greenrobot.eventbus.EventBus;
+
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.NetUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;

@@ -5,7 +5,7 @@ import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.yun.software.kaadas.Comment.Constans;
 import com.yun.software.kaadas.UI.wxchat.BaseWXPayEntryActivity;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.ToastUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;

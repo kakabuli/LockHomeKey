@@ -54,11 +54,9 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
-import la.xiong.androidquick.tool.LogUtils;
-import la.xiong.androidquick.tool.SizeUtils;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import la.xiong.androidquick.tool.StringUtil;
 import la.xiong.androidquick.tool.ToastUtil;
 

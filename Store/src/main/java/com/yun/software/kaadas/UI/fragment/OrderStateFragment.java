@@ -43,7 +43,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.DialogUtil;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.StringUtil;

@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.Glid.GlidUtils;
 import la.xiong.androidquick.tool.SizeUtils;
 import la.xiong.androidquick.tool.StringUtil;

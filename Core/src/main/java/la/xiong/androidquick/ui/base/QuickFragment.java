@@ -17,14 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
-import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.StringUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
 import la.xiong.androidquick.ui.manager.HttpSubRequest;
@@ -438,7 +438,7 @@ public abstract class QuickFragment extends Fragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(EventCenter eventCenter) {
         if (null != eventCenter) {
             onEventComing(eventCenter);

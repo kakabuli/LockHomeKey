@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.yun.software.kaadas.Http.ApiConstants;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;

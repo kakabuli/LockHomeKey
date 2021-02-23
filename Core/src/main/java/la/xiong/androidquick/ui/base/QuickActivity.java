@@ -32,6 +32,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,9 +45,6 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 import la.xiong.androidquick.R;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
@@ -545,7 +546,7 @@ public abstract class QuickActivity extends AppCompatActivity implements EasyPer
         mVaryViewHelperController.restore();
     }
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(EventCenter eventCenter) {
         if (null != eventCenter) {
             onEventComing(eventCenter);

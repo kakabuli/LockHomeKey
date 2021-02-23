@@ -78,7 +78,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.Glid.GlidUtils;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.SizeUtils;

@@ -20,7 +20,7 @@ import com.yun.software.kaadas.Comment.Constans;
 import com.yun.software.kaadas.Http.ApiConstants;
 import com.yun.software.kaadas.Http.HttpManager;
 import com.yun.software.kaadas.Http.OnIResponseListener;
-import com.kaadas.lock.store.R;;import com.kaadas.lock.store.R2;;
+import com.kaadas.lock.store.R;
 import com.yun.software.kaadas.UI.adapter.StyleItmeAdapter;
 import com.yun.software.kaadas.UI.bean.GoodsAttrBean;
 import com.yun.software.kaadas.UI.view.RecyclerItemDecoration;
@@ -31,9 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.Glid.GlidUtils;
-import la.xiong.androidquick.tool.LogUtils;
+
 import la.xiong.androidquick.tool.SizeUtils;
 import la.xiong.androidquick.tool.StringUtil;
 import la.xiong.androidquick.tool.ToastUtil;

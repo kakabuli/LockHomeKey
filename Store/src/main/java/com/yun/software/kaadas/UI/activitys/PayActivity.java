@@ -30,7 +30,7 @@ import com.yun.software.kaadas.base.BaseActivity;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.StringUtil;
 import la.xiong.androidquick.tool.ToastUtil;

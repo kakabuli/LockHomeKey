@@ -54,7 +54,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.iwgang.countdownview.CountdownView;
 import cn.sharesdk.framework.Platform;
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.LogUtils;
 import la.xiong.androidquick.tool.ToastUtil;
 import la.xiong.androidquick.ui.eventbus.EventCenter;

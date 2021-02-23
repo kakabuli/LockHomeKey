@@ -91,9 +91,9 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import la.xiong.androidquick.ui.eventbus.EventCenter;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
@@ -1043,7 +1043,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventBus(EventCenter eventCenter) {
         if (eventCenter.getEventCode() == Constans.RELOGIN) {  //商城token  过期
             MyApplication.getInstance().tokenInvalid(true);

@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import de.greenrobot.event.EventBus;
+import org.greenrobot.eventbus.EventBus;
 import la.xiong.androidquick.tool.DialogUtil;
 import la.xiong.androidquick.tool.ToastUtil;
 import la.xiong.androidquick.ui.dialog.CommonDialog;
