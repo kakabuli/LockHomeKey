@@ -329,12 +329,12 @@ public final class LinphoneService extends Service {
         }
 
         instance = this; // instance is ready once linphone manager has been created
-        incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
+/*        incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
         try {
             incomingReceivedActivity = (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
         } catch (ClassNotFoundException e) {
             LogUtils.e(e);
-        }
+        }*/
 
 
         int linphone_port = LinphoneManager.getLc().getSipTransportPort();

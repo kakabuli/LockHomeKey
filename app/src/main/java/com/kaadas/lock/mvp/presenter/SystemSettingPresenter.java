@@ -3,8 +3,6 @@ package com.kaadas.lock.mvp.presenter;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.huawei.android.hms.agent.HMSAgent;
-import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
@@ -12,12 +10,6 @@ import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.mvp.view.ISystemSettingView;
-import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.Rom;
-import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ftp.GeTui;
-import com.kaidishi.lock.xiaomi.SPUtils2;
-import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 
 
 import io.reactivex.disposables.Disposable;

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.huawei.agconnect'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
@@ -23,7 +24,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 26
         versionCode 202102221
-        versionName "4.3.0"
+        versionName "4.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -97,6 +98,7 @@ android {
 
     buildTypes {
         release {
+            debuggable true
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -145,6 +147,32 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+}
+
+task copyAgconnecToRelease(type:Copy){
+    from "src/main/java/com/kaidishi/lock/push/"
+    include "agconnect-services.json"
+    into "./"
+}
+afterEvaluate {
+    tasks.matching {
+        it.name.equals("assembleDebug") || it.name.equals("assembleRelease")
+    }.each {task->
+        if(isReleaseBuildType()){
+            task.dependsOn(copyAgconnecToRelease);
+        }
+    }
+}
+//判断是否为debug模式
+def isReleaseBuildType(){
+    boolean isReleaseTypes = false;
+    for(String s : gradle.startParameter.taskNames) {
+        if (s.equals(":app:assembleRelease")) {
+            isReleaseTypes = true;
+            break;
+        }
+    }
+    return isReleaseTypes;
 }
 
 //读取签名配置文件
@@ -232,9 +260,6 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
 
-    //SmartRefreshLayout
-//    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
-
     implementation project(path: ':imagepicker')
 
     //mqtt
@@ -254,7 +279,6 @@ dependencies {
     implementation 'com.bm.photoview:library:1.4.1'
     implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
-//    implementation 'org.greenrobot:eventbus:3.1.1'
 
     //微信分享
 
@@ -267,14 +291,7 @@ dependencies {
     implementation project(':library:WheelPicker')
     implementation project(':library:Common')
 
-    //   implementation 'com.getui:hwp:1.0.4'
-//    implementation 'com.getui:xmp:1.0.3'
     implementation files('libs/GetuiSDK-support-OPPO-1.0.7.jar')
-//    implementation 'com.getui:mzp:1.0.7'
-
-    //选择器控件
-
-//        implementation 'com.contrarywind:Android-PickerView:4.1.9'
 
     //文件下载的SDK
     implementation 'com.liulishuo.filedownloader:library:1.7.6'
@@ -289,13 +306,10 @@ dependencies {
     // 其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
-    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-    implementation project(':push:pushsdk_huawei')
+    implementation 'com.huawei.hms:push:5.1.1.301'
+//    implementation project(':push:pushsdk_huawei')
     implementation project(':push:pushsdk_xiaomi')
 
-
-    //日志功能
-//    implementation 'com.blankj:alog:1.9.1'
 
     //依赖商城
     implementation project(':Store')
@@ -321,4 +335,6 @@ dependencies {
     //okhttp
 //    implementation 'com.blankj:utilcodex:1.26.0'
     implementation 'com.tencent:mmkv-static:1.2.7'
+
+
 }

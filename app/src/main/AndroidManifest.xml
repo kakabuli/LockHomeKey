@@ -28,17 +28,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 个推3.0电子围栏功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- OPPO辅助 SDK -->
-    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" />
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" /><!-- OPPO辅助 SDK -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" /> <!-- 使用网络 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络状态 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- wifi状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 位置信息 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- android 10.0使用wifi api新添加的权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 
     <!-- 魅族辅助 SDK -->
@@ -52,6 +47,16 @@
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
     <uses-permission android:name="${applicationId}.push.permission.MESSAGE" />
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
+
+    <!--<queries>
+        <intent>
+            <action android:name="com.huawei.hms.core.aidlservice" />
+        </intent>
+    </queries>-->
+
+    <meta-data
+        android:name="push_kit_auto_init_enabled"
+        android:value="true"/>
 
     <application
         android:name=".MyApplication"
@@ -807,19 +812,6 @@
             android:name=".activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
-        <service android:name=".publiclibrary.xm.DoorbellingService"/>
-        <service android:name=".publiclibrary.ble.BleService" />
-        <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />
-
-        <receiver android:name=".utils.networkListenerutil.NetWorkChangReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activity.cateye.VideoCallBackActivity"
             android:screenOrientation="portrait" />
@@ -846,30 +838,6 @@
         <activity
             android:name=".activity.cateye.RecordingPreviewActivity"
             android:screenOrientation="portrait" /> <!-- &lt;!&ndash; 配置SDK核心服务 &ndash;&gt; -->
-        <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
-        <service
-            android:name="com.kaidishi.lock.service.GeTuiPushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice" /> <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service
-            android:name="com.kaidishi.lock.service.GeTuiIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- OPPO辅助 SDK -->
-        <meta-data
-            android:name="OPPOPUSH_APPKEY"
-            android:value="OP_${OPPO_APP_KEY}" />
-        <meta-data
-            android:name="OPPOPUSH_APPSECRET"
-            android:value="OP_${OPPO_APP_SECRET}" />
-
-        <service
-            android:name="com.igexin.sdk.OppoPushService"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".activity.device.cateye.more.SmartEyeActivity"
             android:screenOrientation="portrait" />
@@ -889,18 +857,6 @@
         <activity
             android:name=".publiclibrary.ota.ble.p6.P6OtaUpgradeActivity"
             android:screenOrientation="portrait" />
-
-        <service android:name=".publiclibrary.ota.ble.p6.BluetoothLeService" />
-
-        <receiver
-            android:name=".publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAResponseReceiver_v1"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.cysmart.bluetooth.le.ACTION_OTA_DATA_AVAILABLE_V1" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".publiclibrary.ota.ble.OTADialogActivity"
             android:theme="@style/gatewayDialog" />
@@ -926,25 +882,6 @@
         <activity
             android:name=".publiclibrary.ota.ble.ti.Ti2FileOtaUpgradeActivity"
             android:screenOrientation="portrait" />
-        <!--
-   接入HMSSDK PUSH模块需要注册，第三方相关 :接收Push消息（注册、透传消息、通知栏点击事件）广播，
-    此receiver类需要开发者自己创建并继承com.huawei.hms.support.api.push.PushReceiver类，
-    参考示例代码中的类：com.huawei.hmsagent.HuaweiPushRevicer${PACKAGE_NAME} 要替换上您应用的包名
-        -->
-        <receiver
-            android:name="com.kaidishi.lock.push.HuaweiPushRevicer"
-            android:permission="com.kaidishi.lock.huawei.permission.PROCESS_PUSH_MSG">
-            <intent-filter>
-
-                <!-- 必须,用于接收token -->
-                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
-                <!-- 必须, 用于接收透传消息 -->
-                <action android:name="com.huawei.android.push.intent.RECEIVE" />
-                <!-- 必须, 用于接收通知栏消息点击事件 此事件不需要开发者处理，只需注册就可以 -->
-                <action android:name="com.huawei.intent.action.PUSH_DELAY_NOTIFY" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activity.device.wifilock.WifiLockWifiDetailActivity"
             android:launchMode="singleTask"
@@ -965,67 +902,7 @@
 
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-        <!-- 魅族辅助 SDK -->
-        <meta-data
-            android:name="MEIZUPUSH_APPID"
-            android:value="MZ_${MEIZU_APP_ID}" />
-        <meta-data
-            android:name="MEIZUPUSH_APPKEY"
-            android:value="MZ_${MEIZU_APP_KEY}" />
-        <service
-            android:name="com.meizu.cloud.pushsdk.NotificationService"
-            android:exported="true"
-            android:process=":pushservice" />
-        <receiver
-            android:name="com.meizu.cloud.pushsdk.SystemReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.igexin.sdk.FlymePushReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
-                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
-                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
-                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
-                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver>
-        <!-- 魅族辅助 SDK -->
-        <!-- VIVO辅助 SDK -->
-        <meta-data
-            android:name="com.vivo.push.app_id"
-            android:value="${VIVO_APP_ID}" />
-        <meta-data
-            android:name="com.vivo.push.api_key"
-            android:value="${VIVO_APP_KEY}" />
 
-        <service
-            android:name="com.vivo.push.sdk.service.CommandClientService"
-            android:exported="true"
-            android:process=":pushservice" />
-
-        <activity
-            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
-            android:exported="true"
-            android:process=":pushservice"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <receiver
-            android:name="com.igexin.sdk.VivoPushMessageReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-
-                <!-- 接收 push 消息 -->
-                <action android:name="com.vivo.pushclient.action.RECEIVE" />
-            </intent-filter>
-        </receiver> <!-- VIVO辅助 SDK -->
         <activity
             android:name=".activity.device.wifilock.add.WifiLockSetUpActivity"
             android:launchMode="singleTask"
@@ -1418,11 +1295,132 @@
         <activity
             android:name=".activity.ScanHttpDialogActivity"
             android:theme="@style/gatewayDialog" />
-
         <activity
             android:name=".activity.my.PrivacyActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <service android:name=".publiclibrary.xm.DoorbellingService"/>
+        <service android:name=".publiclibrary.ble.BleService" />
+        <service android:name=".publiclibrary.ota.ble.p6.BluetoothLeService" />
+        <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />
+
+        <receiver android:name=".utils.networkListenerutil.NetWorkChangReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAResponseReceiver_v1"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.cysmart.bluetooth.le.ACTION_OTA_DATA_AVAILABLE_V1" />
+            </intent-filter>
+        </receiver>
+
+        <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
+        <service
+            android:name="com.kaidishi.lock.service.GeTuiPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" /> <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+        <service
+            android:name="com.kaidishi.lock.service.GeTuiIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <!-- 魅族辅助 SDK start -->
+        <meta-data
+            android:name="MEIZUPUSH_APPID"
+            android:value="MZ_${MEIZU_APP_ID}" />
+        <meta-data
+            android:name="MEIZUPUSH_APPKEY"
+            android:value="MZ_${MEIZU_APP_KEY}" />
+        <service
+            android:name="com.meizu.cloud.pushsdk.NotificationService"
+            android:exported="true"
+            android:process=":pushservice" />
+        <receiver
+            android:name="com.meizu.cloud.pushsdk.SystemReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.igexin.sdk.FlymePushReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
+                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
+                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
+                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
+                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+        <!-- 魅族辅助 SDK end -->
+        <!-- VIVO辅助 SDK start -->
+        <meta-data
+            android:name="com.vivo.push.app_id"
+            android:value="${VIVO_APP_ID}" />
+        <meta-data
+            android:name="com.vivo.push.api_key"
+            android:value="${VIVO_APP_KEY}" />
+
+        <service
+            android:name="com.vivo.push.sdk.service.CommandClientService"
+            android:exported="true"
+            android:process=":pushservice" />
+
+        <activity
+            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
+            android:exported="true"
+            android:process=":pushservice"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="com.igexin.sdk.VivoPushMessageReceiver"
+            android:process=":pushservice">
+            <intent-filter>
+
+                <!-- 接收 push 消息 -->
+                <action android:name="com.vivo.pushclient.action.RECEIVE" />
+            </intent-filter>
+        </receiver>
+        <!-- VIVO辅助 SDK end -->
+        <!-- OPPO辅助 SDK start -->
+        <meta-data
+            android:name="OPPOPUSH_APPKEY"
+            android:value="OP_${OPPO_APP_KEY}" />
+        <meta-data
+            android:name="OPPOPUSH_APPSECRET"
+            android:value="OP_${OPPO_APP_SECRET}" />
+
+        <service
+            android:name="com.igexin.sdk.OppoPushService"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
+            </intent-filter>
+        </service>
+        <!-- OPPO辅助 SDK end -->
+
+        <!--  华为core辅助  -->
+        <meta-data
+            android:name="com.huawei.hms.client.channel.androidMarket"
+            android:value="false" />
+        <service
+            android:name="com.kaidishi.lock.push.HuaWeiPushService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

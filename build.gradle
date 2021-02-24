@@ -4,10 +4,11 @@ buildscript {
     ext.kotlin_version = '1.3.72'
 
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         google()
         jcenter()
         mavenCentral()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url 'https://developer.huawei.com/repo/'}
     }
     dependencies {
         //目前发现gradle升级未3.6.1有问题
@@ -21,6 +22,7 @@ buildscript {
 
         classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.huawei.agconnect:agcp:1.4.1.300'
     }
 }
 

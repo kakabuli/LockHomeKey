@@ -32,8 +32,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.huawei.android.hms.agent.HMSAgent;
-import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.common.ApiException;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -69,7 +70,6 @@ import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
-import com.kaidishi.lock.push.NetEvevt;
 import com.kaidishi.lock.xiaomi.SPUtils2;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 import com.yun.software.kaadas.Comment.Constans;
@@ -99,7 +99,7 @@ import la.xiong.androidquick.ui.eventbus.EventCenter;
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
 
 public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivityPresenter<IMainActivityView>>
-        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener, NetEvevt {
+        implements ViewPager.OnPageChangeListener, IMainActivityView, RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.rb_one)
     RadioButton rbOne;
     @BindView(R.id.rb_two)
@@ -124,7 +124,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private boolean isRegistered = false;
     UpgradePresenter upgradePresenter = null;
     public static boolean isRunning = false;
-    public static NetEvevt evevt;
+//    public static NetEvevt evevt;
     boolean isCreate = false;
     String sip_pacage_invite = null;
     boolean isFromWelCom = false;
@@ -162,7 +162,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         fragments.add(new DeviceFragment());
 //        fragments.add(new ShopFragment());
         fragments.add(new PersonalCenterFragment());
-        evevt = this;
+//        evevt = this;
         instance = this;
         isCreate = true;
         homeViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -369,10 +369,11 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     }
 
 
+    /*//TODO：删除华为推送位置
     @Override
     public void onNetEventToken(String token) {
         uploadToken(3,token);
-    }
+    }*/
 
 
     public interface HomeSelectListener {
@@ -420,27 +421,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
               String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
             if (TextUtils.isEmpty(huawei)) {
                 // 初始化,生成token失败
-                Log.e(GeTui.VideoLog, "startSendFile to HMSAgent,token produce fail");
-                HMSAgent.Push.getToken(new GetTokenHandler() {
-                    @Override
-                    public void onResult(int rtnCode) {
-//                        showLog("get token: end code=" + rtnCode);
-                        // 0:表示成功
-                        Log.e(GeTui.VideoLog, "get token: end code=" + rtnCode);
-                        if(TextUtils.isEmpty(huawei)){
-                            uploadToken(2,(String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, ""));
-                        }
-//                        uploadToken(3,huawei);
-                    }
-                });
+                getToken();
             } else {
                 uploadToken(3,huawei);
-                // produce token success,upload token fail
-//                if (!ispush) {
-//                    uploadToken(huawei);
-//                } else {
-//                    Log.e(GeTui.VideoLog, "token upload to success");
-//                }
             }
         } else if(Rom.isMiui()){
             String xiaoMiToken = (String) SPUtils2.get(MainActivity.this, XiaoMiConstant.XIAOMIKEY,"");
@@ -1012,6 +995,30 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             return getString(R.string.vivo_market);
         }
         return "";
+    }
+
+    /**
+     * getToken(String appId, String scope), This method is used to obtain a token required for accessing HUAWEI Push Kit.
+     * If there is no local AAID, this method will automatically generate an AAID when it is called because the Huawei Push server needs to generate a token based on the AAID.
+     * This method is a synchronous method, and you cannot call it in the main thread. Otherwise, the main thread may be blocked.
+     */
+    private void getToken() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    // read from agconnect-services.json
+                    String appId = AGConnectServicesConfig.fromContext(MainActivity.this).getString("client/app_id");
+                    String huawei = HmsInstanceId.getInstance(MainActivity.this).getToken(appId, "HCM");
+                    if(!TextUtils.isEmpty(huawei)) {
+                        uploadToken(3,huawei);
+                    }
+
+                } catch (ApiException e) {
+                    Log.e(GeTui.VideoLog,"get token failed, " + e);
+                }
+            }
+        }.start();
     }
 
     @Override

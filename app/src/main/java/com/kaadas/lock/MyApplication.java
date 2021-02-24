@@ -11,9 +11,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 
-/*import com.blankj.ALog;*/
 import com.google.gson.Gson;
-import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.hms.push.HmsMessaging;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -141,7 +140,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         MyLog.getInstance().init(this);
         LogUtils.e("attachView  App启动 ");
         instance = this;
-        CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
+        //CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
         initMqttService();//启动MqttService
         initMMKV(this);
@@ -159,7 +158,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         setUpWriteDataBase();
         // HuaWei phone
         if (Rom.isEmui()) {
-            HMSAgent.init(this);
+            HmsMessaging.getInstance(this).setAutoInitEnabled(true);
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
