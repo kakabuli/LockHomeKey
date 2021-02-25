@@ -76,6 +76,18 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activity.device.wifilock.x9.WifiLockOpenDirectionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.x9.WifiLockOpenForceActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.x9.WifiLockLockingMethodActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.device.wifilock.videolock.WifiVideoLockSafeModeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />

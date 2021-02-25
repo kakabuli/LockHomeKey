@@ -1993,4 +1993,14 @@
     <string name="alarm_notification_content_96">有人按门铃</string>
     <string name="alarm_notification_content_112">徘徊报警</string>
     <string name="alarm_notification_content_128">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
+
+    <string name="wifi_lock_x9_door_direction_left">左开门</string>
+    <string name="wifi_lock_x9_door_direction_right">右开门</string>
+    <string name="wifi_lock_x9_door_force_low">低扭力</string>
+    <string name="wifi_lock_x9_door_force_high">高扭力</string>
+    <string name="wifi_lock_x9_locking_method_1">自动上锁</string>
+    <string name="wifi_lock_x9_locking_method_2">定时5秒</string>
+    <string name="wifi_lock_x9_locking_method_3">定时10秒</string>
+    <string name="wifi_lock_x9_locking_method_4">定时15秒</string>
+    <string name="wifi_lock_x9_locking_method_5">关闭自动上锁</string>
 </resources>

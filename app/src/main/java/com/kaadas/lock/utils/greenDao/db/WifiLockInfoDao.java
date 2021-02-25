@@ -82,6 +82,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property LockMac = new Property(48, String.class, "lockMac", false, "LOCK_MAC");
         public final static Property RSSI = new Property(49, String.class, "RSSI", false, "RSSI");
         public final static Property WifiStrength = new Property(50, int.class, "wifiStrength", false, "WIFI_STRENGTH");
+        public final static Property OpenDirection = new Property(51, int.class, "openDirection", false, "OPEN_DIRECTION");
+        public final static Property OpenForce = new Property(52, int.class, "openForce", false, "OPEN_FORCE");
+        public final static Property LockingMethod = new Property(53, int.class, "lockingMethod", false, "LOCKING_METHOD");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -150,7 +153,10 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"MAC\" TEXT," + // 47: mac
                 "\"LOCK_MAC\" TEXT," + // 48: lockMac
                 "\"RSSI\" TEXT," + // 49: RSSI
-                "\"WIFI_STRENGTH\" INTEGER NOT NULL );"); // 50: wifiStrength
+                "\"WIFI_STRENGTH\" INTEGER NOT NULL ," + // 50: wifiStrength
+                "\"OPEN_DIRECTION\" INTEGER NOT NULL ," + // 51: openDirection
+                "\"OPEN_FORCE\" INTEGER NOT NULL ," + // 52: openForce
+                "\"LOCKING_METHOD\" INTEGER NOT NULL );"); // 53: lockingMethod
     }
 
     /** Drops the underlying database table. */
@@ -341,6 +347,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(50, RSSI);
         }
         stmt.bindLong(51, entity.getWifiStrength());
+        stmt.bindLong(52, entity.getOpenDirection());
+        stmt.bindLong(53, entity.getOpenForce());
+        stmt.bindLong(54, entity.getLockingMethod());
     }
 
     @Override
@@ -525,6 +534,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(50, RSSI);
         }
         stmt.bindLong(51, entity.getWifiStrength());
+        stmt.bindLong(52, entity.getOpenDirection());
+        stmt.bindLong(53, entity.getOpenForce());
+        stmt.bindLong(54, entity.getLockingMethod());
     }
 
     @Override
@@ -585,7 +597,10 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47), // mac
             cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48), // lockMac
             cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49), // RSSI
-            cursor.getInt(offset + 50) // wifiStrength
+            cursor.getInt(offset + 50), // wifiStrength
+            cursor.getInt(offset + 51), // openDirection
+            cursor.getInt(offset + 52), // openForce
+            cursor.getInt(offset + 53) // lockingMethod
         );
         return entity;
     }
@@ -643,6 +658,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setLockMac(cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48));
         entity.setRSSI(cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49));
         entity.setWifiStrength(cursor.getInt(offset + 50));
+        entity.setOpenDirection(cursor.getInt(offset + 51));
+        entity.setOpenForce(cursor.getInt(offset + 52));
+        entity.setLockingMethod(cursor.getInt(offset + 53));
      }
     
     @Override

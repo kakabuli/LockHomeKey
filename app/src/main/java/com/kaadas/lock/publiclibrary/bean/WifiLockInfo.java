@@ -157,8 +157,11 @@ public class WifiLockInfo implements Serializable {
     private String lockMac;
     private String RSSI;
     private int wifiStrength;
+    private int openDirection;
+    private int openForce;
+    private int lockingMethod;
 
-    @Generated(hash = 1135326471)
+    @Generated(hash = 405916316)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -171,7 +174,8 @@ public class WifiLockInfo implements Serializable {
             SingleFireSwitchInfo singleFireSwitchInfo, WifiVideoLockSetPirBean setPir,
             WifiVideoLockAliveTimeBean alive_time, int stay_status, String camera_version,
             String mcu_version, String device_model, int keep_alive_status, String mac,
-            String lockMac, String RSSI, int wifiStrength) {
+            String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
+            int lockingMethod) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -223,10 +227,37 @@ public class WifiLockInfo implements Serializable {
         this.lockMac = lockMac;
         this.RSSI = RSSI;
         this.wifiStrength = wifiStrength;
+        this.openDirection = openDirection;
+        this.openForce = openForce;
+        this.lockingMethod = lockingMethod;
     }
 
     @Generated(hash = 666757199)
     public WifiLockInfo() {
+    }
+
+    public int getOpenDirection() {
+        return openDirection;
+    }
+
+    public void setOpenDirection(int openDirection) {
+        this.openDirection = openDirection;
+    }
+
+    public int getOpenForce() {
+        return openForce;
+    }
+
+    public void setOpenForce(int openForce) {
+        this.openForce = openForce;
+    }
+
+    public int getLockingMethod() {
+        return lockingMethod;
+    }
+
+    public void setLockingMethod(int lockingMethod) {
+        this.lockingMethod = lockingMethod;
     }
 
     public String getLockMac() {

@@ -5,7 +5,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 33// 数据库版本号
+    schemaVersion 34// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -98,8 +98,7 @@ android {
 
     buildTypes {
         release {
-            debuggable true
-            minifyEnabled false
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -149,31 +148,31 @@ android {
     }
 }
 
-task copyAgconnecToRelease(type:Copy){
-    from "src/main/java/com/kaidishi/lock/push/"
-    include "agconnect-services.json"
-    into "./"
-}
-afterEvaluate {
-    tasks.matching {
-        it.name.equals("assembleDebug") || it.name.equals("assembleRelease")
-    }.each {task->
-        if(isReleaseBuildType()){
-            task.dependsOn(copyAgconnecToRelease);
-        }
-    }
-}
-//判断是否为debug模式
-def isReleaseBuildType(){
-    boolean isReleaseTypes = false;
-    for(String s : gradle.startParameter.taskNames) {
-        if (s.equals(":app:assembleRelease")) {
-            isReleaseTypes = true;
-            break;
-        }
-    }
-    return isReleaseTypes;
-}
+//task copyAgconnecToRelease(type:Copy){
+//    from "src/main/java/com/kaidishi/lock/push/"
+//    include "agconnect-services.json"
+//    into "./"
+//}
+//afterEvaluate {
+//    tasks.matching {
+//        it.name.equals("assembleDebug") || it.name.equals("assembleRelease")
+//    }.each {task->
+//        if(isReleaseBuildType()){
+//            task.dependsOn(copyAgconnecToRelease);
+//        }
+//    }
+//}
+////判断是否为debug模式
+//def isReleaseBuildType(){
+//    boolean isReleaseTypes = false;
+//    for(String s : gradle.startParameter.taskNames) {
+//        if (s.equals(":app:assembleRelease")) {
+//            isReleaseTypes = true;
+//            break;
+//        }
+//    }
+//    return isReleaseTypes;
+//}
 
 //读取签名配置文件
 def getSigningProperties() {

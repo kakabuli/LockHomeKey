@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockRealTimeVideoPresenter;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiLockRealTimeVideoPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockRealTimeVideoView;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.LogUtils;

@@ -57,6 +57,9 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingLockingMethod;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenDirection;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenForce;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockAliveTime;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPir;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
@@ -1001,8 +1004,43 @@ public class MqttCommandFactory {
 
 
     }
-    //////////
 
+    /////////////////////X9////////////////////////////
+    /**
+     * 设置开门方向
+     */
+    public static MqttMessage settingOpenDirection(String wifiID,int openDirection) {
+        int messageId = getMessageId();
+        SettingOpenDirection.ParamsBean paramsBean = new SettingOpenDirection.ParamsBean();
+        paramsBean.setOpenDirection(openDirection);
+        SettingOpenDirection mSettingOpenDirection = new SettingOpenDirection(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,
+                wifiID,MqttConstant.SET_OPEN_DIRECTION,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingOpenDirection, messageId,2);
+    }
+
+    /**
+     * 设置开门力量
+     */
+    public static MqttMessage settingOpenForce(String wifiID,int openForce) {
+        int messageId = getMessageId();
+        SettingOpenForce.ParamsBean paramsBean = new SettingOpenForce.ParamsBean();
+        paramsBean.setOpenForce(openForce);
+        SettingOpenForce mSettingOpenDirection = new SettingOpenForce(MqttConstant.MSG_TYPE_REQUEST,messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_OPEN_FORCE,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingOpenDirection, messageId,2);
+    }
+
+    /**
+     * 设置上锁方式
+     */
+    public static MqttMessage settingLockingMethod(String wifiID,int lockingMethod) {
+        int messageId = getMessageId();
+        SettingLockingMethod.ParamsBean paramsBean = new SettingLockingMethod.ParamsBean();
+        paramsBean.setLockingMethod(lockingMethod);
+        SettingLockingMethod mSettingOpenDirection = new SettingLockingMethod(MqttConstant.MSG_TYPE_REQUEST,messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_LOCKING_METHOD,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingOpenDirection, messageId,2);
+    }
 
     ///////////////////////视频锁///////////////////////
     /**

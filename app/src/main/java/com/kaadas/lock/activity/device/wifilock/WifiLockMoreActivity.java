@@ -22,6 +22,9 @@ import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivi
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockRealTimeActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity;
+import com.kaadas.lock.activity.device.wifilock.x9.WifiLockLockingMethodActivity;
+import com.kaadas.lock.activity.device.wifilock.x9.WifiLockOpenDirectionActivity;
+import com.kaadas.lock.activity.device.wifilock.x9.WifiLockOpenForceActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
@@ -30,6 +33,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -100,10 +104,16 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     RelativeLayout rlRealTimeVideo;
     @BindView(R.id.rl_lock_type)
     RelativeLayout rlLockType;
-    @BindView(R.id.rl_open_power)
-    RelativeLayout rlOpenPower;
+    @BindView(R.id.rl_open_force)
+    RelativeLayout rlOpenForce;
     @BindView(R.id.rl_door_direction)
     RelativeLayout rlDoorDirection;
+    @BindView(R.id.tv_door_direction)
+    TextView tvDoorDirection;
+    @BindView(R.id.tv_open_force)
+    TextView tvOpenForce;
+    @BindView(R.id.tv_lock_type)
+    TextView tvLockType;
 
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
@@ -194,18 +204,25 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
             if(BleLockUtils.isSupportDoorDirection(func)){
                 rlDoorDirection.setVisibility(View.VISIBLE);
+                try {
+                    setOpenDirection(wifiLockInfo.getOpenDirection());
+                }catch (Exception e){}
             }else{
                 rlDoorDirection.setVisibility(View.GONE);
             }
 
             if(BleLockUtils.isSupportOpenDoorPower(func)){
-                rlOpenPower.setVisibility(View.VISIBLE);
+                rlOpenForce.setVisibility(View.VISIBLE);
+                try{
+                    setOpenForce(wifiLockInfo.getOpenForce());
+                }catch (Exception e){}
             }else{
-                rlOpenPower.setVisibility(View.GONE);
+                rlOpenForce.setVisibility(View.GONE);
             }
 
             if(BleLockUtils.isSupportLockType(func)){
                 rlLockType.setVisibility(View.VISIBLE);
+                setLockingMethod(wifiLockInfo.getLockingMethod());
             }else{
                 rlLockType.setVisibility(View.GONE);
             }
@@ -230,6 +247,42 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         }
     }
 
+    private void setLockingMethod(int lockingMethod) {
+        switch (lockingMethod){
+            case 1:
+                tvLockType.setText(getString(R.string.wifi_lock_x9_locking_method_1));
+                break;
+            case 2:
+                tvLockType.setText(getString(R.string.wifi_lock_x9_locking_method_2));
+                break;
+            case 3:
+                tvLockType.setText(getString(R.string.wifi_lock_x9_locking_method_3));
+                break;
+            case 4:
+                tvLockType.setText(getString(R.string.wifi_lock_x9_locking_method_4));
+                break;
+            case 5:
+                tvLockType.setText(getString(R.string.wifi_lock_x9_locking_method_5));
+                break;
+        }
+    }
+
+    private void setOpenForce(int openForce) {
+        if(openForce == 1){
+            tvOpenForce.setText(getString(R.string.wifi_lock_x9_door_force_low));
+        }else if(openForce == 2){
+            tvOpenForce.setText(getString(R.string.wifi_lock_x9_door_force_high));
+        }
+    }
+
+    private void setOpenDirection(int openDirection) {
+        if(openDirection == 1){
+            tvDoorDirection.setText(getString(R.string.wifi_lock_x9_door_direction_left));
+        }else if(openDirection == 2){
+            tvDoorDirection.setText(getString(R.string.wifi_lock_x9_door_direction_right));
+        }
+    }
+
     private void initClick() {
         back.setOnClickListener(this);
         rlDeviceName.setOnClickListener(this);
@@ -248,6 +301,9 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         ivAm.setOnClickListener(this);
         rlWanderingAlarm.setOnClickListener(this);
         rlRealTimeVideo.setOnClickListener(this);
+        rlDoorDirection.setOnClickListener(this);
+        rlOpenForce.setOnClickListener(this);
+        rlLockType.setOnClickListener(this);
     }
 
     @Override
@@ -406,10 +462,53 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.rl_door_direction:
+                        intent = new Intent(this, WifiLockOpenDirectionActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
+                        break;
+                    case R.id.rl_open_force:
+                        intent = new Intent(this, WifiLockOpenForceActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_FORCE);
+                        break;
+                    case R.id.rl_lock_type:
+                        intent = new Intent(this, WifiLockLockingMethodActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_LOCKING_METHOD);
+                        break;
                 }
             } else {
                 LogUtils.e("--kaadas--取功能集为空");
 
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        int intExtra ;
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                case KeyConstants.WIFI_LOCK_LOCKING_METHOD:
+                    if(data != null){
+                        intExtra = data.getIntExtra(MqttConstant.SET_LOCKING_METHOD, 0);
+                        setLockingMethod(intExtra);
+                    }
+                    break;
+                case KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION:
+                    if(data != null){
+                        intExtra = data.getIntExtra(MqttConstant.SET_OPEN_DIRECTION, 0);
+                        setOpenDirection(intExtra);
+                    }
+                    break;
+                case KeyConstants.WIFI_LOCK_SET_OPEN_FORCE:
+                    if(data != null){
+                        intExtra = data.getIntExtra(MqttConstant.SET_OPEN_FORCE, 0);
+                        setOpenForce(intExtra);
+                    }
+                    break;
             }
         }
     }
@@ -544,32 +643,4 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
     }
 
-    private void showWifiDialog() {
-        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "更换WIFI需重新进入添加门锁步骤",
-                "取消", "确定", "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-
-                    }
-
-                    @Override
-                    public void right() {
-                        Intent wifiIntent = new Intent(WifiLockMoreActivity.this, WifiLockAddNewThirdActivity.class);
-                        String wifiModelType = "WiFi&VIDEO";
-                        wifiIntent.putExtra("wifiModelType", wifiModelType);
-                        wifiIntent.putExtra("distribution_again", true);
-                        startActivity(wifiIntent);
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-
-                    @Override
-                    public void afterTextChanged(String toString) {
-
-                    }
-                });
-    }
 }

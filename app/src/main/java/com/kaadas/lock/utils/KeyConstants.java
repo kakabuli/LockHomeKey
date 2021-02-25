@@ -373,6 +373,15 @@ public class KeyConstants {
     //实时视频设置
     public static final int WIFI_VIDEO_LOCK_REAL_TIME_SETTING_CODE = 2018;
 
+    //X9开门方向
+    public static final int WIFI_LOCK_SET_OPEN_DIRECTION = 3001;
+
+    //X9开门力度
+    public static final int WIFI_LOCK_SET_OPEN_FORCE = 3002;
+
+    //X9上锁方式
+    public static final int WIFI_LOCK_LOCKING_METHOD = 3003;
+
     /**
      * 传递蓝牙设备信息的Key
      */
@@ -553,11 +562,11 @@ public class KeyConstants {
     /**
      *  晾衣机功能
      */
-    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_BAKING = 1001;
-    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY = 1002;
-    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP = 1003;
-    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN = 1004;
-    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE = 1005;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_BAKING = 4001;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY = 4002;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP = 4003;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN = 4004;
+    public final static int CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE = 4005;
 
 
     /**

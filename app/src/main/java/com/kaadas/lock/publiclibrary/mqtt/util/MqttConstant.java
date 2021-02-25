@@ -226,6 +226,15 @@ public class MqttConstant {
     //wifi锁上报的  Function
     public static final String FUNC_WFEVENT = "wfevent";
 
+    //设置锁开门方向
+    public static final String SET_OPEN_DIRECTION = "setOpenDirection";
+
+    //设置开门力量
+    public static final String SET_OPEN_FORCE = "setOpenForce";
+
+    //设置上锁方式
+    public static final String SET_LOCKING_METHOD = "setLockingMethod";
+
     public static final String WIFI_LOCK_DEVTYPE = "kdswflock";
 
     //视频锁 讯美

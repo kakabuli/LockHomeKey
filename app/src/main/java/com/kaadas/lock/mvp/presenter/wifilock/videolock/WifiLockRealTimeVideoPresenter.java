@@ -1,4 +1,4 @@
-package com.kaadas.lock.mvp.presenter.wifilock;
+package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 
 import android.view.SurfaceView;
 

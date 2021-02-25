@@ -230,7 +230,7 @@
             android:layout_marginRight="@dimen/dp_16"
             android:drawableRight="@mipmap/right"
             android:drawablePadding="@dimen/dp_7"
-            android:id="@+id/iv_door_direction"
+            android:id="@+id/tv_door_direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#999999"
@@ -247,7 +247,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_open_power"
+        android:id="@+id/rl_open_force"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="#FFFFFF">
@@ -265,7 +265,7 @@
             android:layout_marginRight="@dimen/dp_16"
             android:drawableRight="@mipmap/right"
             android:drawablePadding="@dimen/dp_7"
-            android:id="@+id/iv_open_power"
+            android:id="@+id/tv_open_force"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -299,7 +299,7 @@
             android:layout_marginRight="@dimen/dp_16"
             android:drawableRight="@mipmap/right"
             android:drawablePadding="@dimen/dp_7"
-            android:id="@+id/iv_lock_type"
+            android:id="@+id/tv_lock_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
