@@ -43,14 +43,14 @@
             android:background="#999999"
             android:visibility="invisible" />
     </LinearLayout>
-
+    <!--android:text="上锁故障报警：您的门锁有故障，请注意"-->
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_12"
         android:layout_marginRight="@dimen/dp_20"
-        android:text="上锁故障报警：您的门锁有故障，请注意"
+        android:text="上锁故障报警：您的门锁未上锁，请检查锁舌是否弹出"
         android:textColor="#999999"
         android:textSize="@dimen/sp_12" />
 

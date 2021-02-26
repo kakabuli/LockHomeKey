@@ -545,7 +545,8 @@
     <string name="warring_broken">已监测到您的门锁被撬,请联系家人或小区保安</string>
     <string name="warring_mechanical_key">您的智能锁正在被机械锁开启,请回家或联系保安查看</string>
     <string name="warring_low_power">您的门锁电量过低，请及时更换</string>
-    <string name="warring_door_not_lock">您的门锁有故障,请注意</string>
+<!--    <string name="warring_door_not_lock">您的门锁有故障,请注意</string>-->
+    <string name="warring_door_not_lock">您的门锁未上锁，请检查锁舌是否弹出</string>
     <string name="warring_arm">您的门锁处于布防状态,有从门内开锁情况</string>
     <string name="warrign_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="warring_unkonw">未知警报</string>
@@ -1387,7 +1388,8 @@
     <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_opens">门锁正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
-    <string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>
+    <!--<string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>-->
+    <string name="wifi_lock_alarm_problem">您的门锁未上锁，请检查锁舌是否弹出</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
     <string name="wifi_video_lock_alarm_doorbell">有人按门铃</string>
     <string name="wifi_lockbind_success">绑定成功</string>
@@ -1419,7 +1421,8 @@
     <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
-    <string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>
+    <!--<string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>-->
+    <string name="wifi_lock_alarm_20">您的%1$s门锁未上锁，请检查锁舌是否弹出</string>
     <string name="wifi_lock_alarm_40">您的%1$s门锁处于布防状态，有从门内开锁情况</string>
     <string name="wifi_lock_alarm_80">您的%1$s门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="lock_already_lock">门锁已上锁</string>
@@ -1988,7 +1991,8 @@
     <string name="alarm_notification_content_4">已监测到您的门锁被撬，请联系家人或小区保安！</string>
     <string name="alarm_notification_content_8">您的门锁正在被机械钥匙开启，请回家或联系保安查看！</string>
     <string name="alarm_notification_content_16">您的门锁低电量，请及时更换！</string>
-    <string name="alarm_notification_content_32">您的门锁有故障，请注意！</string>
+    <!--<string name="alarm_notification_content_32">您的门锁有故障，请注意！</string>-->
+    <string name="alarm_notification_content_32">您的门锁未上锁，请检查锁舌是否弹出</string>
     <string name="alarm_notification_content_64">您的门锁处于布防状态，有从门内开锁情况</string>
     <string name="alarm_notification_content_96">有人按门铃</string>
     <string name="alarm_notification_content_112">徘徊报警</string>
