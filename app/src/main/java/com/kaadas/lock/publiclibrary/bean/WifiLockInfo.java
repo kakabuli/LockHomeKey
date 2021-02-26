@@ -160,8 +160,11 @@ public class WifiLockInfo implements Serializable {
     private int openDirection;
     private int openForce;
     private int lockingMethod;
+    private String frontPanelVersion;
+    private String backPanelVersion;
 
-    @Generated(hash = 405916316)
+
+    @Generated(hash = 731569902)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -175,7 +178,7 @@ public class WifiLockInfo implements Serializable {
             WifiVideoLockAliveTimeBean alive_time, int stay_status, String camera_version,
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
-            int lockingMethod) {
+            int lockingMethod, String frontPanelVersion, String backPanelVersion) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -230,10 +233,29 @@ public class WifiLockInfo implements Serializable {
         this.openDirection = openDirection;
         this.openForce = openForce;
         this.lockingMethod = lockingMethod;
+        this.frontPanelVersion = frontPanelVersion;
+        this.backPanelVersion = backPanelVersion;
     }
 
     @Generated(hash = 666757199)
     public WifiLockInfo() {
+    }
+
+
+    public String getFrontPanelVersion() {
+        return frontPanelVersion;
+    }
+
+    public void setFrontPanelVersion(String frontPanelVersion) {
+        this.frontPanelVersion = frontPanelVersion;
+    }
+
+    public String getBackPanelVersion() {
+        return backPanelVersion;
+    }
+
+    public void setBackPanelVersion(String backPanelVersion) {
+        this.backPanelVersion = backPanelVersion;
     }
 
     public int getOpenDirection() {

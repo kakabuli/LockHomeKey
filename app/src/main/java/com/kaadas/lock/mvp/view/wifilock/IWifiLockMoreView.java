@@ -3,6 +3,9 @@ package com.kaadas.lock.mvp.view.wifilock;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
+
+import java.util.List;
 
 public interface IWifiLockMoreView extends IBaseView {
 
@@ -64,6 +67,9 @@ public interface IWifiLockMoreView extends IBaseView {
      * @param SN
      */
     void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN ,int type);
+
+
+    void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks);
 
 
     /**

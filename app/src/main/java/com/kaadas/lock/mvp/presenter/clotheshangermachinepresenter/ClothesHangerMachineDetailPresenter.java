@@ -5,6 +5,8 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineDetailView;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineView;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.postbean.HangerMultiOTABean;
+import com.kaadas.lock.publiclibrary.http.postbean.HangerUpgradeMultiOTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.MultiOTABean;
 import com.kaadas.lock.publiclibrary.http.postbean.UpgradeMultiOTABean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
@@ -70,9 +72,9 @@ public class ClothesHangerMachineDetailPresenter<T> extends BasePresenter<ICloth
     }
 
     public void checkOTAInfo(String wifiSN,String hangerVersion,String moduleVersion) {
-        List<MultiOTABean.OTAParams> params = new ArrayList<>();
-        params.add(new MultiOTABean.OTAParams(6,hangerVersion));
-        params.add(new MultiOTABean.OTAParams(7,moduleVersion));
+        List<HangerMultiOTABean.OTAParams> params = new ArrayList<>();
+        params.add(new HangerMultiOTABean.OTAParams(6,hangerVersion));
+        params.add(new HangerMultiOTABean.OTAParams(7,moduleVersion));
 
         XiaokaiNewServiceImp.getOtaMultiInfo(1,wifiSN,params,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP)
                 .compose(RxjavaHelper.observeOnMainThread())
@@ -119,12 +121,12 @@ public class ClothesHangerMachineDetailPresenter<T> extends BasePresenter<ICloth
     }
 
     public void updateOTA(String wifiSN,List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
-        List<UpgradeMultiOTABean.UpgradeTaskBean> data = new ArrayList<>();
+        List<HangerUpgradeMultiOTABean.UpgradeTaskBean> data = new ArrayList<>();
         for(int i = 0;i < upgradeTasks.size();i++){
-            data.add(new UpgradeMultiOTABean.UpgradeTaskBean(upgradeTasks.get(i).getDevNum(),upgradeTasks.get(i).getFileLen(),
+            data.add(new HangerUpgradeMultiOTABean.UpgradeTaskBean(upgradeTasks.get(i).getDevNum(),upgradeTasks.get(i).getFileLen(),
                     upgradeTasks.get(i).getFileUrl(),upgradeTasks.get(i).getFileMd5(),upgradeTasks.get(i).getFileVersion()));
         }
-        XiaokaiNewServiceImp.wifiDeviceUploadMultiOta(wifiSN, MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,data)
+        XiaokaiNewServiceImp.hangerDeviceUploadMultiOta(wifiSN, MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP,data)
                 .compose(RxjavaHelper.observeOnMainThread())
                 .subscribe(new BaseObserver<BaseResult>() {
             @Override

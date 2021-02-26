@@ -85,6 +85,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property OpenDirection = new Property(51, int.class, "openDirection", false, "OPEN_DIRECTION");
         public final static Property OpenForce = new Property(52, int.class, "openForce", false, "OPEN_FORCE");
         public final static Property LockingMethod = new Property(53, int.class, "lockingMethod", false, "LOCKING_METHOD");
+        public final static Property FrontPanelVersion = new Property(54, String.class, "frontPanelVersion", false, "FRONT_PANEL_VERSION");
+        public final static Property BackPanelVersion = new Property(55, String.class, "backPanelVersion", false, "BACK_PANEL_VERSION");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -156,7 +158,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"WIFI_STRENGTH\" INTEGER NOT NULL ," + // 50: wifiStrength
                 "\"OPEN_DIRECTION\" INTEGER NOT NULL ," + // 51: openDirection
                 "\"OPEN_FORCE\" INTEGER NOT NULL ," + // 52: openForce
-                "\"LOCKING_METHOD\" INTEGER NOT NULL );"); // 53: lockingMethod
+                "\"LOCKING_METHOD\" INTEGER NOT NULL ," + // 53: lockingMethod
+                "\"FRONT_PANEL_VERSION\" TEXT," + // 54: frontPanelVersion
+                "\"BACK_PANEL_VERSION\" TEXT);"); // 55: backPanelVersion
     }
 
     /** Drops the underlying database table. */
@@ -350,6 +354,16 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(52, entity.getOpenDirection());
         stmt.bindLong(53, entity.getOpenForce());
         stmt.bindLong(54, entity.getLockingMethod());
+ 
+        String frontPanelVersion = entity.getFrontPanelVersion();
+        if (frontPanelVersion != null) {
+            stmt.bindString(55, frontPanelVersion);
+        }
+ 
+        String backPanelVersion = entity.getBackPanelVersion();
+        if (backPanelVersion != null) {
+            stmt.bindString(56, backPanelVersion);
+        }
     }
 
     @Override
@@ -537,6 +551,16 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(52, entity.getOpenDirection());
         stmt.bindLong(53, entity.getOpenForce());
         stmt.bindLong(54, entity.getLockingMethod());
+ 
+        String frontPanelVersion = entity.getFrontPanelVersion();
+        if (frontPanelVersion != null) {
+            stmt.bindString(55, frontPanelVersion);
+        }
+ 
+        String backPanelVersion = entity.getBackPanelVersion();
+        if (backPanelVersion != null) {
+            stmt.bindString(56, backPanelVersion);
+        }
     }
 
     @Override
@@ -600,7 +624,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getInt(offset + 50), // wifiStrength
             cursor.getInt(offset + 51), // openDirection
             cursor.getInt(offset + 52), // openForce
-            cursor.getInt(offset + 53) // lockingMethod
+            cursor.getInt(offset + 53), // lockingMethod
+            cursor.isNull(offset + 54) ? null : cursor.getString(offset + 54), // frontPanelVersion
+            cursor.isNull(offset + 55) ? null : cursor.getString(offset + 55) // backPanelVersion
         );
         return entity;
     }
@@ -661,6 +687,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setOpenDirection(cursor.getInt(offset + 51));
         entity.setOpenForce(cursor.getInt(offset + 52));
         entity.setLockingMethod(cursor.getInt(offset + 53));
+        entity.setFrontPanelVersion(cursor.isNull(offset + 54) ? null : cursor.getString(offset + 54));
+        entity.setBackPanelVersion(cursor.isNull(offset + 55) ? null : cursor.getString(offset + 55));
      }
     
     @Override

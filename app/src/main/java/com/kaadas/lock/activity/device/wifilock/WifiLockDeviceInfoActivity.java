@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineDetailActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCameraVersionActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockFirwareNumberActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -21,6 +22,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -126,8 +128,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 rlLockFirwareNumber.setVisibility(View.GONE);
             }
 
-            lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion() + "";
-            tvLockFirmwareVersion.setText(TextUtils.isEmpty(lockFirmwareVersion) ? "" : wifiLockInfo.getLockFirmwareVersion());
+            if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+                lockFirmwareVersion = wifiLockInfo.getFrontPanelVersion() + "";
+            }else{
+                lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion() + "";
+            }
+            tvLockFirmwareVersion.setText(lockFirmwareVersion);
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion() + "") ? "" : wifiLockInfo.getWifiVersion());
         }
     }
@@ -142,10 +148,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         finish();
     }
 
-    @OnClick({R.id.tv_face_model_firmware_version, R.id.tv_lock_firmware_version, R.id.wifi_version,R.id.rl_camera_version,R.id.rl_lock_firware_number})
+    @OnClick({R.id.rl_face_model_firmware_version, R.id.rl_lock_model_firmware_version, R.id.rl_wifi_model_firmware_version,R.id.rl_camera_version,R.id.rl_lock_firware_number})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_face_model_firmware_version:
+            case R.id.rl_face_model_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(faceModelFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     mPresenter.checkOtaInfo(wifiSN, faceModelFirmwareVersion, 3);
@@ -153,15 +159,19 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.tv_lock_firmware_version:
+            case R.id.rl_lock_model_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(lockFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
-                    mPresenter.checkOtaInfo(wifiSN, lockFirmwareVersion, 2);
+                    if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+                        mPresenter.checkMultiOTAInfo(wifiSN,wifiLockInfo.getFrontPanelVersion() + "",wifiLockInfo.getBackPanelVersion() + "");
+                    }else {
+                        mPresenter.checkOtaInfo(wifiSN, lockFirmwareVersion, 2);
+                    }
                 } else {
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.wifi_version:
+            case R.id.rl_wifi_model_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     mPresenter.checkOtaInfo(wifiSN, sWifiVersion, 1);
@@ -244,9 +254,14 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     @Override
     public void noNeedUpdate() {
         hiddenLoading();
+        String content = getString(R.string.already_newest_version) + "";
+        if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+            content = getString(R.string.already_newest_version) + "\n前面板固件版本：" + wifiLockInfo.getFrontPanelVersion()
+            + "\n后面板固件版本：" + wifiLockInfo.getBackPanelVersion();
+        }
         //当前已是最新版本
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
-                , getString(R.string.already_newest_version), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                , content, getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -311,6 +326,37 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         );
     }
 
+    @Override
+    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+        hiddenLoading();
+        showCheckVersion(upgradeTasks);
+    }
+
+    private void showCheckVersion(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
+                WifiLockDeviceInfoActivity.this,
+                "发现新版本，是否更新？",
+                "否", "是","#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+                        mPresenter.updateOTA(wifiSN,upgradeTasks);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 
     @Override
     public void readInfoFailed(Throwable throwable) {

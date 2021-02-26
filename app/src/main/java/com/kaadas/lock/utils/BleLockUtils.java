@@ -420,18 +420,6 @@ public class BleLockUtils {
     }
 
     /**
-     * 后面板版本与升级
-     */
-    public static boolean isSupportAfterPanel(String functionSet){
-        Integer[] funcs = FUNCTION_SET.get(functionSet);
-        if (funcs == null) {
-            return false;
-        }
-        List<Integer> integers = Arrays.asList(funcs);
-        return integers.contains(63);
-    }
-
-    /**
      * 根据功能集判断  授权用户 是否需要带密码开门
      *
      * @param functionSet
@@ -520,6 +508,16 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(26);
+    }
+
+    public static boolean isSupportPanelMultiOTA(String functionSet){
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(63);
     }
 
     /**

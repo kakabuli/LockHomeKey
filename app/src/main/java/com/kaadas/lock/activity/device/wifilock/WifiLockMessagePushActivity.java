@@ -17,12 +17,15 @@ import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 
 import org.apache.commons.net.bsd.RLoginClient;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -189,6 +192,11 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, int type) {
+
+    }
+
+    @Override
+    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

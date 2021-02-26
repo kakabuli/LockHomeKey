@@ -2,7 +2,7 @@ package com.kaadas.lock.publiclibrary.http.postbean;
 
 import java.util.List;
 
-public class UpgradeMultiOTABean {
+public class HangerUpgradeMultiOTABean {
     /**
     {
   "wifiSN": "WF03201210027",
@@ -19,10 +19,12 @@ public class UpgradeMultiOTABean {
 }
      */
   private String wifiSN;
+  private String devtype;
   private List<UpgradeTaskBean> upgradeTask;
 
-    public UpgradeMultiOTABean(String wifiSN ,List<UpgradeTaskBean> upgradeTask) {
+    public HangerUpgradeMultiOTABean(String wifiSN, String devtype, List<UpgradeTaskBean> upgradeTask) {
         this.wifiSN = wifiSN;
+        this.devtype = devtype;
         this.upgradeTask = upgradeTask;
     }
 
@@ -88,6 +90,14 @@ public class UpgradeMultiOTABean {
 
     public void setWifiSN(String wifiSN) {
         this.wifiSN = wifiSN;
+    }
+
+    public String getDevtype() {
+        return devtype;
+    }
+
+    public void setDevtype(String devtype) {
+        this.devtype = devtype;
     }
 
     public List<UpgradeTaskBean> getUpgradeTask() {

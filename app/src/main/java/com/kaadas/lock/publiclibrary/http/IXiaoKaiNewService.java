@@ -31,6 +31,7 @@ import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockShareResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
 import com.kaadas.lock.publiclibrary.http.temp.resultbean.CheckBindResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.KeyConstants;
 
 
@@ -768,6 +769,13 @@ public interface IXiaoKaiNewService {
     @POST(HttpUrlConstants.WIFI_DEVICE_LIST)
     @Headers({KeyConstants.VERSION})
     Observable<WifiDeviceListResult> wifiDeviceList(@Header("timestamp") String timestamp,@Body RequestBody info);
+
+    /**
+     * 查询设备列表
+     */
+    @POST(HttpUrlConstants.GET_ALL_BIND_DEVICES)
+    @Headers({KeyConstants.VERSION})
+    Observable<AllBindDevices> getAllBindDevices(@Header("timestamp") String timestamp, @Body RequestBody info);
 
     ////////////////////////////////////////////           晾衣机api功能            ///////////////////////////////////////////////
 

@@ -2,17 +2,17 @@ package com.kaadas.lock.publiclibrary.http.postbean;
 
 import java.util.List;
 
-public class MultiOTABean {
+public class HangerMultiOTABean {
     private int customer;
     private String deviceName;
     private List<OTAParams> versions;
+    private String devtype;
 
-
-    public MultiOTABean(int customer, String deviceName, List<OTAParams> versions) {
+    public HangerMultiOTABean(int customer, String deviceName, List<OTAParams> versions, String devtype) {
         this.customer = customer;
         this.deviceName = deviceName;
         this.versions = versions;
-
+        this.devtype = devtype;
     }
 
     public static class OTAParams{
@@ -67,4 +67,11 @@ public class MultiOTABean {
         this.versions = versions;
     }
 
+    public String getDevtype() {
+        return devtype;
+    }
+
+    public void setDevtype(String devtype) {
+        this.devtype = devtype;
+    }
 }

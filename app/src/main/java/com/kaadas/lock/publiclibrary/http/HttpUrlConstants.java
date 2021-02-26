@@ -444,6 +444,11 @@ public class HttpUrlConstants {
      */
     public static final String WIFI_DEVICE_LIST = BASE_URL + "wifi/device/list";
 
+    /**
+     * 查询设备列表
+     */
+    public static final String GET_ALL_BIND_DEVICES = BASE_URL + "app/user/getAllBindDevice";
+
 
     //////////////////////////////////////////晾衣机 Api 功能 //////////////////////////////////////////////
     /**

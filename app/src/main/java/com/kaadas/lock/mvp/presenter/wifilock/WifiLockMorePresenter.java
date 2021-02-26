@@ -7,13 +7,21 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.postbean.MultiOTABean;
+import com.kaadas.lock.publiclibrary.http.postbean.UpgradeMultiOTABean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockVideoBindResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
+import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -187,6 +195,64 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
         compositeDisposable.add(listenActionUpdateDisposable);
     }
 
+    public void checkMultiOTAInfo(String wifiSN,String frontPanelVersion,String backPanelVersion) {
+        List<MultiOTABean.OTAParams> params = new ArrayList<>();
+        params.add(new MultiOTABean.OTAParams(6,frontPanelVersion));
+        params.add(new MultiOTABean.OTAParams(7,backPanelVersion));
+
+        XiaokaiNewServiceImp.getOtaMultiInfo(1,wifiSN,params)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new BaseObserver<MultiCheckOTAResult>() {
+                    @Override
+                    public void onSuccess(MultiCheckOTAResult multiCheckOTAResult) {
+                        if("200".equals(multiCheckOTAResult.getCode() + "")){
+                            if(isSafe()){
+                                mViewRef.get().needUpdate(multiCheckOTAResult.getData().getUpgradeTask());
+                            }
+                        }else if ("401".equals(multiCheckOTAResult.getCode())) { // 数据参数不对
+                            if (isSafe()) {
+                                mViewRef.get().dataError();
+                            }
+                        } else if ("102".equals(multiCheckOTAResult.getCode())) { //SN格式不对
+                            if (isSafe()) {
+                                mViewRef.get().snError();
+                            }
+                        }else if("210".equals(multiCheckOTAResult.getCode() + "")){
+                            if(isSafe()){
+                                mViewRef.get().noNeedUpdate();
+                            }
+                        }else{
+                            if (isSafe()) {
+                                mViewRef.get().unknowError(multiCheckOTAResult.getCode());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if("210".equals(baseResult.getCode() + "")){
+                            if(isSafe()){
+                                mViewRef.get().noNeedUpdate();
+                            }
+                        }else{
+                            mViewRef.get().unknowError(baseResult.getCode());
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (isSafe()) {
+                            mViewRef.get().readInfoFailed(throwable);
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+
+                    }
+                });
+    }
+
 
     /**
      * @param SN
@@ -234,6 +300,41 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     }
                 });
         compositeDisposable.add(otaDisposable);
+    }
+
+    public void updateOTA(String wifiSN,List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+        List<UpgradeMultiOTABean.UpgradeTaskBean> data = new ArrayList<>();
+        for(int i = 0;i < upgradeTasks.size();i++){
+            data.add(new UpgradeMultiOTABean.UpgradeTaskBean(upgradeTasks.get(i).getDevNum(),upgradeTasks.get(i).getFileLen(),
+                    upgradeTasks.get(i).getFileUrl(),upgradeTasks.get(i).getFileMd5(),upgradeTasks.get(i).getFileVersion()));
+        }
+        XiaokaiNewServiceImp.wifiDeviceUploadMultiOta(wifiSN,data)
+                .compose(RxjavaHelper.observeOnMainThread())
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        if (isSafe()) {
+                            mViewRef.get().uploadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        if (isSafe()) {
+                            mViewRef.get().uploadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+
+                    }
+                });
     }
 
 

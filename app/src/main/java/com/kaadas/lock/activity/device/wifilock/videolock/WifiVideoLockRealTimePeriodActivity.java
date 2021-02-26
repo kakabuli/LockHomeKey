@@ -15,6 +15,7 @@ import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.TimePickerDialog;
@@ -264,6 +265,11 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, int type) {
+
+    }
+
+    @Override
+    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

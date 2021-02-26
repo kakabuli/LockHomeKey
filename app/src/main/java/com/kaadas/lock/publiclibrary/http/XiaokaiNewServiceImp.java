@@ -10,6 +10,9 @@ import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddUserBean;
+import com.kaadas.lock.publiclibrary.http.postbean.HangerMultiOTABean;
+import com.kaadas.lock.publiclibrary.http.postbean.HangerUpgradeMultiOTABean;
+import com.kaadas.lock.publiclibrary.http.postbean.HttpAllBindDevicesBean;
 import com.kaadas.lock.publiclibrary.http.postbean.ClothesHangerMachineDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.DeleteDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.DeleteMessageBean;
@@ -106,7 +109,7 @@ import com.kaadas.lock.publiclibrary.http.temp.resultbean.CheckBindResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 
 
 import java.io.File;
@@ -1051,8 +1054,22 @@ public class XiaokaiNewServiceImp {
      * @param deviceName 是	String	设备唯一编号
      * @return
      */
-    public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<MultiOTABean.OTAParams> params,String devtype) {
-        MultiOTABean helpLogBean = new MultiOTABean(customer, deviceName, params,devtype);
+    public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<HangerMultiOTABean.OTAParams> params,String devtype) {
+        HangerMultiOTABean helpLogBean = new HangerMultiOTABean(customer, deviceName, params,devtype);
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getOtaMultiCheck(timestamp,new HttpUtils<HangerMultiOTABean>().getBodyToken(helpLogBean,timestamp))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /** 多固件检查更新
+     * @param customer   是	int	客户：1凯迪仕 2小凯 3桔子物联 4飞利浦
+     * @param deviceName 是	String	设备唯一编号
+     * @return
+     */
+    public static Observable<MultiCheckOTAResult> getOtaMultiInfo(int customer, String deviceName, List<MultiOTABean.OTAParams> params) {
+        MultiOTABean helpLogBean = new MultiOTABean(customer, deviceName, params);
         String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getOtaMultiCheck(timestamp,new HttpUtils<MultiOTABean>().getBodyToken(helpLogBean,timestamp))
@@ -1461,6 +1478,18 @@ public class XiaokaiNewServiceImp {
 
     }
 
+    /**
+     *  查询设备列表
+     */
+    public static Observable<AllBindDevices> httpGetAllBindDevices(){
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .getAllBindDevices(timestamp,new HttpUtils<HttpAllBindDevicesBean>().getBodyToken(new HttpAllBindDevicesBean(MyApplication.getInstance().getUid(),2),timestamp))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+
+    }
+
     ////////////////////////////////////////////           晾衣机api功能            ///////////////////////////////////////////////
 
     /**
@@ -1511,11 +1540,23 @@ public class XiaokaiNewServiceImp {
     /**
      *  多固件确认升级
      */
-    public static Observable<BaseResult> wifiDeviceUploadMultiOta(String wifiSN, String type,List<UpgradeMultiOTABean.UpgradeTaskBean> upgradeTask) {
-        UpgradeMultiOTABean wiFiLockUpdateNickNameBean = new UpgradeMultiOTABean(wifiSN, type, upgradeTask);
+    public static Observable<BaseResult> wifiDeviceUploadMultiOta(String wifiSN,List<UpgradeMultiOTABean.UpgradeTaskBean> upgradeTask) {
+        UpgradeMultiOTABean wiFiLockUpdateNickNameBean = new UpgradeMultiOTABean(wifiSN, upgradeTask);
         String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiDeviceUploadMultiOta(timestamp,new HttpUtils<UpgradeMultiOTABean>().getBodyToken(wiFiLockUpdateNickNameBean,timestamp))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
+     *  多固件确认升级
+     */
+    public static Observable<BaseResult> hangerDeviceUploadMultiOta(String wifiSN, String type,List<HangerUpgradeMultiOTABean.UpgradeTaskBean> upgradeTask) {
+        HangerUpgradeMultiOTABean wiFiLockUpdateNickNameBean = new HangerUpgradeMultiOTABean(wifiSN, type, upgradeTask);
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiDeviceUploadMultiOta(timestamp,new HttpUtils<HangerUpgradeMultiOTABean>().getBodyToken(wiFiLockUpdateNickNameBean,timestamp))
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }

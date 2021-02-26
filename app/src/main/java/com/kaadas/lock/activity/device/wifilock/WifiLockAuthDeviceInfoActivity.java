@@ -16,6 +16,7 @@ import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
+import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -213,6 +214,11 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
 
     @Override
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, int type) {
+
+    }
+
+    @Override
+    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 
