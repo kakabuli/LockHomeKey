@@ -140,7 +140,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         MyLog.getInstance().init(this);
         LogUtils.e("attachView  App启动 ");
         instance = this;
-        //CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
+        CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
         initBleService();
         initMqttService();//启动MqttService
         initMMKV(this);

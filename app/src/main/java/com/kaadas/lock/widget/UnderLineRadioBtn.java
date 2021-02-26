@@ -102,7 +102,6 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
 
         mWidth = getMeasuredWidth();
         mHeight = getMeasuredHeight();
-//        Log.e("下划线高度是", "" + mLineHeight);
         if (mLineHeight > 0) {
             // 下划线的高度合并进控件高度
             mHeight += mLineHeight;
@@ -131,8 +130,6 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
         } else {
             setTextColor(Color.parseColor("#AAFFFFFF"));
         }
-
-        Log.e("下划线高度是 ", "onDraw" + mLineHeight);
 
         // 线的高度小于、等于0，不绘制线了
         if (mLineHeight <= 0)
