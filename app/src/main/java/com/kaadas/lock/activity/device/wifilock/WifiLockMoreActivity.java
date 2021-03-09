@@ -465,7 +465,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
                         startActivity(intent);
                         break;
-                    case R.id.rl_door_direction:
+                    /*case R.id.rl_door_direction:
                         intent = new Intent(this, WifiLockOpenDirectionActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
@@ -479,7 +479,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         intent = new Intent(this, WifiLockLockingMethodActivity.class);
                         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivityForResult(intent,KeyConstants.WIFI_LOCK_LOCKING_METHOD);
-                        break;
+                        break;*/
                 }
             } else {
                 LogUtils.e("--kaadas--取功能集为空");
