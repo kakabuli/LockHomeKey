@@ -189,7 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="请稍等"
+        android:text="@string/wifi_video_lock_waiting"
         android:layout_marginTop="@dimen/dp_10"
         android:textSize="@dimen/sp_14"
         android:layout_below="@id/avi"/>

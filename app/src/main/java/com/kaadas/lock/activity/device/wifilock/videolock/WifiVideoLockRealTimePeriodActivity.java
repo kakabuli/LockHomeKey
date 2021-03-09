@@ -82,23 +82,23 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
 
                 sum += snoozeStartTime[i];
                 if(snoozeStartTime[i] == 1){
-                    str += " 周一";
+                    str += getString(R.string.monday_1);
                 }else if(snoozeStartTime[i] == 2){
-                    str += " 周二";
+                    str += getString(R.string.tuesday_1);
                 }else if(snoozeStartTime[i] == 3){
-                    str += " 周三";
+                    str += getString(R.string.wedensday_1);
                 }else if(snoozeStartTime[i] == 4){
-                    str += " 周四";
+                    str += getString(R.string.thursday_1);
                 }else if(snoozeStartTime[i] == 5){
-                    str += " 周五";
+                    str += getString(R.string.friday_1);
                 }else if(snoozeStartTime[i] == 6){
-                    str += " 周六";
+                    str += getString(R.string.saturday_1);
                 }else if(snoozeStartTime[i] == 7){
-                    str += " 周日";
+                    str += getString(R.string.sunday_1);
                 }
             }
             if(sum == 28){
-                tvPeriodConnect.setText("每天");
+                tvPeriodConnect.setText(getString(R.string.week_day_1));
             }else{
                 tvPeriodConnect.setText(str + "");
             }
@@ -269,7 +269,7 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

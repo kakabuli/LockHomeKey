@@ -652,11 +652,11 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
         title.setText("温馨提示");
         tvContent.setText("门锁已打开，是否继续观看?");
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("继续播放");
+        tv_cancel.setText(getString(R.string.dialog_wifi_video_continue_playing));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("关闭");
+        tv_query.setText(getString(R.string.close));
         openDialog.setContentView(mView);
 
         Window window = openDialog.getWindow();
@@ -805,11 +805,11 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
         TextView tvContent = mView.findViewById(R.id.tv_content);
         tvContent.setText(content + "");
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("关闭");
+        tv_cancel.setText(getString(R.string.close));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("重新连接");
+        tv_query.setText(getString(R.string.clothes_hanger_add_next));
         dialog.setContentView(mView);
 
         Window window = dialog.getWindow();

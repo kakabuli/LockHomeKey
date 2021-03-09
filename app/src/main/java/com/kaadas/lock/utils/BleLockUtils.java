@@ -468,6 +468,9 @@ public class BleLockUtils {
      * @return
      */
     public static boolean isSupport20Passwords(String functionSet) {
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
         int funcSet = Integer.parseInt(functionSet);
         Integer[] funcs = FUNCTION_SET.get(funcSet);
         if (funcs == null) {
@@ -484,6 +487,9 @@ public class BleLockUtils {
      * @return
      */
     public static boolean isOnlySupport20Fingers(String functionSet) {
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
         int funcSet = Integer.parseInt(functionSet);
         Integer[] funcs = FUNCTION_SET.get(funcSet);
         if (funcs == null) {
@@ -501,6 +507,9 @@ public class BleLockUtils {
     }
 
     public static boolean isSupportFace(String functionSet) {
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
         int funcSet = Integer.parseInt(functionSet);
         Integer[] funcs = FUNCTION_SET.get(funcSet);
         if (funcs == null) {
@@ -511,6 +520,9 @@ public class BleLockUtils {
     }
 
     public static boolean isSupportPanelMultiOTA(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
         int funcSet = Integer.parseInt(functionSet);
         Integer[] funcs = FUNCTION_SET.get(funcSet);
         if (funcs == null) {
@@ -1025,6 +1037,9 @@ public class BleLockUtils {
      * @return
      */
     public static boolean isSupportWiFiFaceOTA(String functionSet) {
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
         Integer[] funcs = FUNCTION_SET.get(Integer.parseInt(functionSet));
         if (funcs == null) {
             return false;

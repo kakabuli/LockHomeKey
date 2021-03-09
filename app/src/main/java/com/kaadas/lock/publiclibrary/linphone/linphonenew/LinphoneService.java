@@ -302,7 +302,6 @@ public final class LinphoneService extends Service {
         setupActivityMonitor();
         // In case restart after a crash. Main in LinphoneActivity
         //  mNotificationTitle = "Linphone Service";
-        MyLog.getInstance().save(" 启动linphone service.... ");
         // Needed in order for the two next calls to succeed, libraries must have been loaded first
         LinphonePreferences.instance().setContext(getBaseContext());
         LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
@@ -450,7 +449,6 @@ public final class LinphoneService extends Service {
             @Override
             public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState registrationState, String smessage) {
                 String state = registrationState.toString();
-                 MyLog.getInstance().save("registrationState:"+state);
                 if (sRegistrationCallback != null && state.equals(LinphoneCore.RegistrationState.RegistrationNone.toString())) {
                     sRegistrationCallback.registrationNone();
                 } else if (sRegistrationCallback != null && state.equals(LinphoneCore.RegistrationState.RegistrationProgress.toString())) {

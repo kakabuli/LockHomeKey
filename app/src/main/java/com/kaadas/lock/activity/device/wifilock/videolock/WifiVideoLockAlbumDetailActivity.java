@@ -41,6 +41,7 @@ import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.RotateTransformation;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
@@ -124,6 +125,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_video_album_detail);
         ButterKnife.bind(this);
+        LogUtils.e("shulan WifiVideoLockAlbumDetailActivity------------->onCreate");
         filepath = getIntent().getStringExtra(KeyConstants.VIDEO_PIC_PATH);
         String name = getIntent().getStringExtra("NAME");
 
@@ -334,6 +336,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.e("shulan WifiVideoLockAlbumDetailActivity------------->onDestroy");
         stopRepeatTimer();
         if (mediaPlayer != null) {
             mediaPlayer.releaseResource();
@@ -346,6 +349,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     public void finish() {
         super.finish();
+        LogUtils.e("shulan WifiVideoLockAlbumDetailActivity------------->finish");
         mPresenter.release();
 
         try{
@@ -475,8 +479,8 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     private void showDeleteDialog(String filepath) {
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiVideoLockAlbumDetailActivity.this
-                , "确定删除视频吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.dialog_wifi_video_delete_video) + "",
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -509,6 +513,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 
     @Override
     public void onConnectFailed(int paramInt) {
+        LogUtils.e("shulan onConnectFailed-->" + paramInt);
         mPresenter.handler.post(new Runnable() {
             @Override
             public void run() {
@@ -528,7 +533,6 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
 
     @Override
     public void onConnectSuccess() {
-
         XMP2PManager.getInstance().setSurfaceView(surfaceView1);
         mPresenter.playDeviceRecordVideo(record,path);
     }
@@ -551,8 +555,9 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     @Override
     public void onVideoFrameUsed(H264Frame h264Frame) {
         if(h264Frame.getFrameTimeStamp() == 0){
+            LogUtils.e("shulan onVideoFrameUsed--------->h264Frame.getFrameTimeStamp() == 0");
             isRecordSuccess = true;
-            mPresenter.release();
+//            mPresenter.release();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -620,7 +625,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.getInstance().showShort("找不到文件");
+                    ToastUtil.getInstance().showShort(getString(R.string.wifi_video_lock_find_file_show_toast) + "");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -644,11 +649,11 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
         TextView tvContent = mView.findViewById(R.id.tv_content);
         tvContent.setText(content + "");
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("关闭");
+        tv_cancel.setText(getString(R.string.close));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("重新连接");
+        tv_query.setText(getString(R.string.clothes_hanger_add_next));
         dialog.setContentView(mView);
 
         Window window = dialog.getWindow();
@@ -801,8 +806,8 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
     }
 
     private void showKeepAliveDialog() {
-        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "视频长连接已关闭", "按门铃时可查看门外情况",
-                "唤醒门锁后，可在视频设置中开启", "", "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, getString(R.string.dialog_wifi_video_keep_alive_close), getString(R.string.dialog_wifi_video_doorbell_outside_door),
+                getString(R.string.dialog_wifi_video_waking_up_door_lock_setting), "", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

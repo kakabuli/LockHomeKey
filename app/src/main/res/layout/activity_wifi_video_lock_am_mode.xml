@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="自动上锁"
+            android:text="@string/wifi_video_lock_auto_mode"
             android:textColor="#000000"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold" />
@@ -54,7 +54,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="自动上锁"
+                android:text="@string/wifi_video_lock_auto_mode"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -91,7 +91,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="手动上锁"
+                android:text="@string/wifi_video_lock_normal_mode"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -133,7 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="请稍等"
+        android:text="@string/wifi_video_lock_waiting"
         android:layout_marginTop="@dimen/dp_10"
         android:textSize="@dimen/sp_14"
         android:layout_below="@id/avi"/>

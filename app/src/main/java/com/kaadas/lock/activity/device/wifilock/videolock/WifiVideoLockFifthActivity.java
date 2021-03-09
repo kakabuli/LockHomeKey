@@ -78,12 +78,12 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
         distribution = getIntent().getBooleanExtra("distribution", false);
         wifiModelType = getIntent().getStringExtra("wifiModelType");
         if(distributionAgain){
-            head.setText("第三步：门锁扫描二维码");
+            head.setText(getString(R.string.activity_wifi_video_fifth_third));
         }else{
             if(distribution){
-                head.setText("第四步：门锁扫描二维码");
+                head.setText(getString(R.string.activity_wifi_video_fifth_thour));
             }else{
-                head.setText("第五步：门锁扫描二维码");
+                head.setText(getString(R.string.activity_wifi_video_fifth_fifth));
             }
 
         }
@@ -137,8 +137,8 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiVideoLockFifthActivity.this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

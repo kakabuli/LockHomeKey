@@ -93,7 +93,7 @@ public class ClothesHangerMachineAddSecondActivity extends BaseActivity<IClothes
         AlertDialogUtil.getInstance().noEditTitleOneButtonDialog(
                 ClothesHangerMachineAddSecondActivity.this,
                 "设置失败",
-                "确定", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
                     }

@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 
 
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 
@@ -28,12 +29,14 @@ public class AES {
     @SuppressLint("NewApi")
     public static String Encrypt(String sSrc, String sKey) throws Exception {
         if (sKey == null) {
-            LogUtils.e("shulan Key为空null");
+            if(BuildConfig.DEBUG)
+                LogUtils.e("shulan Key为空null");
             return null;
         }
         // 判断Key是否为16位
         if (sKey.length() != 16) {
-            LogUtils.e("shulan Key长度不是16位");
+            if(BuildConfig.DEBUG)
+                LogUtils.e("shulan Key长度不是16位");
             return null;
         }
         byte[] raw = sKey.getBytes("utf-8");
@@ -41,7 +44,8 @@ public class AES {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");//"算法/模式/补码方式"
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         byte[] encrypted = cipher.doFinal(sSrc.getBytes("utf-8"));
-        LogUtils.e("shulan encrypted---->" + encrypted.toString());
+        if(BuildConfig.DEBUG)
+            LogUtils.e("shulan encrypted---->" + encrypted.toString());
 
         return Base64Utils.getEncoder().encodeToString(encrypted);
 //        return Rsa.parseByte2HexStr(encrypted);
@@ -67,6 +71,7 @@ public class AES {
             byte[] encrypted1 = Base64Utils.getDecoder().decode(sSrc);//先用base64解密
 //            byte[] encrypted1 = new Base64().decode(sSrc);//先用base64解密
 //            byte[] encrypted1 = Rsa.parseHexStr2Byte(sSrc);
+            if(BuildConfig.DEBUG)
             LogUtils.e("shulan Decrypt---->" + encrypted1.toString());
             try {
                 byte[] original = cipher.doFinal(encrypted1);
@@ -88,6 +93,7 @@ public class AES {
                 .append(timeStamp.substring(timeStamp.length() - 4, timeStamp.length() - 2))
                 .append(key.substring(4, 8)).append(token.substring(token.length() - 2))
                 .append(timeStamp.substring(timeStamp.length() - 2));
+        if(BuildConfig.DEBUG)
         LogUtils.e("shulan keyForToken--->" + stringBuilder);
         return stringBuilder.toString();
     }
@@ -96,6 +102,7 @@ public class AES {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(key.substring(0, 5)).append(timeStamp.substring(timeStamp.length() - 6, timeStamp.length() - 3))
                 .append(key.substring(5, 10)).append(timeStamp.substring(timeStamp.length() - 3));
+        if(BuildConfig.DEBUG)
         LogUtils.e("shulan keyNoToken--->" + stringBuilder);
         return stringBuilder.toString();
     }

@@ -27,7 +27,9 @@ public class HttpUtils<T> {
         String obj = new Gson().toJson(t);
         String contentType = "application/json; charset=utf-8";
         if(Integer.parseInt(BuildConfig.HTTP_VERSION) > 0){
+            if(BuildConfig.DEBUG)
             LogUtils.e("shulan getBodyToken http body 加密前--->" + obj);
+            if(BuildConfig.DEBUG)
             LogUtils.e("shulan getBodyToken timestamp--->" + timestamp);
             try {
                 if (!TextUtils.isEmpty(MyApplication.getInstance().getToken())) {
@@ -37,7 +39,9 @@ public class HttpUtils<T> {
                 }
                 if(!TextUtils.isEmpty(obj))
                     contentType = "text/plain; charset=utf-8";
+                if(BuildConfig.DEBUG)
                 LogUtils.e("shulan getBodyToken http body 加密后--->" + obj);
+                if(BuildConfig.DEBUG)
                 LogUtils.e("shulan getBodyToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyForToken(MyApplication.getInstance().getToken(),AES.key,timestamp)));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -51,13 +55,17 @@ public class HttpUtils<T> {
         String obj = new Gson().toJson(t);
         String contentType = "application/json; charset=utf-8";
         if(Integer.parseInt(BuildConfig.HTTP_VERSION) > 0){
+            if(BuildConfig.DEBUG)
             LogUtils.e("shulan getBodyNoToken http body 加密前--->" + obj);
+            if(BuildConfig.DEBUG)
             LogUtils.e("shulan getBodyNoToken timestamp--->" + timestamp);
             try {
                 obj = AES.Encrypt(obj,AES.keyNoToken(AES.key,timestamp));
                 if(!TextUtils.isEmpty(obj))
                     contentType = "text/plain; charset=utf-8";
+                if(BuildConfig.DEBUG)
                 LogUtils.e("shulan getBodyNoToken http body 加密后--->" + obj);
+                if(BuildConfig.DEBUG)
                 LogUtils.e("shulan getBodyNoToken http body 解密后后--->" + AES.Decrypt(obj,AES.keyNoToken(AES.key,timestamp)));
             } catch (Exception e) {
                 e.printStackTrace();

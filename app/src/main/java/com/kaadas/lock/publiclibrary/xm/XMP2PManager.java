@@ -582,12 +582,13 @@ public class XMP2PManager extends StreamListener  {
      * @param rotate 旋转角度 0，90，180，270
      */
     public void startRecordMP4(String filePath, int width, int height, int Rate,int rotate){
-        LogUtils.e("shulan startRecordMP4");
+        LogUtils.e("shulan startRecordMP4---------------->filePath=" + filePath);
         getCodecInstance().startRecordToMP4(filePath, width, height, Rate,rotate);
 
     }
 
     public void stopRecordMP4(){
+        LogUtils.e("shulan stopRecordMP4----------------");
         getCodecInstance().stopRecordToMP4();
     }
 

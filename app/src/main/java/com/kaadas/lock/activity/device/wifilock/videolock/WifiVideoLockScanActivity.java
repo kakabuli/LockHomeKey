@@ -362,7 +362,8 @@ public class WifiVideoLockScanActivity extends BaseActivity<IWifiLockVideoFifthV
 
     private void onWiFIAndPWDError() {
         AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-                WifiVideoLockScanActivity.this, "", "Wi-Fi账号或密码输错已超过3次", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                WifiVideoLockScanActivity.this, "", getString(R.string.activity_wifi_video_scan_wifi_fail),
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

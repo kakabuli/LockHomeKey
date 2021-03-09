@@ -69,7 +69,7 @@ public interface IWifiLockMoreView extends IBaseView {
     void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN ,int type);
 
 
-    void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks);
+    void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks);
 
 
     /**

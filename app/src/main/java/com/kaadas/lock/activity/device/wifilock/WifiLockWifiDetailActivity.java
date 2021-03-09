@@ -117,8 +117,8 @@ public class WifiLockWifiDetailActivity extends BaseAddToApplicationActivity {
     }
 
     private void showWifiDialog() {
-        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "更换WIFI需重新进入添加门锁步骤",
-                "取消", "确定", "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, getString(R.string.activity_wifi_video_replace_wifi_again),
+                getString(R.string.cancel), getString(R.string.confirm), "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

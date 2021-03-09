@@ -100,7 +100,7 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
         if(wifiLockInfo.getOpenForce() == openForce){
             finish();
         }else{
-            showLoading("请稍后...");
+            showLoading(getString(R.string.wifi_video_lock_waiting));
             mPresenter.setOpenForce(wifiSn,openForce);
         }
     }
@@ -123,21 +123,21 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
     @Override
     public void settingThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingSuccess(int openForce) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改成功");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_OPEN_FORCE,openForce);
         setResult(RESULT_OK,intent);

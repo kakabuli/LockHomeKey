@@ -343,7 +343,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 } else {
                     tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
                 }
-                tvCenterMode.setText("安全模式");
+                tvCenterMode.setText(getString(R.string.safe_mode));
                 break;
             case 7:
                 //面容识别已关闭
@@ -586,7 +586,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 
     public void powerStatusDialog(){
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), "锁已开启节能模式，无法查看门外情况", "请更换电池或进入管理员模式进行关闭",
-                "确定", new AlertDialogUtil.ClickListener() {
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

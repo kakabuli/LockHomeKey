@@ -103,7 +103,7 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
         if(wifiLockInfo.getOpenDirection() == openDirection){
             finish();
         }else{
-            showLoading("请稍后...");
+            showLoading(getString(R.string.wifi_video_lock_waiting));
             mPresenter.setOpenDirection(wifiSn,openDirection);
         }
     }
@@ -126,21 +126,21 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
     @Override
     public void settingThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingSuccess(int openDirection) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改成功");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_OPEN_DIRECTION,openDirection);
         setResult(RESULT_OK,intent);

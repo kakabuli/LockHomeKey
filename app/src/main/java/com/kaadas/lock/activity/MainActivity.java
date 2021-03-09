@@ -252,7 +252,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     private void checkNotificatoinEnabled() {
         if(!NotificationUtil.isNotifyEnabled(this)){
             AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "检测到您没有打开通知权限，是否去打开",
-                    "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                    getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 

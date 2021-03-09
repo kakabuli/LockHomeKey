@@ -187,14 +187,15 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
         lockType = wifiLockInfo.getProductModel();
 
         if (!TextUtils.isEmpty(lockType)) {
-            tvLockType.setText(lockType.contentEquals("K13")?"型号: "+getString(R.string.lan_bo_ji_ni):"型号: "+StringUtil.getSubstringFive(lockType));
+            tvLockType.setText(lockType.contentEquals("K13")?getString(R.string.bluetooth_type)+getString(R.string.lan_bo_ji_ni)
+                    :getString(R.string.bluetooth_type)+StringUtil.getSubstringFive(lockType));
 
             //适配服务器上的产品型号，适配不上则显示锁本地的研发型号
             for (ProductInfo productInfo:productList) {
 
                 try {
                     if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
-                        tvLockType.setText("型号："+productInfo.getProductModel());
+                        tvLockType.setText(getString(R.string.bluetooth_type)+productInfo.getProductModel());
                         return;
                     }
                 } catch (Exception e) {
@@ -624,8 +625,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -711,7 +712,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             (this,Manifest.permission.RECORD_AUDIO )) {
                         // ...
                     }
-                    ToastUtil.showShort("请先获取麦克风权限");
+                    ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission));
                 }
                 break;
         }

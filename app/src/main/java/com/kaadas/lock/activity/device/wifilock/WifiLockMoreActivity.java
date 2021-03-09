@@ -626,7 +626,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

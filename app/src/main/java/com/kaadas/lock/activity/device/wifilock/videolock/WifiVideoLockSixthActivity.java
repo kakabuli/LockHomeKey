@@ -200,7 +200,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiVideoLockSixthActivity.this
                 , content,
-                "重新输入", "忘记密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.re_input), getString(R.string.forget_password_symbol), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -228,14 +228,15 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
     private void onAdminPasswordError() {
         if (times < 5) {
             if(times < 3){ // 正常提示
-                showDialog("门锁管理密码验证失败，\n请重新输入");
+                showDialog(getString(R.string.activity_wifi_video_sixth_fail));
 
             }else {
-                showDialog("门锁管理密码验证失败"+ times +"次，\n超过5次，配网失败");
+                showDialog(getString(R.string.activity_wifi_video_sixth_fail_1)+ times +getString(R.string.activity_wifi_video_sixth_fail_2));
             }
         } else { //都五次输入错误提示   退出
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-                    WifiVideoLockSixthActivity.this, "", "\n门锁管理密码验证已失败5次\n" + "请修改管理密码，重新配网\n", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    WifiVideoLockSixthActivity.this, "", getString(R.string.activity_wifi_video_sixth_fail_3) +
+                            getString(R.string.activity_wifi_video_sixth_fail_4), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 
@@ -261,8 +262,8 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

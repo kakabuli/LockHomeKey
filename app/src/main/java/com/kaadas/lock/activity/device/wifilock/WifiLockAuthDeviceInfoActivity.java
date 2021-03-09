@@ -218,7 +218,7 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

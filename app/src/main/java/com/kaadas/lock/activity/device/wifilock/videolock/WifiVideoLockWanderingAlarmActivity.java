@@ -96,18 +96,18 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
             if(wifiLockInfo.getSetPir() != null){
                 stayTime = wifiLockInfo.getSetPir().getStay_time();
                 if(wifiLockInfo.getSetPir().getStay_time() < 10 || wifiLockInfo.getSetPir().getStay_time() > 60){
-                    tvWanderingJudgeTimeRight.setText("30秒");
+                    tvWanderingJudgeTimeRight.setText("30" + getString(R.string.activity_wifi_video_wamdering_sceond));
                 }else {
-                    tvWanderingJudgeTimeRight.setText(wifiLockInfo.getSetPir().getStay_time() + "秒");
+                    tvWanderingJudgeTimeRight.setText(wifiLockInfo.getSetPir().getStay_time() + getString(R.string.activity_wifi_video_wamdering_sceond));
                 }
 
                 pirSen = wifiLockInfo.getSetPir().getPir_sen();
                 if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
-                    tvWanderingPirSensitivityRight.setText("近");
+                    tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_low));
                 }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
-                    tvWanderingPirSensitivityRight.setText("中");
+                    tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_midd));
                 }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
-                    tvWanderingPirSensitivityRight.setText("远");
+                    tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_high));
                 }
 
             }
@@ -270,11 +270,11 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
                     }else{
                         pirSen = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_SENSITIVITY,-1);
                         if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_1 ){
-                            tvWanderingPirSensitivityRight.setText("低");
+                            tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_low));
                         }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_2){
-                            tvWanderingPirSensitivityRight.setText("中");
+                            tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_midd));
                         }else if(pirSen <= KeyConstants.WIFI_VIDEO_LOCK_PIR_SEN_3){
-                            tvWanderingPirSensitivityRight.setText("高");
+                            tvWanderingPirSensitivityRight.setText(getString(R.string.activity_wifi_video_wamdering_high));
                         }
                     }
 
@@ -284,7 +284,7 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
 
                     }else{
                         stayTime = data.getIntExtra(KeyConstants.WIFI_VIDEO_WANDERING_TIME,-1);
-                        tvWanderingJudgeTimeRight.setText(stayTime + "秒");
+                        tvWanderingJudgeTimeRight.setText(stayTime + getString(R.string.activity_wifi_video_wamdering_sceond));
                     }
 
                     break;
@@ -343,8 +343,8 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -465,12 +465,12 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
                 @Override
                 public void run() {
                     if(flag){
-                        ToastUtil.getInstance().showLong("修改成功");
+                        ToastUtil.getInstance().showLong(getString(R.string.modify_success));
                         Intent intent = new Intent();
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM,stayStatus);
                         setResult(RESULT_OK,intent);
                     }else{
-                        ToastUtil.getInstance().showLong("修改失败");
+                        ToastUtil.getInstance().showLong(getString(R.string.modify_failed));
                     }
                     finish();
                 }

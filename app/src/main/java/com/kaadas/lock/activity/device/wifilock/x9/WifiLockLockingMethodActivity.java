@@ -182,7 +182,7 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
         if(wifiLockInfo.getLockingMethod() == lockingMethod){
             finish();
         }else{
-            showLoading("请稍后...");
+            showLoading(getString(R.string.wifi_video_lock_waiting));
             mPresenter.setLockingMethod(wifiSn,lockingMethod);
         }
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
@@ -193,21 +193,21 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     @Override
     public void settingThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改失败");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingSuccess(int lockingMethod) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort("修改成功");
+        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
         setResult(RESULT_OK,intent);

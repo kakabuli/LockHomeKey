@@ -138,7 +138,7 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
 
                 try {
                     if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
-                        tvType.setText("型号："+productInfo.getProductModel());
+                        tvType.setText(getString(R.string.bluetooth_type) + productInfo.getProductModel());
                         return;
                     }
                 } catch (Exception e) {

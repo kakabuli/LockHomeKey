@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="周重复"
+            android:text="@string/cycle_rules_loop"
             android:textColor="#000000"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold" />
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每天"
+            android:text="@string/cycle_rules_everyday"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周日"
+            android:text="@string/cycle_rules_7"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周一"
+            android:text="@string/cycle_rules_1"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -153,7 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周二"
+            android:text="@string/cycle_rules_2"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周三"
+            android:text="@string/cycle_rules_3"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -225,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周四"
+            android:text="@string/cycle_rules_4"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -261,7 +261,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周五"
+            android:text="@string/cycle_rules_5"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 
@@ -297,7 +297,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
-            android:text="每周六"
+            android:text="@string/cycle_rules_6"
             android:textColor="#333333"
             android:textSize="@dimen/sp_13" />
 

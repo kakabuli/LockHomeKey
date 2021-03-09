@@ -176,13 +176,14 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
 
     private void initMMKV(MyApplication myApplication) {
         String rootDir = MMKV.initialize(myApplication);
+        if(BuildConfig.DEBUG)
         LogUtils.e("shulan mmkv root: " + rootDir);
     }
 
     private void initXMP2PManager() {
         XMP2PManager.getInstance().initAPI(getApplicationContext(),XMP2PManager.serviceString);
         XMP2PManager.getInstance().init(getApplicationContext());
-        XMLog.DEBUG=false;
+        XMLog.DEBUG=true;
         LogCodec.DEBUG=false;
     }
 
@@ -562,7 +563,6 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
                             allBindDeviceDisposable.dispose();
                         }
                         String payload = mqttData.getPayload();
-                        MyLog.getInstance().save("--kaadas调试--payload=="+payload);
 
                         allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);
 

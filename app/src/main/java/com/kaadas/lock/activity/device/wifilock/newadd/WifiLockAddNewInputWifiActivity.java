@@ -103,7 +103,7 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
 
                 }
                 if (sPassword.length()<8){
-                    Toast.makeText(this, "wifi密码必须不小于8位", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.activity_wifi_video_fourth_password), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent = new Intent(this,WifiLockAddNewCheckWifiActivity.class);
@@ -138,8 +138,8 @@ public class WifiLockAddNewInputWifiActivity extends BaseAddToApplicationActivit
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiLockAddNewInputWifiActivity.this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

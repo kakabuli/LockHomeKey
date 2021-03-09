@@ -343,7 +343,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this
                 , "门锁初始密码不能验证，\n" + "请修改门锁管理密码或重新输入\n",
-                "重新输入", "修改密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.re_input), "修改密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
                         //重新输入
@@ -393,8 +393,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

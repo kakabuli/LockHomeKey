@@ -150,7 +150,7 @@ public class ClothesHangerMachineAddTourthActivity extends BaseActivity<IClothes
                     return;
                 }
                 if (sPassword.length() < 8){
-                    Toast.makeText(this, "wifi密码必须不小于8位", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.activity_wifi_video_fourth_password), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -221,7 +221,7 @@ public class ClothesHangerMachineAddTourthActivity extends BaseActivity<IClothes
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 ClothesHangerMachineAddTourthActivity.this
                 , content,
-                "取消", "重新输入", "#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.cancel), getString(R.string.re_input), "#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

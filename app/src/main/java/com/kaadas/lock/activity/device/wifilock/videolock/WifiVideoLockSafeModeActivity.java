@@ -353,12 +353,12 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
                 @Override
                 public void run() {
                     if(flag){
-                        ToastUtil.getInstance().showLong("修改成功");
+                        ToastUtil.getInstance().showLong(getString(R.string.modify_success));
                         Intent intent = new Intent();
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_SAFE_MODE,safeMode);
                         setResult(RESULT_OK,intent);
                     }else{
-                        ToastUtil.getInstance().showLong("修改失败");
+                        ToastUtil.getInstance().showLong(getString(R.string.modify_failed));
                     }
                     if(avi != null){
                         avi.hide();
@@ -372,8 +372,8 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
 
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
             @Override
             public void left() {
 

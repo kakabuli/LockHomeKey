@@ -78,12 +78,12 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
 
         apSsidText.setText(wifiName.trim());
         if(distributionAgain){
-            head.setText("第二步：配置连接WI-FI");
+            head.setText(getString(R.string.activity_wifi_video_fourth_sceond));
         }else{
             if(distribution){
-                head.setText("第三步：配置连接WI-FI");
+                head.setText(getString(R.string.activity_wifi_video_fourth_third));
             }else{
-                head.setText("第四步：配置连接WI-FI");
+                head.setText(getString(R.string.activity_wifi_video_fourth_fifth));
             }
 
         }
@@ -121,7 +121,7 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
 
                 }*/
                 if (sPassword.length()<8){
-                    Toast.makeText(this, "wifi密码必须不小于8位", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.activity_wifi_video_fourth_password), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent = new Intent(this, WifiVideoLockFifthActivity.class);
@@ -171,8 +171,8 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiVideoLockFourthActivity.this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

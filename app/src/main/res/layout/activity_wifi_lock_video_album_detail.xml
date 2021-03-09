@@ -101,7 +101,7 @@
         android:layout_below="@id/avi"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/sp_17"
-        android:text="正在建立安全连接，请稍后..."
+        android:text="@string/wifi_video_lock_p2p_connect"
         android:textColor="#ffffff"
         android:textSize="@dimen/sp_15" />
 

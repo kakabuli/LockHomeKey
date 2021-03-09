@@ -46,7 +46,6 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.publiclibrary.xm.XMP2PConnectJsonError;
-import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BitmapUtil;
 import com.kaadas.lock.utils.BleLockUtils;
@@ -54,15 +53,12 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
 import com.yun.software.kaadas.Utils.FileTool;
 import com.yuv.display.MyBitmapFactory;
-
-import org.linphone.core.TunnelConfig;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -312,7 +308,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
                     if (ContextCompat.checkSelfPermission(WifiVideoLockCallingActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions( WifiVideoLockCallingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        ToastUtil.showShort("请先获取麦克风权限");
+                        ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission) + "");
                     }else{
                         if(isFirstAudio){
 
@@ -320,14 +316,14 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                                 ivCalling.setSelected(false);
                                 mPresenter.talkback(false);
                                 mPresenter.stopTalkback();
-                                tvCallingTips.setText("对讲");
+                                tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
                                 tvCallingTips.setTextColor(Color.parseColor("#333333"));
                             }else{
                                 ivCalling.setSelected(true);
                                 mPresenter.talkback(true);
                                 mPresenter.startTalkback();
-                                showShort("已开启对讲");
-                                tvCallingTips.setText("对讲中");
+                                showShort(getString(R.string.wifi_video_lock_open_talk_back));
+                                tvCallingTips.setText(getString(R.string.wifi_video_lock_talking_back));
                                 tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
                             }
                         }
@@ -395,7 +391,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                             mPresenter.enableAudio(false);
                             isMute = true;
                             ivMute.setImageResource(R.mipmap.real_time_video_mute_seleted);
-                            showShort("已开启静音");
+                            showShort(getString(R.string.wifi_video_lock_mute_on));
                         }
                     }
 
@@ -427,7 +423,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             case R.id.iv_recoring:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    ToastUtil.showShort("请先获取读写权限");
+                    ToastUtil.showShort(getString(R.string.wifi_video_lock_read_and_write_permission));
                 }else{
                     if(!ivRecoring.isSelected()){
                         ivRecoring.setSelected(true);
@@ -435,14 +431,14 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                         if(wifiLockInfo != null){
                             String filePath = FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
                             mPresenter.startRecordMP4(filePath);
-                            showShort("已开启录屏");
+                            showShort(getString(R.string.wifi_video_lock_screen_recording_enable));
                         }
 
                     }else{
                         ivRecoring.setSelected(false);
                         llyRecord.setVisibility(View.GONE);
                         mPresenter.stopRecordMP4();
-                        showShort("已结束录屏");
+                        showShort(getString(R.string.wifi_video_lock_screen_recording_disable));
                     }
                     llyRecord.setVisibility(View.VISIBLE);
 
@@ -519,8 +515,8 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     }
 
     private void showKeepAliveDialog() {
-        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "视频长连接已关闭", "按门铃时可查看门外情况",
-                "唤醒门锁后，可在视频设置中开启", "", "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, getString(R.string.dialog_wifi_video_keep_alive_close), getString(R.string.dialog_wifi_video_doorbell_outside_door),
+                getString(R.string.dialog_wifi_video_waking_up_door_lock_setting), "", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -614,7 +610,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         llyRecord.setVisibility(View.GONE);
         ivRecoring.setSelected(false);
         ivCalling.setSelected(false);
-        tvCallingTips.setText("对讲");
+        tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
         tvCallingTips.setTextColor(Color.parseColor("#333333"));
         llyTemporaryPassword.setVisibility(View.GONE);
         tvTemporaryPassword.setText("");
@@ -652,7 +648,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     mPresenter.talkback(false);
                     mPresenter.stopTalkback();
                     ivCalling.setSelected(false);
-                    tvCallingTips.setText("对讲");
+                    tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
                     tvCallingTips.setTextColor(Color.parseColor("#333333"));
                     showShort(getString(R.string.xm_json_error_talk_occupied) + "");
                 }
@@ -677,7 +673,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                         if(ivScreenshotBitmap != null){
                             Glide.with(WifiVideoLockCallingActivity.this).load(myBitmap).into(ivScreenshotBitmap);
                             ivScreenshotBitmap.setVisibility(View.VISIBLE);
-                            showShort("截图成功");
+                            showShort(getString(R.string.screen_success));
                         }
                     }
                 });
@@ -781,7 +777,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ToastUtil.showShort("请先获取麦克风权限");
+                ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission));
             }
         });
     }
@@ -808,14 +804,14 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         View mView = LayoutInflater.from(this).inflate(R.layout.dialog_title_two_button_dialog, null);
         TextView tvContent = mView.findViewById(R.id.tv_content);
         TextView title = mView.findViewById(R.id.title);
-        title.setText("温馨提示");
-        tvContent.setText("门锁已打开，是否继续观看?");
+        title.setText(getString(R.string.dialog_wifi_video_tip));
+        tvContent.setText(getString(R.string.dialog_wifi_video_open_the_door_continue_watching));
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("继续播放");
+        tv_cancel.setText(getString(R.string.dialog_wifi_video_continue_playing));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("关闭");
+        tv_query.setText(getString(R.string.close));
         openDialog.setContentView(mView);
 
         Window window = openDialog.getWindow();
@@ -955,11 +951,11 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         TextView tvContent = mView.findViewById(R.id.tv_content);
         tvContent.setText(content + "");
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("关闭");
+        tv_cancel.setText(getString(R.string.close));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("重新连接");
+        tv_query.setText(getString(R.string.clothes_hanger_add_next));
         dialog.setContentView(mView);
 
         Window window = dialog.getWindow();

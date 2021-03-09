@@ -352,13 +352,13 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
     @Override
     public void settingDeviceFail() {
         refresh();
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void settingDeviceThrowable() {
         refresh();
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -401,7 +401,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
     public void bindingAndModifyDeviceFail() {
         refresh();
 
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -409,7 +409,7 @@ public class SwipchSeetingArgus extends BaseActivity<SingleFireSwitchView, Singl
     public void bindingAndModifyDeviceThrowable() {
         refresh();
 
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
 
     }
 

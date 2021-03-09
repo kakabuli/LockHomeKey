@@ -52,7 +52,7 @@
                 android:id="@+id/tv_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="怎么配置视频锁"
+                android:text="@string/activity_wifi_video_help_video"
                 android:textSize="@dimen/sp_15"
                 android:textColor="#1F96F7"
                 android:layout_centerInParent="true"/>
@@ -76,7 +76,7 @@
                 android:id="@+id/tv_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="常见问题"
+                android:text="@string/chang_jian_question"
                 android:textSize="@dimen/sp_15"
                 android:textColor="#333333"
                 android:layout_centerInParent="true"/>

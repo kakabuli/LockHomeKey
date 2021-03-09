@@ -60,7 +60,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kaadas 2代操作菜单"
+                    android:text="@string/activity_wifi_lock_face_model_1"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -70,7 +70,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="如何开启A-M自动模式（手动模式下）"
+                    android:text="@string/activity_wifi_lock_face_model_2"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -80,7 +80,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="① 按键区输入“*”两次 "
+                    android:text="@string/activity_wifi_lock_face_model_3"
                     android:textColor="#606060" />
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="② 输入已修改的管理密码“********” "
+                    android:text="@string/activity_wifi_lock_face_model_4"
                     android:textColor="#606060" />
 
                 <TextView
@@ -98,7 +98,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="③ 按“#”确认，"
+                    android:text="@string/activity_wifi_lock_face_model_5"
                     android:textColor="#606060" />
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="④ 语音播报：“已进入管理模式” "
+                    android:text="@string/activity_wifi_lock_face_model_6"
                     android:textColor="#606060" />
 
                 <TextView
@@ -116,7 +116,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑤ 根据语音提示,按“1”，在按“8” "
+                    android:text="@string/activity_wifi_lock_face_model_7"
                     android:textColor="#606060" />
 
                 <TextView
@@ -125,7 +125,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑥ 语音播报“设置成功，自动模式”"
+                    android:text="@string/activity_wifi_lock_face_model_8"
                     android:textColor="#606060" />
 
 
@@ -135,7 +135,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="如何开启A-M手动模式（自动模式下）"
+                    android:text="@string/activity_wifi_lock_face_model_9"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -145,7 +145,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="① 按键区输入“*”两次 "
+                    android:text="@string/activity_wifi_lock_face_model_10"
                     android:textColor="#606060" />
 
                 <TextView
@@ -154,7 +154,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="② 输入已修改的管理密码“********” "
+                    android:text="@string/activity_wifi_lock_face_model_11"
                     android:textColor="#606060" />
 
                 <TextView
@@ -163,7 +163,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="③ 按“#”确认，"
+                    android:text="@string/activity_wifi_lock_face_model_12"
                     android:textColor="#606060" />
 
                 <TextView
@@ -172,7 +172,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="④ 语音播报：“已进入管理模式” "
+                    android:text="@string/activity_wifi_lock_face_model_13"
                     android:textColor="#606060" />
 
                 <TextView
@@ -181,7 +181,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑤ 根据语音提示,按“1”，在按“8” "
+                    android:text="@string/activity_wifi_lock_face_model_14"
                     android:textColor="#606060" />
 
                 <TextView
@@ -190,7 +190,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑥ 语音播报“设置成功，手动模式”"
+                    android:text="@string/activity_wifi_lock_face_model_15"
                     android:textColor="#606060"
                     android:layout_marginBottom="@dimen/dp_20"/>
             </LinearLayout>
@@ -211,7 +211,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kaadas 1代操作菜单"
+                    android:text="@string/activity_wifi_lock_face_model_16"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -221,7 +221,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="如何开启A-M自动模式"
+                    android:text="@string/activity_wifi_lock_face_model_17"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -231,7 +231,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="① 按键区输入“*”两次 "
+                    android:text="@string/activity_wifi_lock_face_model_18"
                     android:textColor="#606060" />
 
                 <TextView
@@ -240,7 +240,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="② 输入已修改的管理密码“********” "
+                    android:text="@string/activity_wifi_lock_face_model_19"
                     android:textColor="#606060" />
 
                 <TextView
@@ -249,7 +249,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="③ 按“#”确认，"
+                    android:text="@string/activity_wifi_lock_face_model_5"
                     android:textColor="#606060" />
 
                 <TextView
@@ -258,7 +258,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="④ 语音播报：“已进入管理模式” "
+                    android:text="@string/activity_wifi_lock_face_model_6"
                     android:textColor="#606060" />
 
                 <TextView
@@ -267,7 +267,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑤ 根据语音提示,按“7”，在按“1” "
+                    android:text="@string/activity_wifi_lock_face_model_20"
                     android:textColor="#606060" />
 
                 <TextView
@@ -276,7 +276,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑥ 语音播报“设置成功，自动模式”"
+                    android:text="@string/activity_wifi_lock_face_model_8"
                     android:textColor="#606060" />
 
                 <TextView
@@ -285,7 +285,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="如何开启A-M手动模式"
+                    android:text="@string/activity_wifi_lock_face_model_21"
                     android:textStyle="bold"
                     android:textColor="#606060" />
 
@@ -295,7 +295,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="① 按键区输入“*”两次 "
+                    android:text="@string/activity_wifi_lock_face_model_10"
                     android:textColor="#606060" />
 
                 <TextView
@@ -304,7 +304,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="② 输入已修改的管理密码“********” "
+                    android:text="@string/activity_wifi_lock_face_model_11"
                     android:textColor="#606060" />
 
                 <TextView
@@ -313,7 +313,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="③ 按“#”确认，"
+                    android:text="@string/activity_wifi_lock_face_model_12"
                     android:textColor="#606060" />
 
                 <TextView
@@ -322,7 +322,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="④ 语音播报：“已进入管理模式” "
+                    android:text="@string/activity_wifi_lock_face_model_13"
                     android:textColor="#606060" />
 
                 <TextView
@@ -331,7 +331,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑤ 根据语音提示,按“7”，在按“2” "
+                    android:text="@string/activity_wifi_lock_face_model_22"
                     android:textColor="#606060" />
 
                 <TextView
@@ -340,7 +340,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⑥ 语音播报“设置成功，手动模式”"
+                    android:text="@string/activity_wifi_lock_face_model_15"
                     android:textColor="#606060"
                     android:layout_marginBottom="@dimen/dp_20"/>
 

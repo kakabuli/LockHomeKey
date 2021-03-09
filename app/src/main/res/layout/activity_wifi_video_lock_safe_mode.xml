@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="开锁验证模式"
+            android:text="@string/activity_wifi_video_open_lock_mode"
             android:textColor="#000000"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold" />
@@ -91,7 +91,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="双重验证（指纹+密码）"
+                android:text="@string/activity_wifi_video_safe_mode_double"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="请稍等"
+            android:text="@string/wifi_video_lock_waiting"
             android:layout_marginTop="@dimen/dp_10"
             android:textSize="@dimen/sp_14"
             android:layout_below="@id/avi"/>

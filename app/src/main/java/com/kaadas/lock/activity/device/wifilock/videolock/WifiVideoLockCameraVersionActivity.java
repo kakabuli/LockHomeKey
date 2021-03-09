@@ -248,8 +248,9 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     }
 
     public void updateDialog(CheckOTAResult.UpdateFileInfo appInfo,String content,String wifiSN){
-        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color(this, "", "检测有新"+ content+"\n是否升级",
-                "取消","确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color(this, "", getString(R.string.dialog_wifi_video_check_ota)
+                        + content+"\n" + getString(R.string.dialog_wifi_video_ota_update),
+                getString(R.string.cancel),getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -274,8 +275,8 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -375,11 +376,11 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     public void needUpdate(CheckOTAResult.UpdateFileInfo appInfo, String SN, String version,int type) {
         if(System.currentTimeMillis() - time > 5000){
             if(type == 1){
-                updateDialog(appInfo,"WIFI固件版本" + version,SN);
+                updateDialog(appInfo,getString(R.string.dialog_wifi_wifi_firmware_version) + version,SN);
             }else if(type ==4){
-                updateDialog(appInfo,"视频模组版本" + version,SN);
+                updateDialog(appInfo,getString(R.string.dialog_wifi_video_moudle_version) + version,SN);
             }else if(type == 5){
-                updateDialog(appInfo,"视频模组微控制器版本" + version,SN);
+                updateDialog(appInfo,getString(R.string.dialog_wifi_video_mcu_moudle_version) + version,SN);
             }
             time = System.currentTimeMillis();
         }
@@ -438,7 +439,7 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
                     if (flag) {
 
                     } else {
-                        ToastUtil.getInstance().showLong("升级失败");
+                        ToastUtil.getInstance().showLong(getString(R.string.ota_fail));
                     }
                     if (avi != null) {
                         avi.hide();

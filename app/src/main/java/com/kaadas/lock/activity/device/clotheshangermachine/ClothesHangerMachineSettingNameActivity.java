@@ -94,7 +94,7 @@ public class ClothesHangerMachineSettingNameActivity extends BaseActivity<ICloth
 
     @Override
     public void onSettingNicknameSuccess() {
-        showLoading("修改成功");
+        showLoading(getString(R.string.modify_success));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -111,7 +111,7 @@ public class ClothesHangerMachineSettingNameActivity extends BaseActivity<ICloth
 
     @Override
     public void onSettingNicknameFailed(BaseResult result) {
-        showLoading("修改失败");
+        showLoading(getString(R.string.modify_failed));
     }
 
     @Override

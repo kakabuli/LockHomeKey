@@ -173,9 +173,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             }
 
             if(wifiLockInfo.getSafeMode() == 1){
-                ivSafeMode.setText("安全模式");
+                ivSafeMode.setText(getString(R.string.safe_mode));
             }else{
-                ivSafeMode.setText("普通模式");
+                ivSafeMode.setText(getString(R.string.normal_mode));
             }
             String language = wifiLockInfo.getLanguage();
             if ("zh".equals(language)) {
@@ -197,15 +197,16 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             if (BleLockUtils.isSupportAMModeSet(func)) {
                 rlAm.setVisibility(View.VISIBLE);
                 int amMode = wifiLockInfo.getAmMode();
-                ivAm.setText(amMode == 1 ? getString(R.string.hand) + "上锁": getString(R.string.auto) + "上锁");
+                ivAm.setText(amMode == 1 ? getString(R.string.hand) + getString(R.string.activity_wifi_video_more_lock)
+                        : getString(R.string.auto) + getString(R.string.activity_wifi_video_more_lock));
             } else {
                 rlAm.setVisibility(View.GONE);
             }
 
             if(wifiLockInfo.getStay_status() == 0){
-                tvWanderingAlarmRight.setText("已关闭");
+                tvWanderingAlarmRight.setText(getString(R.string.wandering_alarm_close));
             }else if(wifiLockInfo.getStay_status() ==1){
-                tvWanderingAlarmRight.setText("已开启");
+                tvWanderingAlarmRight.setText(getString(R.string.activity_wifi_video_more_open));
             }
 
 
@@ -506,8 +507,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     }
 
     private void showWifiDialog() {
-        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(WifiVideoLockMoreActivity.this, "更换WIFI需重新进入添加门锁步骤",
-                "取消", "确定", "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(WifiVideoLockMoreActivity.this, getString(R.string.activity_wifi_video_replace_wifi_again),
+                getString(R.string.cancel), getString(R.string.confirm), "#999999", "#1F95F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -614,8 +615,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -723,14 +724,15 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             switch (requestCode){
                 case KeyConstants.WIFI_VIDEO_LOCK_SAFE_MODE_CODE:
                     if(data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_SAFE_MODE,0) == 1){
-                        ivSafeMode.setText("安全模式");
+                        ivSafeMode.setText(getString(R.string.safe_mode));
                     }else{
-                        ivSafeMode.setText("普通模式");
+                        ivSafeMode.setText(getString(R.string.normal_mode));
                     }
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_AM_MODE_CODE:
                     int amMode = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_AM_MODE,0);
-                    ivAm.setText(amMode == 1 ? getString(R.string.hand) + "上锁": getString(R.string.auto) + "上锁");
+                    ivAm.setText(amMode == 1 ? getString(R.string.hand) + getString(R.string.activity_wifi_video_more_lock)
+                            : getString(R.string.auto) + getString(R.string.activity_wifi_video_more_lock));
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE_CODE:
                     String language = data.getStringExtra(KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE);
@@ -745,9 +747,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 case KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE:
                     int stayStatus = data.getIntExtra(KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM,0);
                     if(stayStatus == 0){
-                        tvWanderingAlarmRight.setText("已关闭");
+                        tvWanderingAlarmRight.setText(getString(R.string.wandering_alarm_close));
                     }else if(stayStatus == 1){
-                        tvWanderingAlarmRight.setText("已开启");
+                        tvWanderingAlarmRight.setText(getString(R.string.activity_wifi_video_more_open));
                     }
                     break;
             }
@@ -804,7 +806,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 @Override
                 public void run() {
                     if(flag){
-                        ToastUtil.getInstance().showShort("修改成功");
+                        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
                         if(code == 1){
                             ivSilentMode.setSelected(true);
                         }else{
@@ -812,7 +814,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         }
                     }else{
                         setVolume = code;
-                        ToastUtil.getInstance().showShort("修改失败");
+                        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
                     }
                     if(avi!=null){
                         tvTips.setVisibility(View.GONE);

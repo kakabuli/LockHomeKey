@@ -71,8 +71,8 @@ public class WifiVideoLockPreViewActivity extends BaseAddToApplicationActivity {
     private void showDeleteDialog(String filepath) {
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiVideoLockPreViewActivity.this
-                , "确定删除照片吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_preview_delete),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

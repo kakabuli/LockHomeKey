@@ -141,7 +141,7 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    ToastUtil.getInstance().showShort("修改成功");
+//                    ToastUtil.getInstance().showShort(getString(R.string.modify_success));
                     if(status == 2){
                         ivMessageFree.setSelected(true);
                     }else {
@@ -159,7 +159,7 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.getInstance().showShort("修改失败");
+                    ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
                 }
             });
         }*/
@@ -196,7 +196,7 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

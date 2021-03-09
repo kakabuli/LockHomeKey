@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
@@ -245,6 +246,7 @@ public class MqttService extends Service {
                 }
                 //收到消息
                 String payload = new String(message.getPayload());
+                if(BuildConfig.DEBUG)
                 LogUtils.e("收到mqtt消息111", payload + "---topic" + topic + "  messageID  " + message.getId());
                 //String func, String topic, String payload, MqttMessage mqttMessage
                 JSONObject jsonObject = new JSONObject(payload);

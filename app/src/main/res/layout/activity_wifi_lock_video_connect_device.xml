@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/dp_40"
-            android:text="正在配网中，请稍后..."
+            android:text="@string/activity_wifi_video_scan_network"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold" />

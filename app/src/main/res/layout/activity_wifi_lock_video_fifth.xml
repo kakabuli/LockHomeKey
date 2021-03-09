@@ -56,7 +56,7 @@
             android:id="@+id/head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="第五步：门锁扫描二维码"
+            android:text="@string/activity_wifi_video_fifth_fifth"
             android:textColor="#333333"
             android:textSize="@dimen/sp_18"
             />
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="提示：因手机屏幕尺寸不同，请移动手机在\n距离门锁摄像头10-50CM范围内扫描"/>
+        android:text="@string/activity_wifi_video_fifth_camera"/>
     <View
         android:layout_weight="1"
         android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
         android:layout_width="@dimen/dp_200"
         android:layout_height="@dimen/dp_44"
         android:background="@drawable/go_and_buy"
-        android:text="Wi-Fi已连接，下一步"
+        android:text="@string/activity_wifi_video_fifth_next"
         android:textColor="#fff"
         android:textSize="@dimen/sp_15"
         />
@@ -117,7 +117,7 @@
         android:layout_width="@dimen/dp_200"
         android:layout_height="@dimen/dp_44"
         android:background="@drawable/bg_button_line_blue"
-        android:text="配网失败，重试"
+        android:text="@string/activity_wifi_video_fifth_fail"
         android:textColor="#1F96F7"
         android:textSize="@dimen/sp_15"
         android:layout_marginBottom="@dimen/dp_40"

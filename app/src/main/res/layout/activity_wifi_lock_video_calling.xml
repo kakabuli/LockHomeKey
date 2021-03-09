@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="截图"
+                    android:text="@string/screen_img"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="静音"
+                    android:text="@string/mute_name"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
@@ -183,7 +183,7 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="@dimen/dp_11"
                     android:layout_marginTop="@dimen/dp_38"
-                    android:text="对讲"/>
+                    android:text="@string/wifi_video_lock_talk_back"/>
             </RelativeLayout>
 
             <View
@@ -208,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="录屏"
+                    android:text="@string/recording_screen"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
@@ -236,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/dp_8"
-                    android:text="相册"
+                    android:text="@string/wifi_video_lock_album"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/dp_11" />
             </LinearLayout>
@@ -258,7 +258,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dp_8"
                 android:textSize="@dimen/sp_11"
-                android:text="注：远程临时密码30分钟有效"
+                android:text="@string/wifi_video_lock_30_sceond_password"
                 android:textColor="#505050" />
 
             <TextView
@@ -377,7 +377,7 @@
             android:id="@+id/tv_doorbell"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="有人按门铃啦~"
+            android:text="@string/wifi_video_lock_rang_the_doorbell"
             android:textSize="@dimen/sp_15"
             android:layout_marginTop="@dimen/dp_150"
             android:layout_centerHorizontal="true"
@@ -392,7 +392,7 @@
             android:layout_below="@id/avi"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/sp_17"
-            android:text="正在建立安全连接，请稍后..."
+            android:text="@string/wifi_video_lock_p2p_connect"
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_15" />
 
@@ -440,7 +440,7 @@
                 android:layout_below="@id/iv_answer_icon"
                 android:layout_marginRight="@dimen/dp_94"
                 android:layout_marginTop="@dimen/dp_32"
-                android:text="接听"
+                android:text="@string/call_coming_answer"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_11" />
 
@@ -524,7 +524,7 @@
                 android:layout_marginLeft="@dimen/sp_18"
                 android:layout_marginTop="@dimen/dp_25"
                 android:layout_toRightOf="@id/iv_head_pic"
-                android:text="壮壮家门锁"
+                android:text=""
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_15" />
 
@@ -546,7 +546,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/iv_big_head_pic"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="壮壮家门锁"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_15" />
     </RelativeLayout>

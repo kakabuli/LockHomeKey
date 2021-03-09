@@ -1,6 +1,7 @@
 package com.kaadas.lock.mvp.presenter;
 
 import com.google.gson.Gson;
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
@@ -84,6 +85,7 @@ public class DevicePresenter<T> extends BasePresenter<IDeviceView> {
                         public void accept(MqttData mqttData) throws Exception {
                             toDisposable(allBindDeviceDisposable);
                             String payload = mqttData.getPayload();
+                            if(BuildConfig.DEBUG)
                             LogUtils.e("--kaadas--payload=="+payload);
 
                             AllBindDevices allBindDevices = new Gson().fromJson(payload, AllBindDevices.class);

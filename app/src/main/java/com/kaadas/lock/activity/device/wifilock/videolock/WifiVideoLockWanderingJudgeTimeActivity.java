@@ -193,8 +193,8 @@ public class WifiVideoLockWanderingJudgeTimeActivity extends BaseActivity<IWifiL
 
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -374,7 +374,7 @@ public class WifiVideoLockWanderingJudgeTimeActivity extends BaseActivity<IWifiL
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
 
     }
 

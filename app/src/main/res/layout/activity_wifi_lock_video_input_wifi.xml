@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_25"
             android:lineSpacingExtra="@dimen/dp_4"
-            android:text="第四步：配置连接WI-FI"
+            android:text="@string/activity_wifi_video_fourth_fifth"
             android:layout_gravity="center_horizontal"
             android:textColor="#565656"
             android:textSize="@dimen/sp_18"

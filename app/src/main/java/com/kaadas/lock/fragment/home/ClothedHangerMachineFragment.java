@@ -337,7 +337,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     }
 
     private void showFunctionTimeDialog(String content,int function){
-        AlertDialogUtil.getInstance().clothesHangerMachineDialog(getActivity(), content, "取消", "确定",
+        AlertDialogUtil.getInstance().clothesHangerMachineDialog(getActivity(), content, getString(R.string.cancel), getString(R.string.confirm),
                 "#A3A3A3", "#1F96F7", new AlertDialogUtil.ClothesHangerMachineClickListener() {
                     @Override
                     public void left() {

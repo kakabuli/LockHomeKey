@@ -54,7 +54,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="自动上锁"
+                android:text="@string/wifi_video_lock_auto_mode"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -91,7 +91,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="定时5秒"
+                android:text="@string/wifi_lock_x9_locking_method_2"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -120,7 +120,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="定时10秒"
+                android:text="@string/wifi_lock_x9_locking_method_3"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -155,7 +155,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="定时15秒"
+                android:text="@string/wifi_lock_x9_locking_method_4"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
@@ -190,7 +190,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="关闭自动上锁"
+                android:text="@string/wifi_lock_x9_locking_method_5"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 

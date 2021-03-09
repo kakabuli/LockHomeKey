@@ -273,7 +273,6 @@ public class UnderLineRadioBtn extends AppCompatRadioButton {
             setScaleY((float) 0.8);
             setAlpha((float) 0.8);
         }
-        LogUtils.e("设置选中");
         postInvalidate();
     }
 }

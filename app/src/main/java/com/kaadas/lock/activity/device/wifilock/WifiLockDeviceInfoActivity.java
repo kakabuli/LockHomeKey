@@ -303,6 +303,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         }
         else if (type == 3) { //人脸模组
             content = getString(R.string.hava_face_model_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        }else{
+            if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+                content = getString(R.string.have_panel_multi_new_version) + "";
+            }
         }
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
                 , content, getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
@@ -327,7 +331,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     }
 
     @Override
-    public void needUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
+    public void needMultiUpdate(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
         hiddenLoading();
         showCheckVersion(upgradeTasks);
     }
@@ -335,8 +339,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     private void showCheckVersion(List<MultiCheckOTAResult.UpgradeTask> upgradeTasks) {
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiLockDeviceInfoActivity.this,
-                "发现新版本，是否更新？",
-                "否", "是","#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.have_panel_multi_new_version) + "",
+                getString(R.string.cancel), getString(R.string.confirm),"#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

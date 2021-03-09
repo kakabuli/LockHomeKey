@@ -3,6 +3,7 @@ package com.kaadas.lock.publiclibrary.http.util;
 import android.text.TextUtils;
 
 
+import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.publiclibrary.http.temp.HttpConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -118,14 +119,16 @@ public class RetrofitServiceManager {
     public static class HttpLogger implements HttpLoggingInterceptor.Logger {
         @Override
         public void log(String message) {
-           LogUtils.e("网络请求体   ", message);
+            if(BuildConfig.DEBUG)
+                LogUtils.e("网络请求体   ", message);
         }
     }
 
     public static class HttpHeadLogger implements HttpLoggingInterceptor.Logger {
         @Override
         public void log(String message) {
-            LogUtils.e("网络请求头   ", message);
+            if(BuildConfig.DEBUG)
+                LogUtils.e("网络请求头   ", message);
         }
     }
 

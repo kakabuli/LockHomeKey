@@ -167,8 +167,9 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     }
 
     private void createKeepAliveDialog() {
-        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, "您确定要关闭吗?", "关闭会导致APP无法远程查看门外情况",
-                "有人按门铃（或锁被唤醒）时，可视对讲不受影响", "取消", "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTwoButtonTwoContentDialog(this, getString(R.string.activity_wifi_video_real_time_close),
+                getString(R.string.activity_wifi_video_real_time_close_no_remote),
+                getString(R.string.activity_wifi_video_real_time_belling_video), getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -225,23 +226,23 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
 
                 sum += snoozeStartTime[i];
                 if(snoozeStartTime[i] == 1){
-                    str += " 周一";
+                    str += getString(R.string.monday_1);
                 }else if(snoozeStartTime[i] == 2){
-                    str += " 周二";
+                    str += getString(R.string.tuesday_1);
                 }else if(snoozeStartTime[i] == 3){
-                    str += " 周三";
+                    str += getString(R.string.wedensday_1);
                 }else if(snoozeStartTime[i] == 4){
-                    str += " 周四";
+                    str += getString(R.string.thursday_1);
                 }else if(snoozeStartTime[i] == 5){
-                    str += " 周五";
+                    str += getString(R.string.friday_1);
                 }else if(snoozeStartTime[i] == 6){
-                    str += " 周六";
+                    str += getString(R.string.saturday_1);
                 }else if(snoozeStartTime[i] == 7){
-                    str += " 周日";
+                    str += getString(R.string.sunday_1);
                 }
             }
             if(sum == 28){
-                return "每天 ";
+                return getString(R.string.week_day_1);
             }else{
                 if(str.length() > 10){
                     return str.substring(0,9) + "... ";
@@ -407,8 +408,8 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "设置失败", "\n已开启省电模式，需唤醒门锁后再试\n",
-                "确定", new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 
@@ -532,9 +533,9 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                 public void run() {
 
                     if(flag){
-                        ToastUtil.getInstance().showShort("修改成功");
+                        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
                     }else{
-                        ToastUtil.getInstance().showShort("修改失败");
+                        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
                     }
                     if(avi != null){
                         tvTips.setVisibility(View.GONE);

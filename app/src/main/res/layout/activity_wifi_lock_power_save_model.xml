@@ -79,7 +79,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="门锁如何开启节能模式"
+            android:text="@string/activity_wifi_lock_power_status"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -89,7 +89,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ① 按键区输入“*”两次"
+            android:text="@string/activity_wifi_lock_face_model_23"
             android:textColor="#606060" />
 
         <TextView
@@ -98,7 +98,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ② 输入已修改的管理密码“********”"
+            android:text="@string/activity_wifi_lock_face_model_24"
             android:textColor="#606060" />
 
         <TextView
@@ -107,7 +107,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ③ 按“#”确认，"
+            android:text="@string/activity_wifi_lock_face_model_25"
             android:textColor="#606060" />
 
         <TextView
@@ -116,7 +116,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ④ 语音播报：“已进入管理模式”"
+            android:text="@string/activity_wifi_lock_face_model_26"
             android:textColor="#606060" />
 
         <TextView
@@ -125,7 +125,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑤ 根据语音提示,按“1”，在按“9”"
+            android:text="@string/activity_wifi_lock_face_model_27"
             android:textColor="#606060" />
 
         <TextView
@@ -134,7 +134,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑥ 语音播报“设置成功，节能模式已开启”"
+            android:text="@string/activity_wifi_lock_face_model_28"
             android:textColor="#606060" />
 
         <TextView
@@ -143,7 +143,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="门锁如何关闭节能模式"
+            android:text="@string/activity_wifi_lock_close_power_status"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -153,7 +153,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ① 按键区输入“*”两次"
+            android:text="@string/activity_wifi_lock_face_model_23"
             android:textColor="#606060" />
 
         <TextView
@@ -162,7 +162,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ② 输入已修改的管理密码“********”"
+            android:text="@string/activity_wifi_lock_face_model_24"
             android:textColor="#606060" />
 
         <TextView
@@ -171,7 +171,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ③ 按“#”确认，"
+            android:text="@string/activity_wifi_lock_face_model_25"
             android:textColor="#606060" />
 
         <TextView
@@ -180,7 +180,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" ④ 语音播报：“已进入管理模式”"
+            android:text="@string/activity_wifi_lock_face_model_26"
             android:textColor="#606060" />
 
         <TextView
@@ -189,7 +189,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑤ 根据语音提示,按“1”，在按“9”"
+            android:text="@string/activity_wifi_lock_face_model_27"
             android:textColor="#606060" />
 
         <TextView
@@ -199,7 +199,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10"
-            android:text="⑥ 语音播报“设置成功，节能模式已关闭”"
+            android:text="@string/activity_wifi_lock_face_model_29"
             android:textColor="#606060" />
 
     </LinearLayout>
@@ -218,7 +218,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kaadas 1代操作菜单"
+            android:text="@string/activity_wifi_lock_face_model_16"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -228,7 +228,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="门锁如何开启节能模式"
+            android:text="@string/activity_wifi_lock_power_status"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -238,7 +238,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="① 按键区输入“*”两次 "
+            android:text="@string/activity_wifi_lock_face_model_18"
             android:textColor="#606060" />
         <TextView
             android:textSize="14sp"
@@ -246,16 +246,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="② 输入已修改的管理密码“********” "
-            android:textColor="#606060" />
-
-        <TextView
-            android:textSize="14sp"
-            android:layout_marginTop="@dimen/dp_10"
-            android:drawablePadding="@dimen/dp_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="③ 按“#”确认， "
+            android:text="@string/activity_wifi_lock_face_model_19"
             android:textColor="#606060" />
 
         <TextView
@@ -264,7 +255,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="④ 语音播报：“已进入管理模式”"
+            android:text="@string/activity_wifi_lock_face_model_25"
             android:textColor="#606060" />
 
         <TextView
@@ -273,7 +264,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑤ 根据语音提示,按“6”，在按“1”"
+            android:text="@string/activity_wifi_lock_face_model_26"
             android:textColor="#606060" />
 
         <TextView
@@ -282,7 +273,16 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑥ 语音播报“设置成功”"
+            android:text="@string/activity_wifi_lock_face_model_30"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_wifi_lock_face_model_31"
             android:textColor="#606060" />
 
         <TextView
@@ -291,7 +291,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="门锁如何关闭"
+            android:text="@string/activity_wifi_lock_face_model_32"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -301,7 +301,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="① 按键区输入“*”两次 "
+            android:text="@string/activity_wifi_lock_face_model_18"
             android:textColor="#606060" />
         <TextView
             android:textSize="14sp"
@@ -309,16 +309,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="② 输入已修改的管理密码“********” "
-            android:textColor="#606060" />
-
-        <TextView
-            android:textSize="14sp"
-            android:layout_marginTop="@dimen/dp_10"
-            android:drawablePadding="@dimen/dp_10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="③ 按“#”确认， "
+            android:text="@string/activity_wifi_lock_face_model_19"
             android:textColor="#606060" />
 
         <TextView
@@ -327,7 +318,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="④ 语音播报：“已进入管理模式”"
+            android:text="@string/activity_wifi_lock_face_model_33"
             android:textColor="#606060" />
 
         <TextView
@@ -336,7 +327,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑤ 根据语音提示,按“6”，在按“2”"
+            android:text="@string/activity_wifi_lock_face_model_26"
             android:textColor="#606060" />
 
         <TextView
@@ -345,7 +336,16 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⑥ 语音播报“设置成功”"
+            android:text="@string/activity_wifi_lock_face_model_34"
+            android:textColor="#606060" />
+
+        <TextView
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:drawablePadding="@dimen/dp_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_wifi_lock_face_model_31"
             android:layout_marginBottom="@dimen/dp_10"
             android:textColor="#606060" />
 
@@ -368,7 +368,7 @@
             android:drawablePadding="@dimen/dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="注：节能模式说明"
+            android:text="@string/activity_wifi_lock_face_model_35"
             android:textStyle="bold"
             android:textColor="#606060" />
 
@@ -379,7 +379,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="@dimen/dp_10"
-            android:text="① 节能模式开启后，关闭人脸识别功能；节能模式关闭后，开启人脸识别功能；"
+            android:text="@string/activity_wifi_lock_face_model_36"
             android:textColor="#606060" />
         <TextView
             android:textSize="14sp"
@@ -389,7 +389,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="@dimen/dp_10"
             android:layout_marginBottom="@dimen/dp_10"
-            android:text="② 当电池低于预调的电量时，为保障您更持续长久的智能进出体验，智能锁会把人脸识别功能关闭，进入节能模式，用户的指纹、密码、卡等开启方式可正常使用。若需要重新开启人脸识别功能，只需要重新更换充满的电池即可恢复。"
+            android:text="@string/activity_wifi_lock_face_model_37"
             android:textColor="#606060" />
 
 

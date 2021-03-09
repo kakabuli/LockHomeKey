@@ -207,7 +207,7 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
                     public void onSuccess(MultiCheckOTAResult multiCheckOTAResult) {
                         if("200".equals(multiCheckOTAResult.getCode() + "")){
                             if(isSafe()){
-                                mViewRef.get().needUpdate(multiCheckOTAResult.getData().getUpgradeTask());
+                                mViewRef.get().needMultiUpdate(multiCheckOTAResult.getData().getUpgradeTask());
                             }
                         }else if ("401".equals(multiCheckOTAResult.getCode())) { // 数据参数不对
                             if (isSafe()) {

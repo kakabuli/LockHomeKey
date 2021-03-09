@@ -244,11 +244,11 @@ public class WifiVideoLockDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
         TextView tvContent = mView.findViewById(R.id.tv_content);
         tvContent.setText(content + "");
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
-        tv_cancel.setText("关闭");
+        tv_cancel.setText(getString(R.string.close));
         tv_cancel.setTextColor(Color.parseColor("#9A9A9A"));
         TextView tv_query = mView.findViewById(R.id.tv_right);
         tv_query.setTextColor(Color.parseColor("#2096F8"));
-        tv_query.setText("重新连接");
+        tv_query.setText(getString(R.string.clothes_hanger_add_next));
         dialog.setContentView(mView);
 
         Window window = dialog.getWindow();

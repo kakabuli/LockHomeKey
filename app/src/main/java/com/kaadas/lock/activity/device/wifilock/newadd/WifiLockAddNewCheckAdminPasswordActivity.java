@@ -466,7 +466,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends BaseAddToApplicati
             }
         } else { //都五次输入错误提示   退出
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-                    WifiLockAddNewCheckAdminPasswordActivity.this, "", "门锁管理密码验证已失败5次\n" + "请修改管理密码，重新配网", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    WifiLockAddNewCheckAdminPasswordActivity.this, "", getString(R.string.activity_wifi_video_sixth_fail_3) + getString(R.string.activity_wifi_video_sixth_fail_4), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
                             startActivity(new Intent(WifiLockAddNewCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
@@ -495,7 +495,7 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends BaseAddToApplicati
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiLockAddNewCheckAdminPasswordActivity.this
                 , "门锁初始密码不能验证，\n" + "请修改门锁管理密码或重新输入\n",
-                "重新输入", "修改密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.re_input), "修改密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
                         //重新输入
@@ -543,8 +543,8 @@ public class WifiLockAddNewCheckAdminPasswordActivity extends BaseAddToApplicati
     private void showWarring(){
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 this
-                , "确定重新开始配网吗？",
-                "取消", "确定", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.activity_wifi_video_fifth_network),
+                getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
 

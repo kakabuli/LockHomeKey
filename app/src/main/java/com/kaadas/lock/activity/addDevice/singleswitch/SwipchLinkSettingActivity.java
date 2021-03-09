@@ -322,7 +322,7 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
     @Override
     public void settingDeviceFail() {
 //        LogUtils.e("--kaadas--设置失败");
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -371,7 +371,7 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
 
     @Override
     public void bindingAndModifyDeviceFail() {
-        Toast.makeText(this, "设置失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.set_failed), Toast.LENGTH_SHORT).show();
 
     }
 
