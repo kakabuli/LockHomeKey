@@ -24,6 +24,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockOpenRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockOpenRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
+import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
@@ -172,6 +173,16 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiLockOperationRecord record = lockRecords.get(i);
+                boolean falg = false;
+                for(WifiLockOperationRecord list : records){
+                    if(list.get_id().equals(record.get_id()) ){
+                        falg = true;
+                        break;
+                    }
+                }
+                if(falg){
+                    continue;
+                }
                 //获取开锁时间的毫秒数
                 long openTime = record.getTime();
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
