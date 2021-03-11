@@ -121,7 +121,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
             case 0x04:// 已监测到您的门锁被撬，请联系家人或小区保安
-                tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.pick_proof) +"</font>" + "<br><font color='#999999'>已监测到您的门锁被撬</font>"));
+                tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.pick_proof) +"</font>" + "<br><font color='#999999'>已监测到您的门锁异常</font>"));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
             case 0x70:// 徘徊报警

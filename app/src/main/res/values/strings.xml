@@ -169,7 +169,7 @@
     <string name="help_four_one">对于没有任何按键的设备，您可以尝试以 1 秒为间隙，反复对设备进行上电操作。</string>
     <string name="bluetooth_first_text">确保门锁已安装好，并装上电池</string>
     <string name="bluetooth_user_pwd">初始用户管理密码：12345678</string>
-    <string name="help_four_two">对于有一个按键或有重置孔的设备，您可以尝试长按按键或长按重置孔。进入待添加状态后，通常会有一个特殊的指示灯效果。</string>
+    <string name="help_four_two">对于有一个按键或有重置孔的设备，您可以尝试长按按键或双击重置孔。进入待添加状态后，通常会有一个特殊的指示灯效果。</string>
     <string name="bluetooth_two_text">触摸按键区域唤醒面板</string>
     <string name="bluetooth_three_text">先按“*”两次，再输入管理密码，按“#”确认</string>
     <string name="bluetooth_four_text">语音提示：“已进入管理模式”</string>
@@ -551,8 +551,8 @@
 
     <string name="warring_lock">您的门锁错误验证多次,门锁系统锁定</string>
     <string name="warring_three_times">您的门锁错误验证多次，请回家或联系保安查看！</string>
-    <string name="warring_broken">已监测到您的门锁被撬,请联系家人或小区保安</string>
-    <string name="warring_mechanical_key">您的智能锁正在被机械锁开启,请回家或联系保安查看</string>
+    <string name="warring_broken">已监测到您的门锁异常,请联系家人或小区保安</string>
+    <string name="warring_mechanical_key">您的智能锁正在被机械方式开启,请回家或联系保安查看</string>
     <string name="warring_low_power">您的门锁电量过低，请及时更换</string>
 <!--    <string name="warring_door_not_lock">您的门锁有故障,请注意</string>-->
     <string name="warring_door_not_lock">您的门锁未上锁，请检查锁舌是否弹出</string>
@@ -1395,11 +1395,11 @@
     <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
-    <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
+    <string name="wifi_lock_alarm_lock_broken">防撬报警信息</string>
     <string name="wifi_lock_alarm_opens">门锁正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
     <!--<string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>-->
-    <string name="wifi_lock_alarm_problem">您的门锁未上锁，请检查锁舌是否弹出</string>
+    <string name="wifi_lock_alarm_problem">您的门锁处于异常状态，请检查锁体</string>
     <string name="wifi_lock_alarm_safe">您的门锁处于布防状态，有从门内开锁情况</string>
     <string name="wifi_video_lock_alarm_doorbell">有人按门铃</string>
     <string name="wifi_lockbind_success">绑定成功</string>
@@ -1428,7 +1428,7 @@
     <string name="wifi_lock_alarm_1">您的%1$s门锁错误验证多次，门锁系统锁定100秒</string>
     <string name="wifi_lock_alarm_2">您的家人使用劫持密码开启%1$s门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_3">您的%1$s门锁错误验证多次</string>
-    <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁被撬，请联系家人或小区保安</string>
+    <string name="wifi_lock_alarm_4">已监测到您的%1$s门锁异常，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_8">您的%1$s门锁错正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_10">您的%1$s门锁门锁低电量，请及时更换</string>
     <!--<string name="wifi_lock_alarm_20">您的%1$s门锁有故障，请注意</string>-->
@@ -1998,7 +1998,7 @@
     <string name="alarm_notification_content_1">您的门锁错误验证多次，门锁系统锁定100秒！</string>
     <string name="alarm_notification_content_2">您的门锁使用劫持密码开门，赶紧联系或报警！</string>
     <string name="alarm_notification_content_3">您的门锁已3次验证开门失败，请回家或联系保安查看！</string>
-    <string name="alarm_notification_content_4">已监测到您的门锁被撬，请联系家人或小区保安！</string>
+    <string name="alarm_notification_content_4">防撬报警信息!</string>
     <string name="alarm_notification_content_8">您的门锁正在被机械钥匙开启，请回家或联系保安查看！</string>
     <string name="alarm_notification_content_16">您的门锁低电量，请及时更换！</string>
     <!--<string name="alarm_notification_content_32">您的门锁有故障，请注意！</string>-->

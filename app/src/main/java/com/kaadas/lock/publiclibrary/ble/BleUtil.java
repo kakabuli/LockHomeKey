@@ -693,7 +693,7 @@ public class BleUtil {
                 content = context.getString(R.string.wifi_lock_alarm_low_power);
                 break;
             case DOOR_NOT_LOCK: //32锁体异常
-                content = context.getString(R.string.wifi_lock_alarm_problem);
+                content = context.getString(R.string.alarm_notification_content_32);
                 break;
             case ARM://64布防
                 content = context.getString(R.string.wifi_lock_alarm_safe);
