@@ -329,6 +329,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         changeState(4);
         Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
         startActivity(intent);
     }
 
@@ -422,6 +423,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     public void onUpdateSuccess(String wifiSn){
         changeState(4);
         Intent intent = new Intent(this, WifiLockAddBleSuccessActivity.class);
+        intent.putExtra(KeyConstants.WIFI_LOCK_FUNC,func);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
         startActivity(intent);
     }

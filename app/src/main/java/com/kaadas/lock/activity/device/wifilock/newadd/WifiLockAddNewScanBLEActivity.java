@@ -429,6 +429,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void onConnectBLEWIFISuccess(BluetoothLockBroadcastBean broadcastBean,int version) {
+        LogUtils.e("shulan onConnectBLEWIFISuccess");
         hiddenLoading();
         Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFiSwitchActivity.class);
         nextIntent.putExtra(KeyConstants.BLE_VERSION, version);

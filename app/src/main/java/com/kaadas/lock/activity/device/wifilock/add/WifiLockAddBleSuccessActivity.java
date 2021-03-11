@@ -26,6 +26,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAddSuccessPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAddSuccessView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
@@ -57,6 +58,7 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
     private AddBluetoothPairSuccessAdapter mAdapter;
     private String wifiSN;
     private Handler handler = new Handler();
+    private int func = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
         mList.add(new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_bedroom), false));
         mList.add(new AddBluetoothPairSuccessBean(getString(R.string.wifi_lock_company), false));
         wifiSN = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+        func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC, 0);
     }
 
     private void initView() {
@@ -210,7 +213,9 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
         hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
 
-        handler.postDelayed(runnable, 400);
+        if(!BleLockUtils.isSupportPanelMultiOTA(func + "")){
+            handler.postDelayed(runnable, 400);
+        }
 
 //        Intent backIntent=new Intent(this, MainActivity.class);
 //        startActivity(backIntent);
