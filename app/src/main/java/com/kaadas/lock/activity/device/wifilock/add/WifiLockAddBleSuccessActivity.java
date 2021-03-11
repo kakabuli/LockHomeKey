@@ -215,6 +215,9 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
 
         if(!BleLockUtils.isSupportPanelMultiOTA(func + "")){
             handler.postDelayed(runnable, 400);
+        }else{
+            Intent backIntent=new Intent(this, MainActivity.class);
+            startActivity(backIntent);
         }
 
 //        Intent backIntent=new Intent(this, MainActivity.class);
