@@ -284,7 +284,6 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
 
 
     public void bindDevice(BluetoothDevice device, boolean isBind) {
-        LogUtils.e("shulan bleService->" + bleService);
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -292,7 +291,6 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                 bleService = MyApplication.getInstance().getBleService(); //判断
             }
         }
-        LogUtils.e("shulan 开始绑定");
         LogUtils.e("开始绑定");
         this.isBind = isBind;
         this.device = device;
@@ -302,20 +300,14 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
             }
             return;
         }
-        LogUtils.e("shulan 11111111111111111111111");
         // 连接
         bleService.removeBleLockInfo(); //1
-        LogUtils.e("shulan 22222222222222222222222");
         handler.removeCallbacks(releaseRunnable);
-        LogUtils.e("shulan 33333333333333333333333");
         bleService.connectDeviceByDevice(device); //1
-        LogUtils.e("shulan 44444444444444444444444");
         handler.postDelayed(releaseRunnable, 15 * 1000);
-        LogUtils.e("shulan 5555555555555555555555");
         if (isSafe()) {
             mViewRef.get().onConnecting();
         }
-        LogUtils.e("shulan 666666666666666666666");
         try {
             bindDisposable = bleService.subscribeDeviceConnectState() //1
                     .compose(RxjavaHelper.observeOnMainThread())
@@ -324,19 +316,13 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                         public void accept(BleStateBean bleStateBean) throws Exception {
                             handler.removeCallbacks(releaseRunnable);
                             toDisposable(bindDisposable);
-                            LogUtils.e("shulan 77777777777777777777777");
                             if (bleStateBean.isConnected()) {
                                 LogUtils.e(SearchBleWiFiDevicePresenter.class.getName() + "--kaadas--连接成功");
-                                LogUtils.e("shulan 8888888888888888888888888888888");
                                 if (bleStateBean.getBleVersion() == 4) {
-                                    LogUtils.e("shulan 10---------------------");
                                     if (isSafe()) {
                                         for (BluetoothLockBroadcastBean broadcastBean : broadcastItemList)
                                         {
                                             if (broadcastBean.getDevice().equals(device)){
-                                                LogUtils.e("shulan 13---------------------device->" + device);
-                                                LogUtils.e("shulan 13---------------------BleVersion->" + bleStateBean.getBleVersion());
-                                                LogUtils.e("shulan 13---------------------");
                                                 mViewRef.get().onConnectBLEWIFISuccess(broadcastBean,bleStateBean.getBleVersion());
 
                                             }
@@ -344,20 +330,17 @@ public class SearchBleWiFiDevicePresenter<T> extends BasePresenter<ISearchDevice
                                     }
                                 }
                                 else if (bleStateBean.getBleVersion() == 2 || bleStateBean.getBleVersion() == 3) {
-                                    LogUtils.e("shulan 11---------------------");
 //                                    if (isSafe()) {
 //                                        mViewRef.get().onConnectSuccess();
 //                                    }
                                     readSnTimes = 0;  //初始化读取SN的次数
                                     readSn(bleStateBean.getBleVersion(), device.getAddress(), device.getName());
                                 } else if (bleStateBean.getBleVersion() == 1) { //最老的模块，走老的流程
-                                    LogUtils.e("shulan 12---------------------");
                                     if (isSafe()) {
                                         mViewRef.get().onConnectedAndIsOldMode(bleStateBean.getBleVersion(), isBind, device.getAddress(), device.getName());
                                     }
                                 }
                             } else {
-                                LogUtils.e("shulan 99999999999999999999999999999999");
                                 connectTimes++;
                                 LogUtils.e(SearchBleWiFiDevicePresenter.class.getName() + "--kaadas--绑定界面连接失败");
                                 bindDevice(device, isBind);
