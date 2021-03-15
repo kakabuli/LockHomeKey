@@ -183,7 +183,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
     private void initXMP2PManager() {
         XMP2PManager.getInstance().initAPI(getApplicationContext(),XMP2PManager.serviceString);
         XMP2PManager.getInstance().init(getApplicationContext());
-        XMLog.DEBUG=true;
+        XMLog.DEBUG=false;
         LogCodec.DEBUG=false;
     }
 
