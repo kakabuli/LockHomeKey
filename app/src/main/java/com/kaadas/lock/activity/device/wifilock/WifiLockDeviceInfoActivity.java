@@ -74,6 +74,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     private String sWifiVersion;
     private String lockFirmwareVersion;
     private List<ProductInfo> productList = new ArrayList<>();
+    private boolean multiOTAflag = false;
 
 
     @Override
@@ -154,6 +155,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             case R.id.rl_face_model_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(faceModelFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
+                    multiOTAflag = false;
                     mPresenter.checkOtaInfo(wifiSN, faceModelFirmwareVersion, 3);
                 } else {
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
@@ -163,8 +165,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(lockFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+                        multiOTAflag = true;
                         mPresenter.checkMultiOTAInfo(wifiSN,wifiLockInfo.getFrontPanelVersion() + "",wifiLockInfo.getBackPanelVersion() + "");
                     }else {
+                        multiOTAflag = false;
                         mPresenter.checkOtaInfo(wifiSN, lockFirmwareVersion, 2);
                     }
                 } else {
@@ -174,6 +178,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             case R.id.rl_wifi_model_firmware_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
                     showLoading(getString(R.string.is_check_version));
+                    multiOTAflag = false;
                     mPresenter.checkOtaInfo(wifiSN, sWifiVersion, 1);
                 } else {
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
@@ -255,7 +260,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     public void noNeedUpdate() {
         hiddenLoading();
         String content = getString(R.string.already_newest_version) + "";
-        if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
+        if(multiOTAflag && BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
             content = getString(R.string.already_newest_version) + "\n前面板固件版本：" + wifiLockInfo.getFrontPanelVersion()
             + "\n后面板固件版本：" + wifiLockInfo.getBackPanelVersion();
         }
