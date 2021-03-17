@@ -306,7 +306,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         if (wifiLockInfo != null && wifiLockInfo.getIsAdmin() == 1) {
             LogUtils.e("--kaadas--更新密码因子=="+randomCode);
             //更新密码因子
-            mPresenter.update(wifiSn, randomCode, wifiSn, func);
+            mPresenter.update(wifiSn, randomCode, sSsid, func);
         } else {
             LogUtils.e("--kaadas--绑定设备=="+randomCode);
             //绑定设备
