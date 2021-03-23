@@ -318,7 +318,11 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                     }
                 }
                 fragmentTransaction.commit();*/
-                viewPager.setCurrentItem(2);
+                if(isVideoLock){
+                    viewPager.setCurrentItem(2);
+                }else{
+                    viewPager.setCurrentItem(1);
+                }
                 break;
 
             case R.id.tv_visitor_record:
