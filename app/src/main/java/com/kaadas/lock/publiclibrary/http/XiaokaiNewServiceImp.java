@@ -160,7 +160,7 @@ public class XiaokaiNewServiceImp {
         RegisterByPhoneBean registerByPhoneBean = new RegisterByPhoneBean(name, password, tokens);
         String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getNoTokenInstance().create(IXiaoKaiNewService.class)
-                .registerByEmail(timestamp,new HttpUtils<RegisterByPhoneBean>().getBodyToken(registerByPhoneBean,timestamp))
+                .registerByEmail(timestamp,new HttpUtils<RegisterByPhoneBean>().getBodyNoToken(registerByPhoneBean,timestamp))
                 .compose(RxjavaHelper.observeOnMainThread());
     }
 
