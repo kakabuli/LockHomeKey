@@ -38,7 +38,7 @@ public class HuaWeiPushService extends HmsMessageService {
     public void onNewToken(String token) {
         LogUtils.d(TAG, "received refresh token:" + token);
         // send the token to your app server.
-        if (!TextUtils.isEmpty(token)) {
+        if (!TextUtils.isEmpty(token) && !token.equals(SPUtils.get(GeTui.HUAWEI_KEY,"").toString())) {
             // This method callback must be completed in 10 seconds. Otherwise, you need to start a new Job for callback processing.
             refreshedTokenToServer(token);
 //            turnSwichpush(this,true);
