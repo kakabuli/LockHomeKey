@@ -59,6 +59,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -72,8 +73,7 @@ import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.xiaomi.SPUtils2;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
-import com.yun.software.kaadas.Comment.Constans;
-import com.yun.software.kaadas.Utils.UserUtils;
+import com.yun.store.util.Constans;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
@@ -1054,7 +1054,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
     public void onEventBus(EventCenter eventCenter) {
         if (eventCenter.getEventCode() == Constans.RELOGIN) {  //商城token  过期
             MyApplication.getInstance().tokenInvalid(true);
-            UserUtils.setToken("");
+            MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,"");
         }
     }
 

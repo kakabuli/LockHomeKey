@@ -11,7 +11,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.IRegisterView;
-import com.yun.software.kaadas.Utils.UserUtils;
 
 import io.reactivex.disposables.Disposable;
 
@@ -95,7 +94,7 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
 //                                SPUtils.put(SPUtils.UID, result.getData().getUid());
                                 MyApplication.getInstance().setToken(result.getData().getToken());
                                 MyApplication.getInstance().setUid(result.getData().getUid());
-                                UserUtils.setToken(result.getData().getStoreToken());
+                                MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,result.getData().getStoreToken());
                                 if (mViewRef != null) {
                                     mViewRef.get().registerSuccess();
                                 }
@@ -137,7 +136,7 @@ public class RegisterPresenter<T> extends BasePresenter<IRegisterView> {
                                 MMKVUtils.setMMKV(SPUtils.UID,result.getData().getUid());
                                 MyApplication.getInstance().setToken(result.getData().getToken());
                                 MyApplication.getInstance().setUid(result.getData().getUid());
-                                UserUtils.setToken(result.getData().getStoreToken());
+                                MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,result.getData().getStoreToken());
                                 if (mViewRef != null) {
                                     mViewRef.get().registerSuccess();
                                 }

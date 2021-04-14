@@ -5,7 +5,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.greenDao.convert.SingleFireSwitchInfoConvert;
 import com.kaadas.lock.utils.greenDao.convert.WifiVideoAliveTimeBeanConvert;
 import com.kaadas.lock.utils.greenDao.convert.WifiVideoLockSetPirConvert;
-import com.yun.software.kaadas.UI.wxchat.PayResult;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;

@@ -25,6 +25,8 @@ public class SPUtils {
     public static final String LOCK_PWD = "lock_pwd";
     //token
     public static final String TOKEN = "token";
+    // store token
+    public static final String STORE_TOKEN = "store_token";
     //uid
     public static final String UID = "user_id";
     //phone

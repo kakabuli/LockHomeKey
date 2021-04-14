@@ -2,6 +2,7 @@ package com.kaadas.lock;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Application;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
@@ -72,10 +73,7 @@ import com.tencent.mmkv.MMKV;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xm.sdk.log.XMLog;
 import com.xmitech.sdk.log.LogCodec;
-import com.yun.software.kaadas.Utils.ActivityCollectorUtil;
-import com.yun.software.kaadas.Utils.UserUtils;
-/*import com.uuzuche.lib_zxing.activity.ZXingLibrary;*/
-
+import com.yun.store.util.ActivityCollectorUtil;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
@@ -106,7 +104,7 @@ import io.reactivex.subjects.PublishSubject;
  * Create By lxj  on 2019/1/7
  * Describe
  */
-public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication {
+public class MyApplication extends Application {
     private static MyApplication instance;
     private String token;
     private String uid;
@@ -390,7 +388,7 @@ public class MyApplication extends com.yun.software.kaadas.Comment.MyApplication
         boolean alreadyStart = false;
         Boolean appUpdate = (Boolean) SPUtils.get(SPUtils.APPUPDATE, false);
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
-        UserUtils.clear();
+        MMKVUtils.removeKey(SPUtils.STORE_TOKEN);
         //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate == true) {

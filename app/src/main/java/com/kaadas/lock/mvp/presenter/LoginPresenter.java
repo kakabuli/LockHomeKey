@@ -18,14 +18,6 @@ import com.kaadas.lock.utils.MD5Utils;
 import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
-import com.kaadas.lock.utils.SPUtils2;
-import com.kaadas.lock.utils.ftp.GeTui;
-import com.yun.software.kaadas.Utils.UserUtils;
-
-
-import net.sdvn.cmapi.ConnectionService;
-
-import org.linphone.mediastream.Log;
 
 import io.reactivex.disposables.Disposable;
 
@@ -139,7 +131,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
-        UserUtils.setToken(loginResult.getData().getStoreToken());
+        MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,loginResult.getData().getStoreToken());
     }
 
 }

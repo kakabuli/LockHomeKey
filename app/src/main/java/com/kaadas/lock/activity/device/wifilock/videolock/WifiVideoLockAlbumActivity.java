@@ -24,13 +24,12 @@ import com.kaadas.lock.adapter.MyAlbumItemAdapter;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
-import com.yun.software.kaadas.Utils.FileTool;
+import com.yun.store.util.FileTool;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

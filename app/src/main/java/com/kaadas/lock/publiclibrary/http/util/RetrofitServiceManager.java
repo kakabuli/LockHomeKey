@@ -31,9 +31,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class RetrofitServiceManager {
-    private static final int DEFAULT_TIME_OUT = 5;//超时时间
-    private static final int DEFAULT_READ_TIME_OUT = 5;//读取时间
-    private static final int DEFAULT_WRITE_TIME_OUT = 5;//读取时间
+    private static final int DEFAULT_TIME_OUT = 15;//超时时间
+    private static final int DEFAULT_READ_TIME_OUT = 15;//读取时间
+    private static final int DEFAULT_WRITE_TIME_OUT = 15;//读取时间
     private static Retrofit mRetrofit;  //还有token
     private static Retrofit noRetrofit;
     private static OkHttpClient.Builder builder;

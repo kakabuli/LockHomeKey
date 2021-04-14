@@ -27,8 +27,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockChangeAdminPasswordActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.MyAlbumPlayerPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IMyAlbumPlayerView;
@@ -48,7 +46,7 @@ import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.H264Frame;
 import com.xmitech.sdk.MP4Info;
-import com.yun.software.kaadas.Utils.FileTool;
+import com.yun.store.util.FileTool;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

@@ -62,4 +62,5 @@
 
     <color name="seekbar_bg">#9E9E9E</color>
     <color name="seekbar_process">#149CF3</color>
+    <color name="color_333">#333333</color>
 </resources>

@@ -57,7 +57,7 @@ import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
-import com.yun.software.kaadas.Utils.FileTool;
+import com.yun.store.util.FileTool;
 import com.yuv.display.MyBitmapFactory;
 
 import java.io.File;

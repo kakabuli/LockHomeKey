@@ -1,0 +1,7 @@
+file=E:\shulan_file\work\Kaadas19_mater\app\build\outputs\mapping\kaadas\release\mapping.txt
+sha1=9c8a944b9e6f3b253664c6c740fe545749448354
+appId=3ac95f5a71
+appChannel=kaadas
+appPackage=com.kaidishi.lock
+appVersion=4.3.8
+
