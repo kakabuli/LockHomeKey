@@ -277,21 +277,21 @@ public class DoorbellingService extends Service {
         if(!ServiceAliveUtils.isServiceRunning(this,BleService.class.getName())){
             //        //启动bleService
             Intent bleServiceIntent = new Intent(this, BleService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(bleServiceIntent);
-            } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                startForegroundService(bleServiceIntent);
+//            } else {
                 startService(bleServiceIntent);
-            }
+//            }
         }
 
         if(!ServiceAliveUtils.isServiceRunning(this,MqttService.class.getName())){
             //启动mqttservice
             Intent intent = new Intent(this, MqttService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent);
-            } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                startForegroundService(intent);
+//            } else {
                 startService(intent);
-            }
+//            }
 
 //            reconnectMqtt();
         }else{

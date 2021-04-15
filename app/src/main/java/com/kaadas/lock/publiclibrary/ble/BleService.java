@@ -242,7 +242,7 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationManager.silentForegroundNotification(this);
+//        NotificationManager.silentForegroundNotification(this);
 
         return super.onStartCommand(intent, flags, startId);
     }

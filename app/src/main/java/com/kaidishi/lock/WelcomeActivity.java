@@ -259,33 +259,26 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
     @Override
     protected void onResume() {
         super.onResume();
-        //       MyLog.getInstance().save("onResume..............:"+MainActivity.isRunning);
         //启动mqttservice
-        Intent intent = new Intent(this, MqttService.class);
+        /*Intent intent = new Intent(this, MqttService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
         } else {
             startService(intent);
-        }
+        }*/
 //        //启动bleService
-        Intent bleServiceIntent = new Intent(this, BleService.class);
+        /*Intent bleServiceIntent = new Intent(this, BleService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(bleServiceIntent);
         } else {
             startService(bleServiceIntent);
-        }
+        }*/
 //        //启动linphoneService
         boolean isService = ServiceUtils.isServiceRunning(WelcomeActivity.this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
         if (!isService) {
             Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
             startService(linphoneServiceIntent);
         }
-        //       Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(linphoneServiceIntent);
-//        }else {
-//            startService(intent);
-//        }
     }
 
     final int timeout = 20;
