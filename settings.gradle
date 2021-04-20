@@ -1,2 +1,2 @@
 include ':keep_alive'
-include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker', ':push:pushsdk_xiaomi', ':pickerview', ':refresh', ':Core', ':countdownview'
+include ':app', ':imagepicker', ':linphoneLibrary', ':library:Common', ':library:WheelPicker', ':push:pushsdk_xiaomi', ':pickerview', ':refresh', ':Core'

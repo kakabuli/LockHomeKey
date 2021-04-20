@@ -19,12 +19,12 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.ToastUtil;
-import com.lzy.imagepicker.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import la.xiong.androidquick.tool.SizeUtils;
 
 public class WifiLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeView,WifiLockSafeModePresenter<IWifiLockSafeModeView>> implements
         View.OnClickListener,IWifiLockSafeModeView {
@@ -86,13 +86,13 @@ public class WifiLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeVie
             all.setVisibility(View.VISIBLE);
             noCard.setVisibility(View.GONE);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-            lp.setMargins(0, 0, 0, Utils.dp2px(this, 60));
+            lp.setMargins(0, 0, 0, SizeUtils.dp2px( 60));
             rlNotice.setLayoutParams(lp);
         } else {
             all.setVisibility(View.GONE);
             noCard.setVisibility(View.VISIBLE);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-            lp.setMargins(0, 0, 0, Utils.dp2px(this, 100));
+            lp.setMargins(0, 0, 0, SizeUtils.dp2px( 100));
             rlNotice.setLayoutParams(lp);
             if (supportFinger && supportCard) {
                 iv1.setImageResource(R.mipmap.safe_finger);
