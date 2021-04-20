@@ -116,7 +116,8 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
                     public void accept(BluetoothLockBroadcastBean broadcastBean) throws Exception {
                         BluetoothDevice device = broadcastBean.getDevice();
                         LogUtils.e("shulan broadcastBean.getDeviceSN()-->" + broadcastBean.getDeviceSN());
-                        LogUtils.e("--kaadas--搜索到设备   " + device.getName());
+                        LogUtils.e("shulan --kaadas--搜索到设备   " + device.getName());
+                        LogUtils.e("shulan --kaadas--搜索到设备   " + device.getAddress());
                         devices.add(device);
                         broadcastItemList.add(broadcastBean);
                         broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));

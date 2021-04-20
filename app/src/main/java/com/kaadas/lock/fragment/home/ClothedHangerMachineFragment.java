@@ -161,7 +161,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
         if(action == 0){
             setHangerMotorStatus(KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE);
             setHangerMotorStatus(status);
-        }else if(action == 1){
+        }else if(action == 2){//上升
             if(status != 2){
                 if(status == 1){
                     setHangerMotorStatus(status);
@@ -169,7 +169,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
                     setHangerMotorStatus(KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP);
                 }
             }
-        }else if(action == 2){
+        }else if(action == 1){//下降
             if(status != 1){
                 if(status == 2){
                     setHangerMotorStatus(status);

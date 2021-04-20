@@ -346,6 +346,7 @@ public class BleService extends Service {
                 return;
             }
             try {
+                LogUtils.e("shulan onScanResult-- devide Name------>" + device.getName());
                 //符合要求的设备
                 if (device.getName().contains("Bootloader")
                         || device.getName().contains("OAD")

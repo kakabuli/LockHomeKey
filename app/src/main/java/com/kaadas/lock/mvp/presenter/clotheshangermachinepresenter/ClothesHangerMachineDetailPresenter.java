@@ -73,8 +73,8 @@ public class ClothesHangerMachineDetailPresenter<T> extends BasePresenter<ICloth
 
     public void checkOTAInfo(String wifiSN,String hangerVersion,String moduleVersion) {
         List<HangerMultiOTABean.OTAParams> params = new ArrayList<>();
-        params.add(new HangerMultiOTABean.OTAParams(6,hangerVersion));
-        params.add(new HangerMultiOTABean.OTAParams(7,moduleVersion));
+        params.add(new HangerMultiOTABean.OTAParams(7,hangerVersion));//晾衣机固件
+        params.add(new HangerMultiOTABean.OTAParams(6,moduleVersion));//wifi固件
 
         XiaokaiNewServiceImp.getOtaMultiInfo(1,wifiSN,params,MqttConstant.CLOTHES_HANGER_MACHINE_MX_CHIP)
                 .compose(RxjavaHelper.observeOnMainThread())
