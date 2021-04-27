@@ -218,7 +218,8 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
                 boolean falg = false;
                 for(WifiVideoLockAlarmRecord li : list){
-                    if(li.get_id().equals(record.get_id()) ){
+                    if(li.get_id() != null && record.get_id() != null
+                            && li.get_id().equals(record.get_id()) ){
                         falg = true;
                         break;
                     }

@@ -37,11 +37,6 @@ allprojects {
 
 dependencies {
 //    compile fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.1.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
-    api files('libs/org.apache.http.legacy.jar')
     implementation "com.android.support:design:28.0.0"
     implementation "com.android.support:appcompat-v7:28.0.0"
 
@@ -49,16 +44,7 @@ dependencies {
     api project(':refresh')
     api project(':pickerview')
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    //butterknife
-    implementation "com.jakewharton:butterknife:8.4.0"
-    implementation "com.jakewharton:butterknife-compiler:8.4.0"
     api 'com.google.code.gson:gson:2.7'
-    //纯色沉浸式标题栏
-    //https://github.com/liyuhaolol/LightImmersionMode
-    api 'spa.lyh.cn:immersion-sdk:1.0.7'
-    //glide
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.alibaba:fastjson:1.2.44'
 
 }
 

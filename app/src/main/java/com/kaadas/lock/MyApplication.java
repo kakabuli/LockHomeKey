@@ -388,7 +388,6 @@ public class MyApplication extends Application {
         boolean alreadyStart = false;
         Boolean appUpdate = (Boolean) SPUtils.get(SPUtils.APPUPDATE, false);
         String phone = (String) SPUtils.get(SPUtils.PHONEN, "");
-        MMKVUtils.removeKey(SPUtils.STORE_TOKEN);
         //退出登录  清除数据
         SPUtils.clear();
         if (appUpdate == true) {

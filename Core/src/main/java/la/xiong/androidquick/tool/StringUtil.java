@@ -6,9 +6,6 @@ import android.content.res.AssetManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-
-import com.alibaba.fastjson.JSON;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -240,27 +237,6 @@ public class StringUtil {
             return true;
         }
         return false;
-    }
-
-    public static String getJsonKeyStr(String jsonstr, String key) {
-        if (isEmpty(jsonstr)) {
-            return "";
-        }
-        Map map = JSON.parseObject(jsonstr, Map.class);
-        return toString(map.get(key));
-    }
-
-    public static int getJsonKeyint(String jsonstr, String key) {
-        try {
-            if (isEmpty(jsonstr)) {
-                return 0;
-            }
-            Map map = JSON.parseObject(jsonstr, Map.class);
-            return toInt(map.get(key));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
     }
 
     public static float toFloat(Object obj) {

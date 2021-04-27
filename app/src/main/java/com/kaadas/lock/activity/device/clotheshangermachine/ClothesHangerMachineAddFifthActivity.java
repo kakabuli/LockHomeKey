@@ -48,8 +48,6 @@ public class ClothesHangerMachineAddFifthActivity extends BaseActivity<IClothesH
     @BindView(R.id.circle_progress_bar2)
     WifiCircleProgress circleProgressBar2;
 
-    private MessageDialog messageDialog;
-
     private String wifiModelType = "";
     private boolean passwordHide = true;
     private String sPassword = "";

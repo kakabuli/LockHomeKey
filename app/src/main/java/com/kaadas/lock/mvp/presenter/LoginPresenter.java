@@ -131,7 +131,6 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());
         getUserName(loginResult.getData().getUid());
-        MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,loginResult.getData().getStoreToken());
     }
 
 }

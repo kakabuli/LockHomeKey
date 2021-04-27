@@ -91,10 +91,6 @@ import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import la.xiong.androidquick.ui.eventbus.EventCenter;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
 
@@ -142,7 +138,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
-        EventBus.getDefault().register(this);
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService = MyApplication.getInstance().getMqttService();
         if (mqttService != null) {
@@ -1046,15 +1041,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         if (mReceiver!=null){
             unregisterReceiver(mReceiver);
 
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventBus(EventCenter eventCenter) {
-        if (eventCenter.getEventCode() == Constans.RELOGIN) {  //商城token  过期
-            MyApplication.getInstance().tokenInvalid(true);
-            MMKVUtils.setMMKV(SPUtils.STORE_TOKEN,"");
         }
     }
 
