@@ -23,8 +23,8 @@ android {
         applicationId "com.kaadas.lock"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 202104201
-        versionName "4.3.9"
+        versionCode 202104301
+        versionName "4.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
