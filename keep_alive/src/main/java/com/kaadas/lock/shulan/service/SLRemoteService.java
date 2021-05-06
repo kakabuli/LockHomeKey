@@ -17,7 +17,7 @@ import com.kaadas.lock.shulan.R;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
 import com.kaadas.lock.shulan.config.NotificationUtils;
 import com.kaadas.lock.shulan.receive.NotificationClickReceiver;
-import com.kaadas.lock.shulan.utils.SPUtils;
+import com.kaadas.lock.shulan.utils.MMKVUtils;
 
 
 /**
@@ -57,9 +57,9 @@ public class SLRemoteService extends Service {
 
     private void shouDefNotify() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            KeepAliveConfig.CONTENT = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
-            KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
-            KeepAliveConfig.TITLE = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
+            KeepAliveConfig.CONTENT = MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.CONTENT);
+            KeepAliveConfig.DEF_ICONS = MMKVUtils.getIntMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RES_ICON,R.mipmap.ic_launcher);
+            KeepAliveConfig.TITLE = MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.TITLE);
             if (!TextUtils.isEmpty(KeepAliveConfig.TITLE) && !TextUtils.isEmpty( KeepAliveConfig.CONTENT)) {
                 //启用前台服务，提升优先级
                 Intent intent2 = new Intent(SLRemoteService.this, NotificationClickReceiver.class);
@@ -92,9 +92,9 @@ public class SLRemoteService extends Service {
                     KeepAliveConfig.DEF_ICONS = iconRes;
                     KeepAliveConfig.TITLE = discription;
                 } else {
-                    KeepAliveConfig.CONTENT = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT);
-                    KeepAliveConfig.DEF_ICONS = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON, R.mipmap.ic_launcher);
-                    KeepAliveConfig.TITLE = SPUtils.getInstance(SLRemoteService.this, KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE);
+                    KeepAliveConfig.CONTENT = MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.CONTENT);
+                    KeepAliveConfig.DEF_ICONS = MMKVUtils.getIntMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RES_ICON,R.mipmap.ic_launcher);
+                    KeepAliveConfig.TITLE = MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.TITLE);
 
                 }
                 if (KeepAliveConfig.TITLE != null && KeepAliveConfig.CONTENT != null) {

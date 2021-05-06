@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
-import com.kaadas.lock.shulan.utils.LogUtils;
 
 public final class OnePixelActivity extends Activity {
     //注册广播接受者   当屏幕开启结果成功结束一像素的activity
@@ -21,7 +21,7 @@ public final class OnePixelActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.e("OnePixelActivity onCreate");
+        Log.e("OnePixelActivity"," onCreate");
         //设定一像素的activity
         Window window = getWindow();
         window.setGravity(Gravity.START | Gravity.TOP);
@@ -35,7 +35,7 @@ public final class OnePixelActivity extends Activity {
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LogUtils.e("ScreenOn AND OnePixelActivity onReceive finish activity");
+                Log.e("shulan","ScreenOn AND OnePixelActivity onReceive finish activity");
                 finish();
             }
         };
@@ -45,7 +45,7 @@ public final class OnePixelActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        LogUtils.e("OnePixelActivity onDestroy");
+        Log.e("shulan","OnePixelActivity onDestroy");
         try {
             unregisterReceiver(br);
         } catch (IllegalArgumentException e) {

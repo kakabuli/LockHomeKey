@@ -10,7 +10,7 @@ import android.os.IBinder;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
 import com.kaadas.lock.shulan.config.NotificationUtils;
 import com.kaadas.lock.shulan.receive.NotificationClickReceiver;
-import com.kaadas.lock.shulan.utils.SPUtils;
+import com.kaadas.lock.shulan.utils.MMKVUtils;
 
 /**
  * 隐藏前台服务通知
@@ -40,9 +40,9 @@ public class HideForegroundService extends Service {
             Intent intent = new Intent(HideForegroundService.this, NotificationClickReceiver.class);
             intent.setAction(NotificationClickReceiver.CLICK_NOTIFICATION);
             Notification notification = NotificationUtils.createNotification(this,
-                    SPUtils.getInstance(HideForegroundService.this,KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.TITLE),
-                    SPUtils.getInstance(HideForegroundService.this,KeepAliveConfig.SP_NAME).getString(KeepAliveConfig.CONTENT),
-                    SPUtils.getInstance(HideForegroundService.this,KeepAliveConfig.SP_NAME).getInt(KeepAliveConfig.RES_ICON),
+                    MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.TITLE),
+                    MMKVUtils.getStringMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.CONTENT),
+                    MMKVUtils.getIntMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RES_ICON),
                     intent
             );
             startForeground(KeepAliveConfig.FOREGROUD_NOTIFICATION_ID, notification);

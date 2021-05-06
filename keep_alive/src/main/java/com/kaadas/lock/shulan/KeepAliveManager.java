@@ -9,6 +9,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.kaadas.lock.shulan.config.ForegroundNotification;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
@@ -19,8 +20,7 @@ import com.kaadas.lock.shulan.service.JobHandlerService;
 import com.kaadas.lock.shulan.service.SLLocalService;
 import com.kaadas.lock.shulan.service.SLRemoteService;
 import com.kaadas.lock.shulan.utils.KeepAliveUtils;
-import com.kaadas.lock.shulan.utils.LogUtils;
-import com.kaadas.lock.shulan.utils.SPUtils;
+import com.kaadas.lock.shulan.utils.MMKVUtils;
 
 
 /**
@@ -39,10 +39,10 @@ public class KeepAliveManager {
     public static void toKeepAlive(@NonNull Application application, @NonNull int runMode, String title, String content, int res_icon, ForegroundNotification foregroundNotification) {
         if (KeepAliveUtils.isRunning(application)) {
             KeepAliveConfig.foregroundNotification = foregroundNotification;
-            SPUtils.getInstance(application, KeepAliveConfig.SP_NAME).put(KeepAliveConfig.TITLE, title);
-            SPUtils.getInstance(application, KeepAliveConfig.SP_NAME).put(KeepAliveConfig.CONTENT, content);
-            SPUtils.getInstance(application, KeepAliveConfig.SP_NAME).put(KeepAliveConfig.RES_ICON, res_icon);
-            SPUtils.getInstance(application, KeepAliveConfig.SP_NAME).put(KeepAliveConfig.RUN_MODE, runMode);
+            MMKVUtils.setMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.TITLE, title);
+            MMKVUtils.setMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.CONTENT, content);
+            MMKVUtils.setMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RES_ICON, res_icon);
+            MMKVUtils.setMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RUN_MODE, runMode);
             //优化后的枚举
             RunMode.setShape(runMode);
             KeepAliveConfig.runMode = RunMode.getShape();
@@ -71,7 +71,7 @@ public class KeepAliveManager {
                 application.startService(new Intent(application, HideForegroundService.class));
             }
         } catch (Exception e) {
-            LogUtils.e("HideForegroundService--", e.getMessage());
+            Log.e("HideForegroundService--", e.getMessage());
 
         }
     }
@@ -90,7 +90,7 @@ public class KeepAliveManager {
 //            application.stopService(guardIntent);
             application.stopService(new Intent(application, JobHandlerService.class));
         } catch (Exception e) {
-            LogUtils.e(TAG + "stopWork-->" + e.getMessage());
+            Log.e(TAG , "stopWork-->" + e.getMessage());
         }
     }
 
