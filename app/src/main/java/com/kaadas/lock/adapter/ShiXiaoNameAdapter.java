@@ -1,7 +1,7 @@
 package com.kaadas.lock.adapter;
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 

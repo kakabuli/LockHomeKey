@@ -9,7 +9,7 @@ import android.telephony.TelephonyManager;
 
 import com.kaadas.lock.MyApplication;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
+import static androidx.core.content.ContextCompat.getSystemService;
 
 
 public class NetUtil {

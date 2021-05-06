@@ -25,7 +25,7 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
         ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so） 去掉对X86的手机So的支持
@@ -158,19 +158,20 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation files('libs/Native_Libs2.jar')
     implementation project(path: ':keep_alive')
     implementation files('libs/GetuiSDK-support-MZP-1.1.1.jar')
     implementation files('libs/GetuiSDK-support-STP-1.0.1.jar')
 
 
-    testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    testImplementation 'junit:junit:4.13.2'
+    implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.constraintlayoutVersion}"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espresso_core_version}"
+
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     //----------------------------网络请求依赖----------------------------------
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -191,7 +192,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
-    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
+//    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     implementation 'com.safframework.log:saf-logginginterceptor:1.3.3'
 
     //----------------------------网络请求依赖----------------------------------
@@ -200,10 +201,9 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.jakewharton.rx2:replaying-share:2.1.0'
     implementation 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
-    implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
-    implementation 'com.android.support:recyclerview-v7:28.0.0-alpha1'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     implementation project(path: ':imagepicker')
 
@@ -213,7 +213,7 @@ dependencies {
 
     //zxing
     implementation 'com.king.zxing:zxing-lite:1.1.1'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.google.android.material:material:1.3.0'
 
     //linphone库
     implementation project(path: ':linphoneLibrary')
@@ -256,8 +256,6 @@ dependencies {
     implementation project(':push:pushsdk_xiaomi')
 
     implementation project(':Core')
-    implementation 'com.jakewharton:butterknife:8.4.0'
-    implementation 'com.jakewharton:butterknife-compiler:8.4.0'
 
     implementation(name: 'esptouch', ext: 'aar')
     implementation files('libs/GetuiSDK-support-VIVO-1.0.5.jar')
@@ -266,13 +264,9 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'ru.alexbykov:nopermission:1.1.2'
-
 
     implementation files('libs/xm-codec.jar')
     implementation files('libs/xm-support.jar')
-//    implementation 'com.jaredrummler:material-spinner:1.3.1'
-    //okhttp
-//    implementation 'com.blankj:utilcodex:1.26.0'
+
 
 }

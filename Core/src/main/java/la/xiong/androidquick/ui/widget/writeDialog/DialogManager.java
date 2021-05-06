@@ -2,7 +2,7 @@ package la.xiong.androidquick.ui.widget.writeDialog;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;

@@ -1,9 +1,9 @@
 package com.kaadas.lock.shulan.config;
 
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
+
+import androidx.annotation.NonNull;
 
 /**
  * 默认前台服务样式

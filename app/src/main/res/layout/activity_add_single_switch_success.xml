@@ -90,7 +90,7 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_name"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
@@ -136,7 +136,7 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_weight="1"
         android:id="@+id/rv_position"
         android:layout_width="match_parent"

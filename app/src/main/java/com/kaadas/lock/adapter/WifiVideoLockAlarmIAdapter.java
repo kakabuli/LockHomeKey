@@ -1,6 +1,6 @@
 package com.kaadas.lock.adapter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;

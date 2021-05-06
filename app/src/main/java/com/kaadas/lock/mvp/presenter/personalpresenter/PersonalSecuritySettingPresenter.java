@@ -3,7 +3,6 @@ package com.kaadas.lock.mvp.presenter.personalpresenter;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;
@@ -11,6 +10,8 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.mvp.view.personalview.IPersonalSecuritySettingView;
+
+import androidx.annotation.RequiresApi;
 
 
 public class PersonalSecuritySettingPresenter<T> extends BasePresenter<IPersonalSecuritySettingView> {

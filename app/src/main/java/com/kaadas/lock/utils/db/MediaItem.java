@@ -2,7 +2,9 @@ package com.kaadas.lock.utils.db;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.Comparator;
 import java.util.Date;

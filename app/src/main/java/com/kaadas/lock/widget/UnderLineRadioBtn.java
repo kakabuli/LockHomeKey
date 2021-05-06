@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Build;
-import android.support.v7.widget.AppCompatRadioButton;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,6 +15,8 @@ import android.view.View;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.LogUtils;
+
+import androidx.appcompat.widget.AppCompatRadioButton;
 
 
 /**

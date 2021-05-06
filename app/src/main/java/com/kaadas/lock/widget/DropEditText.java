@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +15,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.kaadas.lock.R;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 public class DropEditText extends AppCompatEditText implements AdapterView.OnItemClickListener, PopupWindow.OnDismissListener {
 

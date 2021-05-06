@@ -3,7 +3,9 @@ package la.xiong.androidquick.tool;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.io.BufferedReader;

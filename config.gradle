@@ -24,4 +24,6 @@ ext {
     ]
 
     greendao_schemaVersion = 35
+    constraintlayoutVersion = "2.0.4"
+    espresso_core_version = "3.3.0"
 }

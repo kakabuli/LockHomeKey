@@ -29,7 +29,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 
@@ -59,6 +58,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+import androidx.core.content.FileProvider;
 import la.xiong.androidquick.tool.StringUtil;
 
 import static com.yun.store.util.ConstTool.KB;

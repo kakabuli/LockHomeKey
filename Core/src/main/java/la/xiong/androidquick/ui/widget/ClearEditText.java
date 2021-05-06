@@ -13,10 +13,11 @@ import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 
+import androidx.appcompat.widget.AppCompatEditText;
 import la.xiong.androidquick.R;
 
 
-public class ClearEditText extends android.support.v7.widget.AppCompatEditText implements
+public class ClearEditText extends AppCompatEditText implements
         OnFocusChangeListener, TextWatcher {
 
     private OnKeyboardSearchKeyClickListener mSearchKeyListener;

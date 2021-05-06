@@ -188,17 +188,22 @@ public class MyApplication extends Application {
     }
 
     private void initMeme() {
-        //设置配置项
-        Config config = new Config(true);
-        if (BuildConfig.DEBUG) {
-            config.setLogLevel(5);
-        } else {
-            config.setLogLevel(0);
-        }
-        CMAPI.getInstance().setConfig(config);
-        CMAPI.getInstance().init(this, MqttConstant.APP_ID, MqttConstant.PARTERN_ID, MqttConstant.DC_TEST);
+        try {
+            //设置配置项
+            Config config = new Config(true);
+            if (BuildConfig.DEBUG) {
+                config.setLogLevel(5);
+            } else {
+                config.setLogLevel(0);
+            }
+            CMAPI.getInstance().setConfig(config);
+            CMAPI.getInstance().init(this, MqttConstant.APP_ID, MqttConstant.PARTERN_ID, MqttConstant.DC_TEST);
 
-        MemeManager.getInstance().init();
+            MemeManager.getInstance().init();
+        }catch (Exception e){
+            LogUtils.e("shulan weishenme -->" + e.getMessage());
+        }
+
     }
 
 

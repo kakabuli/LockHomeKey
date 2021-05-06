@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.cateye;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -41,6 +40,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.appcompat.widget.AppCompatSeekBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

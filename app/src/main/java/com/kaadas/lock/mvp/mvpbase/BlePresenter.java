@@ -2,7 +2,7 @@ package com.kaadas.lock.mvp.mvpbase;
 
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.kaadas.lock.MyApplication;

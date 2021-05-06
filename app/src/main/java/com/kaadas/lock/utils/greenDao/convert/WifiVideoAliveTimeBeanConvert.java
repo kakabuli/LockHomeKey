@@ -1,8 +1,7 @@
 package com.kaadas.lock.utils.greenDao.convert;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAliveTimeBean;
-import com.kaadas.lock.publiclibrary.bean.WifiVideoLockSetPirBean;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
@@ -12,13 +11,14 @@ public class WifiVideoAliveTimeBeanConvert implements PropertyConverter<WifiVide
 
     @Override
     public WifiVideoLockAliveTimeBean convertToEntityProperty(String databaseValue) {
-        return JSON.parseObject(databaseValue,WifiVideoLockAliveTimeBean.class);
-
+//        return JSON.parseObject(databaseValue,WifiVideoLockAliveTimeBean.class);
+        return new Gson().fromJson(databaseValue,WifiVideoLockAliveTimeBean.class);
     }
 
     @Override
     public String convertToDatabaseValue(WifiVideoLockAliveTimeBean entityProperty) {
-        return JSON.toJSONString(entityProperty);
+//        return JSON.toJSONString(entityProperty);
+        return new Gson().toJson(entityProperty);
     }
 
 }

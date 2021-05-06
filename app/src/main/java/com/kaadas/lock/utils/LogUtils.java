@@ -1,6 +1,6 @@
 package com.kaadas.lock.utils;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 
 import com.kaadas.lock.BuildConfig;

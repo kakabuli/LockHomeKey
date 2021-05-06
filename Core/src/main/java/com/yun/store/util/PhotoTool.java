@@ -13,13 +13,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import la.xiong.androidquick.tool.ToastUtil;
 
 import static com.yun.store.util.FileTool.getDataColumn;
@@ -53,7 +53,7 @@ public class PhotoTool {
         activity.startActivityForResult(intent, GET_IMAGE_BY_CAMERA);
     }
 
-    public static void openCameraImage(final android.support.v4.app.Fragment fragment) {
+    public static void openCameraImage(final androidx.fragment.app.Fragment fragment) {
         imageUriFromCamera = createImagePathUri(fragment.getContext());
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -71,7 +71,7 @@ public class PhotoTool {
         activity.startActivityForResult(intent, GET_IMAGE_FROM_PHONE);
     }
 
-    public static void openLocalImage(final android.support.v4.app.Fragment fragment) {
+    public static void openLocalImage(final androidx.fragment.app.Fragment fragment) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_PICK);
@@ -112,7 +112,7 @@ public class PhotoTool {
         activity.startActivityForResult(intent, CROP_IMAGE);
     }
 
-    public static void cropImage(android.support.v4.app.Fragment fragment, Uri srcUri) {
+    public static void cropImage(androidx.fragment.app.Fragment fragment, Uri srcUri) {
         cropImageUri = createImagePathUri(fragment.getContext());
 
         Intent intent = new Intent("com.android.camera.action.CROP");

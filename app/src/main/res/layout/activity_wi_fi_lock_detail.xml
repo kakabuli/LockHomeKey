@@ -136,7 +136,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/detail_function_recyclerView"
         android:layout_width="match_parent"
@@ -145,9 +145,9 @@
         android:layout_margin="@dimen/dp_15"
         android:background="@color/device_item_background"
         >
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/detail_function_onLine"
         android:layout_width="match_parent"
         android:layout_weight="1.2"
@@ -158,6 +158,6 @@
         android:layout_marginBottom="25dp"
         android:background="@color/device_item_background"
         >
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

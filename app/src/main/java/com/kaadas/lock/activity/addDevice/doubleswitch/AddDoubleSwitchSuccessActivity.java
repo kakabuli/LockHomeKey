@@ -1,8 +1,6 @@
 package com.kaadas.lock.activity.addDevice.doubleswitch;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -21,11 +19,13 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddDoubleSwitchSuccessActivity   extends BaseAddToApplicationActivity {
+public class AddDoubleSwitchSuccessActivity  extends BaseAddToApplicationActivity {
 
     @BindView(R.id.back)
     ImageView back;

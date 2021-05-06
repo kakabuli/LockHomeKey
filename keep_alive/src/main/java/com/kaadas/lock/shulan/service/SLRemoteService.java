@@ -28,7 +28,7 @@ public class SLRemoteService extends Service {
     private SLRemoteBinder mBilder;
     private String TAG = getClass().getSimpleName();
 
-    @android.support.annotation.Nullable
+    @androidx.annotation.Nullable
     @Override
     public IBinder onBind(Intent intent) {
 //        return mBilder;

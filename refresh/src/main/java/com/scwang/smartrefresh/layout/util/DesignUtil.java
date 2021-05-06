@@ -1,12 +1,13 @@
 package com.scwang.smartrefresh.layout.util;
 
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smartrefresh.layout.api.RefreshKernel;
 import com.scwang.smartrefresh.layout.listener.CoordinatorLayoutListener;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * Design 兼容包缺省尝试

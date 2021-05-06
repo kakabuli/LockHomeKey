@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation("androidx.test.espresso:espresso-core:${rootProject.ext.espresso_core_version}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation files('libs/commons-compress-1.11.jar')

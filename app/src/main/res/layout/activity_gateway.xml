@@ -146,7 +146,7 @@
             android:textColor="#999999"
             android:textSize="@dimen/sp_12" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
             android:layout_below="@+id/con_device"
 
             >
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
         <LinearLayout
             android:id="@+id/no_device_layout"
             android:layout_width="wrap_content"
