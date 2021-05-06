@@ -134,7 +134,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        initALog();
         MyLog.getInstance().init(this);
         LogUtils.e("attachView  App启动 ");
         instance = this;
@@ -142,13 +141,10 @@ public class MyApplication extends Application {
         initBleService();
         initMqttService();//启动MqttService
         initMMKV(this);
-//        SPUtils.init(this);  //初始化SPUtils  传递Context进去  不需要每次都传递Context
         ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
-        //扫描二维码初始化
-        /* ZXingLibrary.initDisplayOpinion(this);*/
         initMeme();
         initXMP2PManager();
         regToWx();
@@ -160,12 +156,7 @@ public class MyApplication extends Application {
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
-//        PushManager.getInstance().initialize(this, userPushService);
         PushManager.getInstance().initialize(this);
-        // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
-        // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
-        // IntentService, 必须在 AndroidManifest 中声明)
-//        PushManager.getInstance().registerPushIntentService(this, GeTuiIntentService.class);
         LogUtils.e("attachView  App启动完成 ");
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();

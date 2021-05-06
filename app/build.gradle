@@ -5,7 +5,7 @@ apply plugin: 'bugly'   //添加bugly的符号表
 apply plugin: 'com.mob.sdk'
 
 greendao {
-    schemaVersion 35// 数据库版本号
+    schemaVersion rootProject.ext.greendao_schemaVersion// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
     targetGenDir 'src/main/java'//生成数据库文件的目录
 }
@@ -18,13 +18,13 @@ bugly {
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
     defaultConfig {
-        applicationId "com.kaadas.lock"
-        minSdkVersion 22
-        targetSdkVersion 26
-        versionCode 202104301
-        versionName "4.4.0"
+        applicationId rootProject.ext.appId["app"]
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -60,7 +60,7 @@ android {
     //多渠道打包
     productFlavors {
         kaadas {
-            applicationId "com.kaidishi.lock"
+            applicationId rootProject.ext.appId["kaadas"]
             buildConfigField('String', 'HTTP_HOST', '"https://app1.orangeiot.cn:8008"')
             buildConfigField('String', 'HTTP_VERSION', '"1"')
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
@@ -119,7 +119,7 @@ android {
         }
     }
 
-    buildToolsVersion '28.0.3'
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
     compileOptions {
 
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -274,7 +274,5 @@ dependencies {
 //    implementation 'com.jaredrummler:material-spinner:1.3.1'
     //okhttp
 //    implementation 'com.blankj:utilcodex:1.26.0'
-    implementation 'com.tencent:mmkv-static:1.2.7'
-
 
 }

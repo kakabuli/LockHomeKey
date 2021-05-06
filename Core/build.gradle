@@ -3,12 +3,12 @@ apply plugin: 'com.jakewharton.butterknife'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
     defaultConfig {
-        minSdkVersion 22
-        targetSdkVersion 26
-        versionCode 201909250
-        versionName "3.4.8"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.coreVersionCode
+        versionName rootProject.ext.android.coreVersionName
         multiDexEnabled true
     }
 
