@@ -17,12 +17,12 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.SingleSwitchTimerAdapter;
 import com.kaadas.lock.bean.SingleSwitchTimerShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class TimerManagerActivity extends BaseAddToApplicationActivity {
     @BindView(R.id.button_next)
     Button buttonNext;
     @BindView(R.id.rv_timer_list)
-    SwipeMenuRecyclerView rvTimerList;
+    SwipeRecyclerView rvTimerList;
     @BindView(R.id.ll_no_data)
     LinearLayout llNoData;
     private List<SingleSwitchTimerShowBean> singleSwitchTimerShowBeans = new ArrayList<>();
@@ -74,12 +74,11 @@ public class TimerManagerActivity extends BaseAddToApplicationActivity {
             }
         });
         rvTimerList.setSwipeMenuCreator(swipeMenuCreator);
-        rvTimerList.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
+        rvTimerList.setOnItemMenuClickListener(new OnItemMenuClickListener() {
             @Override
-            public void onItemClick(SwipeMenuBridge menuBridge) {
-                int adapterPosition = menuBridge.getAdapterPosition();
+            public void onItemClick(SwipeMenuBridge menuBridge, int adapterPosition) {
                 menuBridge.closeMenu();
-                Toast.makeText(TimerManagerActivity.this, "删除   " + adapterPosition, Toast.LENGTH_SHORT).show();
+                Toast.makeText(TimerManagerActivity.this, "删除   " + menuBridge.getPosition(), Toast.LENGTH_SHORT).show();
             }
         });
         rvTimerList.setLayoutManager(new LinearLayoutManager(this));

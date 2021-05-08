@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,11 +111,6 @@ public class LogUtils {
 
     public static void i(final Object... contents) {
         log(I, CONFIG.mGlobalTag, contents);
-    }
-
-    public static JsonObject iTag(final String tag, final Object... contents) {
-        log(I, tag, contents);
-        return null;
     }
 
     public static void w(final Object... contents) {

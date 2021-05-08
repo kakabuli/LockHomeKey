@@ -44,13 +44,12 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -87,7 +86,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     @BindView(R.id.pir_history_add_cancle)
     LinearLayout pir_history_add_cancle;
     @BindView(R.id.history_rv_ff)
-    SwipeMenuRecyclerView history_rv_ff;
+    SwipeRecyclerView history_rv_ff;
 
     @BindView(R.id.history_refreshLayout_ff)
     SmartRefreshLayout history_refreshLayout_ff;
@@ -241,7 +240,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
      //   history_rv_ff.setSwipeItemClickListener(mItemClickListener); // RecyclerView Item点击监听。
         // 侧滑
         history_rv_ff.setSwipeMenuCreator(swipeMenuCreator);
-        history_rv_ff.setSwipeMenuItemClickListener(mMenuItemClickListener);
+        history_rv_ff.setOnItemMenuClickListener(mMenuItemClickListener);
 
 
         history_refreshLayout_ff.setEnableLoadMore(false);
@@ -543,9 +542,9 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
     /**
      * RecyclerView的Item的Menu点击监听。
      */
-    private SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
+    private OnItemMenuClickListener mMenuItemClickListener = new OnItemMenuClickListener() {
         @Override
-        public void onItemClick(SwipeMenuBridge menuBridge) {
+        public void onItemClick(SwipeMenuBridge menuBridge, int position) {
             menuBridge.closeMenu();
 
             if(isFresh){
@@ -554,11 +553,11 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             }
 
             // int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
-            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+            int adapterPosition = menuBridge.getPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
 
          //   Toast.makeText(getActivity(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-            int position = adapterPosition - history_rv_ff.getHeaderItemCount();
+//            int position = adapterPosition - history_rv_ff.getHeaderItemCount();
 
             //Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
 

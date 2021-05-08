@@ -86,7 +86,7 @@
             android:textSize="@dimen/sp_15" />
     </LinearLayout>
 
-    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
         android:id="@+id/rv_timer_list"
         android:layout_weight="1"
         android:layout_width="match_parent"

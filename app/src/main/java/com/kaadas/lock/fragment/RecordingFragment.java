@@ -26,12 +26,12 @@ import com.kaadas.lock.utils.PirConst;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.db.MediaItem;
 import com.kaadas.lock.utils.ftp.GeTui;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -51,7 +51,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
 
 
     @BindView(R.id.recording_rv_ff)
-    SwipeMenuRecyclerView recording_rv_ff;
+    SwipeRecyclerView recording_rv_ff;
     RecordingFragment recordingFragment;
     @BindView(R.id.recording_btn)
     Button recording_btn;
@@ -96,7 +96,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
 
         // 侧滑
         recording_rv_ff.setSwipeMenuCreator(swipeMenuCreator);
-        recording_rv_ff.setSwipeMenuItemClickListener(mMenuItemClickListener);
+        recording_rv_ff.setOnItemMenuClickListener(mMenuItemClickListener);
 
         recording_btn.setOnClickListener(this);
         recordingAdapter = new RecordingAdapter(getActivity(),currentDateItem);
@@ -267,17 +267,17 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
     /**
      * RecyclerView的Item的Menu点击监听。
      */
-    private SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
+    private OnItemMenuClickListener mMenuItemClickListener = new OnItemMenuClickListener() {
         @Override
-        public void onItemClick(SwipeMenuBridge menuBridge) {
+        public void onItemClick(SwipeMenuBridge menuBridge, int position) {
             menuBridge.closeMenu();
 
             // int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
-            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+            int adapterPosition = menuBridge.getPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
 
             //   Toast.makeText(getActivity(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
-            int position = adapterPosition - recording_rv_ff.getHeaderItemCount();
+//            int position = adapterPosition - recording_rv_ff.getHeaderItemCount();
 
            // Toast.makeText(getActivity(), "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
 

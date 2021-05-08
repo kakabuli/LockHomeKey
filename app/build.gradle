@@ -159,72 +159,57 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation files('libs/Native_Libs2.jar')
-    implementation project(path: ':keep_alive')
-    implementation files('libs/GetuiSDK-support-MZP-1.1.1.jar')
-    implementation files('libs/GetuiSDK-support-STP-1.0.1.jar')
-    implementation files('libs/GetuiSDK-support-OPPO-1.0.7.jar')
-    implementation files('libs/GetuiSDK-support-VIVO-1.0.5.jar')
-
-
     testImplementation 'junit:junit:4.13.2'
     implementation "androidx.constraintlayout:constraintlayout:${rootProject.ext.constraintlayoutVersion}"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espresso_core_version}"
 
+    implementation files('libs/Native_Libs2.jar')
+    implementation files('libs/GetuiSDK-support-MZP-1.1.1.jar')
+    implementation files('libs/GetuiSDK-support-STP-1.0.1.jar')
+    implementation files('libs/GetuiSDK-support-OPPO-1.0.7.jar')
+    implementation files('libs/GetuiSDK-support-VIVO-1.0.5.jar')
+    implementation files('libs/xm-codec.jar')
+    implementation files('libs/xm-support.jar')
+
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 
     //----------------------------网络请求依赖----------------------------------
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
-
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     //Retrofit通过GSON将结果转换为Bean对象
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 
     //okhttp拦截器
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 
     //图片加载框架
     implementation 'com.github.bumptech.glide:glide:4.8.0'
 
     //Rxjava rx Android
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.5'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
-    implementation 'com.safframework.log:saf-logginginterceptor:1.3.3'
 
-    //----------------------------网络请求依赖----------------------------------
-    implementation 'com.polidea.rxandroidble2:rxandroidble:1.8.0'
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
-    implementation 'com.jakewharton.rx2:replaying-share:2.1.0'
-    implementation 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-
-    implementation project(path: ':imagepicker')
 
     //mqtt
-    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.1'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
 
     //zxing
     implementation 'com.king.zxing:zxing-lite:1.1.1'
     implementation 'com.google.android.material:material:1.3.0'
 
-    //linphone库
-    implementation project(path: ':linphoneLibrary')
-
     //米米网库
     implementation(name: 'cmapi_v2_0_0', ext: 'aar')
-    implementation 'com.github.razerdp:BasePopup:2.1.9'
+    implementation 'com.github.razerdp:BasePopup:2.2.2.2'
     implementation 'com.bm.photoview:library:1.4.1'
-    implementation 'com.yarolegovich:discrete-scrollview:1.4.9'
-    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
+    implementation 'com.yarolegovich:discrete-scrollview:1.5.1'
+    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
 
     implementation 'org.greenrobot:greendao:3.3.0'
     implementation 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
@@ -234,9 +219,13 @@ dependencies {
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
     implementation project(':library:Common')
+    implementation project(':push:pushsdk_xiaomi')
+    implementation project(':Core')
+    implementation project(':keep_alive')
+
 
     //文件下载的SDK
-    implementation 'com.liulishuo.filedownloader:library:1.7.6'
+    implementation 'com.liulishuo.filedownloader:library:1.7.7'
     implementation 'com.tencent.bugly:crashreport:latest.release'
 
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
@@ -244,20 +233,11 @@ dependencies {
 
     implementation 'com.huawei.hms:push:5.1.1.301'
 
-    implementation project(':push:pushsdk_xiaomi')
-
-    implementation project(':Core')
-
     implementation(name: 'esptouch', ext: 'aar')
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.7'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-
-    implementation files('libs/xm-codec.jar')
-    implementation files('libs/xm-support.jar')
-
 
 }
