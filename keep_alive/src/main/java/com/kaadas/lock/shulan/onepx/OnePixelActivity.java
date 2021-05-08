@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.kaadas.lock.shulan.BuildConfig;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
 
 public final class OnePixelActivity extends Activity {
@@ -21,6 +22,7 @@ public final class OnePixelActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(BuildConfig.DEBUG)
         Log.e("OnePixelActivity"," onCreate");
         //设定一像素的activity
         Window window = getWindow();
@@ -35,6 +37,7 @@ public final class OnePixelActivity extends Activity {
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if(BuildConfig.DEBUG)
                 Log.e("shulan","ScreenOn AND OnePixelActivity onReceive finish activity");
                 finish();
             }
@@ -45,6 +48,7 @@ public final class OnePixelActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if(BuildConfig.DEBUG)
         Log.e("shulan","OnePixelActivity onDestroy");
         try {
             unregisterReceiver(br);

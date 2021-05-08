@@ -15,7 +15,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable false  //启用debug的buildType配置
+        }
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

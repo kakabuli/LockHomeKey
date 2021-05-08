@@ -17,6 +17,7 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.kaadas.lock.shulan.BuildConfig;
 import com.kaadas.lock.shulan.KeepAliveAIDL;
 import com.kaadas.lock.shulan.KeepAliveRuning;
 import com.kaadas.lock.shulan.R;
@@ -41,6 +42,7 @@ public class SLLocalService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        if(BuildConfig.DEBUG)
         Log.e("本地服务", "：本地服务启动成功");
         if (mBilder == null) {
 //            mBilder = new SLLocalBinder();
@@ -60,6 +62,7 @@ public class SLLocalService extends Service {
     }
 
     private void play() {
+        if(BuildConfig.DEBUG)
         Log.e(TAG, "播放音乐");
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
@@ -76,6 +79,7 @@ public class SLLocalService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         //播放无声音乐
         KeepAliveConfig.runMode = MMKVUtils.getIntMultiMMKV(KeepAliveConfig.SP_NAME,KeepAliveConfig.RUN_MODE);
+        if(BuildConfig.DEBUG)
         Log.e(TAG, "运行模式：" + KeepAliveConfig.runMode);
         if (mediaPlayer == null && KeepAliveConfig.runMode == RunMode.HIGH_POWER_CONSUMPTION) {
             mediaPlayer = MediaPlayer.create(this, R.raw.novioce);
@@ -83,6 +87,7 @@ public class SLLocalService extends Service {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
+                    if(BuildConfig.DEBUG)
                     Log.e(TAG,"循环播放音乐");
                     play();
                 }

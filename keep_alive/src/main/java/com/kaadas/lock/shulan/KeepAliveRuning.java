@@ -12,13 +12,14 @@ public class KeepAliveRuning implements IKeepAliveRuning {
 
     @Override
     public void onRuning(Context context) {
-
+        if(BuildConfig.DEBUG)
         Log.e("runing?KeepAliveRuning", "true");
 
         ClassLoader classLoader = KeepAliveRuning.class.getClassLoader();
         Class<?> clz;
         try {
             clz = classLoader.loadClass("com.kaadas.lock.publiclibrary.xm.DoorbellingService");
+            if(BuildConfig.DEBUG)
             Log.e("shulan","0000000 " + clz.getName());
             Intent intent = new Intent(context, clz);
             if(!KeepAliveUtils.isServiceRunning(context,clz.getName()))
@@ -32,6 +33,7 @@ public class KeepAliveRuning implements IKeepAliveRuning {
 
     @Override
     public void onStop() {
+        if(BuildConfig.DEBUG)
         Log.e("runing?KeepAliveRuning", "false");
     }
 }

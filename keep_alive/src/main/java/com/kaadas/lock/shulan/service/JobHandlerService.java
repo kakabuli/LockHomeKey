@@ -11,6 +11,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import android.util.Log;
 
+import com.kaadas.lock.shulan.BuildConfig;
 import com.kaadas.lock.shulan.config.KeepAliveConfig;
 import com.kaadas.lock.shulan.utils.KeepAliveUtils;
 
@@ -49,6 +50,7 @@ public class JobHandlerService extends JobService {
             mJobScheduler.schedule(builder.build());
 
         } catch (Exception e) {
+            if(BuildConfig.DEBUG)
             Log.e("startJob->", e.getMessage());
         }
     }
@@ -62,6 +64,7 @@ public class JobHandlerService extends JobService {
 
     private void startService(Context context) {
         try {
+            if(BuildConfig.DEBUG)
             Log.e(TAG, "---》启动双进程保活服务");
             //启动本地服务
             Intent localIntent = new Intent(context, SLLocalService.class);
@@ -75,6 +78,7 @@ public class JobHandlerService extends JobService {
 //                startService(guardIntent);
             }
         } catch (Exception e) {
+            if(BuildConfig.DEBUG)
             Log.e(TAG, e.getMessage());
         }
     }
@@ -83,6 +87,7 @@ public class JobHandlerService extends JobService {
     public boolean onStartJob(JobParameters jobParameters) {
         try {
             ++EXECUTE_COUNT;
+            if(BuildConfig.DEBUG)
             Log.e("JOB-->", " Job 执行 " + EXECUTE_COUNT);
             //7.0以上轮询
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -90,10 +95,12 @@ public class JobHandlerService extends JobService {
             }
             if (!KeepAliveUtils.isServiceRunning(JobHandlerService.this, getPackageName() + ":sllocal")
                     || !KeepAliveUtils.isRunningTaskExist(JobHandlerService.this, getPackageName() + ":slremote")) {
+                if(BuildConfig.DEBUG)
                 Log.e("JOB-->", " 重新开启了 服务 ");
                 startService(this);
             }
         } catch (Exception e) {
+            if(BuildConfig.DEBUG)
             Log.e(TAG, e.getMessage());
         }
         return false;
