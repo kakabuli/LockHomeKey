@@ -441,3 +441,10 @@ public static java.lang.String TABLENAME;
 -dontwarn com.sina.**
 -dontwarn com.mob.**
 # ----------------ShareSDK------------------
+
+# ----------------CymChad:BaseRecyclerViewAdapterHelper------------------
+-keep public class * extends com.chad.library.adapter.base.viewholder.BaseViewHolder
+-keepclassmembers  class **$** extends com.chad.library.adapter.base.viewholder.BaseViewHolder {
+     <init>(...);
+}
+# ----------------CymChad:BaseRecyclerViewAdapterHelper------------------

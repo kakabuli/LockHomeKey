@@ -473,7 +473,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     @Override
     public void onDeviceStateChange(boolean isConnected) {
 
-        if (!isConnected) {
+        /*if (!isConnected) {
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                     WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                         @Override
@@ -494,7 +494,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         public void afterTextChanged(String toString) {
                         }
                     });
-        }
+        }*/
     }
 
     @Override

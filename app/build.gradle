@@ -202,7 +202,7 @@ dependencies {
 
     //zxing
     implementation 'com.king.zxing:zxing-lite:2.0.3'
-    implementation 'com.google.android.material:material:1.3.0'
+//    implementation 'com.google.android.material:material:1.3.0'
 
     //米米网库
     implementation(name: 'cmapi_v2_0_0', ext: 'aar')
