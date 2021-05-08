@@ -194,7 +194,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
 
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'//TODO:暂时不升
 
     //mqtt
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
