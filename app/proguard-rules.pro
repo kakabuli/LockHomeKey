@@ -334,10 +334,13 @@
 public static java.lang.String TABLENAME;
 }
 -keep class **$Properties{*;}
--keep class net.sqlcipher.database.**{*;}
--keep public interface net.sqlcipher.database.**
--dontwarn net.sqlcipher.database.**
--dontwarn org.greenrobot.greendao.**
+# If you DO use SQLCipher:
+-keep class org.greenrobot.greendao.database.SqlCipherEncryptedHelper { *; }
+#-keep class net.sqlcipher.database.**{*;}
+#-keep public interface net.sqlcipher.database.**
+#-dontwarn net.sqlcipher.database.**
+-keep,includedescriptorclasses class net.sqlcipher.** { *; }
+-keep,includedescriptorclasses interface net.sqlcipher.** { *; }
 # ---------------greendao---------------------
 
 # ---------------linphone---------------------

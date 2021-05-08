@@ -1,7 +1,8 @@
 package com.kaadas.lock.utils.greenDao.db;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+
+import net.sqlcipher.database.SQLiteDatabase;
 
 public class DaoManager {
 
@@ -52,22 +53,32 @@ public class DaoManager {
 	/**
 	 * 获取可读数据库
 	 */
-	private SQLiteDatabase getReadableDatabase() {
+	private SQLiteDatabase getReadableDatabase(String password) {
 		if (openHelper == null) {
 			openHelper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
 		}
-		SQLiteDatabase db = openHelper.getReadableDatabase();
+		SQLiteDatabase db = null;
+		try{
+			db = (SQLiteDatabase) openHelper.getEncryptedReadableDb(password);
+		}catch (Exception e){
+			db = (SQLiteDatabase) openHelper.getReadableDb();
+		}
 		return db;
 	}
 
 	/**
 	 * 获取可写数据库
 	 */
-	private DaoMaster getWritableDatabase() {
+	private DaoMaster getWritableDatabase(String password) {
 		if (openHelper == null) {
 			openHelper = new DaoMaster.DevOpenHelper(context, DB_NAME, null);
 		}
-		daoWriteMaster = new DaoMaster(openHelper.getWritableDatabase());
+		//TODO:加密数据库迁移
+		try {
+			daoWriteMaster = new DaoMaster(openHelper.getEncryptedWritableDb(password));
+		}catch (Exception e){
+			daoWriteMaster = new DaoMaster(openHelper.getWritableDatabase());
+		}
 		return daoWriteMaster;
 	}
 
@@ -79,10 +90,10 @@ public class DaoManager {
 	 * 完成对数据库的添加删除修改查询等的操作
 	 * 注：仅仅是一个接口
 	 */
-	public DaoSession getDaoSession() {
+	public DaoSession getDaoSession(String password) {
 		if (daoSession == null) {
 			if (daoWriteMaster == null) {
-				daoWriteMaster = getWritableDatabase();
+				daoWriteMaster = getWritableDatabase(password);
 			}
 			daoSession = daoWriteMaster.newSession();
 		}

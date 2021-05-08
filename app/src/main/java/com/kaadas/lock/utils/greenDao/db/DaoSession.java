@@ -11,9 +11,9 @@ import org.greenrobot.greendao.internal.DaoConfig;
 import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
-import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
+import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.bean.DBOpenLockRecord;
 import com.kaadas.lock.utils.greenDao.bean.DevicePower;
@@ -31,9 +31,9 @@ import com.kaadas.lock.utils.greenDao.bean.PirDefault;
 import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
-import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeEventDao;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
+import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.ClothesHangerMachineAllBeanDao;
 import com.kaadas.lock.utils.greenDao.db.DBOpenLockRecordDao;
 import com.kaadas.lock.utils.greenDao.db.DevicePowerDao;
@@ -60,9 +60,9 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig productInfoDaoConfig;
     private final DaoConfig wifiLockInfoDaoConfig;
     private final DaoConfig bleLockServiceInfoDaoConfig;
-    private final DaoConfig cateEyeInfoBaseDaoConfig;
     private final DaoConfig catEyeEventDaoConfig;
     private final DaoConfig catEyeServiceInfoDaoConfig;
+    private final DaoConfig cateEyeInfoBaseDaoConfig;
     private final DaoConfig clothesHangerMachineAllBeanDaoConfig;
     private final DaoConfig dBOpenLockRecordDaoConfig;
     private final DaoConfig devicePowerDaoConfig;
@@ -80,9 +80,9 @@ public class DaoSession extends AbstractDaoSession {
     private final ProductInfoDao productInfoDao;
     private final WifiLockInfoDao wifiLockInfoDao;
     private final BleLockServiceInfoDao bleLockServiceInfoDao;
-    private final CateEyeInfoBaseDao cateEyeInfoBaseDao;
     private final CatEyeEventDao catEyeEventDao;
     private final CatEyeServiceInfoDao catEyeServiceInfoDao;
+    private final CateEyeInfoBaseDao cateEyeInfoBaseDao;
     private final ClothesHangerMachineAllBeanDao clothesHangerMachineAllBeanDao;
     private final DBOpenLockRecordDao dBOpenLockRecordDao;
     private final DevicePowerDao devicePowerDao;
@@ -110,14 +110,14 @@ public class DaoSession extends AbstractDaoSession {
         bleLockServiceInfoDaoConfig = daoConfigMap.get(BleLockServiceInfoDao.class).clone();
         bleLockServiceInfoDaoConfig.initIdentityScope(type);
 
-        cateEyeInfoBaseDaoConfig = daoConfigMap.get(CateEyeInfoBaseDao.class).clone();
-        cateEyeInfoBaseDaoConfig.initIdentityScope(type);
-
         catEyeEventDaoConfig = daoConfigMap.get(CatEyeEventDao.class).clone();
         catEyeEventDaoConfig.initIdentityScope(type);
 
         catEyeServiceInfoDaoConfig = daoConfigMap.get(CatEyeServiceInfoDao.class).clone();
         catEyeServiceInfoDaoConfig.initIdentityScope(type);
+
+        cateEyeInfoBaseDaoConfig = daoConfigMap.get(CateEyeInfoBaseDao.class).clone();
+        cateEyeInfoBaseDaoConfig.initIdentityScope(type);
 
         clothesHangerMachineAllBeanDaoConfig = daoConfigMap.get(ClothesHangerMachineAllBeanDao.class).clone();
         clothesHangerMachineAllBeanDaoConfig.initIdentityScope(type);
@@ -161,9 +161,9 @@ public class DaoSession extends AbstractDaoSession {
         productInfoDao = new ProductInfoDao(productInfoDaoConfig, this);
         wifiLockInfoDao = new WifiLockInfoDao(wifiLockInfoDaoConfig, this);
         bleLockServiceInfoDao = new BleLockServiceInfoDao(bleLockServiceInfoDaoConfig, this);
-        cateEyeInfoBaseDao = new CateEyeInfoBaseDao(cateEyeInfoBaseDaoConfig, this);
         catEyeEventDao = new CatEyeEventDao(catEyeEventDaoConfig, this);
         catEyeServiceInfoDao = new CatEyeServiceInfoDao(catEyeServiceInfoDaoConfig, this);
+        cateEyeInfoBaseDao = new CateEyeInfoBaseDao(cateEyeInfoBaseDaoConfig, this);
         clothesHangerMachineAllBeanDao = new ClothesHangerMachineAllBeanDao(clothesHangerMachineAllBeanDaoConfig, this);
         dBOpenLockRecordDao = new DBOpenLockRecordDao(dBOpenLockRecordDaoConfig, this);
         devicePowerDao = new DevicePowerDao(devicePowerDaoConfig, this);
@@ -181,9 +181,9 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(ProductInfo.class, productInfoDao);
         registerDao(WifiLockInfo.class, wifiLockInfoDao);
         registerDao(BleLockServiceInfo.class, bleLockServiceInfoDao);
-        registerDao(CateEyeInfoBase.class, cateEyeInfoBaseDao);
         registerDao(CatEyeEvent.class, catEyeEventDao);
         registerDao(CatEyeServiceInfo.class, catEyeServiceInfoDao);
+        registerDao(CateEyeInfoBase.class, cateEyeInfoBaseDao);
         registerDao(ClothesHangerMachineAllBean.class, clothesHangerMachineAllBeanDao);
         registerDao(DBOpenLockRecord.class, dBOpenLockRecordDao);
         registerDao(DevicePower.class, devicePowerDao);
@@ -203,9 +203,9 @@ public class DaoSession extends AbstractDaoSession {
         productInfoDaoConfig.clearIdentityScope();
         wifiLockInfoDaoConfig.clearIdentityScope();
         bleLockServiceInfoDaoConfig.clearIdentityScope();
-        cateEyeInfoBaseDaoConfig.clearIdentityScope();
         catEyeEventDaoConfig.clearIdentityScope();
         catEyeServiceInfoDaoConfig.clearIdentityScope();
+        cateEyeInfoBaseDaoConfig.clearIdentityScope();
         clothesHangerMachineAllBeanDaoConfig.clearIdentityScope();
         dBOpenLockRecordDaoConfig.clearIdentityScope();
         devicePowerDaoConfig.clearIdentityScope();
@@ -233,16 +233,16 @@ public class DaoSession extends AbstractDaoSession {
         return bleLockServiceInfoDao;
     }
 
-    public CateEyeInfoBaseDao getCateEyeInfoBaseDao() {
-        return cateEyeInfoBaseDao;
-    }
-
     public CatEyeEventDao getCatEyeEventDao() {
         return catEyeEventDao;
     }
 
     public CatEyeServiceInfoDao getCatEyeServiceInfoDao() {
         return catEyeServiceInfoDao;
+    }
+
+    public CateEyeInfoBaseDao getCateEyeInfoBaseDao() {
+        return cateEyeInfoBaseDao;
     }
 
     public ClothesHangerMachineAllBeanDao getClothesHangerMachineAllBeanDao() {

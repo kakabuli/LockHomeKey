@@ -77,6 +77,7 @@ import com.yun.store.util.ActivityCollectorUtil;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.greendao.database.Database;
@@ -105,6 +106,7 @@ import io.reactivex.subjects.PublishSubject;
  * Describe
  */
 public class MyApplication extends Application {
+    public static final String DB_KEY = "kaadas-2021";
     private static MyApplication instance;
     private String token;
     private String uid;
@@ -149,7 +151,7 @@ public class MyApplication extends Application {
         initXMP2PManager();
         regToWx();
         //配置数据库
-        setUpWriteDataBase();
+        setUpWriteDataBase(DB_KEY);
         // HuaWei phone
         if (Rom.isEmui()) {
             HmsMessaging.getInstance(this).setAutoInitEnabled(true);
@@ -425,6 +427,7 @@ public class MyApplication extends Application {
     }
 
     public void deleSQL() {  //删除所有表 然后创建所有表
+        SQLiteDatabase.loadLibs(this);
         Database database = getDaoWriteSession().getDatabase();
         DaoMaster daoMaster = new DaoMaster(database);
         DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
@@ -959,9 +962,14 @@ public class MyApplication extends Application {
     private static DaoSession daoWriteSession;
     private DaoManager manager;
 
-    private void setUpWriteDataBase() {
+    /**
+     *
+     * @param password 数据库加密key
+     */
+    private void setUpWriteDataBase(String password) {
+        SQLiteDatabase.loadLibs(this);
         manager = DaoManager.getInstance(this);
-        daoWriteSession = manager.getDaoSession();
+        daoWriteSession = manager.getDaoSession(password);
     }
 
     public DaoSession getDaoWriteSession() {

@@ -2,9 +2,10 @@ package com.kaadas.lock.utils.db;
 
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteOpenHelper;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.utils.LogUtils;
 
 /**
@@ -43,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteSqlDB() {
         LogUtils.e("數據刪除");
         //TABLE_NAME 是要删除的数据库的名字
-        getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + DBTableConfig.DATABASE_NAME);
+        getWritableDatabase(MyApplication.getInstance().DB_KEY).execSQL("DROP TABLE IF EXISTS " + DBTableConfig.DATABASE_NAME);
     }
 
     @Override

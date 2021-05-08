@@ -23,7 +23,7 @@ ext {
             "kaadas"                :"com.kaidishi.lock"
     ]
 
-    greendao_schemaVersion = 35
+    greendao_schemaVersion = 36
     constraintlayoutVersion = "2.0.4"
     espresso_core_version = "3.3.0"
 }
