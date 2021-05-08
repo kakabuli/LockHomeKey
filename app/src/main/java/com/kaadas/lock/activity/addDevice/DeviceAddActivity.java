@@ -26,10 +26,10 @@ import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
-import com.king.zxing.Intents;
 
 import java.util.List;
 
@@ -264,7 +264,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
         if(resultCode == RESULT_OK && data!=null){
             switch (requestCode){
                 case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
-                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    String result = data.getStringExtra(Constants.SCAN_QR_CODE_RESULT);
                     LogUtils.e("扫描结果是   " + result);
                     if (result.contains("SN-GW")&&result.contains("MAC-")&&result.contains(" ")){
                         String[] strs=result.split(" ");

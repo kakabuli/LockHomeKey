@@ -15,13 +15,13 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineAddPresenter;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineAddView;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.clothesHangerMachineUtil.ClothesHangerMachineUtil;
 import com.kaadas.lock.utils.dialog.MessageDialog;
-import com.king.zxing.Intents;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,7 +100,7 @@ public class ClothesHangerMachineAddActivity extends BaseActivity<IClothesHanger
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
-                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    String result = data.getStringExtra(Constants.SCAN_QR_CODE_RESULT);
                     LogUtils.e("扫描结果是   " + result);
                     if(result.contains("_WiFi&BLE_")){
                         String[] str = result.split("_");

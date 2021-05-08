@@ -6,44 +6,33 @@
     android:background="#000"
     android:orientation="vertical">
 
-
-    <cn.bingoogolapple.qrcode.zbar.ZBarView
-        android:id="@+id/zbarview"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:qrcv_animTime="2000"
-        app:qrcv_barCodeTipText=""
-        app:qrcv_barcodeRectHeight="120dp"
-        app:qrcv_borderColor="@android:color/transparent"
-        app:qrcv_borderSize="1dp"
-        app:qrcv_cornerColor="#149BF3"
-        app:qrcv_cornerLength="20dp"
-        app:qrcv_cornerSize="3dp"
-        app:qrcv_customGridScanLineDrawable="@mipmap/scan_line"
-        app:qrcv_isAutoZoom="true"
-        app:qrcv_isBarcode="false"
-        app:qrcv_isOnlyDecodeScanBoxArea="false"
-        app:qrcv_isShowDefaultGridScanLineDrawable="false"
-        app:qrcv_isShowDefaultScanLineDrawable="true"
-        app:qrcv_isShowLocationPoint="false"
-        app:qrcv_isShowTipBackground="false"
-        app:qrcv_tipTextMargin="12dp"
-        app:qrcv_isShowTipTextAsSingleLine="false"
-        app:qrcv_isTipTextBelowRect="true"
-        app:qrcv_maskColor="#33FFFFFF"
-        app:qrcv_qrCodeTipText="@string/qr_notice"
-        app:qrcv_rectWidth="@dimen/dp_225"
-        app:qrcv_scanLineColor="#149BF3"
-        app:qrcv_toolbarHeight="56dp"
-        app:qrcv_topOffset="120dp"
-        app:qrcv_verticalBias="-1" />
+        />
+
+    <com.king.zxing.ViewfinderView
+        android:id="@+id/viewfinderView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cornerColor="#149BF3"
+        app:laserColor="#149BF3"
+        app:frameHeight="265dp"
+        app:frameWidth="265dp"
+        app:labelText="@string/qr_notice"
+        app:labelTextLocation="bottom"
+        app:frameGravity="top"
+        app:framePaddingTop="@dimen/dp_132"
+        app:frameColor="@color/transparent"
+        />
 
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:id="@+id/touch_light_layout"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="175dp"
         android:background="#66161616"
         android:orientation="vertical"
         android:paddingLeft="@dimen/dp_10"

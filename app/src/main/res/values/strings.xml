@@ -2136,6 +2136,7 @@
     <string name="activity_wifi_lock_wifi_detail_title">更换Wi-Fi</string>
     <string name="activity_wifi_lock_wifi_detail_name">Wi-Fi名称</string>
     <string name="activity_wifi_lock_wifi_detail_strength">Wi-Fi强度</string>
+    <string name="activity_clothes_hanger_machine_qrcode_scan">%1$s 晾衣机，是否进入配网？</string>
 
 
 

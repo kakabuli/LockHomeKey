@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
@@ -18,7 +19,9 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
+import com.king.zxing.CameraScan;
 import com.king.zxing.CaptureActivity;
+import com.king.zxing.DefaultCameraScan;
 
 import java.util.List;
 
@@ -34,8 +37,8 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     private boolean falshLight=false;
-    private Camera.Parameters parameter;
-    private Camera camera;
+    private CameraScan mCameraScan;
+
     @Override
     public int getLayoutId() {
         return R.layout.device_scan_qrcode;
@@ -57,6 +60,8 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
         lp.setMargins(0, getStatusBarHeight(), 0, 0);
         titleBar.setLayoutParams(lp);
+        PreviewView previewView = findViewById(R.id.previewView);
+        mCameraScan = new DefaultCameraScan(this, previewView);
     }
 
     private void checkVersion() {
@@ -78,38 +83,7 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
             }
         }
 
-        //版本为22 5.1
-        if (Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP_MR1){
-           if (!isCameraCanUse()){
-               ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
-               finish();
-               return;
-           }
-
-        }
-
-
     }
-
-    //Android6.0以下的摄像头权限处理：
-    public static boolean isCameraCanUse() {
-        boolean canUse = true;
-        Camera mCamera = null;
-        try {
-            mCamera = Camera.open();
-            // setParameters 是针对魅族MX5 做的。MX5 通过Camera.open() 拿到的Camera
-            Camera.Parameters mParameters = mCamera.getParameters();
-            mCamera.setParameters(mParameters);
-        } catch (Exception e) {
-            canUse = false;
-        }
-        if (mCamera != null) {
-            mCamera.release();
-        }
-        return canUse;
-    }
-
-
 
     private void initView() {
         if (!hasFlash()){
@@ -117,9 +91,32 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mCameraScan != null) {
+            mCameraScan.setOnScanResultCallback(this)
+                    .setVibrate(true)
+                    .startCamera();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        if(mCameraScan != null) {
+            mCameraScan.stopCamera();
+        }
+        super.onStop();
+    }
+
 
     @Override
     public void onDestroy() {
+        if(mCameraScan != null) {
+            mCameraScan.enableTorch(false);
+            mCameraScan.release();
+        }
         super.onDestroy();
         MyApplication.getInstance().removeActivity(this);
     }
@@ -143,59 +140,16 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
 
     //打开手电筒
     private void openFlashLight(boolean highlight){
-        if (getCameraManager().getOpenCamera()!=null) {
-            camera = getCameraManager().getOpenCamera().getCamera();
-            parameter = camera.getParameters();
-            if (!highlight) {
-                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-                camera.setParameters(parameter);
+        if(mCameraScan != null){
+            if(!highlight){
+                mCameraScan.enableTorch(true);
                 falshLight = true;
-            } else {  // 关灯
-                parameter.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(parameter);
+            }else {
+                mCameraScan.enableTorch(false);
                 falshLight = false;
             }
         }
-
     }
-
-
-    /*  *//**
-     * 二维码解析回调函数
-     *//*
-    CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
-        @Override
-        public void onAnalyzeSuccess(Bitmap mBitmap, String result) {
-            LogUtils.e("扫描结果是   " + result);
-            if (result.contains("SN-CH")&&result.contains("MAC-")&&result.contains(" ")){
-                String[] strs=result.split(" ");
-                String deviceSN=strs[0].replace("SN-","");
-                String deviceMac=strs[1].replace("MAC-","");
-                Intent successIntent=new Intent(AddDeviceCatEyeScanActivity.this,AddDeviceCatEyeSecondActivity.class);
-                successIntent.putExtra(KeyConstants.GW_WIFI_SSID, ssid);
-                successIntent.putExtra(KeyConstants.GW_WIFI_PWD, pwd);
-                successIntent.putExtra(KeyConstants.DEVICE_SN,deviceSN);
-                successIntent.putExtra(KeyConstants.DEVICE_MAC,deviceMac);
-                successIntent.putExtra(KeyConstants.GW_SN,gwId);
-                startActivity(successIntent);
-                finish();
-
-            }else{
-                Intent scanSuccessIntent=new Intent(AddDeviceCatEyeScanActivity.this,AddDeviceCatEyeScanFailActivity.class);
-                startActivity(scanSuccessIntent);
-                //ToastUtil.getInstance().showShort(R.string.please_scan_cateye_qrcode);
-            }
-
-
-        }
-
-
-        @Override
-        public void onAnalyzeFailed() {
-            ToastUtil.getInstance().showShort(getString(R.string.scan_qr_failed));
-        }
-    };
-*/
 
     //获取状态栏高度
     public int getStatusBarHeight() {

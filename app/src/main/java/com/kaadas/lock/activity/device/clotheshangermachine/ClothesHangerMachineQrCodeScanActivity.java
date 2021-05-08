@@ -13,33 +13,35 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.zxing.Result;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.clothesHangerMachineUtil.ClothesHangerMachineUtil;
 import com.kaadas.lock.utils.dialog.MessageDialog;
-import com.king.zxing.Intents;
+import com.king.zxing.CameraScan;
+import com.king.zxing.DefaultCameraScan;
 
+import androidx.camera.view.PreviewView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 
-public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplicationActivity implements QRCodeView.Delegate {
+public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplicationActivity implements CameraScan.OnScanResultCallback {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.touch_light_layout)
     LinearLayout touchLightLayout;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
-    private ZBarView mZBarView;
+    private CameraScan mCameraScan;
     private boolean isOpenLight = false;
     int scan = 0;
     private static final int REQUEST_CODE = 101;
@@ -58,8 +60,8 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
         ButterKnife.bind(this);
         checkVersion();
         scan = getIntent().getIntExtra(KeyConstants.SCAN_TYPE, 0);
-        mZBarView = findViewById(R.id.zbarview);
-        mZBarView.setDelegate(this);
+        PreviewView previewView = findViewById(R.id.previewView);
+        mCameraScan = new DefaultCameraScan(this, previewView);
         //动态设置状态栏高度
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
         lp.setMargins(0, getStatusBarHeight(), 0, 0);
@@ -69,19 +71,27 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
     @Override
     protected void onStart() {
         super.onStart();
-        mZBarView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
-        mZBarView.startSpotAndShowRect(); // 显示扫描框，并开始识别
+        if(mCameraScan != null) {
+            mCameraScan.setOnScanResultCallback(this)
+                    .setVibrate(true)
+                    .startCamera();
+        }
     }
 
     @Override
     protected void onStop() {
-        mZBarView.stopCamera(); // 关闭摄像头预览，并且隐藏扫描框
+        if(mCameraScan != null) {
+            mCameraScan.stopCamera();
+        }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        mZBarView.onDestroy(); // 销毁二维码扫描控件
+        if(mCameraScan != null) {
+            mCameraScan.enableTorch(false);
+            mCameraScan.release();
+        }
         super.onDestroy();
     }
 
@@ -103,34 +113,6 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
                 }
             }
         }
-        //版本为22 5.1
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (!isCameraCanUse()) {
-                ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
-                finish();
-                return;
-            }
-
-        }
-
-    }
-
-    //Android6.0以下的摄像头权限处理：
-    public static boolean isCameraCanUse() {
-        boolean canUse = true;
-        Camera mCamera = null;
-        try {
-            mCamera = Camera.open();
-            // setParameters 是针对魅族MX5 做的。MX5 通过Camera.open() 拿到的Camera
-            Camera.Parameters mParameters = mCamera.getParameters();
-            mCamera.setParameters(mParameters);
-        } catch (Exception e) {
-            canUse = false;
-        }
-        if (mCamera != null) {
-            mCamera.release();
-        }
-        return canUse;
     }
 
     @OnClick({R.id.back, R.id.touch_light_layout})
@@ -143,32 +125,20 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
 //                mZBarView.openFlashlight(); // 打开闪光灯
                 if (!isOpenLight){
                     isOpenLight = true;
-                    mZBarView.openFlashlight(); // 打开闪光灯
+                    if(mCameraScan != null) {
+                        mCameraScan.enableTorch(true);
+                    }
                 }else {
                     isOpenLight = false;
-                    mZBarView.closeFlashlight(); // 打开闪光灯
+                    if(mCameraScan != null) {
+                        mCameraScan.enableTorch(false);
+                    }
                 }
                 break;
         }
     }
 
     private String result = "";
-    @Override
-    public void onScanQRCodeSuccess(String result) {
-        this.result = result;
-        LogUtils.e("shulan -->" + result);
-        String[] str = result.split("_");
-        if(str.length > 0){
-            if(str.length >= 4){
-                if(ClothesHangerMachineUtil.pairMode(str[1]).equals(str[2])){
-                    showClothesMachineDialog(str[1] + "晾衣机，是否进入配网？");
-                    return;
-                }
-            }
-        }
-        showErrorDialog();
-
-    }
 
     private void showErrorDialog() {
         //信息
@@ -188,18 +158,6 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
     }
 
     @Override
-    public void onCameraAmbientBrightnessChanged(boolean isDark) {
-
-    }
-
-    @Override
-    public void onScanQRCodeOpenCameraError() {
-        LogUtils.e("打开相机出错");
-        finish();
-        Toast.makeText(this, getString(R.string.open_camera_failed), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
@@ -207,12 +165,12 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
                 String result2 = data.getStringExtra(KeyConstants.URL_RESULT);
 
                 Intent intent = new Intent();
-                intent.putExtra(Intents.Scan.RESULT, result2);
+                intent.putExtra(Constants.SCAN_QR_CODE_RESULT, result2);
                 setResult(RESULT_OK, intent);
                 finish();
             }else {
                 Intent intent = new Intent();
-                intent.putExtra(Intents.Scan.RESULT, result);
+                intent.putExtra(Constants.SCAN_QR_CODE_RESULT, result);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -242,7 +200,7 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
             public void right() {
                 //首页过来的
                 Intent intent = new Intent();
-                intent.putExtra(Intents.Scan.RESULT, result);
+                intent.putExtra(Constants.SCAN_QR_CODE_RESULT, result);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -257,5 +215,22 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
 
             }
         });
+    }
+
+    @Override
+    public boolean onScanResultCallback(Result result) {
+        this.result = result.getText();
+        LogUtils.d("shulan -->" + result);
+        String[] str = result.getText().split("_");
+        if(str.length > 0){
+            if(str.length >= 4){
+                if(ClothesHangerMachineUtil.pairMode(str[1]).equals(str[2])){
+                    showClothesMachineDialog(getString(R.string.activity_clothes_hanger_machine_qrcode_scan,str[1]));
+                    return true;
+                }
+            }
+        }
+        showErrorDialog();
+        return true;
     }
 }

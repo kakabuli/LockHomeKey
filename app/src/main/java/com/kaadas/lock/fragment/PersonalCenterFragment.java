@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.ProductActivationScanActivity;
 import com.kaadas.lock.activity.my.AboutUsActivity;
 import com.kaadas.lock.activity.my.BarCodeActivity;
 import com.kaadas.lock.activity.my.PersonalFAQActivity;
@@ -31,6 +30,7 @@ import com.kaadas.lock.mvp.presenter.MyFragmentPresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.UserNickResult;
 import com.kaadas.lock.utils.BitmapUtil;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MMKVUtils;
@@ -39,9 +39,6 @@ import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.mvp.view.IMyFragmentView;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.CircleImageView;
-import com.king.zxing.Intents;
-
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,9 +75,6 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
     TextView headPortraitName;
     @BindView(R.id.rl_user_feedback)
     RelativeLayout rlUserFeedback;
-    @BindView(R.id.product_activition)
-    RelativeLayout product_activition;
-
     private View mPersonlCenterView;
     private Bitmap changeBitmap;
 
@@ -145,7 +139,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
         unbinder.unbind();
     }
 
-    @OnClick({R.id.message_layout, R.id.security_setting_layout, R.id.faq_layout, R.id.system_setting_layout, R.id.about_xk_layout, R.id.head_second,R.id.product_activition})
+    @OnClick({R.id.message_layout, R.id.security_setting_layout, R.id.faq_layout, R.id.system_setting_layout, R.id.about_xk_layout, R.id.head_second})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.message_layout:
@@ -171,10 +165,6 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
             case R.id.head_second:
                 Intent updateHeadData = new Intent(getActivity(), PersonalUpdateHeadDataActivity.class);
                 startActivity(updateHeadData);
-                break;
-            case R.id.product_activition:
-                Intent zigbeeLockIntent=new Intent(getActivity(), ProductActivationScanActivity.class);
-                startActivityForResult(zigbeeLockIntent,KeyConstants.SCANPRODUCT_REQUEST_CODE);
                 break;
         }
     }
@@ -245,7 +235,7 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
         if(resultCode == RESULT_OK && data!=null){
             switch (requestCode){
                 case KeyConstants.SCANPRODUCT_REQUEST_CODE:
-                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    String result = data.getStringExtra(Constants.SCAN_QR_CODE_RESULT);
                     LogUtils.e(result+"     产品激活");
                     if(result.contains(" ")){
                         result=result.replace(" ","%20");

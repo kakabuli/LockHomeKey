@@ -345,10 +345,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.addDevice.gateway.AddGatewayScanActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.addDevice.gateway.AddGatewaySuccessActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -856,10 +852,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.cateye.more.CateDefaultActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.addDevice.zigbeelocknew.ProductActivationScanActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.my.BarCodeActivity"

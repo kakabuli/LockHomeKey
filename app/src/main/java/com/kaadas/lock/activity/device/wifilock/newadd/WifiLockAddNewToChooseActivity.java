@@ -25,6 +25,7 @@ import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.WiFiLockChooseToAddPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.WiFiLockChooseToAddView;
+import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
@@ -32,7 +33,6 @@ import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.dialog.InfoDialog;
 import com.kaadas.lock.utils.dialog.MessageDialog;
-import com.king.zxing.Intents;
 
 import java.util.Objects;
 import java.util.logging.LogRecord;
@@ -183,7 +183,7 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case KeyConstants.SCANGATEWAYNEW_REQUEST_CODE:
-                    String result = data.getStringExtra(Intents.Scan.RESULT);
+                    String result = data.getStringExtra(Constants.SCAN_QR_CODE_RESULT);
                     LogUtils.e("扫描结果是   " + result);
 
                     if ( (result.contains("_WiFi_"))){  //4-30新的配网流程
