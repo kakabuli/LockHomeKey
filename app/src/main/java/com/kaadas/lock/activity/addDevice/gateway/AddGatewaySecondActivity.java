@@ -16,7 +16,7 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +75,7 @@ public class AddGatewaySecondActivity extends BaseAddToApplicationActivity {
                         startActivity(scanSuccessIntent);
                         finish();
                     }else{
-                        ToastUtil.getInstance().showShort(getString(R.string.please_use_gateway_qr_code));
+                        ToastUtils.showShort(getString(R.string.please_use_gateway_qr_code));
                     }
                     break;
             }

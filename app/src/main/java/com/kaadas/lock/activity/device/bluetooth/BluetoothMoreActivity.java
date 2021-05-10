@@ -28,7 +28,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -171,12 +171,12 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
-                                ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
@@ -220,7 +220,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
                         showLoading(getString(R.string.is_close_auto_mode));
                     }
                 } else {
-                    ToastUtil.getInstance().showLong(R.string.please_lock_countrol);
+                    ToastUtils.showLong(R.string.please_lock_countrol);
                 }
                 break;
             case R.id.rl_door_lock_language_switch:
@@ -289,7 +289,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
 
     @Override
     public void onDeleteDeviceSuccess() {
-        ToastUtil.getInstance().showLong(R.string.delete_success);
+        ToastUtils.showLong(R.string.delete_success);
         hiddenLoading();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -299,7 +299,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     @Override
     public void onDeleteDeviceFailed(Throwable throwable) {
         LogUtils.e("删除失败   " + throwable.getMessage());
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
 //        ToastUtil.getInstance().showLong(R.string.delete_fialed);
         hiddenLoading();
     }
@@ -308,7 +308,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     public void onDeleteDeviceFailedServer(BaseResult result) {
         LogUtils.e("删除失败   " + result.toString());
         String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
-        ToastUtil.getInstance().showLong(httpErrorCode);
+        ToastUtils.showLong(httpErrorCode);
         hiddenLoading();
     }
 
@@ -318,19 +318,19 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
         deviceNickname = name;
         tvDeviceName.setText(deviceNickname);
         bleLockInfo.getServerLockInfo().setLockNickName(deviceNickname);
-        ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+        ToastUtils.showLong(R.string.device_nick_name_update_success);
     }
 
     @Override
     public void modifyDeviceNicknameError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
@@ -356,7 +356,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
             ivSilentMode.setImageResource(R.mipmap.iv_close);
             ivSilentMode.setEnabled(true);
         }
-        ToastUtil.getInstance().showLong(getString(R.string.set_success));
+        ToastUtils.showLong(getString(R.string.set_success));
     }
 
     @Override
@@ -372,7 +372,7 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
             ivSilentMode.setEnabled(true);
         }
         //0失败，代表打开静音失败
-        ToastUtil.getInstance().showLong(getString(R.string.set_failed));
+        ToastUtils.showLong(getString(R.string.set_failed));
     }
 
     @Override
@@ -422,14 +422,14 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
                 break;
 
         }
-        ToastUtil.getInstance().showShort(strError);
+        ToastUtils.showShort(strError);
     }
 
 
     @Override
     public void setAutoLockError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(throwable.toString() + "");
+        ToastUtils.showShort(throwable.toString() + "");
     }
 
     @Override
@@ -460,13 +460,13 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     @Override
     public void onUpdateSoftFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.update_ble_version_failed));
+        ToastUtils.showLong(getString(R.string.update_ble_version_failed));
     }
 
     @Override
     public void onUpdateSoftFailedServer(BaseResult baseResult) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.update_ble_version_failed));
+        ToastUtils.showLong(getString(R.string.update_ble_version_failed));
     }
 
     @Override

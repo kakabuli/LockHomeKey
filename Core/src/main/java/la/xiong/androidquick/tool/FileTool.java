@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yun.store.util;
+package la.xiong.androidquick.tool;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -59,12 +58,7 @@ import java.util.List;
 import java.util.Vector;
 
 import androidx.core.content.FileProvider;
-import la.xiong.androidquick.tool.StringUtil;
 
-import static com.yun.store.util.ConstTool.KB;
-
-
-//import android.util.Log;
 
 /**
  * Created in Sep 10, 2016 4:22:18 PM.
@@ -180,24 +174,6 @@ public class FileTool {
         }
         return Environment.getDataDirectory().getPath();
     }
-
-    /**
-     * 获取SD卡剩余空间
-     *
-     * @return SD卡剩余空间
-     */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public static String getFreeSpace() {
-        if (!isSDCardEnable()) {
-            return "sdcard unable!";
-        }
-        StatFs stat = new StatFs(getSDCardPath());
-        long blockSize, availableBlocks;
-        availableBlocks = stat.getAvailableBlocksLong();
-        blockSize = stat.getBlockSizeLong();
-        return DataTool.byte2FitSize(availableBlocks * blockSize);
-    }
-
     /**
      * SD卡是否可用.
      */
@@ -1483,9 +1459,9 @@ public class FileTool {
         OutputStream os = null;
         try {
             os = new BufferedOutputStream(new FileOutputStream(file, append));
-            byte data[] = new byte[KB];
+            byte data[] = new byte[1024];
             int len;
-            while ((len = is.read(data, 0, KB)) != -1) {
+            while ((len = is.read(data, 0, 1024)) != -1) {
                 os.write(data, 0, len);
             }
             return true;
@@ -1657,34 +1633,6 @@ public class FileTool {
     }
 
     /**
-     * 指定编码按行读取文件到字符数组中
-     *
-     * @param filePath 文件路径
-     * @return StringBuilder对象
-     */
-    public static byte[] readFile2Bytes(String filePath) {
-        return readFile2Bytes(getFileByPath(filePath));
-    }
-
-    /**
-     * 指定编码按行读取文件到字符数组中
-     *
-     * @param file 文件
-     * @return StringBuilder对象
-     */
-    public static byte[] readFile2Bytes(File file) {
-        if (file == null) {
-            return null;
-        }
-        try {
-            return DataTool.inputStream2Bytes(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * 简单获取文件编码格式
      *
      * @param filePath 文件路径
@@ -1744,9 +1692,9 @@ public class FileTool {
         InputStream is = null;
         try {
             is = new BufferedInputStream(new FileInputStream(file));
-            byte[] buffer = new byte[KB];
+            byte[] buffer = new byte[1024];
             int readChars;
-            while ((readChars = is.read(buffer, 0, KB)) != -1) {
+            while ((readChars = is.read(buffer, 0, 1024)) != -1) {
                 for (int i = 0; i < readChars; ++i) {
                     if (buffer[i] == '\n') {
                         ++count;
@@ -1759,30 +1707,6 @@ public class FileTool {
             closeIO(is);
         }
         return count;
-    }
-
-    /**
-     * 获取文件大小
-     *
-     * @param filePath 文件路径
-     * @return 文件大小
-     */
-    public static String getFileSize(String filePath) {
-        return getFileSize(getFileByPath(filePath));
-    }
-
-    /**
-     * 获取文件大小
-     * <p>例如：getFileSize(file, RxConstTool.MB); 返回文件大小单位为MB</p>
-     *
-     * @param file 文件
-     * @return 文件大小
-     */
-    public static String getFileSize(File file) {
-        if (!isFileExists(file)) {
-            return "";
-        }
-        return DataTool.byte2FitSize(file.length());
     }
 
 //    /**
@@ -1986,17 +1910,6 @@ public class FileTool {
                 return null;
             }
         }
-    }
-
-    /**
-     * 将Uri转换成File
-     *
-     * @param context
-     * @param uri
-     * @return
-     */
-    public static File getFilePhotoFromUri(Activity context, Uri uri) {
-        return new File(PhotoTool.getImageAbsolutePath(context, uri));
     }
 
     @TargetApi(19)

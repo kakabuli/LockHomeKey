@@ -50,7 +50,6 @@ public class WifiVideoLockSixthPresenter<T> extends BasePresenter<IWifiLockVideo
                 SPUtils.put(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSN, "");
                 SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSN, "");
                 SPUtils.put(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSN, "");
-                SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_RANDOMCODE + wifiSN,true);
                 if (isSafe()) {
                     mViewRef.get().onBindSuccess(wifiSN);
                 }

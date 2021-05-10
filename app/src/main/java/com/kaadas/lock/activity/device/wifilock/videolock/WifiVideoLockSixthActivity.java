@@ -26,7 +26,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.utils.WifiVideoPasswordFactorManager;
 
@@ -109,13 +109,13 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
             case R.id.button_next:
                 String adminPassword = apPasswordEdit.getText().toString().trim();
                 if (!StringUtil.randomJudge(adminPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 //打开wifi
                 WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
                 if (!wifiUtils.isWifiEnable()) {
-                    ToastUtil.getInstance().showShort(getString(R.string.wifi_no_open_please_open_wifi));
+                    ToastUtils.showShort(getString(R.string.wifi_no_open_please_open_wifi));
                 }
                 if(System.currentTimeMillis() - time > 500){
                     checkAdminPassword(adminPassword);

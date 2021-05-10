@@ -16,7 +16,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +79,7 @@ public class WifiLockInputAdminPasswordActivity extends BaseAddToApplicationActi
             case R.id.tv_next:
                 String adminPassword = etAdminPassword.getText().toString().trim();
                 if (!StringUtil.randomJudge(adminPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 Intent intent = new Intent(WifiLockInputAdminPasswordActivity.this, WifiLockCheckAdminPasswordActivity.class);

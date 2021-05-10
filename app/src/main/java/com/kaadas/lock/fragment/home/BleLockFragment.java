@@ -11,7 +11,6 @@ import android.os.Vibrator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +26,6 @@ import android.widget.TextView;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.BluetoothRecordActivity;
-import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.adapter.HomeBeanRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
@@ -50,7 +48,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,9 +251,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
                         if (bleLockInfo.getSafeMode() == 1) {
-                            ToastUtil.getInstance().showLong(R.string.safe_mode_can_not_open);
+                            ToastUtils.showLong(R.string.safe_mode_can_not_open);
                         } else if (bleLockInfo.getBackLock() == 0) {
-                            ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
+                            ToastUtils.showLong(R.string.back_lock_can_not_open);
                         }
                         return false;
                     }
@@ -769,7 +767,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
                 break;
             case R.id.tv_synchronized_record:
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                    ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
+                    ToastUtils.showShort(R.string.is_loading_lock_record);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -863,7 +861,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void notAdminMustHaveNet() {  //不是管理员开锁必须要有网络
-        ToastUtil.getInstance().showLong(R.string.not_admin_must_have_net);
+        ToastUtils.showLong(R.string.not_admin_must_have_net);
     }
 
     @Override
@@ -887,7 +885,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             public void onClick(View v) {
                 String name = editText.getText().toString().trim();
                 if (!StringUtil.randomJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 alertDialog.dismiss();
@@ -952,12 +950,12 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             @Override
             public void run() {
                 if (throwable instanceof TimeoutException) {
-                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                    ToastUtils.showShort(getString(R.string.open_lock_failed));
                 } else if (throwable instanceof BleProtocolFailedException) {
                     BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
-                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                    ToastUtils.showShort(getString(R.string.open_lock_failed));
                 } else {
-                    ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+                    ToastUtils.showShort(getString(R.string.open_lock_failed));
                 }
                 lockRunnable.run();
                 stopOpenLockAnimator();
@@ -1182,7 +1180,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
 
     @Override
     public void noData() {
-        ToastUtil.getInstance().showShort(R.string.lock_no_record);
+        ToastUtils.showShort(R.string.lock_no_record);
         hiddenLoading();//加载完了   设置正在加载数据
         isLoadingBleRecord = false;
     }
@@ -1199,9 +1197,9 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void onLoadBleRecordFinish(boolean isComplete) {
         if (isComplete) {
-            ToastUtil.getInstance().showShort(R.string.sync_success);
+            ToastUtils.showShort(R.string.sync_success);
         } else {
-            ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
+            ToastUtils.showShort(R.string.get_record_failed_please_wait);
         }
         hiddenLoading();
         //加载完了   设置正在加载数据
@@ -1318,7 +1316,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
     @Override
     public void noPermissions() {
         PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, getActivity());
-        ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
+        ToastUtils.showLong(R.string.please_allow_ble_permission);
         changeOpenLockStatus(12);
     }
 
@@ -1327,7 +1325,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
      */
     @Override
     public void noOpenGps() {
-        ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+        ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
     }
 
     private void onChangeInitView() {

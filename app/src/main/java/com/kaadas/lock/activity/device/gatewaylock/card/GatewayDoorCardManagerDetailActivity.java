@@ -15,7 +15,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,7 +84,7 @@ public class GatewayDoorCardManagerDetailActivity extends BaseAddToApplicationAc
                     public void onClick(View v) {
                         String name = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         //TODO 获取卡昵称判断
@@ -122,7 +122,7 @@ public class GatewayDoorCardManagerDetailActivity extends BaseAddToApplicationAc
                         }
                     });
                 } else {
-                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                    ToastUtils.showShort(getString(R.string.network_exception));
                 }
                 break;
         }

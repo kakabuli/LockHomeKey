@@ -16,7 +16,7 @@ import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockOpenForceView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,21 +123,21 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
     @Override
     public void settingThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
+        ToastUtils.showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
+        ToastUtils.showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingSuccess(int openForce) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
+        ToastUtils.showShort(getString(R.string.modify_success));
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_OPEN_FORCE,openForce);
         setResult(RESULT_OK,intent);

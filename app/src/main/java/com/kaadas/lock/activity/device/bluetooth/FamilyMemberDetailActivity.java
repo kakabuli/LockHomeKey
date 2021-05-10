@@ -24,7 +24,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.IFamilyMemberDeatilView;
 
 import butterknife.BindView;
@@ -116,7 +116,7 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                         }
                     });
                 } else {
-                    ToastUtil.getInstance().showLong(R.string.network_exception);
+                    ToastUtils.showLong(R.string.network_exception);
                 }
                 break;
             case R.id.iv_editor:
@@ -143,11 +143,11 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
                     public void onClick(View v) {
                         data = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(data)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (dataBean.getUnickname().equals(data)) {
-                            ToastUtil.getInstance().showShort(getString(R.string.user_nickname_no_update));
+                            ToastUtils.showShort(getString(R.string.user_nickname_no_update));
                             return;
                         }
                         String uid = MyApplication.getInstance().getUid();
@@ -167,18 +167,18 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
 
     @Override
     public void deleteCommonUserListSuccess(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(R.string.delete_common_user_success);
+        ToastUtils.showShort(R.string.delete_common_user_success);
         finish();
     }
 
     @Override
     public void deleteCommonUserListFail(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
     public void deleteCommonUserListError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
@@ -186,16 +186,16 @@ public class FamilyMemberDetailActivity extends BaseActivity<IFamilyMemberDeatil
         nickname = data;
         tvName.setText(nickname);
         dataBean.setUnickname(nickname);
-        ToastUtil.getInstance().showShort(R.string.modify_user_nickname_success);
+        ToastUtils.showShort(R.string.modify_user_nickname_success);
     }
 
     @Override
     public void modifyCommonUserNicknameFail(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
     public void modifyCommonUserNicknameError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 }

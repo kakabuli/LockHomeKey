@@ -1,10 +1,8 @@
 package com.kaadas.lock.fragment.record;
 
-import android.net.Network;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +25,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockRecord;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockRecordDao;
@@ -220,7 +218,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             refreshLayout.finishRefresh();
             refreshLayout.finishLoadMore();
         }
-        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
+        ToastUtils.showShort(R.string.get_open_lock_record_fail);
         changeView(false);
     }
 
@@ -231,7 +229,7 @@ public class GatewayOpenLockRecordFragment extends BaseFragment<IGatewayLockReco
             refreshLayout.finishLoadMore();
         }
         LogUtils.e("获取开锁记录异常  网关锁");
-        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
+        ToastUtils.showShort(R.string.get_open_lock_record_fail);
         changeView(false);
     }
 

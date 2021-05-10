@@ -30,7 +30,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
@@ -174,7 +174,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void SoftwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -191,7 +191,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void HardwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void FirmwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -223,19 +223,19 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
         deviceNickname = name;
         tvDeviceName.setText(deviceNickname);
         bleLockInfo.getServerLockInfo().setLockNickName(deviceNickname);
-        ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+        ToastUtils.showLong(R.string.device_nick_name_update_success);
     }
 
     @Override
     public void modifyDeviceNicknameError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
@@ -264,7 +264,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
 
     @Override
     public void onRequestOtaFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.open_ota_failed);
+        ToastUtils.showLong(R.string.open_ota_failed);
     }
 
     @Override
@@ -287,7 +287,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             showLoading(getString(R.string.is_authing));
         } else {
             hiddenLoading();
-            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            ToastUtils.showLong(R.string.connet_failed_please_near);
         }
     }
 
@@ -311,7 +311,7 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             public void onDownFailed(String url, String path, Throwable throwable) {
                 LogUtils.e("下载文件失败，  " + throwable.getMessage());
                 hiddenLoading();
-                ToastUtil.getInstance().showLong(R.string.down_file_failed_please_retry);
+                ToastUtils.showLong(R.string.down_file_failed_please_retry);
             }
 
             @Override
@@ -361,12 +361,12 @@ public class BleDeviceInfoActivity extends BaseBleCheckInfoActivity<IDeviceInfoV
             public void onClick(View v) {
                 name = editText.getText().toString().trim();
                 if (!StringUtil.nicknameJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
                 if (deviceNickname != null) {
                     if (deviceNickname.equals(name)) {
-                        ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                        ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                         alertDialog.dismiss();
                         return;
                     }

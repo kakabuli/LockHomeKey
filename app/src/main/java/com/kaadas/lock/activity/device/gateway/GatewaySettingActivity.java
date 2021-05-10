@@ -3,15 +3,12 @@ package com.kaadas.lock.activity.device.gateway;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.text.InputFilter;
-import android.text.InputType;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +21,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.adapter.GatewaySettingAdapter;
 import com.kaadas.lock.bean.GatewaySettingItemBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -38,9 +34,7 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayBaseInfo;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
@@ -48,9 +42,6 @@ import com.kaadas.lock.utils.greenDao.db.GatewayBaseInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.GatewayServiceInfoDao;
 
-import org.w3c.dom.Text;
-
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +124,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                 gatewaySettingItemBeanThree.setTitle(getString(R.string.gateway_setting_wifi_name));
             }
         }else {
-            ToastUtil.getInstance().showShort(R.string.gateway_confirm_version);
+            ToastUtils.showShort(R.string.gateway_confirm_version);
             return;
         }
         if (isAdmin==1){
@@ -372,13 +363,13 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
                             String nickname = editUpdateText.getText().toString().trim();
                             //todo 判断名称是否修改
                             if (TextUtils.isEmpty(nickname)){
-                                ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                                ToastUtils.showShort(getString(R.string.device_name_cannot_be_empty));
                                 return;
                             }
 
                             if (gatewayNickName != null) {
                                 if (gatewayNickName.equals(nickname)) {
-                                    ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                    ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                                     alertUpdateDialog.dismiss();
                                     return;
                                 }
@@ -663,7 +654,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_net_basic_fail);
+        ToastUtils.showShort(R.string.get_net_basic_fail);
     }
 
     @Override
@@ -671,7 +662,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_net_basic_fail);
+        ToastUtils.showShort(R.string.get_net_basic_fail);
     }
 
     @Override
@@ -701,7 +692,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){  // 小网关
 
         }else{
-            ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+            ToastUtils.showShort(R.string.get_wifi_info_fail);
         }
 
     }
@@ -714,7 +705,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if( (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW)) || (!TextUtils.isEmpty(model) && model.equals(KeyConstants.SMALL_GW2)) ){  // 小网关
 
         }else{
-            ToastUtil.getInstance().showShort(R.string.get_wifi_info_fail);
+            ToastUtils.showShort(R.string.get_wifi_info_fail);
         }
     }
 
@@ -752,7 +743,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (loadingDialog!=null){
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_zb_channel_fail);
+        ToastUtils.showShort(R.string.get_zb_channel_fail);
     }
 
     @Override
@@ -761,7 +752,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
             loadingDialog.dismiss();
         }
         LogUtils.e(throwable.getMessage());
-        ToastUtil.getInstance().showShort(throwable.getMessage());
+        ToastUtils.showShort(throwable.getMessage());
     }
 
     @Override
@@ -786,7 +777,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -794,7 +785,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed_error));
+        ToastUtils.showShort(getString(R.string.delete_fialed_error));
     }
 
     @Override
@@ -808,17 +799,17 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+        ToastUtils.showShort(getString(R.string.set_success));
     }
 
     @Override
     public void setWifiFail() {
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
     public void setWifiThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -832,18 +823,18 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+        ToastUtils.showShort(getString(R.string.set_success));
 
     }
 
     @Override
     public void setNetLanFail() {
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
     public void setNetLanThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -855,17 +846,17 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (gatewaySettingAdapter!=null){
             gatewaySettingAdapter.notifyDataSetChanged();
         }
-        ToastUtil.getInstance().showShort(R.string.set_success);
+        ToastUtils.showShort(R.string.set_success);
     }
 
     @Override
     public void setZbChannelFail() {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
     public void setZbChannelThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -890,7 +881,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -898,7 +889,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -923,7 +914,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -931,7 +922,7 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         if (deleteDialog!=null){
             deleteDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -948,16 +939,16 @@ public class GatewaySettingActivity extends BaseActivity<GatewaySettingView, Gat
         intent.putExtra(KeyConstants.GATEWAY_NICKNAME, nickName);
         //设置返回数据
         GatewaySettingActivity.this.setResult(RESULT_OK, intent);
-        ToastUtil.getInstance().showShort(R.string.set_success);
+        ToastUtils.showShort(R.string.set_success);
     }
 
     @Override
     public void updateDevNickNameFail() {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 }

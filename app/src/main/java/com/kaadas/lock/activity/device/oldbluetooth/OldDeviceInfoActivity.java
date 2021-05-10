@@ -24,7 +24,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +116,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
                 sn = tvSerialNumber.getText().toString().trim();
                 version = tvBluetoothModuleVersion.getText().toString().replace("V", "");
                 if (TextUtils.isEmpty(sn) || TextUtils.isEmpty(version)) {
-                    ToastUtil.getInstance().showLong(R.string.get_device_info);
+                    ToastUtils.showLong(R.string.get_device_info);
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.getBluetoothDeviceInformation();
                     }
@@ -148,12 +148,12 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
-                                ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
@@ -186,7 +186,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void SoftwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void HardwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void FirmwareRevDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
 
     @Override
     public void SerialNumberDataError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
     @Override
     public void ModelNumberDataError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(R.string.read_device_info_fail);
+        ToastUtils.showShort(R.string.read_device_info_fail);
     }
 
 
@@ -249,19 +249,19 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
         deviceNickname = name;
         tvDeviceName.setText(deviceNickname);
         bleLockInfo.getServerLockInfo().setLockNickName(deviceNickname);
-        ToastUtil.getInstance().showLong(R.string.device_nick_name_update_success);
+        ToastUtils.showLong(R.string.device_nick_name_update_success);
     }
 
     @Override
     public void modifyDeviceNicknameError(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void modifyDeviceNicknameFail(BaseResult baseResult) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showLong(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
@@ -283,7 +283,7 @@ public class OldDeviceInfoActivity extends BaseBleCheckInfoActivity<IOldDeviceIn
         } else {
             hiddenLoading();
             if (!isEnterOta ){
-                ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+                ToastUtils.showLong(R.string.connet_failed_please_near);
             }
         }
     }

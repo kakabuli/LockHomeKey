@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineDetailActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCameraVersionActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockFirwareNumberActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -27,7 +26,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,13 +237,13 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     @Override
     public void onUpdatePushStatusFailed(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.set_failed);
+        ToastUtils.showLong(R.string.set_failed);
     }
 
     @Override
     public void onUpdatePushStatusThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.set_failed);
+        ToastUtils.showLong(R.string.set_failed);
     }
 
     @Override
@@ -288,7 +287,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     @Override
     public void snError() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.sn_error));
+        ToastUtils.showLong(getString(R.string.sn_error));
     }
 
 
@@ -369,13 +368,13 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
     @Override
     public void readInfoFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        ToastUtils.showLong(getString(R.string.check_update_failed));
         hiddenLoading();
     }
 
     @Override
     public void unknowError(String errorCode) {
-        ToastUtil.getInstance().showLong(R.string.unknown_error);
+        ToastUtils.showLong(R.string.unknown_error);
         hiddenLoading();
     }
 

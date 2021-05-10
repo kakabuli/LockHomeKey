@@ -4,29 +4,24 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.PersonalFAQAdapter;
 import com.kaadas.lock.bean.FAQBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordWeekPresenter;
 import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalFAQPresenter;
-import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordWeekView;
 import com.kaadas.lock.mvp.view.personalview.IPersonalFAQView;
 import com.kaadas.lock.publiclibrary.http.result.GetFAQResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -83,7 +78,7 @@ public class PersonalFAQLockHelpFragment  extends BaseFragment<IPersonalFAQView,
                 //todo 国际化的时候记得传入此时的语言类型
                 mPresenter.getFAQList(1);
             } else {
-                ToastUtil.getInstance().showShort(R.string.noNet);
+                ToastUtils.showShort(R.string.noNet);
             }
         }
     }
@@ -101,7 +96,7 @@ public class PersonalFAQLockHelpFragment  extends BaseFragment<IPersonalFAQView,
                     //todo 国际化的时候记得传入此时的语言类型
                     mPresenter.getFAQList(1);
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.noNet);
+                    ToastUtils.showShort(R.string.noNet);
                 }
                 refreshLayout.finishRefresh(2000);
             }
@@ -136,12 +131,12 @@ public class PersonalFAQLockHelpFragment  extends BaseFragment<IPersonalFAQView,
 
     @Override
     public void getFAQError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void getFAQFail(GetFAQResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(getActivity(), baseResult.getCode()));
     }
 
     private void getData(List<GetFAQResult.DataBean> dataBeans) {

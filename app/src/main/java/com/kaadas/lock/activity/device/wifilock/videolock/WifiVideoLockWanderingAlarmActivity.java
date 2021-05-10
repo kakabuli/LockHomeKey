@@ -23,7 +23,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
@@ -465,12 +465,12 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
                 @Override
                 public void run() {
                     if(flag){
-                        ToastUtil.getInstance().showLong(getString(R.string.modify_success));
+                        ToastUtils.showLong(getString(R.string.modify_success));
                         Intent intent = new Intent();
                         intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM,stayStatus);
                         setResult(RESULT_OK,intent);
                     }else{
-                        ToastUtil.getInstance().showLong(getString(R.string.modify_failed));
+                        ToastUtils.showLong(getString(R.string.modify_failed));
                     }
                     finish();
                 }

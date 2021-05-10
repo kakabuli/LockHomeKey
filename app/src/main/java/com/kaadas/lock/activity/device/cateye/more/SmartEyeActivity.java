@@ -23,7 +23,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 
@@ -261,7 +261,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         switch (view.getId()) {
             case R.id.iv_smart_monitor:
                 if (sd!=1){
-                    ToastUtil.getInstance().showShort(R.string.please_insert_sd_card);
+                    ToastUtils.showShort(R.string.please_insert_sd_card);
                     return;
                 }else{
                     if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
@@ -320,7 +320,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         if (alertDialog!=null){
             alertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -328,7 +328,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         if (alertDialog!=null){
             alertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -354,7 +354,7 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         if (pirEnableAlertDialog!=null){
             pirEnableAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
+        ToastUtils.showShort(R.string.smart_check_set_fail);
     }
 
     @Override
@@ -362,6 +362,6 @@ public class SmartEyeActivity extends BaseActivity<ISmartEyeView, SmartEyePresen
         if (pirEnableAlertDialog!=null){
             pirEnableAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.smart_check_set_fail);
+        ToastUtils.showShort(R.string.smart_check_set_fail);
     }
 }

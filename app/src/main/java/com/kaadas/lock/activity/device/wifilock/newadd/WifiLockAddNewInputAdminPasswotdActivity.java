@@ -10,16 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockApCheckAdminPasswordActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockApInputAdminPasswordActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +61,7 @@ public class WifiLockAddNewInputAdminPasswotdActivity extends BaseAddToApplicati
             case R.id.button_next: //输入管理员密码  下一步
                 String adminPassword = apPasswordEdit.getText().toString().trim();
                 if (!StringUtil.randomJudge(adminPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
 

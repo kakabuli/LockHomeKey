@@ -1,9 +1,7 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
-import android.net.wifi.ScanResult;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.hisilicon.hisilink.MessageSend;
@@ -14,28 +12,13 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeView;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
-import com.kaadas.lock.publiclibrary.mqtt.MqttReturnCodeError;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeviceOnLineBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.LoginUtil;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.io.IOException;
 import java.io.OutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;

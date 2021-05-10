@@ -19,7 +19,7 @@ import com.kaadas.lock.mvp.presenter.UserFeedbackPresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.IUserFeedbackView;
 
 import butterknife.BindView;
@@ -82,9 +82,9 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
                     if (text.length()>=8){
                         mPresenter.userFeedback(MyApplication.getInstance().getUid(),text);
                     }else if (text.length()>0){
-                        ToastUtil.getInstance().showShort(R.string.feedback_little);
+                        ToastUtils.showShort(R.string.feedback_little);
                     }else {
-                        ToastUtil.getInstance().showShort(R.string.enter_feedback);
+                        ToastUtils.showShort(R.string.enter_feedback);
                     }
 
 //                } else {
@@ -127,17 +127,17 @@ public class UserFeedbackActivity extends BaseActivity<IUserFeedbackView, UserFe
 
     @Override
     public void userFeedbackSubmitSuccess() {
-        ToastUtil.getInstance().showShort(R.string.submit_success);
+        ToastUtils.showShort(R.string.submit_success);
         finish();
     }
 
     @Override
     public void userFeedbackSubmitFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void userFeedbackSubmitFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 }

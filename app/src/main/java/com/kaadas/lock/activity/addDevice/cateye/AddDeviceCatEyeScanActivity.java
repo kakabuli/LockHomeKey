@@ -2,28 +2,22 @@ package com.kaadas.lock.activity.addDevice.cateye;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
+
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.king.zxing.CameraScan;
 import com.king.zxing.CaptureActivity;
 import com.king.zxing.DefaultCameraScan;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,12 +65,12 @@ public class AddDeviceCatEyeScanActivity extends CaptureActivity {
             if (i==-1){
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
                     //禁止
-                    ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    ToastUtils.showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
                 }else{
                     //询问
-                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
+                    ToastUtils.showShort(getString(R.string.inquire_camera_permission));
                     finish();
                     return;
                 }

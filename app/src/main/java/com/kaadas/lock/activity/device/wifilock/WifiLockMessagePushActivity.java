@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.device.wifilock;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.RelativeLayout;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
-import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
@@ -19,11 +16,6 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.widget.BottomMenuDialog;
-import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
-
-import org.apache.commons.net.bsd.RLoginClient;
 
 import java.util.List;
 

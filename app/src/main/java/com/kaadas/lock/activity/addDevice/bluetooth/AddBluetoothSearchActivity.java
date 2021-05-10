@@ -7,13 +7,11 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -23,8 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +33,6 @@ import com.kaadas.lock.adapter.DeviceSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
-import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.SearchDevicePresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.ISearchDeviceView;
@@ -48,7 +43,7 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +90,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             int i=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (i==-1){
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                    ToastUtil.getInstance().showShort(getString(R.string.aler_no_entry_location));
+                    ToastUtils.showShort(getString(R.string.aler_no_entry_location));
                     finish();
                     return;
                 }
@@ -115,7 +110,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             tvIsSearching.setVisibility(View.VISIBLE);
             mPresenter.searchDevices();
         }else {
-            ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+            ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
         }
     }
 
@@ -220,7 +215,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
                     tvIsSearching.setVisibility(View.VISIBLE);
                     mPresenter.searchDevices();
                 }else {
-                    ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+                    ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
                 }
                 break;
         }
@@ -234,7 +229,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
             mPresenter.checkBind(device);
             showLoading(getString(R.string.is_checking_bind));
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -372,7 +367,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
 
     @Override
     public void onCheckBindFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
         hiddenLoading();
     }
 
@@ -396,7 +391,7 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @Override
     public void onScanFailed(Throwable throwable) {
         stopAnimation();
-        ToastUtil.getInstance().showShort(getString(R.string.scan_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.scan_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
@@ -425,14 +420,14 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     public void onConnectFailed() {
 //        showLoading(getString(R.string.connect_failed));
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.connect_failed_retry);
+        ToastUtils.showLong(R.string.connect_failed_retry);
     }
 
     @Override
     public void readSNFailed() {
 //        showLoading(getString(R.string.read_info_failed));
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.connect_failed_retry);
+        ToastUtils.showLong(R.string.connect_failed_retry);
     }
 
     @Override
@@ -465,20 +460,20 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @Override
     public void pwdIsEmpty() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.server_data_error);
+        ToastUtils.showLong(R.string.server_data_error);
     }
 
 
     @Override
     public void getPwd1Failed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.connect_failed_retry);
+        ToastUtils.showLong(R.string.connect_failed_retry);
     }
 
     @Override
     public void getPwd1FailedServer(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.connect_failed_retry);
+        ToastUtils.showLong(R.string.connect_failed_retry);
     }
 
     @Override
@@ -513,13 +508,13 @@ public class AddBluetoothSearchActivity extends BaseActivity<ISearchDeviceView, 
     @Override
     public void onCheckBindFailedServer(String code) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.network_exception);
+        ToastUtils.showLong(R.string.network_exception);
     }
 
     @Override
     public void checkBindFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.network_exception);
+        ToastUtils.showLong(R.string.network_exception);
     }
 
 

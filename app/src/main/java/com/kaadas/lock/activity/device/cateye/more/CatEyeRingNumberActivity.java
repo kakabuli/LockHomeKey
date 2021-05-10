@@ -20,7 +20,7 @@ import com.kaadas.lock.mvp.view.cateye.ICatEyeRingNumberView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -160,7 +160,7 @@ public class CatEyeRingNumberActivity extends BaseActivity<ICatEyeRingNumberView
                 break;
             case R.id.btn_save:
                 if (selectRingNumber == currentRingNumber || selectRingNumber == 0) {
-                    ToastUtil.getInstance().showShort(R.string.current_ring_number_no_change);
+                    ToastUtils.showShort(R.string.current_ring_number_no_change);
                     return;
                 }
                 if (selectRingNumber != 0 && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
@@ -183,7 +183,7 @@ public class CatEyeRingNumberActivity extends BaseActivity<ICatEyeRingNumberView
         intent.putExtra(KeyConstants.RIGH_NUMBER, number);
         //设置返回数据
         CatEyeRingNumberActivity.this.setResult(RESULT_OK, intent);
-        ToastUtil.getInstance().showShort(R.string.set_success);
+        ToastUtils.showShort(R.string.set_success);
     }
 
     @Override
@@ -232,7 +232,7 @@ public class CatEyeRingNumberActivity extends BaseActivity<ICatEyeRingNumberView
                     break;
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -280,7 +280,7 @@ public class CatEyeRingNumberActivity extends BaseActivity<ICatEyeRingNumberView
                     break;
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
 }

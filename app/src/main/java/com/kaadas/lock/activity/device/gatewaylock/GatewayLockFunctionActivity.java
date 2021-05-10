@@ -12,8 +12,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +39,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -353,7 +351,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                 //对话框
                 String lockPwd = (String) SPUtils.get(KeyConstants.SAVA_LOCK_PWD + deviceId, "");
                 if (flagEvent == 1) {
-                    ToastUtil.getInstance().showShort(getString(R.string.lock_already_offline));
+                    ToastUtils.showShort(getString(R.string.lock_already_offline));
                     return;
                 } else if (TextUtils.isEmpty(lockPwd)) {
                     //密码为空
@@ -376,10 +374,10 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
                         }
                         mPresenter.setArmLocked(MyApplication.getInstance().getUid(), gatewayId, deviceId, armLock);
                     } else {
-                        ToastUtil.getInstance().showShort(R.string.get_arm_lock_fail);
+                        ToastUtils.showShort(R.string.get_arm_lock_fail);
                     }
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.get_aram_lock);
+                    ToastUtils.showShort(R.string.get_aram_lock);
                 }
 
 
@@ -409,7 +407,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             public void onClick(View v) {
                 String pwd = editText.getText().toString().trim();
                 if (!StringUtil.randomJudge(pwd)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 mPresenter.openLock(gatewayId, deviceId, pwd);
@@ -609,16 +607,16 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
     public void setArmLockedFail(String code) {
         //设置布防失败
         if ("405".equals(code)) {
-            ToastUtil.getInstance().showShort(getString(R.string.the_lock_no_support_func));
+            ToastUtils.showShort(getString(R.string.the_lock_no_support_func));
         } else {
-            ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+            ToastUtils.showShort(getString(R.string.set_failed));
         }
     }
 
     @Override
     public void setArmLockedThrowable(Throwable throwable) {
         //设置布防异常
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -644,7 +642,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
             getArmLockSuccess = true;
         } else {
             getArmLockSuccess = false;
-            ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
+            ToastUtils.showShort(R.string.get_alarm_lock_fail);
         }
 
 
@@ -655,7 +653,7 @@ public class GatewayLockFunctionActivity extends BaseActivity<GatewayLockDetailV
         //获取布防异常
         getArmLock = true;
         getArmLockSuccess = false;
-        ToastUtil.getInstance().showShort(R.string.get_alarm_lock_fail);
+        ToastUtils.showShort(R.string.get_alarm_lock_fail);
     }
 
     @Override

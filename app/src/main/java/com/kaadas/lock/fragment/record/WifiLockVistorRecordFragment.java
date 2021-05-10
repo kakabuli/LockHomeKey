@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
 import com.kaadas.lock.adapter.WifiLockVistorIAdapter;
-import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockVistorRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVistorRecordView;
@@ -33,16 +31,15 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yun.store.util.FileTool;
+import la.xiong.androidquick.tool.FileTool;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -263,12 +260,12 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
@@ -278,13 +275,13 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtil.getInstance().showShort(R.string.server_no_data_2);
+        ToastUtils.showShort(R.string.server_no_data_2);
         tvNoMore.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+        ToastUtils.showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
     }

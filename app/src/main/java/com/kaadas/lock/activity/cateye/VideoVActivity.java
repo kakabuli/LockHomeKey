@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.InputFilter;
@@ -57,7 +56,7 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.RecordTools;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
@@ -487,16 +486,16 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                         GwLockInfo gwLockInfo = gwLockInfos.get(position);
                         if (gwLockInfo != null) {
                             if (gwLockInfo.getServerInfo().getEvent_str().equals("offline")) {
-                                ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                                ToastUtils.showShort(getString(R.string.wifi_alreade_offline));
                                 return;
                             }
                             String dvId=gwLockInfo.getServerInfo().getDeviceId();
                             if (openLockStatus.equals(dvId+"opening_true")) {
                                 String nickN=gwLockInfo.getServerInfo().getNickName();
                                 if (!TextUtils.isEmpty(nickN)){
-                                    ToastUtil.getInstance().showShort(nickN + ":" + getString(R.string.is_opening_try_latter));
+                                    ToastUtils.showShort(nickN + ":" + getString(R.string.is_opening_try_latter));
                                 }else{
-                                    ToastUtil.getInstance().showShort(dvId + ":" + getString(R.string.is_opening_try_latter));
+                                    ToastUtils.showShort(dvId + ":" + getString(R.string.is_opening_try_latter));
                                 }
 
                                 return;
@@ -504,9 +503,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                             if (closeLockStatus.equals(dvId+"closing_true")) {
                                 String nickName=gwLockInfo.getServerInfo().getNickName();
                                 if (!TextUtils.isEmpty(nickName)){
-                                    ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.lock_already_open));
+                                    ToastUtils.showShort(nickName+":"+getString(R.string.lock_already_open));
                                 }else{
-                                    ToastUtil.getInstance().showShort(dvId+":"+getString(R.string.lock_already_open));
+                                    ToastUtils.showShort(dvId+":"+getString(R.string.lock_already_open));
                                 }
 
 
@@ -517,7 +516,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                             if (NetUtil.isNetworkAvailable()) {
                                 mPresenter.openLock(gwLockInfo);
                             } else {
-                                ToastUtil.getInstance().showShort(getString(R.string.wifi_alreade_offline));
+                                ToastUtils.showShort(getString(R.string.wifi_alreade_offline));
                                 return;
                             }
                         }
@@ -616,12 +615,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         switch (v.getId()) {
             case R.id.video_start_play:  //点击呼叫
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showLong(R.string.current_net_not_enable);
+                    ToastUtils.showLong(R.string.current_net_not_enable);
                     return;
                 }
                 boolean isRegisterStatus = (boolean) SPUtils.get(Constants.LINPHONE_REGESTER_STATE,false);
                 if(!isRegisterStatus){
-                    ToastUtil.getInstance().showLong(R.string.network_exception_video);
+                    ToastUtils.showLong(R.string.network_exception_video);
                     return;
                 }
                 List<GatewayInfo> allGateway = MyApplication.getInstance().getAllGateway();
@@ -634,12 +633,12 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 }
                 //网关不在线
                 if (gatewayInfo!=null && !"online".equals(gatewayInfo.getEvent_str())) {
-                    ToastUtil.getInstance().showLong(R.string.gw_offline);
+                    ToastUtils.showLong(R.string.gw_offline);
                     return;
                 }
                 //猫眼设备不在线
                 if (!"online".equals(cateEyeInfo.getServerInfo().getEvent_str())) {
-                    ToastUtil.getInstance().showLong(R.string.cat_eye_offline);
+                    ToastUtils.showLong(R.string.cat_eye_offline);
                     return;
                 }
                 Log.e(GeTui.VideoLog,"maikefeng:"+!RecordTools.validateMicAvailability());
@@ -712,7 +711,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         //    Log.e("denganzhi1","tag:"+tag+" shuping:"+isShuPing+" ischeck:"+isChecked);
                 if(isShuPing==true && tag.equals("shuping")){
                     if( startRecord !=0 && System.currentTimeMillis()-startRecord<5*1000 && isChecked==false){
-                        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+                        ToastUtils.showShort(R.string.video_must_record_5_seconds);
                         cbScreenRecord.setChecked(true);
                         return;
                     }
@@ -726,7 +725,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                     cbScreenRecord2.setChecked(isChecked);
                 }else if(isShuPing==false && tag.equals("hengping") ){
                     if( startRecord !=0 && System.currentTimeMillis()-startRecord<5*1000 && isChecked==false){
-                        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+                        ToastUtils.showShort(R.string.video_must_record_5_seconds);
                         cbScreenRecord2.setChecked(true);
                         return;
                     }
@@ -793,7 +792,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void loginMemeFailed() {
         //登录meme网失败
-        ToastUtil.getInstance().showShort(R.string.link_failed);
+        ToastUtils.showShort(R.string.link_failed);
         callFailed();
     }
 
@@ -866,17 +865,17 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void recordTooShort() {
         cbScreenRecord.setChecked(true);
-        ToastUtil.getInstance().showShort(R.string.video_must_record_5_seconds);
+        ToastUtils.showShort(R.string.video_must_record_5_seconds);
     }
 
     @Override
     public void recordTooStart() {
-        ToastUtil.getInstance().showShort(R.string.start_recording);
+        ToastUtils.showShort(R.string.start_recording);
     }
 
     @Override
     public void recordTooEnd() {
-        ToastUtil.getInstance().showShort(R.string.end_recording);
+        ToastUtils.showShort(R.string.end_recording);
     }
 
     @Override
@@ -899,7 +898,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void wakeupFailed() {
         //唤醒失败
-        ToastUtil.getInstance().showShort(R.string.call_failed);
+        ToastUtils.showShort(R.string.call_failed);
         callFailed();
 
     }
@@ -920,7 +919,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void waitCallTimeout() {
         //等待猫眼呼叫35秒  没有呼叫过来
-        ToastUtil.getInstance().showShort(R.string.call_time_out);
+        ToastUtils.showShort(R.string.call_time_out);
         callFailed();
 //        Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
 //        startService(linphoneServiceIntent);
@@ -937,7 +936,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     @Override
     public void onCatEyeOffline() {
         //猫眼离线
-        ToastUtil.getInstance().showShort(R.string.call_failed_cat_eye_offline);
+        ToastUtils.showShort(R.string.call_failed_cat_eye_offline);
     }
 
     @Override
@@ -962,7 +961,7 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             public void onClick(View v) {
                 String pwd = editText.getText().toString().trim();
                 if (!StringUtil.randomJudge(pwd)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 mPresenter.realOpenLock(gwLockInfo.getGwID(), gwLockInfo.getServerInfo().getDeviceId(), pwd);
@@ -988,9 +987,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (gwLockInfo!=null){
             String nickName=gwLockInfo.getServerInfo().getNickName();
             if (!TextUtils.isEmpty(nickName)){
-                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_failed));
+                ToastUtils.showShort(nickName+":"+getString(R.string.open_lock_failed));
             }else{
-                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_failed));
+                ToastUtils.showShort(devId+":"+getString(R.string.open_lock_failed));
             }
 
         }
@@ -1006,9 +1005,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         if (gwLockInfo!=null){
             String nickName=gwLockInfo.getServerInfo().getNickName();
             if (!TextUtils.isEmpty(nickName)){
-                ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.open_lock_failed));
+                ToastUtils.showShort(nickName+":"+getString(R.string.open_lock_failed));
             }else{
-                ToastUtil.getInstance().showShort(devId+":"+getString(R.string.open_lock_failed));
+                ToastUtils.showShort(devId+":"+getString(R.string.open_lock_failed));
             }
         }
         //hiddenLoading();
@@ -1073,9 +1072,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
             closeLockStatus=deviceId+"closing_true";
             String nickName = gwLockInfo.getServerInfo().getNickName();
             if (!TextUtils.isEmpty(nickName)) {
-                ToastUtil.getInstance().showShort(nickName + ":" + getString(R.string.open_lock_success));
+                ToastUtils.showShort(nickName + ":" + getString(R.string.open_lock_success));
             } else {
-                ToastUtil.getInstance().showShort(deviceId + ":" + getString(R.string.open_lock_success));
+                ToastUtils.showShort(deviceId + ":" + getString(R.string.open_lock_success));
             }
         }
         }
@@ -1089,9 +1088,9 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
                 closeLockStatus=devId+"closing_false";
                 String nickName=gwLockInfo.getServerInfo().getNickName();
                 if (!TextUtils.isEmpty(nickName)){
-                    ToastUtil.getInstance().showShort(nickName+":"+getString(R.string.close_lock_success));
+                    ToastUtils.showShort(nickName+":"+getString(R.string.close_lock_success));
                 }else{
-                    ToastUtil.getInstance().showShort(devId+":"+getString(R.string.close_lock_success));
+                    ToastUtils.showShort(devId+":"+getString(R.string.close_lock_success));
                 }
             }
         }

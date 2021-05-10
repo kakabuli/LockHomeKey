@@ -3,35 +3,17 @@ package com.kaadas.lock.activity.addDevice.cateye;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+
 import com.kaadas.lock.utils.LoadingDialog;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.AddCatEyeSecondPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IAddCatEyeSecondView;
-import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
-import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
-import com.kaadas.lock.publiclibrary.mqtt.MqttReturnCodeError;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
-import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.util.concurrent.TimeUnit;
-
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 
 public class AddDeviceCatEyeSecondActivity extends BaseActivity<IAddCatEyeSecondView, AddCatEyeSecondPresenter<IAddCatEyeSecondView>>
         implements IAddCatEyeSecondView {
@@ -119,7 +101,7 @@ public class AddDeviceCatEyeSecondActivity extends BaseActivity<IAddCatEyeSecond
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showLong(R.string.http_expection_retry);
+        ToastUtils.showLong(R.string.http_expection_retry);
         finish();
     }
 }

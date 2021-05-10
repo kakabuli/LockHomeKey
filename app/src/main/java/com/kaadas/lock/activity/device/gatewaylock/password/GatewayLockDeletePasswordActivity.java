@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,13 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
-import com.kaadas.lock.activity.device.gatewaylock.password.GatewayPasswordManagerActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockDeletePasswordPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordSharePresenter;
-import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
-import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockDeletePasswordView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordShareView;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
@@ -27,7 +22,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
 import java.util.Arrays;
@@ -257,7 +252,7 @@ public class GatewayLockDeletePasswordActivity extends BaseActivity<IGatewayLock
         }
         hiddenLoading();
         //删除异常
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override

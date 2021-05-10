@@ -16,21 +16,18 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.FamilyMemberDetailActivity;
 import com.kaadas.lock.adapter.DeviceShareAdapter;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaypresenter.GatewaySharedPresenter;
 import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
-import com.kaadas.lock.publiclibrary.bean.GwLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.DeviceShareUserResultBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -204,7 +201,7 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
                         });
                     }
                 }else {
-                    ToastUtil.getInstance().showShort(R.string.query_fail_requery);
+                    ToastUtils.showShort(R.string.query_fail_requery);
                 }
                 break;
 
@@ -230,7 +227,7 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
                                 LogUtils.e("咪咪网为空需要重新注册");
                                 String deviceSN = gatewayInfo.getServerInfo().getDeviceSN();
                                 mPresenter.bindMimi(deviceSN, deviceSN);
-                                ToastUtil.getInstance().showShort(getString(R.string.add_common_user_fail));
+                                ToastUtils.showShort(getString(R.string.add_common_user_fail));
                             }
                         }else {
                             mPresenter.shareDevice(2, gatewayId, deviceId, uid, phone, "", 1);
@@ -249,17 +246,17 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
         if (gatewayId!=null&&deviceId!=null&&uid!=null){
             mPresenter.getShareDeviceUser(gatewayId,deviceId,uid);
         }
-        ToastUtil.getInstance().showShort(R.string.add_common_user_success);
+        ToastUtils.showShort(R.string.add_common_user_success);
     }
 
     @Override
     public void shareDeviceFail() {
-        ToastUtil.getInstance().showShort(R.string.add_common_user_fail);
+        ToastUtils.showShort(R.string.add_common_user_fail);
     }
 
     @Override
     public void shareDeviceThrowable() {
-        ToastUtil.getInstance().showShort(R.string.add_common_user_fail);
+        ToastUtils.showShort(R.string.add_common_user_fail);
     }
 
     @Override
@@ -285,7 +282,7 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
             refreshLayout.finishRefresh();
         }
         pageChange(true);
-        ToastUtil.getInstance().showShort(R.string.get_share_user_fail);
+        ToastUtils.showShort(R.string.get_share_user_fail);
     }
 
     @Override
@@ -294,7 +291,7 @@ public class GatewayLockSharedActivity extends BaseActivity<IGatewaySharedView, 
             refreshLayout.finishRefresh();
         }
         pageChange(true);
-        ToastUtil.getInstance().showShort(R.string.get_share_user_fail);
+        ToastUtils.showShort(R.string.get_share_user_fail);
     }
 
     @Override

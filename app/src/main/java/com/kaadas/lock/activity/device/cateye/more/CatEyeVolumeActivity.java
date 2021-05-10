@@ -20,7 +20,7 @@ import com.kaadas.lock.mvp.view.cateye.ICatEyeVolumeView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,7 +123,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
 
             case R.id.btn_save:
                 if (selectRingNumber == currentRingNumber||selectRingNumber==-1) {
-                    ToastUtil.getInstance().showShort(R.string.current_volume_no_change);
+                    ToastUtils.showShort(R.string.current_volume_no_change);
                     return;
                 }
                 if (selectRingNumber != -1 && !TextUtils.isEmpty(gatewayId) && !TextUtils.isEmpty(deviceId)) {
@@ -148,7 +148,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
         //设置返回数据
         CatEyeVolumeActivity.this.setResult(RESULT_OK, intent);
 
-        ToastUtil.getInstance().showShort(R.string.set_success);
+        ToastUtils.showShort(R.string.set_success);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
                     break;
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class CatEyeVolumeActivity extends BaseActivity<ICatEyeVolumeView, CatEye
                     break;
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 }
 

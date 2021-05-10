@@ -20,7 +20,7 @@ import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,13 +183,13 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
     @Override
     public void onUpdatePushStatusFailed(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.set_failed);
+        ToastUtils.showLong(R.string.set_failed);
     }
 
     @Override
     public void onUpdatePushStatusThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.set_failed);
+        ToastUtils.showLong(R.string.set_failed);
     }
 
     @Override

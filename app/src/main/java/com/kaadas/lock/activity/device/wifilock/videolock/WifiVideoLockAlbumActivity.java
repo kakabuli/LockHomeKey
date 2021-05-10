@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.device.wifilock.videolock;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
@@ -28,8 +26,8 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
-import com.yun.store.util.FileTool;
+import com.blankj.utilcode.util.ToastUtils;
+import la.xiong.androidquick.tool.FileTool;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -223,7 +221,7 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
                         showDeleteSelectFileItemDialog();
                     }else{
                         revoke();
-                        ToastUtil.getInstance().showShort(getString(R.string.wifi_video_lock_delete_show_toast) + "");
+                        ToastUtils.showShort(getString(R.string.wifi_video_lock_delete_show_toast) + "");
                     }
                 }else if(tvCancel.getVisibility() == View.GONE){
                     showDeleteItem = true;

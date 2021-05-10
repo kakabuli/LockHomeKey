@@ -6,7 +6,6 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
@@ -41,7 +40,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 
 import java.util.ArrayList;
@@ -454,7 +453,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //            Toast.makeText(getContext(), getString(R.string.sync_success), Toast.LENGTH_SHORT).show();
 //        }
         if(isNotice)
-            ToastUtil.getInstance().showShort(R.string.sync_success);
+            ToastUtils.showShort(R.string.sync_success);
     }
 
     @Override
@@ -464,7 +463,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //        }
 //        hiddenLoading();
         if(isNotice)
-            ToastUtil.getInstance().showShort(R.string.synv_failed);
+            ToastUtils.showShort(R.string.synv_failed);
 
     }
 
@@ -483,7 +482,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 //        }
 //        hiddenLoading();
         if (isNotice)
-            ToastUtil.getInstance().showShort(R.string.no_data);
+            ToastUtils.showShort(R.string.no_data);
 
     }
 

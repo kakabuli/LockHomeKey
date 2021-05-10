@@ -2,7 +2,7 @@ package com.kaadas.lock.activity.device.gatewaylock.more;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +19,7 @@ import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockLangView;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,15 +101,15 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
                 break;
             case R.id.btn_save:
                 if (TextUtils.isEmpty(lockCurrentLang)){
-                    ToastUtil.getInstance().showShort(getString(R.string.no_get_current_lang));
+                    ToastUtils.showShort(getString(R.string.no_get_current_lang));
                     return;
                 }
                 if (lockCurrentLang.equals(languageCurrent)){
-                    ToastUtil.getInstance().showShort(getString(R.string.lock_lang_no_change));
+                    ToastUtils.showShort(getString(R.string.lock_lang_no_change));
                     return;
                 }
                 if (gatewayId!=null&&deviceId!= null){
-                    ToastUtil.getInstance().showShort(R.string.is_setting_lock_lang);
+                    ToastUtils.showShort(R.string.is_setting_lock_lang);
                     mPresenter.setLang(gatewayId,deviceId,languageCurrent);
                 }
                 break;
@@ -147,7 +147,7 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
     @Override
     public void getLockLangFail() {
         loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort(R.string.get_lock_lang_fail);
+        ToastUtils.showShort(R.string.get_lock_lang_fail);
     }
 
     @Override
@@ -160,13 +160,13 @@ public class GatewayLockLanguageSettingActivity extends BaseActivity<GatewayLock
     public void setLockLangSuccess(String lang) {
         languageCurrent=lang;
         lockCurrentLang=lang;
-        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+        ToastUtils.showShort(getString(R.string.set_success));
     }
 
 
     @Override
     public void setLockLangFail() {
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override

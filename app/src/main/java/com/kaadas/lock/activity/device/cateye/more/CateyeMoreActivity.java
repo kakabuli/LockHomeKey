@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.text.InputFilter;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,6 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanPropertyResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanResult;
-import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.EditTextWatcher;
@@ -39,17 +38,13 @@ import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.CateEyeInfoBase;
 import com.kaadas.lock.utils.greenDao.db.CatEyeServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
-import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -241,13 +236,13 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                     public void onClick(View v) {
                         name = editText.getText().toString().trim();
                         if (TextUtils.isEmpty(name)) {
-                            ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                            ToastUtils.showShort(getString(R.string.device_name_cannot_be_empty));
                             return;
                         }
                         //todo 判断名称是否修改
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
-                                ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
@@ -302,7 +297,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 break;
             case R.id.rl_device_information:
                 if (getCatInfoStatus == 0) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    ToastUtils.showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
                     if (cateEyeInfoBase != null) {
@@ -312,7 +307,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         startActivity(detailIntent);
                         return;
                     }
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    ToastUtils.showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
                     if (!TextUtils.isEmpty(returnCatEyeInfo)) {
@@ -324,7 +319,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                 break;
             case R.id.rl_smart_monitor:
                 if (getCatInfoStatus == 0) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    ToastUtils.showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
                     if (cateEyeInfoBase != null) {
@@ -335,7 +330,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
                         startActivity(smartEyeIntent);
                         return;
                     }
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    ToastUtils.showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
                     if (returnCatEyeInfo != null) {
@@ -348,10 +343,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             case R.id.rl_ring_number:
                 //响铃次数
                 if (getCatInfoStatus == 0) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    ToastUtils.showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    ToastUtils.showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
                     String ring = tvRingnumber.getText().toString().trim();
@@ -369,10 +364,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             case R.id.rl_resolution:
                 //分辨率
                 if (getCatInfoStatus == 0) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    ToastUtils.showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    ToastUtils.showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
                     String resolution = tvResolution.getText().toString().trim();
@@ -389,10 +384,10 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
             case R.id.rl_volume:
                 //音量
                 if (getCatInfoStatus == 0) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_wait);
+                    ToastUtils.showShort(R.string.get_cateye_info_wait);
                     return;
                 } else if (getCatInfoStatus == 2) {
-                    ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+                    ToastUtils.showShort(R.string.get_cateye_info_fail);
                     return;
                 } else {
                     String volume = tvVolume.getText().toString().trim();
@@ -417,7 +412,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
 //                    return;
                     String result = (String) SPUtils.get(deviceId + Constants.NIGHT_SIGHT, "");
                     if (TextUtils.isEmpty(result)) {
-                        ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                        ToastUtils.showShort(getString(R.string.network_exception));
                         return;
                     } else {
                         Intent night_sight = new Intent();
@@ -460,17 +455,17 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         intent.putExtra(KeyConstants.NAME, name);
         //设置返回数据
         CateyeMoreActivity.this.setResult(RESULT_OK, intent);
-        ToastUtil.getInstance().showShort(getString(R.string.update_nick_name));
+        ToastUtils.showShort(getString(R.string.update_nick_name));
     }
 
     @Override
     public void updateDevNickNameFail() {
-        ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+        ToastUtils.showShort(getString(R.string.update_nickname_fail));
     }
 
     @Override
     public void updateDevNickNameThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+        ToastUtils.showShort(getString(R.string.update_nickname_fail));
     }
 
     private DaoSession daoSession;
@@ -568,7 +563,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+        ToastUtils.showShort(R.string.get_cateye_info_fail);
         getCatInfoStatus = 2;
     }
 
@@ -577,7 +572,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_cateye_info_fail);
+        ToastUtils.showShort(R.string.get_cateye_info_fail);
         getCatInfoStatus = 2;
     }
 
@@ -600,7 +595,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -608,7 +603,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -628,7 +623,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override
@@ -636,7 +631,7 @@ public class CateyeMoreActivity extends BaseActivity<IGatEyeView, CatEyeMorePres
         if (deleteAlertDialog != null) {
             deleteAlertDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
     }
 
     @Override

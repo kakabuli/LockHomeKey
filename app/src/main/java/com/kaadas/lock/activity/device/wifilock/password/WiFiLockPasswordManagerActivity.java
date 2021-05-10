@@ -5,12 +5,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,8 +16,6 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockAddSecondActivity;
-import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddFaceFirstActivity;
 import com.kaadas.lock.adapter.WifiLockCardAndFingerAdapter;
 import com.kaadas.lock.adapter.WifiLockFacePasswordAdapter;
@@ -33,9 +29,8 @@ import com.kaadas.lock.publiclibrary.bean.ForeverPassword;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -256,7 +251,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (refreshLayout != null) {
             refreshLayout.finishRefresh();
         }
-        ToastUtil.getInstance().showLong(R.string.refresh_failed_please_retry_later);
+        ToastUtils.showLong(R.string.refresh_failed_please_retry_later);
     }
 
     @Override
@@ -264,7 +259,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (refreshLayout != null) {
             refreshLayout.finishRefresh();
         }
-        ToastUtil.getInstance().showLong(R.string.refresh_failed_please_retry_later);
+        ToastUtils.showLong(R.string.refresh_failed_please_retry_later);
     }
 
     @Override

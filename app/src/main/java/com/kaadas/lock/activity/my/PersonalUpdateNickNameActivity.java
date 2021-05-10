@@ -17,7 +17,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.personalview.IPersonalUpdateNickNameView;
 
 import butterknife.BindView;
@@ -90,23 +90,23 @@ public class PersonalUpdateNickNameActivity extends BaseActivity<IPersonalUpdate
                 String editText = etNickName.getText().toString().trim();
                 if (NetUtil.isNetworkAvailable()) {
                     if (TextUtils.isEmpty(editText)) {
-                        ToastUtil.getInstance().showShort(R.string.nickName_not_empty);
+                        ToastUtils.showShort(R.string.nickName_not_empty);
                         return;
                     }
                     if (!StringUtil.nicknameJudge(editText)) {
 
-                        ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                        ToastUtils.showShort(R.string.nickname_verify_error);
                         return;
                     }
 
                     if (editText.equals(userName)) {
-                        ToastUtil.getInstance().showShort(R.string.nickname_repeat);
+                        ToastUtils.showShort(R.string.nickname_repeat);
                         return;
                     }
                     mPresenter.updateNickName(MyApplication.getInstance().getUid(), editText);
 
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.noNet);
+                    ToastUtils.showShort(R.string.noNet);
                 }
                 break;
 
@@ -117,18 +117,18 @@ public class PersonalUpdateNickNameActivity extends BaseActivity<IPersonalUpdate
     public void updateNickNameSuccess(String nickName) {
         //更新成功
         SPUtils.put(SPUtils.USERNAME, nickName);
-        ToastUtil.getInstance().showShort(R.string.update_nick_name);
+        ToastUtils.showShort(R.string.update_nick_name);
         finish();
     }
 
     @Override
     public void updateNickNameError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void updateNickNameFail(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override

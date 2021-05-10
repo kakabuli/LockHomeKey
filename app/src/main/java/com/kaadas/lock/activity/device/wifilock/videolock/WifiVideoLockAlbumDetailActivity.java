@@ -41,12 +41,12 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.RotateTransformation;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.H264Frame;
 import com.xmitech.sdk.MP4Info;
-import com.yun.store.util.FileTool;
+import la.xiong.androidquick.tool.FileTool;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -623,7 +623,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.getInstance().showShort(getString(R.string.wifi_video_lock_find_file_show_toast) + "");
+                    ToastUtils.showShort(getString(R.string.wifi_video_lock_find_file_show_toast) + "");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -34,7 +33,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,13 +153,13 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
                 break;
             case R.id.btn_confirm_generation:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_temp_pwd);
+                    ToastUtils.showShort(R.string.please_have_net_add_temp_pwd);
                     return;
                 }
                 String strTemporaryPassword = etPassword.getText().toString().trim();
 
                 if (!StringUtil.randomJudge(strTemporaryPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 if (StringUtil.checkSimplePassword(strTemporaryPassword)) {
@@ -185,7 +184,7 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
                 }
                 String temproaryPasswordName = etName.getText().toString().trim();
                 if (!StringUtil.nicknameJudge(temproaryPasswordName)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
 
@@ -214,21 +213,21 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
 
     @Override
     public void onSetPwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.set_temp_pwd_failed);
+        ToastUtils.showLong(R.string.set_temp_pwd_failed);
         hiddenLoading();
     }
 
     @Override
     public void onSetPwdFailedServer(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(getActivity(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onSetPwdSuccess() {
-        ToastUtil.getInstance().showLong(R.string.set_temp_pwd_succcess);
+        ToastUtils.showLong(R.string.set_temp_pwd_succcess);
     }
 
     @Override
@@ -253,7 +252,7 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
 
     @Override
     public void onUploadFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         hiddenLoading();
         startActivity(new Intent(getActivity(), BlePasswordManagerActivity.class));
         getActivity().finish();
@@ -283,6 +282,6 @@ public class PasswordTempFragment extends BaseBleFragment<IAddTempView, AddTempP
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(getString(R.string.sync_failed));
+        ToastUtils.showLong(getString(R.string.sync_failed));
     }
 }

@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -31,7 +31,7 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.IResetPasswordView;
 
 import butterknife.BindView;
@@ -166,7 +166,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
             timeUtils = new TimeUtils(tvGetVerification,tvGetVerification);
             timeUtils.RunTimer();
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -187,11 +187,11 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
             String pwd = StringUtil.getEdittextContent(etPassword);
             if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.password_judgment);
+                ToastUtils.showShort(R.string.password_judgment);
                 return;
             }
             if (!StringUtil.passwordJudge(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.password_judgment);
+                ToastUtils.showShort(R.string.password_judgment);
                 return;
             }
 
@@ -216,7 +216,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
 
 
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -251,26 +251,26 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
     @Override
     public void resetPasswordSuccess() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.pwd_resetting_success));
+        ToastUtils.showShort(getString(R.string.pwd_resetting_success));
         MyApplication.getInstance().tokenInvalid(false);
     }
 
     @Override
     public void sendRandomFailed(Throwable e) {
         LogUtils.e("验证码发送失败");
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void resetPasswordFailed(Throwable e) {
         hiddenLoading();
         LogUtils.e("密码重置失败");
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void sendRandomFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 
     @Override
@@ -279,7 +279,7 @@ public class ForgetPasswordActivity extends BaseActivity<IResetPasswordView, Res
         if ("445".equals(result.getCode())){
             AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_correct_verification_code));
         }else {
-            ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+            ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         }
     }
 }

@@ -16,7 +16,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
@@ -113,7 +113,7 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
     public void onBackPressed() {
         if (System.currentTimeMillis() - lastClickBackTime > 2000) {
             lastClickBackTime = System.currentTimeMillis();
-            ToastUtil.getInstance().showLong(R.string.exit);
+            ToastUtils.showLong(R.string.exit);
         } else {
             System.exit(0);
         }

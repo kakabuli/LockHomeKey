@@ -16,12 +16,11 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +78,7 @@ public class WifiLockAddNewFifthActivity extends BaseAddToApplicationActivity {
                     startActivity(new Intent(this,WifiLockAddNewScanBLEActivity.class));
                 }
                 else {
-                    ToastUtil.getInstance().showShort("未知模组类型");
+                    ToastUtils.showShort("未知模组类型");
 
                 }
 

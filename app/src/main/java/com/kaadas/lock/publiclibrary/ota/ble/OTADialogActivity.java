@@ -16,7 +16,7 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +62,7 @@ public class OTADialogActivity extends BaseBleCheckInfoActivity<IOtaView, OtaPre
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(sn) || TextUtils.isEmpty(version)) {  //如果本地保存的SN或者version为空
-                    ToastUtil.getInstance().showLong(R.string.get_update_info_failed);
+                    ToastUtils.showLong(R.string.get_update_info_failed);
                     finish();
                     return;
                 }

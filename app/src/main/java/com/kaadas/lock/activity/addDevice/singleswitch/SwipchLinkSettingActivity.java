@@ -3,7 +3,7 @@ package com.kaadas.lock.activity.addDevice.singleswitch;
 import android.content.Intent;
 import android.graphics.Color;
 import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,7 +20,6 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.singlefireswitchpresenter.SingleFireSwitchSettingPresenter;
 import com.kaadas.lock.mvp.view.singlefireswitchview.SingleFireSwitchView;
 import com.kaadas.lock.publiclibrary.bean.SingleFireSwitchInfo;
-import com.kaadas.lock.publiclibrary.bean.SwitchNumberBean;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
@@ -31,11 +30,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.TimeUtil;
-import com.kaadas.lock.utils.ToastUtil;
-
-import java.util.List;
-
-import butterknife.BindView;
+import com.blankj.utilcode.util.ToastUtils;
 
 public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView, SingleFireSwitchSettingPresenter<SingleFireSwitchView>> implements View.OnClickListener,SingleFireSwitchView{
     // 1 表示全天
@@ -148,7 +143,7 @@ public class SwipchLinkSettingActivity extends BaseActivity<SingleFireSwitchView
 
          case R.id.btn_next:
              if (!NetUtil.isNetworkAvailable()) {
-                 ToastUtil.getInstance().showShort(R.string.please_have_net_add_pwd);
+                 ToastUtils.showShort(R.string.please_have_net_add_pwd);
                  return;
              }
              // 非全天

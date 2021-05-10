@@ -47,7 +47,6 @@ import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
-import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.db.ClothesHangerMachineAllBeanDao;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
@@ -73,7 +72,6 @@ import com.tencent.mmkv.MMKV;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xm.sdk.log.XMLog;
 import com.xmitech.sdk.log.LogCodec;
-import com.yun.store.util.ActivityCollectorUtil;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.Config;
@@ -143,7 +141,6 @@ public class MyApplication extends Application {
         initBleService();
         initMqttService();//启动MqttService
         initMMKV(this);
-        ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
@@ -380,7 +377,6 @@ public class MyApplication extends Application {
      */
     public void tokenInvalid(boolean isShowDialog) {
         deleSQL();  //清除数据库数据
-        ActivityCollectorUtil.finishAllActivity();
         LogUtils.e("token过期   ");
         SPUtils.put(KeyConstants.HEAD_PATH, "");
         boolean alreadyStart = false;

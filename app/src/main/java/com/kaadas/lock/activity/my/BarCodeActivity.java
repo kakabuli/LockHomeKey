@@ -11,12 +11,11 @@ import android.widget.TextView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class BarCodeActivity extends BaseAddToApplicationActivity implements View.OnClickListener {
 
@@ -36,7 +35,7 @@ public class BarCodeActivity extends BaseAddToApplicationActivity implements Vie
         ButterKnife.bind(this);
         ivBack.setOnClickListener(this);
         if(TextUtils.isEmpty(bar_url)){
-            ToastUtil.getInstance().showShort(getString(R.string.bar_code_scan_qr_failed));
+            ToastUtils.showShort(getString(R.string.bar_code_scan_qr_failed));
             finish();
         }
         Log.e(GeTui.VideoLog," finall->result:"+bar_url);

@@ -4,8 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.text.Html;
-import android.text.TextUtils;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -20,19 +19,16 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.GatewayOTAPresenter;
 import com.kaadas.lock.mvp.presenter.NightSightPresenter;
-import com.kaadas.lock.mvp.view.GatewayOTAView;
 import com.kaadas.lock.mvp.view.personalview.NightSightView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.CatEyeInfoBeanPropertyResultUpdate;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
-import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 
@@ -205,7 +201,7 @@ public class CatEyeNightSightDialogActivity extends BaseActivity<NightSightView,
                 }
 
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                    ToastUtils.showShort(getString(R.string.network_exception));
                     finish();
                     return;
                 }

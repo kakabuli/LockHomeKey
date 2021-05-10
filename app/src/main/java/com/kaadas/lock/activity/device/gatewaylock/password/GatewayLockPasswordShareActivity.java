@@ -25,7 +25,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SharedUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
 import java.util.Arrays;
@@ -161,7 +161,7 @@ public class GatewayLockPasswordShareActivity extends BaseActivity<IGatewayLockP
                 if (SharedUtil.isWeixinAvilible(this)) {
                     SharedUtil.getInstance().sendWeiXin(message);
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.telephone_not_install_wechat);
+                    ToastUtils.showShort(R.string.telephone_not_install_wechat);
                 }
                 break;
             case R.id.tv_copy:

@@ -19,7 +19,7 @@ import com.kaadas.lock.mvp.view.GatewayOTAView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,13 +117,13 @@ public class GatewayOTADialogActivity extends BaseActivity<GatewayOTAView, Gatew
 
     @Override
     public void gatewayUpgradeingNow(String deviceId) {
-        ToastUtil.getInstance().showShort(deviceId + getString(R.string.gateway_upgrade_now));
+        ToastUtils.showShort(deviceId + getString(R.string.gateway_upgrade_now));
         finish();
     }
 
     @Override
     public void gatewayUpgradeFail(String deviceId) {
-        ToastUtil.getInstance().showShort(deviceId + getString(R.string.gateway_upgade_fail));
+        ToastUtils.showShort(deviceId + getString(R.string.gateway_upgade_fail));
         finish();
     }
 }

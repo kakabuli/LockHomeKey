@@ -1,22 +1,14 @@
 package com.kaadas.lock.activity.device.wifilock;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Vibrator;
+
 import androidx.annotation.Nullable;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,35 +19,25 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.MainActivity;
-import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
-import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAuthPresenter;
-import com.kaadas.lock.mvp.view.IOldBleDetailView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAuthView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.bean.ProductInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
-import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BatteryView;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import net.sdvn.cmapi.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -320,20 +302,20 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
     @Override
     public void onDeleteDeviceSuccess() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.delete_success);
+        ToastUtils.showLong(R.string.delete_success);
         finish();
     }
 
     @Override
     public void onDeleteDeviceFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.delete_fialed);
+        ToastUtils.showLong(R.string.delete_fialed);
     }
 
     @Override
     public void onDeleteDeviceFailedServer(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.delete_fialed);
+        ToastUtils.showLong(R.string.delete_fialed);
     }
 
     //获取状态栏高度

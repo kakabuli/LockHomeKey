@@ -54,7 +54,7 @@ public class EditTextWatcher implements TextWatcher {
                             break;
                         }else{
                             String message = String.format(context.getString(R.string.input_name_max), len+"",chinaLen+"");
-                            ToastUtil.getInstance().showShort(message);
+                            com.blankj.utilcode.util.ToastUtils.showShort(message);
                         }
 
                     } while (cnt-- > 0);

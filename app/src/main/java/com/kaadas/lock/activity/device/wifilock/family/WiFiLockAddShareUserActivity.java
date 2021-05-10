@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WiFiLockShareAddUserPresenter;
@@ -23,7 +22,7 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,7 +80,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
 
                 if (myPhone != null) {
                     if (myPhone.equals(phone)) {
-                        ToastUtil.getInstance().showShort(R.string.no_add_my);
+                        ToastUtils.showShort(R.string.no_add_my);
                         return;
                     }
                 }
@@ -110,7 +109,7 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
                         }
                     }
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.noNet);
+                    ToastUtils.showShort(R.string.noNet);
                 }
 
                 break;
@@ -120,20 +119,20 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
     @Override
     public void onAddUserSuccess() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.share_success);
+        ToastUtils.showLong(R.string.share_success);
         finish();
     }
 
     @Override
     public void onAddUserFailed(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong( HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showLong( HttpUtils.httpErrorCode(this, result.getCode()));
     }
 
     @Override
     public void onAddUserFailedServer(Throwable throwable) {
         hiddenLoading();
 //        ToastUtil.getInstance().showLong(R.string.add_failed);
-        ToastUtil.getInstance().showLong(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showLong(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 }

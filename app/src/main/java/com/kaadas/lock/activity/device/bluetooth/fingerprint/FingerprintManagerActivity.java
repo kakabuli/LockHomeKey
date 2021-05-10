@@ -26,7 +26,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -102,7 +102,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //下拉刷新   如果正在同步，不刷新  强制从服务器中获取数据
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                     refreshLayout.finishRefresh();
                 } else {
                     mPresenter.getAllPassword(bleLockInfo, true);
@@ -157,7 +157,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
                 break;
             case R.id.ll_add:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_add_finger);
+                    ToastUtils.showShort(R.string.please_add_finger);
                     return;
                 }
                 if (!mPresenter.isAuthAndNoConnect(bleLockInfo)) {  //指纹特有的   只查看是否鉴权，不连接
@@ -172,7 +172,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
             case R.id.tv_synchronized_record:
                 //同步
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                 } else {
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.syncPassword();
@@ -229,7 +229,7 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.sync_finger_failed);
+        ToastUtils.showShort(R.string.sync_finger_failed);
     }
 
     @Override
@@ -271,12 +271,12 @@ public class FingerprintManagerActivity extends BaseBleActivity<IFingerprintMana
     }
     @Override
     public void onGetPasswordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(R.string.get_finger_failed);
+        ToastUtils.showShort(R.string.get_finger_failed);
         refreshLayout.finishRefresh();
     }
     @Override
     public void onGetPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.get_finger_failed);
+        ToastUtils.showShort(R.string.get_finger_failed);
         refreshLayout.finishRefresh();
     }
 }

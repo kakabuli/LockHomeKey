@@ -25,7 +25,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -151,11 +151,11 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                     public void onClick(View v) {
                         String name = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (StringUtil.judgeNicknameWhetherSame(password.getNickName(), name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
+                            ToastUtils.showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;
                         }
@@ -202,7 +202,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
                         }
                     });
                 } else {
-                    ToastUtil.getInstance().showLong(R.string.network_exception);
+                    ToastUtils.showLong(R.string.network_exception);
                 }
                 break;
         }
@@ -215,7 +215,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void onDeletePwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
         hiddenLoading();
     }
 
@@ -230,7 +230,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void onDeleteServerPwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync));
+        ToastUtils.showShort(getString(R.string.lock_delete_success_please_sync));
         LogUtils.e("删除服务器密码失败   ");
         hiddenLoading();
         finish();
@@ -238,7 +238,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void onDeleteServerPwdFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync));
+        ToastUtils.showShort(getString(R.string.lock_delete_success_please_sync));
         // ToastUtil.getInstance().showShort( HttpUtils.httpErrorCode(this, result.getCode()));
         hiddenLoading();
         finish();
@@ -246,7 +246,7 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void updateNickNameSuccess(String nickName) {
-        ToastUtil.getInstance().showShort(R.string.modify_success);
+        ToastUtils.showShort(R.string.modify_success);
         hiddenLoading();
         Intent intent = new Intent(this, BlePasswordManagerActivity.class);
         startActivity(intent);
@@ -255,25 +255,25 @@ public class BluetoothPasswordManagerDetailActivity extends BaseBleActivity<IPas
 
     @Override
     public void updateNickNameFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.modify_nickname_fail));
+        ToastUtils.showShort(getString(R.string.modify_nickname_fail));
     }
 
     @Override
     public void updateNickNameFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(getString(R.string.modify_nickname_fail));
+        ToastUtils.showShort(getString(R.string.modify_nickname_fail));
     }
 
     @Override
     public void onLockNoThisNumber() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.lock_no_this_password);
+        ToastUtils.showLong(R.string.lock_no_this_password);
         finish();
     }
 
     @Override
     public void onGetLockNumberFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.get_lock_password_failed);
+        ToastUtils.showLong(R.string.get_lock_password_failed);
         finish();
     }
 }

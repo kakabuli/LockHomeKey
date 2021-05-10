@@ -3,7 +3,7 @@ package com.kaadas.lock.activity.device.gatewaylock.demo;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,7 +12,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,32 +81,32 @@ public class GatewayLockSettingActivity extends BaseActivity<CatwayLockSettingVi
 
     @Override
     public void setArmLockedSuccess() {
-        ToastUtil.getInstance().showShort("设置布防成功");
+        ToastUtils.showShort("设置布防成功");
     }
 
     @Override
     public void setArmLockedFail() {
-        ToastUtil.getInstance().showShort("设置布防失败");
+        ToastUtils.showShort("设置布防失败");
     }
 
     @Override
     public void setArmLockedThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort("设置布防异常");
+        ToastUtils.showShort("设置布防异常");
     }
 
     @Override
     public void setAMSuccess() {
-        ToastUtil.getInstance().showShort("设置AM成功");
+        ToastUtils.showShort("设置AM成功");
     }
 
     @Override
     public void setAMFail() {
-        ToastUtil.getInstance().showShort("设置AM失败");
+        ToastUtils.showShort("设置AM失败");
     }
 
     @Override
     public void setAMThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort("设置AM异常");
+        ToastUtils.showShort("设置AM异常");
     }
 
     @Override
@@ -114,17 +114,17 @@ public class GatewayLockSettingActivity extends BaseActivity<CatwayLockSettingVi
         if (getArmLocked!=null){
             getArmLocked.setText("布防状态时"+operatingMode);
         }
-        ToastUtil.getInstance().showShort("获取布防成功");
+        ToastUtils.showShort("获取布防成功");
     }
 
     @Override
     public void getArmLockedFail() {
-        ToastUtil.getInstance().showShort("获取布防失败");
+        ToastUtils.showShort("获取布防失败");
     }
 
     @Override
     public void getArmLockedThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort("获取布防异常");
+        ToastUtils.showShort("获取布防异常");
     }
 
     @Override
@@ -132,16 +132,16 @@ public class GatewayLockSettingActivity extends BaseActivity<CatwayLockSettingVi
         if (getAM!=null){
             getArmLocked.setText("AM是"+autoRelockTime);
         }
-        ToastUtil.getInstance().showShort("获取AM成功");
+        ToastUtils.showShort("获取AM成功");
     }
 
     @Override
     public void getAMFail() {
-        ToastUtil.getInstance().showShort("获取AM失败");
+        ToastUtils.showShort("获取AM失败");
     }
 
     @Override
     public void getAMThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showShort("获取AM异常");
+        ToastUtils.showShort("获取AM异常");
     }
 }

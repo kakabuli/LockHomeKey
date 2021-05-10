@@ -12,7 +12,7 @@ import com.kaadas.lock.mvp.presenter.wifilock.AddWifiLockTempPasswordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IAddWifiTempPasswordView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +58,7 @@ public class AddWifiLockTempPasswordSecondActivity extends BaseActivity<IAddWifi
             case R.id.confirm_btn:
                 String password = etPassword.getText().toString().trim();
                 if (!StringUtil.randomJudge(password)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 if (StringUtil.checkSimplePassword(password)) {

@@ -3,7 +3,6 @@ package com.kaadas.lock.activity.addDevice.cateye;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -27,7 +26,7 @@ import com.kaadas.lock.mvp.view.deviceaddview.AddZigbeeLockSuccessSaveView;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 
@@ -158,13 +157,13 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
                 String name=inputName.getText().toString().trim();
                 Log.e(GeTui.VideoLog,"name:"+name);
                 if (TextUtils.isEmpty(name)){
-                    ToastUtil.getInstance().showShort(getString(R.string.nickname_not_null));
+                    ToastUtils.showShort(getString(R.string.nickname_not_null));
                     return;
                 }
                 if (!TextUtils.isEmpty(deviceId)&&!TextUtils.isEmpty(gatewayId)){
                     mPresenter.updateZigbeeLockName(gatewayId,deviceId,name);
                 }else{
-                    ToastUtil.getInstance().showShort(R.string.gateway_or_device_null);
+                    ToastUtils.showShort(R.string.gateway_or_device_null);
                 }
                 break;
         }
@@ -192,7 +191,7 @@ public class AddDeviceCatEyeSaveNickNameActivity  extends BaseActivity<AddZigbee
 
     @Override
     public void updateDevNickNameFail() {
-        ToastUtil.getInstance().showShort(R.string.update_nickname_fail);
+        ToastUtils.showShort(R.string.update_nickname_fail);
     }
 
     @Override

@@ -30,7 +30,7 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,11 +175,11 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
             case R.id.save:
                 String name = inputName.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    ToastUtil.getInstance().showShort(R.string.not_empty);
+                    ToastUtils.showShort(R.string.not_empty);
                     return;
                 }
                 if (!StringUtil.nicknameJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
 

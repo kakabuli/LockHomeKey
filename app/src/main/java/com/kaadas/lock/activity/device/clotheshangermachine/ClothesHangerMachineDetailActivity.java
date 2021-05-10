@@ -13,9 +13,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineAddPresenter;
 import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineDetailPresenter;
-import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineAddView;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineDetailView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
@@ -30,7 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import la.xiong.androidquick.tool.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 public class ClothesHangerMachineDetailActivity extends BaseActivity<IClothesHangerMachineDetailView, ClothesHangerMachineDetailPresenter<IClothesHangerMachineDetailView>>
         implements IClothesHangerMachineDetailView {
@@ -192,8 +190,7 @@ public class ClothesHangerMachineDetailActivity extends BaseActivity<IClothesHan
     }
 
     private void showShort(String ss) {
-        ToastUtil.setGravity(Gravity.CENTER,0,0);
-        ToastUtil.showShort(ss);
+        ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER,0,0).showShort(ss);
     }
 
     @Override

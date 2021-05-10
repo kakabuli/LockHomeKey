@@ -19,8 +19,7 @@ import com.kaadas.lock.mvp.presenter.cateye.CatEyeResolutionPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeResolutionView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LoadingDialog;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +105,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
                 break;
             case R.id.btn_save:
                 if (currentResolution.equals(selectResolution)||TextUtils.isEmpty(selectResolution)){
-                    ToastUtil.getInstance().showShort(R.string.current_resolution_no_change);
+                    ToastUtils.showShort(R.string.current_resolution_no_change);
                     return;
                 }
                 if (!TextUtils.isEmpty(gatewayId)&&!TextUtils.isEmpty(deviceId)){
@@ -129,7 +128,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
         intent.putExtra(KeyConstants.RESOLUTION_NUMBER, resolution);
         //设置返回数据
         CatEyeResolutionActivity.this.setResult(RESULT_OK, intent);
-        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+        ToastUtils.showShort(getString(R.string.set_success));
 
     }
 
@@ -148,7 +147,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
                 twiceImg.setChecked(true);
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class CatEyeResolutionActivity extends BaseActivity<ICatEyeResolutionView
                 twiceImg.setChecked(true);
             }
         }
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 }
 

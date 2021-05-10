@@ -13,12 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewScanFailActivity;
-import com.kaadas.lock.activity.addDevice.zigbeelocknew.AddDeviceZigbeeLockNewZeroActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 
@@ -27,15 +23,10 @@ import com.kaadas.lock.mvp.presenter.deviceaddpresenter.WiFiLockChooseToAddPrese
 import com.kaadas.lock.mvp.view.deviceaddview.WiFiLockChooseToAddView;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.dialog.InfoDialog;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.dialog.MessageDialog;
-
-import java.util.Objects;
-import java.util.logging.LogRecord;
 
 import butterknife.ButterKnife;
 
@@ -121,11 +112,11 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
             case R.id.add:
                 String name = wifi_lock_choose_to_input.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    ToastUtil.getInstance().showShort(R.string.not_empty);
+                    ToastUtils.showShort(R.string.not_empty);
                     return;
                 }
                 if (!StringUtil.nicknameJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
                 mPresenter.searchLockProduct(name);

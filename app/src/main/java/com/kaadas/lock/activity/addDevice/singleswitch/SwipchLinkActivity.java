@@ -24,7 +24,6 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.AddSingleFireSwitchBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.BindingSingleFireSwitchBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.CloneObjectUtils;
-import com.kaadas.lock.utils.DensityUtil;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,6 +41,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.dialog.InfoDialog;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -325,12 +325,12 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
                 ViewGroup.LayoutParams mylayoutParam2 =  swipch_two_img.getLayoutParams();
                 RelativeLayout.LayoutParams rllayoutParam2 =( RelativeLayout.LayoutParams) (mylayoutParam2);
                 rllayoutParam2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                rllayoutParam2.topMargin= DensityUtil.dip2px(this,10);
+                rllayoutParam2.topMargin= DensityUtil.dp2px(10);
 
                 ViewGroup.LayoutParams mylayoutParam3 =  swipch_three_img.getLayoutParams();
                 RelativeLayout.LayoutParams rllayoutParam3 =( RelativeLayout.LayoutParams) (mylayoutParam3);
                 rllayoutParam3.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                rllayoutParam3.topMargin= DensityUtil.dip2px(this,10);
+                rllayoutParam3.topMargin= DensityUtil.dp2px(10);
 
                 if(mylayoutParam1 instanceof  RelativeLayout.LayoutParams){
 

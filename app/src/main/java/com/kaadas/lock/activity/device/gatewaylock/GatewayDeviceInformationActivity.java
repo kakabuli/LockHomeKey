@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.device.gatewaylock;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.gatewaylock.more.GatewayMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockInformationPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockInformationView;
@@ -26,7 +24,7 @@ import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayLockBaseInfo;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.GatewayLockBaseInfoDao;
@@ -141,13 +139,13 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
                         name = editText.getText().toString().trim();
                         //todo 判断名称是否修改
                         if (TextUtils.isEmpty(name)) {
-                            ToastUtil.getInstance().showShort(getString(R.string.device_name_cannot_be_empty));
+                            ToastUtils.showShort(getString(R.string.device_name_cannot_be_empty));
                             return;
                         }
 
                         if (deviceNickname != null) {
                             if (deviceNickname.equals(name)) {
-                                ToastUtil.getInstance().showShort(getString(R.string.device_nick_name_no_update));
+                                ToastUtils.showShort(getString(R.string.device_nick_name_no_update));
                                 alertDialog.dismiss();
                                 return;
                             }
@@ -239,13 +237,13 @@ public class GatewayDeviceInformationActivity extends BaseActivity<GatewayLockIn
     @Override
     public void getLcokInfoFail() {
         loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort(R.string.get_lock_info_fail);
+        ToastUtils.showShort(R.string.get_lock_info_fail);
     }
 
     @Override
     public void getLockInfoThrowable(Throwable throwable) {
         loadingDialog.dismiss();
-        ToastUtil.getInstance().showShort(R.string.get_lock_info_fail);
+        ToastUtils.showShort(R.string.get_lock_info_fail);
         LogUtils.e("获取锁信息出现异常    " + throwable.getMessage());
     }
 

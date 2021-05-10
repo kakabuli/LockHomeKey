@@ -16,12 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.bean.UpgradeBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.SystemSettingPresenter;
@@ -29,10 +27,8 @@ import com.kaadas.lock.mvp.presenter.UpgradePresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.CheckLanguageUtil;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.ISystemSettingView;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
@@ -142,7 +138,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             @Override
             public void right() {
                 //清除缓存数据，关闭会话。
-                ToastUtil.getInstance().showShort(R.string.delete_cache_data_success);
+                ToastUtils.showShort(R.string.delete_cache_data_success);
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -195,14 +191,14 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     @Override
     public void onLoginOutFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.logout_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.logout_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
         LogUtils.e("退出失败  " + throwable.getMessage());
     }
 
     @Override
     public void onLoginOutFailedServer(BaseResult result) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.logout_fail) + HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showShort(getString(R.string.logout_fail) + HttpUtils.httpErrorCode(this, result.getCode()));
         LogUtils.e("退出失败  " + result.getMsg());
     }
 
@@ -239,7 +235,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
                                   SelectMarket(isForced,upgradeBean);
 
                             }else {
-                                ToastUtil.getInstance().showShort(R.string.new_version);
+                                ToastUtils.showShort(R.string.new_version);
                             }
                       //  }
                         Log.e(GeTui.VideoLog,"currentCode:"+cuurentversioncode+" servercode:"+upgradeBean.getVersionCode());
@@ -252,14 +248,14 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
 
                 }else {
                     Log.e(GeTui.VideoLog,"update.....获取数据为null");
-                    ToastUtil.getInstance().showShort(R.string.get_version_code_fail);
+                    ToastUtils.showShort(R.string.get_version_code_fail);
                 }
             }
 
             @Override
             public void ShowUpgradePresenterFail() {
                 Log.e(GeTui.VideoLog,"update.....fail.......失败");
-                ToastUtil.getInstance().showShort(R.string.get_version_code_fail);
+                ToastUtils.showShort(R.string.get_version_code_fail);
             }
         });
     }

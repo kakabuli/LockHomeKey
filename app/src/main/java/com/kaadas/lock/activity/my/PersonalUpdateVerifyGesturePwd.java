@@ -26,7 +26,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.MD5Utils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.utils.handPwdUtil.GestureContentView;
@@ -190,7 +190,7 @@ public class PersonalUpdateVerifyGesturePwd extends BaseAddToApplicationActivity
                 String password = etPassword.getText().toString().trim();
                 password =   MD5Utils.encode(password);
                 if (TextUtils.isEmpty(password)) {
-                    ToastUtil.getInstance().showLong(R.string.please_input_password);
+                    ToastUtils.showLong(R.string.please_input_password);
                     return;
                 } else {
                     String localPassword = (String) SPUtils.get(SPUtils.PASSWORD, "");

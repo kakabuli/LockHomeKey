@@ -21,7 +21,6 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -61,13 +60,12 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
@@ -75,7 +73,6 @@ import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
 import com.kaidishi.lock.xiaomi.SPUtils2;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
-import com.yun.store.util.Constans;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
@@ -139,7 +136,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ButterKnife.bind(this);
         PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
-        ToastUtil.init(this); //初始化ToastUtil 传递Context进去  不需要每次都传递
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService = MyApplication.getInstance().getMqttService();
         if (mqttService != null) {
@@ -624,7 +620,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                     content = String.format(getString(R.string.low_power_notify), nickName);
                     break;
             }
-            ToastUtil.getInstance().showLong(content);
+            ToastUtils.showLong(content);
             LogUtils.e("猫眼报警的内容为   " + content);
         }
     }
@@ -650,23 +646,23 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 switch (alarmCode) {
                     case 0:    //门锁堵转报警
                         str = String.format(getString(R.string.lock_blocked_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                     case 1:
                         str = String.format(getString(R.string.lock_resect_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                     case 4:
                         str = String.format(getString(R.string.lock_system_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                     case 6:
                         str = String.format(getString(R.string.lock_pick_proof_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                     case 9:
                         str = String.format(getString(R.string.lock_stress_alarm_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                 }
                 //电量
@@ -674,7 +670,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 switch (alarmCode) {
                     case 16:
                         str = String.format(getString(R.string.low_power_notify), nickName);
-                        ToastUtil.getInstance().showShort(str);
+                        ToastUtils.showShort(str);
                         break;
                 }
             }
@@ -708,7 +704,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
     @Override
     public void gatewayResetSuccess(String gatewayId) {
-        ToastUtil.getInstance().showShort(gatewayId + "网关:" + getString(R.string.gateway_reset_unbind));
+        ToastUtils.showShort(gatewayId + "网关:" + getString(R.string.gateway_reset_unbind));
     }
 
     @Override
@@ -1055,7 +1051,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){//同意授权
 
                 }else {
-                    ToastUtil.getInstance().showShort("请先获取麦克风权限");
+                    ToastUtils.showShort("请先获取麦克风权限");
                 }
                 break;
         }

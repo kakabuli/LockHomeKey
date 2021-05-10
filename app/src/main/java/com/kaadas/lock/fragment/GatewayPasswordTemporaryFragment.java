@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,7 +31,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
 import java.util.ArrayList;
@@ -128,13 +127,13 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
                 break;
             case R.id.btn_confirm_generation:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_temp_pwd);
+                    ToastUtils.showShort(R.string.please_have_net_add_temp_pwd);
                     return;
                 }
                 String strTemporaryPassword = etPassword.getText().toString().trim();
 
                 if (!StringUtil.randomJudge(strTemporaryPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 if (StringUtil.checkSimplePassword(strTemporaryPassword)) {
@@ -210,7 +209,7 @@ public class GatewayPasswordTemporaryFragment extends BaseFragment<IGatewayLockP
 
     @Override
     public void addLockPwdSuccess(GatewayPasswordPlanBean gatewayPasswordPlanBean, String pwdValue) {
-        ToastUtil.getInstance().showLong(getString(R.string.set_success));
+        ToastUtils.showLong(getString(R.string.set_success));
         hiddenLoading();
 
         //跳转到分享页面

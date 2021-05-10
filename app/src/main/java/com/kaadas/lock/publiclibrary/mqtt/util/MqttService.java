@@ -16,7 +16,6 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
 import com.kaadas.lock.bean.PirEventBus;
-import com.kaadas.lock.publiclibrary.NotificationManager;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
 import com.kaadas.lock.publiclibrary.mqtt.PublishResult;
@@ -27,7 +26,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils2;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
@@ -381,7 +380,7 @@ public class MqttService extends Service {
     //订阅
     private void mqttSubscribe(MqttAndroidClient mqttClient, String topic, int qos) {
         if (!NetUtil.isNetworkAvailable()) {
-            ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+            ToastUtils.showShort(getString(R.string.network_exception));
             return;
         }
         LogUtils.e("订阅    "+topic +"   "+(mqttClient != null));

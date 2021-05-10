@@ -23,7 +23,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SharedUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -169,11 +169,11 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                     public void onClick(View v) {
                         String name = editText.getText().toString().trim();
                         if (TextUtils.isEmpty(name)) {
-                            ToastUtil.getInstance().showShort(R.string.name_not_empty);
+                            ToastUtils.showShort(R.string.name_not_empty);
                             return;
                         }
                         if (name.equals(nickName)){
-                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
+                            ToastUtils.showShort(R.string.nickname_not_modify);
                             return;
                         }
                         if (tvName != null) {
@@ -213,7 +213,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
                 if (SharedUtil.isWeixinAvilible(this)){
                     SharedUtil.getInstance().sendWeiXin(message);
                 }else {
-                    ToastUtil.getInstance().showShort(R.string.telephone_not_install_wechat);
+                    ToastUtils.showShort(R.string.telephone_not_install_wechat);
                 }
 
                 break;
@@ -230,7 +230,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
 
     @Override
     public void onDeletePwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        ToastUtils.showShort(R.string.delete_fialed);
         hiddenLoading();
     }
 
@@ -250,14 +250,14 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
     @Override
     public void onDeleteServerPwdFailed(Throwable throwable) {
         LogUtils.e("删除失败  " + throwable.getMessage());
-        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        ToastUtils.showShort(R.string.delete_fialed);
         hiddenLoading();
     }
 
     @Override
     public void onDeleteServerPwdFailedServer(BaseResult result) {
         LogUtils.e("删除失败  " + result.toString());
-        ToastUtil.getInstance().showShort(R.string.delete_fialed);
+        ToastUtils.showShort(R.string.delete_fialed);
         hiddenLoading();
     }
 
@@ -273,7 +273,7 @@ public class BluetoothPasswordShareActivity extends BaseBleActivity<IPasswordDet
             startActivity(intent);
         }
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.nickname_modify_success);
+        ToastUtils.showLong(R.string.nickname_modify_success);
         finish();
     }
 

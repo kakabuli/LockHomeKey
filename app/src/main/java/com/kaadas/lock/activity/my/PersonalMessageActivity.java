@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,10 +25,9 @@ import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalMessagePresenter;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetMessageResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.utils.DpPxConversion;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.personalview.IPersonalMessageView;
 import com.kaadas.lock.widget.RecyclerViewNoBugLinearLayoutManager;
 import com.kaadas.lock.widget.SlideRecyclerView;
@@ -37,6 +35,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +96,7 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_inset));
 //        messageRecycler.addItemDecoration(dividerItemDecoration);
 //        messageAdapter = new PersonalMessageAdapter(this, mPersonalMessageList, R.layout.personal_message_item);
-        messageRecycler.addItemDecoration(new PersonalMessageActivity.SpacesItemDecoration(DpPxConversion.getInstance().dp2px(this, 10)));
+        messageRecycler.addItemDecoration(new PersonalMessageActivity.SpacesItemDecoration(DensityUtil.dp2px( 10)));
         messageAdapter = new PersonalMessageAdapter(this, mPersonalMessageList, R.layout.item_my_message_system_message, R.layout.item_my_message_share_device_authorization_message);
         messageRecycler.setAdapter(messageAdapter);
     }
@@ -171,12 +170,12 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
 
     @Override
     public void getMessageFail(GetMessageResult getMessageResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, getMessageResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, getMessageResult.getCode()));
     }
 
     @Override
     public void getMessageError(Throwable e) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
@@ -188,12 +187,12 @@ public class PersonalMessageActivity extends BaseActivity<IPersonalMessageView, 
 
     @Override
     public void deleteError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void deleteFail(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override

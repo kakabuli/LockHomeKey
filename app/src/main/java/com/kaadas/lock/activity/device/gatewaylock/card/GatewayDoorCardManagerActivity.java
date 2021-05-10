@@ -17,7 +17,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class GatewayDoorCardManagerActivity extends BaseAddToApplicationActivity
                 break;
             case R.id.ll_add:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_card);
+                    ToastUtils.showShort(R.string.please_have_net_add_card);
                     return;
                 }
 

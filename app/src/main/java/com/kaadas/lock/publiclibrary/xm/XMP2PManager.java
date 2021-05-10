@@ -1,20 +1,15 @@
 package com.kaadas.lock.publiclibrary.xm;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.util.Log;
 import android.view.SurfaceView;
 
 import com.kaadas.lock.publiclibrary.xm.bean.DeviceInfo;
-import com.kaadas.lock.utils.ConstantConfig;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.p2p.pppp_api.st_PPCS_Session;
 import com.xm.sdk.apis.XMStreamComCtrl;
 import com.xm.sdk.bean.ParamConnectDev;
 import com.xm.sdk.bean.ParamConnectP2P;
-import com.xm.sdk.bean.ParamInitDev;
-import com.xm.sdk.interfaces.av.AVStreamListener;
 import com.xm.sdk.interfaces.av.StreamListener;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.AudioFrame;
@@ -26,8 +21,6 @@ import com.xmitech.sdk.interfaces.VideoPackagedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import la.xiong.androidquick.tool.ToastUtil;
 
 
 public class XMP2PManager extends StreamListener  {

@@ -20,7 +20,7 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +62,7 @@ public class AddBluetoothFamilyMemberActivity extends BaseAddToApplicationActivi
 
                 if (myPhone != null) {
                     if (myPhone.equals(phone)) {
-                        ToastUtil.getInstance().showShort(R.string.no_add_my);
+                        ToastUtils.showShort(R.string.no_add_my);
                         return;
                     }
                 }
@@ -99,7 +99,7 @@ public class AddBluetoothFamilyMemberActivity extends BaseAddToApplicationActivi
                     }
 
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.noNet);
+                    ToastUtils.showShort(R.string.noNet);
                 }
 
                 break;

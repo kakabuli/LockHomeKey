@@ -19,12 +19,11 @@ import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
-import com.lzy.imagepicker.util.Utils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import la.xiong.androidquick.tool.SizeUtils;
 
 /**
  * Created by David on 2019/4/15
@@ -71,7 +70,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
         if (mPresenter.isAuth(bleLockInfo, false)) {
             mPresenter.getDeviceInfo();
         } else {
-            ToastUtil.getInstance().showLong(getString(R.string.please_connect_lock));
+            ToastUtils.showLong(getString(R.string.please_connect_lock));
         }
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.safe_mode);
@@ -89,13 +88,13 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
                 all.setVisibility(View.VISIBLE);
                 noCard.setVisibility(View.GONE);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-                lp.setMargins(0, 0, 0, SizeUtils.dp2px( 60));
+                lp.setMargins(0, 0, 0, DensityUtil.dp2px( 60));
                 rlNotice.setLayoutParams(lp);
             } else {
                 all.setVisibility(View.GONE);
                 noCard.setVisibility(View.VISIBLE);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
-                lp.setMargins(0, 0, 0, SizeUtils.dp2px( 100));
+                lp.setMargins(0, 0, 0, DensityUtil.dp2px( 100));
                 rlNotice.setLayoutParams(lp);
                 if (supportFinger && supportCard) {
                     iv1.setImageResource(R.mipmap.safe_finger);
@@ -169,7 +168,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
 
     @Override
     public void onSetFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(getString(R.string.set_failed));
+        ToastUtils.showLong(getString(R.string.set_failed));
         hiddenLoading();
     }
 
@@ -187,7 +186,7 @@ public class BluetoothSafeModeActivity extends BaseBleActivity<ISafeModeView, Sa
     @Override
     public void onGetStateFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.get_lock_state_fail));
+        ToastUtils.showShort(getString(R.string.get_lock_state_fail));
         LogUtils.e("获取门锁状态失败   " + throwable.getMessage());
     }
 

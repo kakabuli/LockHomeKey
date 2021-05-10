@@ -18,7 +18,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.concurrent.TimeoutException;
 
@@ -92,7 +92,7 @@ public class FingerprintCollectionActivity extends BaseBleActivity<IAddFingerpri
 
     @Override
     public void onSetFingerFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(this,throwable));
+        ToastUtils.showShort( HttpUtils.httpProtocolErrorCode(this,throwable));
         // TODO: 2019/3/7   蓝牙协议错误  根据协议提示用户
 
         /**
@@ -117,7 +117,7 @@ public class FingerprintCollectionActivity extends BaseBleActivity<IAddFingerpri
         }else if (throwable instanceof TimeoutException){
             errorCause = getString(R.string.set_failed_tineout);
         }
-        ToastUtil.getInstance().showLong(errorCause);
+        ToastUtils.showLong(errorCause);
         Intent intent=new Intent(this,FingerprintNoConnectBluetoothOneActivity.class);
         startActivity(intent);
     }
@@ -137,21 +137,21 @@ public class FingerprintCollectionActivity extends BaseBleActivity<IAddFingerpri
 
     @Override
     public void onUploadFingerFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(this,FingerprintManagerActivity.class));
         finish();
     }
 
     @Override
     public void onUploadFingerFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(this,FingerprintManagerActivity.class));
         finish();
     }
 
     @Override
     public void onGetFingerNumberFailedFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_finger_failed_number);
+        ToastUtils.showShort(R.string.set_finger_failed_number);
         startActivity(new Intent(this,FingerprintManagerActivity.class));
         finish();
     }

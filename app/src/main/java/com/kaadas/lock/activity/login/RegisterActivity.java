@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -36,7 +36,7 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.utils.TimeUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -110,7 +110,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
                 break;
             case R.id.btn_register:
                 if(!userProtocolSlected){
-                    ToastUtil.getInstance().showShort("请先同意用户协议");
+                    ToastUtils.showShort("请先同意用户协议");
                     return;
                 }
                 register();
@@ -239,7 +239,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
             timeUtils = new TimeUtils(tvGetVerification, tvGetVerification);
             timeUtils.RunTimer();
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -287,16 +287,16 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
             pwd = StringUtil.getEdittextContent(etPassword);
             if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
+                ToastUtils.showShort(R.string.not_input_special_symbol);
                 return;
             }
             if (!StringUtil.passwordJudge(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.password_judgment);
+                ToastUtils.showShort(R.string.password_judgment);
                 return;
             }
 
             if (!userProtocolSlected) {
-                ToastUtil.getInstance().showShort(R.string.agree_user_protocol);
+                ToastUtils.showShort(R.string.agree_user_protocol);
                 return;
             }
             if (StringUtil.isNumeric(account)) {
@@ -325,7 +325,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
 
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -397,7 +397,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
     public void registerSuccess() { //注册成功
         hiddenLoading();
         LogUtils.e("注册成功");
-        ToastUtil.getInstance().showLong(R.string.register_success);
+        ToastUtils.showLong(R.string.register_success);
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         intent.putExtra(KeyConstants.AREA_CODE, countryNumber);
         intent.putExtra(KeyConstants.COUNTRY, countryName);
@@ -410,19 +410,19 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
 
     @Override
     public void sendRandomFailed(Throwable e) { //发送验证码失败
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
     public void sendRandomFailedServer(BaseResult result) {
 
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 
     @Override
     public void registerFailed(Throwable e) { //注册失败
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
@@ -431,7 +431,7 @@ public class RegisterActivity extends BaseActivity<IRegisterView, RegisterPresen
         if ("445".equals(result.getCode())){
             AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.input_correct_verification_code));
         }else {
-            ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+            ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         }
 
 

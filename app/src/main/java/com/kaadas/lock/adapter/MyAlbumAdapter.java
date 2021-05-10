@@ -1,12 +1,10 @@
 package com.kaadas.lock.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
@@ -14,19 +12,14 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity;
-import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockPreViewActivity;
 import com.kaadas.lock.bean.FileBean;
 import com.kaadas.lock.bean.FileItemBean;
-import com.kaadas.lock.utils.DateUtils;
-import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.StringUtil;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.SimpleItemAnimator;
-import la.xiong.androidquick.tool.SizeUtils;
 
 
 public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
@@ -66,10 +59,10 @@ public class MyAlbumAdapter extends BaseQuickAdapter<FileBean, BaseViewHolder> {
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
 
                     if(parent.getChildAdapterPosition(view) % 3 != 0){
-                        outRect.left = SizeUtils.dp2px(5);
+                        outRect.left = DensityUtil.dp2px(5);
                     }
                     if(parent.getChildAdapterPosition(view) >2){
-                        outRect.top = SizeUtils.dp2px(5);
+                        outRect.top = DensityUtil.dp2px(5);
                     }
                 }
             });

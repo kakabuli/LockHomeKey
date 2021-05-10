@@ -23,7 +23,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -131,7 +131,7 @@ public class GatewayLockShareUserNumberActivity extends BaseActivity<IGatewayDel
                         }
                     });
                 } else {
-                    ToastUtil.getInstance().showLong(R.string.network_exception);
+                    ToastUtils.showLong(R.string.network_exception);
                 }
                 break;
             case R.id.iv_editor:
@@ -158,11 +158,11 @@ public class GatewayLockShareUserNumberActivity extends BaseActivity<IGatewayDel
                     public void onClick(View v) {
                         data = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(data)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (dataBean.getUserNickname().equals(data)) {
-                            ToastUtil.getInstance().showShort(getString(R.string.user_nickname_no_update));
+                            ToastUtils.showShort(getString(R.string.user_nickname_no_update));
                             return;
                         }
                         if (gatewayId!=null&&deviceId!=null){
@@ -215,16 +215,16 @@ public class GatewayLockShareUserNumberActivity extends BaseActivity<IGatewayDel
         if (dataBean!=null){
             dataBean.setUserNickname(name);
         }
-        ToastUtil.getInstance().showShort(getString(R.string.update_nick_name));
+        ToastUtils.showShort(getString(R.string.update_nick_name));
     }
 
     @Override
     public void updateShareUserNameFail() {
-        ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+        ToastUtils.showShort(getString(R.string.update_nickname_fail));
     }
 
     @Override
     public void updaateShareUserNameThrowable() {
-        ToastUtil.getInstance().showShort(getString(R.string.update_nickname_fail));
+        ToastUtils.showShort(getString(R.string.update_nickname_fail));
     }
 }

@@ -24,7 +24,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -79,7 +79,7 @@ public class WifiLockSmartConfigActivity extends BaseAddToApplicationActivity {
                 Intent intent = new Intent(WifiLockSmartConfigActivity.this, WifiLockAPAddFailedActivity.class);
                 intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
                 startActivity(intent);
-                ToastUtil.getInstance().showLong(R.string.wifi_model_set_up_failed);
+                ToastUtils.showLong(R.string.wifi_model_set_up_failed);
             }
 
             @Override
@@ -204,7 +204,7 @@ public class WifiLockSmartConfigActivity extends BaseAddToApplicationActivity {
                 if (loadingDialog != null) {
                     loadingDialog.dismiss();
                 }
-                ToastUtil.getInstance().showLong(R.string.set_up_failed);
+                ToastUtils.showLong(R.string.set_up_failed);
                 setUpResult.onSetUpFailed();
             } else {
                 if (loadingDialog != null) {

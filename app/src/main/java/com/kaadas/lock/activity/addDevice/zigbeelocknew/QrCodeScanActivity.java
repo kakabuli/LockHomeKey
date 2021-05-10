@@ -17,7 +17,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.king.zxing.CameraScan;
 import com.king.zxing.DefaultCameraScan;
 
@@ -94,12 +94,12 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
             if (i == -1) {
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     //禁止该权限
-                    ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    ToastUtils.showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
                 } else {
                     //询问该权限
-                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
+                    ToastUtils.showShort(getString(R.string.inquire_camera_permission));
                     finish();
                     return;
                 }

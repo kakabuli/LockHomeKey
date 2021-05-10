@@ -1,8 +1,9 @@
-package la.xiong.androidquick.ui.dialog;
+package la.xiong.androidquick.tool;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ public class LoadingDialog extends Dialog implements View.OnClickListener {
         mNoBgLinely = (LinearLayout) findViewById(R.id.ll_loading);
         mNoBgLinely.setVisibility(View.VISIBLE);
         mTipTxt = (TextView)findViewById(R.id.tip);
-        if(!StringUtil.isEmpty(mTip)){
+        if(!TextUtils.isEmpty(mTip)){
             mTipTxt.setText(mTip);
         }
     }

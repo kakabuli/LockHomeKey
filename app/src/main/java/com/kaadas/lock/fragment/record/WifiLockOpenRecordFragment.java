@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +18,19 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
 import com.kaadas.lock.adapter.WifiLockRecordIAdapter;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockOpenRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockOpenRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
-import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -206,12 +204,12 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
@@ -221,13 +219,13 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtil.getInstance().showShort(R.string.server_no_data_2);
+        ToastUtils.showShort(R.string.server_no_data_2);
         tvNoMore.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+        ToastUtils.showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
     }

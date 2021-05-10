@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifiActivity;
-import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.cateye.TurnOnCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
@@ -22,14 +21,13 @@ import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
-import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
 import com.kaadas.lock.utils.handPwdUtil.Constants;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -133,7 +131,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                 break;
             case R.id.button_next:
                 if (zigbeeBindGatewayBeanSelect == null||zigbeeBindGatewayBeanSelect.isSelect()==false) {
-                    ToastUtil.getInstance().showShort(getString(R.string.select_bindgateway));
+                    ToastUtils.showShort(getString(R.string.select_bindgateway));
                 } else {
                         if (type == 2) {
                             //跳转猫眼流程,需要网络
@@ -142,7 +140,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                                 showLoading(getString(R.string.getting_wifi_info));
                                 mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
                             }else{
-                                ToastUtil.getInstance().showShort(R.string.network_exception);
+                                ToastUtils.showShort(R.string.network_exception);
                             }
                         } else if (type == 3) {
                             //跳转zigbee锁流程
@@ -170,7 +168,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
             if(zigbeeBindGatewayBeanSelect!=null){
                 zigbeeBindGatewayBeanSelect.setSelect(true);
             }
-            ToastUtil.getInstance().showShort(getString(R.string.gateway_offline));
+            ToastUtils.showShort(getString(R.string.gateway_offline));
             return;
         }
         if (zigbeeBindGatewayBeanSelect.getIsAdmin()!=1){
@@ -178,7 +176,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
             if(zigbeeBindGatewayBeanSelect!=null){
                 zigbeeBindGatewayBeanSelect.setSelect(true);
             }
-            ToastUtil.getInstance().showShort(R.string.gateway_is_authorization);
+            ToastUtils.showShort(R.string.gateway_is_authorization);
             return;
         }
         if (zigbeeBindGatewayBeanSelect.getModel() != null) {
@@ -190,12 +188,12 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                 if (zigbeeBindGatewayBeanSelect != null) {
                     zigbeeBindGatewayBeanSelect.setSelect(true);
                 }
-                ToastUtil.getInstance().showShort(R.string.gateway_no_support);
+                ToastUtils.showShort(R.string.gateway_no_support);
                 return;
             }
         }
         else {
-            ToastUtil.getInstance().showShort(R.string.gateway_confirm_version);
+            ToastUtils.showShort(R.string.gateway_confirm_version);
             return;
         }
         lastzigbeeBindGatewayBeanSelect= zigbeeBindGatewayBeanSelect;
@@ -286,7 +284,7 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
     @Override
     public void onGetWifiInfoFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.get_wifi_info_failed);
+        ToastUtils.showLong(R.string.get_wifi_info_failed);
     }
 
 

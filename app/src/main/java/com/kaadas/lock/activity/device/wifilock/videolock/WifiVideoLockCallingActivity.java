@@ -57,7 +57,7 @@ import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
-import com.yun.store.util.FileTool;
+import la.xiong.androidquick.tool.FileTool;
 import com.yuv.display.MyBitmapFactory;
 
 import java.io.File;
@@ -72,7 +72,7 @@ import java.util.TimerTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import la.xiong.androidquick.tool.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCallingView,
         WifiVideoLockCallingPresenter<IWifiLockVideoCallingView>> implements IWifiLockVideoCallingView{
@@ -308,7 +308,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
                     if (ContextCompat.checkSelfPermission(WifiVideoLockCallingActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions( WifiVideoLockCallingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission) + "");
+                        ToastUtils.showShort(getString(R.string.wifi_video_lock_microphone_permission) + "");
                     }else{
                         if(isFirstAudio){
 
@@ -423,7 +423,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             case R.id.iv_recoring:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    ToastUtil.showShort(getString(R.string.wifi_video_lock_read_and_write_permission));
+                    ToastUtils.showShort(getString(R.string.wifi_video_lock_read_and_write_permission));
                 }else{
                     if(!ivRecoring.isSelected()){
                         ivRecoring.setSelected(true);
@@ -464,8 +464,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     }
 
     private void showShort(String ss) {
-        ToastUtil.setGravity(Gravity.CENTER,0,0);
-        ToastUtil.showShort(ss);
+        ToastUtils.getDefaultMaker().setGravity(Gravity.CENTER,0,0).showShort(ss);
     }
 
     @Override
@@ -777,7 +776,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission));
+                ToastUtils.showShort(getString(R.string.wifi_video_lock_microphone_permission));
             }
         });
     }

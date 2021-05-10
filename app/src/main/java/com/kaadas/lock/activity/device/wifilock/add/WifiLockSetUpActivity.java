@@ -41,7 +41,7 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -307,7 +307,7 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
     @Override
     public void connectFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        ToastUtils.showLong(R.string.bind_failed);
     }
 
     @Override
@@ -323,13 +323,13 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
     @Override
     public void readFailed(int errorCode) {
         LogUtils.e("读取数据失败     " + errorCode);
-        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        ToastUtils.showLong(R.string.bind_failed);
         hiddenLoading();
     }
 
     @Override
     public void onBindSuccess(String wifiSn) {
-        ToastUtil.getInstance().showLong(R.string.wifi_lockbind_success);
+        ToastUtils.showLong(R.string.wifi_lockbind_success);
         hiddenLoading();
         MyApplication.getInstance().getAllDevicesByMqtt(true);
         Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
@@ -340,19 +340,19 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
 
     @Override
     public void onBindFailed(BaseResult baseResult) {
-        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        ToastUtils.showLong(R.string.bind_failed);
         hiddenLoading();
     }
 
     @Override
     public void onBindThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.bind_failed);
+        ToastUtils.showLong(R.string.bind_failed);
         hiddenLoading();
     }
 
     @Override
     public void onUpdateSuccess(String wifiSn) {
-        ToastUtil.getInstance().showLong(R.string.modify_success);
+        ToastUtils.showLong(R.string.modify_success);
         hiddenLoading();
         Intent intent = new Intent(this, WifiLockAddSuccessActivity.class);
         intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
@@ -361,19 +361,19 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
 
     @Override
     public void onUpdateFailed(BaseResult baseResult) {
-        ToastUtil.getInstance().showLong(R.string.modify_failed);
+        ToastUtils.showLong(R.string.modify_failed);
         hiddenLoading();
     }
 
     @Override
     public void onUpdateThrowable(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.modify_failed);
+        ToastUtils.showLong(R.string.modify_failed);
         hiddenLoading();
     }
 
     @Override
     public void onCheckError(byte[] data) {
-        ToastUtil.getInstance().showLong(R.string.admin_password_please_re_input);
+        ToastUtils.showLong(R.string.admin_password_please_re_input);
         hiddenLoading();
     }
 
@@ -477,7 +477,7 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
                 if (loadingDialog != null) {
                     loadingDialog.dismiss();
                 }
-                ToastUtil.getInstance().showLong(R.string.set_up_failed);
+                ToastUtils.showLong(R.string.set_up_failed);
                 setUpResult.onSetUpFailed();
             } else {
                 if (loadingDialog != null) {

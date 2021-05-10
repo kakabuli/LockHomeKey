@@ -16,7 +16,7 @@ import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalSecuritySettingPr
 import com.kaadas.lock.mvp.view.personalview.IPersonalSecuritySettingView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 
@@ -158,7 +158,7 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
         touchId = false;
         ivOpenTouchId.setImageResource(R.mipmap.iv_close);
         touchIdStatus.setText(getString(R.string.open_touch_id));
-        ToastUtil.getInstance().showLong(R.string.no_open_fingerprint);
+        ToastUtils.showLong(R.string.no_open_fingerprint);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class PersonalSecuritySettingActivity extends BaseActivity<IPersonalSecur
                         //手机不支持指纹识别
                         ivOpenTouchId.setImageResource(R.mipmap.iv_close);
                         touchIdStatus.setText(getString(R.string.open_touch_id));
-                        ToastUtil.getInstance().showShort(R.string.no_support_fingeprint);
+                        ToastUtils.showShort(R.string.no_support_fingeprint);
                     } else {
                         mPresenter.isOpenFingerPrint();
                     }

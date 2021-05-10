@@ -16,14 +16,13 @@ import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleWiFiSwitchPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
-import com.kaadas.lock.publiclibrary.ble.BleService;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +90,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
             case R.id.button_next: //输入管理员密码  下一步
                 String adminPassword = apPasswordEdit.getText().toString().trim();
                 if (!StringUtil.randomJudge(adminPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
 

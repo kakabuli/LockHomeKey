@@ -1,36 +1,26 @@
 package com.kaadas.lock.activity.device.gatewaylock.password;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.bluetooth.password.BlePasswordManagerActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
-import com.kaadas.lock.mvp.presenter.ble.PasswordDetailPresenter;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockPasswordSharePresenter;
-import com.kaadas.lock.mvp.view.IPasswordDetailView;
-import com.kaadas.lock.mvp.view.gatewayView.IGatewaySharedView;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockPasswordShareView;
-import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.BleUtil;
-import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SharedUtil;
-import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.bean.GatewayPasswordPlanBean;
 
 import java.util.Arrays;
@@ -195,7 +185,7 @@ public class GatewayPlanPasswordShareActivity extends BaseActivity<IGatewayLockP
                 if (SharedUtil.isWeixinAvilible(this)) {
                     SharedUtil.getInstance().sendWeiXin(message);
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.telephone_not_install_wechat);
+                    ToastUtils.showShort(R.string.telephone_not_install_wechat);
                 }
                 break;
             case R.id.tv_copy:
@@ -280,13 +270,13 @@ public class GatewayPlanPasswordShareActivity extends BaseActivity<IGatewayLockP
     @Override
     public void deletePasswordSuccess() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.delete_success));
+        ToastUtils.showLong(getString(R.string.delete_success));
     }
 
     @Override
     public void deletePasswordFailed(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.delete_fialed));
+        ToastUtils.showLong(getString(R.string.delete_fialed));
     }
 
     @Override

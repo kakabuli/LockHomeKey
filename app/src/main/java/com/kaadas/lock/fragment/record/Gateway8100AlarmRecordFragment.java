@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,27 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.adapter.BluetoothWarnMessageAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockAlaramRecordPresenter;
-import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockRecordPresenter;
 import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayAlarmLockRecordView;
-import com.kaadas.lock.mvp.view.gatewaylockview.IGatewayLockRecordView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetAlarmRecordResult;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SelectOpenLockResultBean;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.greenDao.bean.GatewayLockRecord;
-import com.kaadas.lock.utils.greenDao.db.DaoSession;
-import com.kaadas.lock.utils.greenDao.db.GatewayLockRecordDao;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -204,7 +195,7 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
             refreshLayout.finishRefresh();
             refreshLayout.finishLoadMore();
         }
-        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
+        ToastUtils.showShort(R.string.get_open_lock_record_fail);
         changeView(false);
     }
 
@@ -215,7 +206,7 @@ public class Gateway8100AlarmRecordFragment extends BaseFragment<IGatewayAlarmLo
             refreshLayout.finishLoadMore();
         }
         LogUtils.e("获取开锁记录异常  网关锁");
-        ToastUtil.getInstance().showShort(R.string.get_open_lock_record_fail);
+        ToastUtils.showShort(R.string.get_open_lock_record_fail);
         changeView(false);
     }
 

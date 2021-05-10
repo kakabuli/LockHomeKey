@@ -24,7 +24,7 @@ import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.io.File;
 
@@ -91,7 +91,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
 
     public void ota(View view) {
         if (isStarting) {
-            ToastUtil.getInstance().showLong(getString(R.string.isupdating_can_not_back));
+            ToastUtils.showLong(getString(R.string.isupdating_can_not_back));
             return;
         }
         startOta();
@@ -193,7 +193,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
         ClipData mClipData = ClipData.newPlainText("Label", wifiPassword);
         // 将ClipData内容放到系统剪贴板里。
         cm.setPrimaryClip(mClipData);
-        ToastUtil.getInstance().showLong(R.string.already_copy);
+        ToastUtils.showLong(R.string.already_copy);
 
     }
 
@@ -201,7 +201,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
     public void otaSuccess() {
         socketOtaUtil.release();
         isStarting = false;
-        ToastUtil.getInstance().showLong("蓝牙上报OTA成功");
+        ToastUtils.showLong("蓝牙上报OTA成功");
         otaStatus.setText("蓝牙上报OTA成功");
         AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.good_for_you), getString(R.string.ota_good_for_you), getString(R.string.hao_de), new AlertDialogUtil.ClickListener() {
             @Override
@@ -246,7 +246,7 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
     @Override
     public void onBackPressed() {
         if (isStarting) {
-            ToastUtil.getInstance().showLong(getString(R.string.isupdating_can_not_back));
+            ToastUtils.showLong(getString(R.string.isupdating_can_not_back));
             return;
         }
         mPresenter.finishOta((byte) moduleNumber, (byte) otaType, version);

@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +21,7 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +116,7 @@ public class AddDeviceCatEyeCheckWifiActivity extends BaseAddToApplicationActivi
                 finish();
             }
         }else {
-            ToastUtil.getInstance().showLong(R.string.open_gps_wifi);
+            ToastUtils.showLong(R.string.open_gps_wifi);
         }
 
     }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +26,7 @@ import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -87,7 +86,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 if (isLoadingBleRecord) {  //正在获取开锁记录，提示用户
-                    ToastUtil.getInstance().showShort(R.string.is_sync_warring_record);
+                    ToastUtils.showShort(R.string.is_sync_warring_record);
                     refreshlayout.finishRefresh();
                 } else {   //真正在
                     refreshlayout.setEnableLoadMore(true);
@@ -136,7 +135,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     @Override
     public void noData() {
-        ToastUtil.getInstance().showShort(R.string.lock_no_warn_message);
+        ToastUtils.showShort(R.string.lock_no_warn_message);
         hiddenLoading();
         isLoadingBleRecord = false;
     }
@@ -190,9 +189,9 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     @Override
     public void onLoadBleRecordFinish(boolean isComplete) {
         if (isComplete) {
-            ToastUtil.getInstance().showShort(R.string.sync_success);
+            ToastUtils.showShort(R.string.sync_success);
         } else {
-            ToastUtil.getInstance().showShort(R.string.warring_record_empty);
+            ToastUtils.showShort(R.string.warring_record_empty);
             hiddenLoading();
         }
         //加载完了   设置正在加载数据
@@ -266,7 +265,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     @Override
     public void onLoadServerRecordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(getActivity(), throwable));
         //加载服务器开锁记录失败
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
@@ -274,7 +273,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(getActivity(), result.getCode()));
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
@@ -284,12 +283,12 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtil.getInstance().showShort(R.string.server_no_warring_data);
+        ToastUtils.showShort(R.string.server_no_warring_data);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+        ToastUtils.showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
     }
@@ -322,7 +321,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
         switch (v.getId()) {
             case R.id.tv_synchronized_record:
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                    ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
+                    ToastUtils.showShort(R.string.is_loading_lock_record);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {

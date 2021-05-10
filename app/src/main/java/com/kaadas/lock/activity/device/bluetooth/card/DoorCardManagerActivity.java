@@ -26,7 +26,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -110,7 +110,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //下拉刷新   如果正在同步，不刷新  强制从服务器中获取数据
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                     refreshLayout.finishRefresh();
                 } else {
                     mPresenter.getAllPassword(bleLockInfo, true);
@@ -164,7 +164,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
                 break;
             case R.id.ll_add:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_card);
+                    ToastUtils.showShort(R.string.please_have_net_add_card);
                     return;
                 }
                 if (!mPresenter.isAuthAndNoConnect(bleLockInfo)) {
@@ -179,7 +179,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
             case R.id.tv_synchronized_record:
                 //同步
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                 } else {
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.syncPassword();
@@ -238,7 +238,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.sync_failed_card));
+        ToastUtils.showShort(getString(R.string.sync_failed_card));
     }
 
     @Override
@@ -285,7 +285,7 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         if (isSync) {
             return;
         }
-        ToastUtil.getInstance().showShort(R.string.get_card_failed);
+        ToastUtils.showShort(R.string.get_card_failed);
     }
     @Override
     public void onGetPasswordFailed(Throwable throwable) {
@@ -293,6 +293,6 @@ public class DoorCardManagerActivity extends BaseBleActivity<ICardManagerView, C
         if (isSync) {
             return;
         }
-        ToastUtil.getInstance().showShort(R.string.get_card_failed);
+        ToastUtils.showShort(R.string.get_card_failed);
     }
 }

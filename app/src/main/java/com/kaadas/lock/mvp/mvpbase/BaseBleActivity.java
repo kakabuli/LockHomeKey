@@ -6,7 +6,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.PermissionUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 /**
  * Create By lxj  on 2019/3/5
@@ -19,7 +19,7 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
     @Override
     public void onBleOpenStateChange(boolean isOpen) {  //锁中蓝牙没有打开  提示用户打开蓝牙
         if (!isOpen){
-            ToastUtil.getInstance().showLong(R.string.ble_is_close);
+            ToastUtils.showLong(R.string.ble_is_close);
         }
     }
 
@@ -29,19 +29,19 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
             showLoading(getString(R.string.is_authing));
         } else {
             hiddenLoading();
-            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            ToastUtils.showLong(R.string.connet_failed_please_near);
         }
     }
 
     @Override
     public void onSearchDeviceFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.no_fond_device);
+        ToastUtils.showLong(R.string.no_fond_device);
         hiddenLoading();
     }
 
     @Override
     public void onNeedRebind(int errorCode) {
-        ToastUtil.getInstance().showLong(R.string.rebind);
+        ToastUtils.showLong(R.string.rebind);
         hiddenLoading();
     }
 
@@ -49,9 +49,9 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
     public void authResult(boolean isSuccess) {
         hiddenLoading();
         if (isSuccess){
-            ToastUtil.getInstance().showLong(R.string.device_coneected_can_control_device);
+            ToastUtils.showLong(R.string.device_coneected_can_control_device);
         }else {
-            ToastUtil.getInstance().showLong(R.string.rebind);
+            ToastUtils.showLong(R.string.rebind);
         }
 
     }
@@ -99,7 +99,7 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
     @Override
     public void noPermissions(){
         PermissionUtil.getInstance().requestPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, this);
-        ToastUtil.getInstance().showLong(R.string.please_allow_ble_permission);
+        ToastUtils.showLong(R.string.please_allow_ble_permission);
     }
 
     /**
@@ -107,7 +107,7 @@ public abstract class BaseBleActivity<T extends IBleView, V extends BlePresenter
      */
     @Override
     public void noOpenGps(){
-        ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+        ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
     }
 
 

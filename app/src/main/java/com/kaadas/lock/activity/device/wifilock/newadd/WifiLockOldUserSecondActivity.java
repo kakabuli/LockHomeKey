@@ -6,7 +6,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +20,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +77,7 @@ public class WifiLockOldUserSecondActivity extends BaseAddToApplicationActivity 
                     startActivity(new Intent(this,WifiLockAddNewScanBLEActivity.class));
                 }
                 else {
-                    ToastUtil.getInstance().showShort("未知模组类型");
+                    ToastUtils.showShort("未知模组类型");
                 }
                 break;
         }

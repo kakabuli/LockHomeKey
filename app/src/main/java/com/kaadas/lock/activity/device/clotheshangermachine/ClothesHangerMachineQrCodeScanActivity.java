@@ -2,7 +2,6 @@ package com.kaadas.lock.activity.device.clotheshangermachine;
 
 import android.Manifest;
 import android.content.Intent;
-import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.kaadas.lock.MyApplication;
@@ -22,7 +20,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.clothesHangerMachineUtil.ClothesHangerMachineUtil;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.king.zxing.CameraScan;
@@ -102,12 +100,12 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
             if (i == -1) {
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     //禁止该权限
-                    ToastUtil.getInstance().showShort(getString(R.string.ban_camera_permission));
+                    ToastUtils.showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
                 } else {
                     //询问该权限
-                    ToastUtil.getInstance().showShort(getString(R.string.inquire_camera_permission));
+                    ToastUtils.showShort(getString(R.string.inquire_camera_permission));
                     finish();
                     return;
                 }

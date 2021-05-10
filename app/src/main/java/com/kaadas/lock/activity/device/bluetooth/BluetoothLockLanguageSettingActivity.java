@@ -16,7 +16,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.LanguageSetPresenter;
 import com.kaadas.lock.mvp.view.ILanguageSetView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +52,7 @@ public class BluetoothLockLanguageSettingActivity extends BaseBleActivity<ILangu
         if (mPresenter.isAuth(bleLockInfo, false)) {
             mPresenter.getDeviceInfo();
         }else{
-            ToastUtil.getInstance().showLong(R.string.please_connect_lock);
+            ToastUtils.showLong(R.string.please_connect_lock);
         }
         context = MyApplication.getInstance();
         initData();
@@ -120,7 +120,7 @@ public class BluetoothLockLanguageSettingActivity extends BaseBleActivity<ILangu
 
     @Override
     public void onGetLanguageFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.read_device_language_fail));
+        ToastUtils.showShort(getString(R.string.read_device_language_fail));
     }
 
     @Override
@@ -130,13 +130,13 @@ public class BluetoothLockLanguageSettingActivity extends BaseBleActivity<ILangu
         } else {  //英文
             languageCurrent = "en";
         }
-        ToastUtil.getInstance().showShort(R.string.set_success);
+        ToastUtils.showShort(R.string.set_success);
         hiddenLoading();
     }
 
     @Override
     public void onSetLangFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
         hiddenLoading();
     }
 }

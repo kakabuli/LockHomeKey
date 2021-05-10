@@ -25,7 +25,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
-import com.kaadas.lock.activity.addDevice.DeviceAddActivity;
 import com.kaadas.lock.activity.device.BleDetailActivity;
 import com.kaadas.lock.activity.device.BleAuthActivity;
 import com.kaadas.lock.activity.device.cateye.more.CateyeAuthorizationFunctionActivity;
@@ -54,14 +53,13 @@ import com.kaadas.lock.publiclibrary.http.result.ServerBleDevice;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
@@ -443,7 +441,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         deviceDetailAdapter.notifyDataSetChanged();
                     }
                 } else {
-                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                    ToastUtils.showShort(getString(R.string.network_exception));
                     refreshLayout.finishRefresh();
                 }
 
@@ -592,12 +590,12 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                                 startActivity(intent);
                             }
                         } else {
-                            ToastUtil.getInstance().showLong(R.string.lock_info_not_push);
+                            ToastUtils.showLong(R.string.lock_info_not_push);
                         }
                         break;
                 }
             } else {
-                ToastUtil.getInstance().showShort(R.string.please_refresh_page_get_newdata);
+                ToastUtils.showShort(R.string.please_refresh_page_get_newdata);
             }
         }
     }
@@ -622,14 +620,14 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
     public void deviceDataRefreshFail() {
         LogUtils.e("刷新页面失败");
         refresh.finishRefresh();
-        ToastUtil.getInstance().showShort(R.string.refresh_data_fail);
+        ToastUtils.showShort(R.string.refresh_data_fail);
     }
 
     @Override
     public void deviceDataRefreshThrowable(Throwable throwable) {
         //刷新页面异常
         refresh.finishRefresh();
-        ToastUtil.getInstance().showShort(R.string.refresh_data_fail);
+        ToastUtils.showShort(R.string.refresh_data_fail);
         LogUtils.e("刷新页面异常");
     }
 
@@ -806,7 +804,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 if (mqttService != null && mqttService.getMqttClient() != null && !mqttService.getMqttClient().isConnected()) {
                     LogUtils.e("重连次数" + mqttService.reconnectionNum);
                     if (mqttService.reconnectionNum == 0) {
-                        ToastUtil.getInstance().showShort(getString(R.string.mqtt_already_disconnect_refresh));
+                        ToastUtils.showShort(getString(R.string.mqtt_already_disconnect_refresh));
                     }
                 }
                 if (deviceDetailAdapter != null) {

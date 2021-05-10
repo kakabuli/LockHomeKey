@@ -27,7 +27,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -109,7 +109,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 //下拉刷新   如果正在同步，不刷新
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                     refreshLayout.finishRefresh();
                 } else {
                     mPresenter.getAllPassword(bleLockInfo, true);
@@ -168,7 +168,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
             case R.id.tv_synchronized_record:
                 //同步
                 if (isSync) {
-                    ToastUtil.getInstance().showShort(R.string.is_sync_please_wait);
+                    ToastUtils.showShort(R.string.is_sync_please_wait);
                 } else {
                     if (mPresenter.isAuth(bleLockInfo, true)) {
                         mPresenter.syncPassword();
@@ -209,7 +209,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.syc_pwd_fail));
+        ToastUtils.showShort(getString(R.string.syc_pwd_fail));
     }
 
     @Override
@@ -235,7 +235,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
     @Override
     public void endSync() {
         isSync = false;
-        ToastUtil.getInstance().showLong(R.string.sync_success);
+        ToastUtils.showLong(R.string.sync_success);
         hiddenLoading();
     }
 
@@ -249,7 +249,7 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
     public void onGetPasswordFailedServer(BaseResult result) {
 //        isNotPassword = true;
 //        passwordPageChange();
-        ToastUtil.getInstance().showShort(R.string.get_password_failed);
+        ToastUtils.showShort(R.string.get_password_failed);
         refreshLayout.finishRefresh();
     }
 
@@ -311,6 +311,6 @@ public class BlePasswordManagerActivity extends BaseBleActivity<IPasswordManager
         if (isSync) {
             return;
         }
-        ToastUtil.getInstance().showShort(R.string.get_password_failed);
+        ToastUtils.showShort(R.string.get_password_failed);
     }
 }

@@ -15,7 +15,6 @@ import android.bluetooth.le.ScanSettings;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
@@ -29,7 +28,6 @@ import android.widget.Toast;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
-import com.kaadas.lock.publiclibrary.NotificationManager;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.bean.NewVersionBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
@@ -38,7 +36,7 @@ import com.kaadas.lock.publiclibrary.ble.responsebean.ReadInfoBean;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -182,7 +180,7 @@ public class BleService extends Service {
         if (bluetoothAdapter == null) {
             //不支持
             //设备不支持蓝牙    此种情况很少出现
-            ToastUtil.getInstance().showLong(R.string.device_no_support_ble);
+            ToastUtils.showLong(R.string.device_no_support_ble);
             return;
         }
 

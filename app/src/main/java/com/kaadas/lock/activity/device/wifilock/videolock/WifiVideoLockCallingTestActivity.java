@@ -53,7 +53,7 @@ import com.kaadas.lock.widget.AVLoadingIndicatorView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
-import com.yun.store.util.FileTool;
+import la.xiong.androidquick.tool.FileTool;
 import com.yuv.display.MyBitmapFactory;
 
 import java.io.File;
@@ -71,7 +71,7 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import la.xiong.androidquick.tool.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVideoCallingView,
         WifiVideoLockCallingPresenter<IWifiLockVideoCallingView>> implements IWifiLockVideoCallingView{
@@ -226,13 +226,13 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
                     if (ContextCompat.checkSelfPermission(WifiVideoLockCallingTestActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions( WifiVideoLockCallingTestActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        ToastUtil.showShort("请先获取麦克风权限");
+                        ToastUtils.showShort("请先获取麦克风权限");
                     }else{
                         // 勾选了不再提示
                         if (! ActivityCompat.shouldShowRequestPermissionRationale
                                 (WifiVideoLockCallingTestActivity.this,Manifest.permission.RECORD_AUDIO )) {
                             // ...
-                            ToastUtil.showShort("请先获取麦克风权限");
+                            ToastUtils.showShort("请先获取麦克风权限");
                         }else{
                             if(mPresenter.isTalkback()){
                                 ivCalling.setSelected(false);
@@ -333,7 +333,7 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
             case R.id.iv_recoring:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    ToastUtil.showShort("请先获取读写权限");
+                    ToastUtils.showShort("请先获取读写权限");
                 }else{
                    /* // 勾选了不再提示
                     if (!ActivityCompat.shouldShowRequestPermissionRationale
@@ -620,7 +620,7 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ToastUtil.showShort("请先获取麦克风权限");
+                ToastUtils.showShort("请先获取麦克风权限");
             }
         });
     }

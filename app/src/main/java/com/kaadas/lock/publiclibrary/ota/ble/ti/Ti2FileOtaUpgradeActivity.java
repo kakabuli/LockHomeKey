@@ -26,18 +26,15 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
 import com.kaadas.lock.publiclibrary.ota.OtaBaseActivity;
 import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.CircleProgress;
 import com.kaadas.lock.widget.OtaMutiProgress;
-import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 
 import java.io.File;
@@ -321,7 +318,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     @Override
     public void onBackPressed() {
         if (isUpdating) {
-            ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+            ToastUtils.showLong(R.string.isupdating_can_not_back);
         } else {
             finish();
         }
@@ -332,7 +329,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
         switch (view.getId()) {
             case R.id.iv_back:
                 if (isUpdating) {
-                    ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+                    ToastUtils.showLong(R.string.isupdating_can_not_back);
                 } else {
                     finish();
                 }
@@ -342,7 +339,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                 break;
             case R.id.start_upgrade:
                 if (isUpdating) {
-                    ToastUtil.getInstance().showLong(R.string.isupdating_can_not_back);
+                    ToastUtils.showLong(R.string.isupdating_can_not_back);
                     break;
                 }
                 isUpdating = true;
@@ -618,7 +615,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
             if (bluetoothLeScanner != null) {
                 bluetoothLeScanner.stopScan(newScanBleCallback);
             }
-            ToastUtil.getInstance().showLong(R.string.please_near_lock);
+            ToastUtils.showLong(R.string.please_near_lock);
             otaFailed("搜索超时  " + currentStatus);
         }
     };
@@ -631,7 +628,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
                 bluetoothGatt.close();
                 isHand = true;
             }
-            ToastUtil.getInstance().showLong(R.string.connet_failed_please_near);
+            ToastUtils.showLong(R.string.connet_failed_please_near);
             otaFailed("超时  " + currentStatus);
         }
     };
@@ -663,7 +660,7 @@ public class Ti2FileOtaUpgradeActivity extends OtaBaseActivity implements View.O
     @Override
     public void onDownFailed(String url, String path, Throwable throwable) {
         LogUtils.e("下载出错  " + throwable.getMessage());
-        ToastUtil.getInstance().showLong(R.string.down_failed);
+        ToastUtils.showLong(R.string.down_failed);
         mutiProgress.setCurrNodeNO(0, false);
         mCircleProgress2.setValue(0);
         otaFailed("");

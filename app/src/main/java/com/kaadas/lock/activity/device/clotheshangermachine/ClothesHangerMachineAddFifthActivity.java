@@ -4,31 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
+
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineAddFifthPresenter;
-import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineAddTourthPresenter;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineAddFifthView;
-import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineAddTourthView;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.dialog.MessageDialog;
-import com.kaadas.lock.widget.DropEditText;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.WifiCircleProgress;
 
 import java.util.concurrent.TimeUnit;
@@ -230,11 +219,11 @@ public class ClothesHangerMachineAddFifthActivity extends BaseActivity<IClothesH
 
     @Override
     public void onBindDeviceFailed() {
-        ToastUtil.getInstance().showLong(R.string.network_exception);
+        ToastUtils.showLong(R.string.network_exception);
     }
 
     @Override
     public void onBindDeviceFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 }

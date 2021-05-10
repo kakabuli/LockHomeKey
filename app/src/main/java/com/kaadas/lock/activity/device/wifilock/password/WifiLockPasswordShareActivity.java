@@ -3,12 +3,10 @@ package com.kaadas.lock.activity.device.wifilock.password;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.DateUtils;
@@ -17,7 +15,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SharedUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -167,7 +165,7 @@ public class WifiLockPasswordShareActivity extends BaseAddToApplicationActivity 
                 if (SharedUtil.isWeixinAvilible(this)) {
                     SharedUtil.getInstance().sendWeiXin(message);
                 } else {
-                    ToastUtil.getInstance().showShort(R.string.telephone_not_install_wechat);
+                    ToastUtils.showShort(R.string.telephone_not_install_wechat);
                 }
                 break;
             case R.id.tv_copy:

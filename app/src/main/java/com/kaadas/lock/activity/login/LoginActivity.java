@@ -1,13 +1,11 @@
 package com.kaadas.lock.activity.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -18,20 +16,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
-
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
 
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.mvp.presenter.LoginPresenter;
-import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
-import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.result.LoginErrorResult;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.utils.AES;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DetectionEmailPhone;
@@ -42,19 +34,11 @@ import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.ILoginView;
 
 import net.sdvn.cmapi.CMAPI;
 import net.sdvn.cmapi.ConnectionService;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.CompletableFuture;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -263,7 +247,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 return;
             }
             if (StringUtil.judgeSpecialCharacter(pwd)) {
-                ToastUtil.getInstance().showShort(R.string.not_input_special_symbol);
+                ToastUtils.showShort(R.string.not_input_special_symbol);
                 return;
             }
             if (StringUtil.isNumeric(phone)) {
@@ -299,7 +283,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
             }
 
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -345,7 +329,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
     public void onLoginFailed(Throwable e) {
         btnLogin.setBackgroundResource(R.drawable.login_button_shape);
         hiddenLoading();
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, e));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, e));
     }
 
     @Override
@@ -363,7 +347,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                 AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.account_password_error));
             }
         }else {
-            ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+            ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
         }
     }
 

@@ -119,7 +119,9 @@
         <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockAddSuccessActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockScanFailedActivity"/>
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockScanFailedActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockScanActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

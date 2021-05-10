@@ -24,16 +24,13 @@ import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.adapter.AddBluetoothPairSuccessAdapter;
 import com.kaadas.lock.bean.deviceAdd.AddBluetoothPairSuccessBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleSuccessPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockAddSuccessPresenter;
-import com.kaadas.lock.mvp.view.deviceaddview.IBindBleSuccessView;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockAddSuccessView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,11 +153,11 @@ public class WifiLockAddSuccessActivity extends BaseActivity<IWifiLockAddSuccess
             case R.id.save:
                 String name = inputName.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    ToastUtil.getInstance().showShort(R.string.not_empty);
+                    ToastUtils.showShort(R.string.not_empty);
                     return;
                 }
                 if (!StringUtil.nicknameJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
 

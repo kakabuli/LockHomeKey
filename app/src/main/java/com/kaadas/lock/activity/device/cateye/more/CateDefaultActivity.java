@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.bean.MyDate;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.cateye.CatEyeDefaultPresenter;
 import com.kaadas.lock.mvp.view.cateye.ICatEyeDefaultView;
@@ -20,9 +19,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.GetPirSlientBean;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.PirDefault;
-import com.kaadas.lock.utils.greenDao.db.CateEyeInfoBaseDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.PirDefaultDao;
 
@@ -149,7 +147,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
                 break;
             case R.id.save:
                 if (getPirEnableFlag == false) {
-                    ToastUtil.getInstance().showShort(getString(R.string.get_pir_slient_fail));
+                    ToastUtils.showShort(getString(R.string.get_pir_slient_fail));
                     return;
                 }
                 String periodtimeStr = periodtime.getText().toString().trim();
@@ -158,34 +156,34 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
                 String ustStr = ust.getText().toString().trim();
                 String maxprohibitionStr = maxprohibition.getText().toString().trim();
                 if (TextUtils.isEmpty(periodtimeStr) || TextUtils.isEmpty(thresholdStr) || TextUtils.isEmpty(protecttimeStr) || TextUtils.isEmpty(ustStr) || TextUtils.isEmpty(maxprohibitionStr)) {
-                    ToastUtil.getInstance().showShort(getString(R.string.parameter_not_empty));
+                    ToastUtils.showShort(getString(R.string.parameter_not_empty));
                     return;
                 }
                 int periodtimeInt = Integer.parseInt(periodtimeStr);
                 if (periodtimeInt > 60 || periodtimeInt <= 0) {
-                    ToastUtil.getInstance().showShort(getString(R.string.please_input_legal_number));
+                    ToastUtils.showShort(getString(R.string.please_input_legal_number));
                     return;
                 }
 
                 int thresholdInt = Integer.parseInt(thresholdStr);
                 if (thresholdInt > 60 || thresholdInt <= 0) {
-                    ToastUtil.getInstance().showShort(getString(R.string.please_input_legal_number));
+                    ToastUtils.showShort(getString(R.string.please_input_legal_number));
                     return;
                 }
                 int protecttimeInt = Integer.parseInt(protecttimeStr);
                 if (protecttimeInt > 60 || periodtimeInt <= 0) {
-                    ToastUtil.getInstance().showShort(getString(R.string.please_input_legal_number));
+                    ToastUtils.showShort(getString(R.string.please_input_legal_number));
                     return;
                 }
                 int ustInt = Integer.parseInt(ustStr);
                 if (ustInt > 60 || ustInt <= 0) {
-                    ToastUtil.getInstance().showShort(getString(R.string.please_input_legal_number));
+                    ToastUtils.showShort(getString(R.string.please_input_legal_number));
                     return;
                 }
 
                 int maxprohibitionInt = Integer.parseInt(maxprohibitionStr);
                 if (maxprohibitionInt > 60 || maxprohibitionInt <= 0) {
-                    ToastUtil.getInstance().showShort(getString(R.string.please_input_legal_number));
+                    ToastUtils.showShort(getString(R.string.please_input_legal_number));
                     return;
                 }
                 loadingDialog.show(getString(R.string.take_effect_be_being));
@@ -258,7 +256,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_pir_slient_fail);
+        ToastUtils.showShort(R.string.get_pir_slient_fail);
     }
 
     @Override
@@ -267,7 +265,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(R.string.get_pir_slient_fail);
+        ToastUtils.showShort(R.string.get_pir_slient_fail);
 
     }
 
@@ -276,7 +274,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_success));
+        ToastUtils.showShort(getString(R.string.set_success));
     }
 
     @Override
@@ -284,7 +282,7 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 
     @Override
@@ -292,6 +290,6 @@ public class CateDefaultActivity extends BaseActivity<ICatEyeDefaultView, CatEye
         if (loadingDialog != null) {
             loadingDialog.dismiss();
         }
-        ToastUtil.getInstance().showShort(getString(R.string.set_failed));
+        ToastUtils.showShort(getString(R.string.set_failed));
     }
 }

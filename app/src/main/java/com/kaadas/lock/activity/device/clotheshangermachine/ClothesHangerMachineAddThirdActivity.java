@@ -5,18 +5,16 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.text.TextUtils;
+
 import android.view.View;
 import android.widget.ImageView;
 
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewWiFiScanBLEFailedActivity;
 import com.kaadas.lock.adapter.ClothesHangerMachineBleWiFiSearchAdapter;
-import com.kaadas.lock.adapter.DeviceBleWiFiSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
@@ -24,25 +22,19 @@ import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.clotheshangermachinepresenter.ClothesHangerMachineAddThirdPresenter;
 import com.kaadas.lock.mvp.view.clotheshangermachineview.IClothesHangerMachineAddThirdView;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.utils.AlertDialogUtil;
-import com.kaadas.lock.utils.AnimationsContainer;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesHangerMachineAddThirdView,
         ClothesHangerMachineAddThirdPresenter<IClothesHangerMachineAddThirdView>> implements IClothesHangerMachineAddThirdView, OnBindClickListener {
@@ -105,7 +97,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
         if (GpsUtil.isOPen(this)){
             mPresenter.searchDevices();
         }else {
-            ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+            ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
         }
     }
 
@@ -140,7 +132,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
                 if (GpsUtil.isOPen(this)){
                     mPresenter.searchDevices();
                 }else {
-                    ToastUtil.getInstance().showLong(R.string.check_phone_not_open_gps_please_open);
+                    ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
                 }
                 break;
         }
@@ -185,7 +177,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
             mPresenter.checkBind(wifiModelType,device);
 //            showLoading(getString(R.string.is_checking_bind));
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -222,7 +214,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
     @Override
     public void onScanDevicesFailed(Throwable throwable) {
         stopSearchAnimation();
-        ToastUtil.getInstance().showShort(getString(R.string.scan_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.scan_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
@@ -276,14 +268,14 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
 
     @Override
     public void onCheckBindFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.bind_failed) + HttpUtils.httpProtocolErrorCode(this, throwable));
         hiddenLoading();
     }
 
     @Override
     public void checkBindFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.network_exception);
+        ToastUtils.showLong(R.string.network_exception);
     }
 
     @Override

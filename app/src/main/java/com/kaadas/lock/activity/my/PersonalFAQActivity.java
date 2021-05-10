@@ -3,41 +3,18 @@ package com.kaadas.lock.activity.my;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.adapter.PersonalFAQAdapter;
 import com.kaadas.lock.fragment.help.PersonalFAQHangerHelpFragment;
 import com.kaadas.lock.fragment.help.PersonalFAQLockHelpFragment;
-import com.kaadas.lock.fragment.help.WifiVideoLockCommonProblemHelpFragment;
-import com.kaadas.lock.fragment.help.WifiVideoLockToConfigureHelpFragment;
-import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.bean.FAQBean;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
-import com.kaadas.lock.mvp.presenter.personalpresenter.PersonalFAQPresenter;
-import com.kaadas.lock.publiclibrary.http.result.GetFAQResult;
-import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
-import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.ToastUtil;
-import com.kaadas.lock.utils.cachefloder.ACache;
-import com.kaadas.lock.utils.cachefloder.CacheFloder;
-import com.kaadas.lock.mvp.view.personalview.IPersonalFAQView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

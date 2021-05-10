@@ -17,7 +17,7 @@ import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import java.util.concurrent.TimeoutException;
 
@@ -110,7 +110,7 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
         } else if (throwable instanceof TimeoutException) {
             errorCause = getString(R.string.set_failed_tineout);
         }
-        ToastUtil.getInstance().showLong(errorCause);
+        ToastUtils.showLong(errorCause);
         Intent intent = new Intent(this, DoorCardNoConnectOneActivity.class);
         startActivity(intent);
     }
@@ -130,21 +130,21 @@ public class DoorCardIdentificationActivity extends BaseBleActivity<IAddCardEndV
 
     @Override
     public void onUploadPasswordNickFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(this,DoorCardManagerActivity.class));
         finish();
     }
 
     @Override
     public void onUploadPasswordNickFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(this,DoorCardManagerActivity.class));
         finish();
     }
 
     @Override
     public void syncNumberFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_card_failed_number);
+        ToastUtils.showShort(R.string.set_card_failed_number);
         startActivity(new Intent(this,DoorCardManagerActivity.class));
         finish();
     }

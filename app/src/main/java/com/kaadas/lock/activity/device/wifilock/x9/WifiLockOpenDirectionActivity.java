@@ -11,14 +11,12 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.x9.WifiLockOpenDirectionPresenter;
-import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
 import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockOpenDirectionView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,21 +124,21 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
     @Override
     public void settingThrowable(Throwable throwable) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
+        ToastUtils.showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingFailed() {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
+        ToastUtils.showShort(getString(R.string.modify_failed));
         finish();
     }
 
     @Override
     public void settingSuccess(int openDirection) {
         hiddenLoading();
-        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
+        ToastUtils.showShort(getString(R.string.modify_success));
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_OPEN_DIRECTION,openDirection);
         setResult(RESULT_OK,intent);

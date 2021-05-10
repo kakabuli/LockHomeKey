@@ -40,7 +40,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.CustomDatePicker;
 
 import java.text.SimpleDateFormat;
@@ -220,13 +220,13 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                 break;
             case R.id.btn_confirm_generation:
                 if (!NetUtil.isNetworkAvailable()) {
-                    ToastUtil.getInstance().showShort(R.string.please_have_net_add_pwd);
+                    ToastUtils.showShort(R.string.please_have_net_add_pwd);
                     return;
                 }
                 String strPassword = etPassword.getText().toString().trim();
                 String nickName = etName.getText().toString().trim();
                 if (!StringUtil.randomJudge(strPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 if (StringUtil.checkSimplePassword(strPassword)) {
@@ -253,11 +253,11 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                 }
 
                 if (!StringUtil.nicknameJudge(nickName)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
                 if (0 == timeStatus) {
-                    ToastUtil.getInstance().showShort(R.string.select_time_ce_lue);
+                    ToastUtils.showShort(R.string.select_time_ce_lue);
                     return;
                 } else if (KeyConstants.YONG_JIU == timeStatus) {
                     if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -273,16 +273,16 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
                 } else if (KeyConstants.CUSTOM == timeStatus) {
                     //自定义
                     if (startMilliseconds == 0) {
-                        ToastUtil.getInstance().showShort(R.string.select_take_effect_time);
+                        ToastUtils.showShort(R.string.select_take_effect_time);
                         return;
                     }
                     if (endMilliseconds == 0) {
-                        ToastUtil.getInstance().showShort(R.string.select_end_time);
+                        ToastUtils.showShort(R.string.select_end_time);
                         return;
                     }
 
                     if (startMilliseconds >= endMilliseconds) {
-                        ToastUtil.getInstance().showShort(R.string.end_time_must_bigger_end_time);
+                        ToastUtils.showShort(R.string.end_time_must_bigger_end_time);
                         return;
                     }
                     LogUtils.e("开始时间   " + DateUtils.getDateTimeFromMillisecond(startMilliseconds));
@@ -406,7 +406,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
 
     @Override
     public void onSetUserTypeFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -416,7 +416,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
 
     @Override
     public void onSetTimePlanFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -427,7 +427,7 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
 
     @Override
     public void onSetPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.set_failed);
+        ToastUtils.showShort(R.string.set_failed);
     }
 
     @Override
@@ -471,14 +471,14 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
 
     @Override
     public void onUploadFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onUploadFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(R.string.lock_set_success_please_sync);
+        ToastUtils.showShort(R.string.lock_set_success_please_sync);
         startActivity(new Intent(getContext(), BlePasswordManagerActivity.class));
         getActivity().finish();
     }
@@ -495,13 +495,13 @@ public class PasswordTimeFragment extends BaseBleFragment<IAddTimePasswprdView, 
 
     @Override
     public void onSyncPasswordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.set_failed);
+        ToastUtils.showLong(R.string.set_failed);
     }
 
     @Override
     public void onTimePwdFull() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(R.string.only_0to4);
+        ToastUtils.showLong(R.string.only_0to4);
     }
 
     @Override

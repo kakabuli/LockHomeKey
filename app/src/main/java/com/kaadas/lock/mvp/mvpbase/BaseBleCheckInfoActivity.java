@@ -15,7 +15,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extends BleCheckOTAPresenter<T>> extends BaseBleActivity<T, V> implements ICheckOtaView {
 
@@ -59,7 +59,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
     @Override
     public void snError() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.sn_error));
+        ToastUtils.showLong(getString(R.string.sn_error));
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
     @Override
     public void dataError() {
         hiddenLoading();
-        ToastUtil.getInstance().showLong(getString(R.string.data_params_error));
+        ToastUtils.showLong(getString(R.string.data_params_error));
     }
 
     @Override
@@ -84,7 +84,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
             } else if (bleLockInfo.getBleType() == 2) {  //P6升级
 
             } else {
-                ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2));
+                ToastUtils.showLong(getString(R.string.check_update_failed2));
                 return;
             }
         }
@@ -108,7 +108,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                     public void right() {
                         if (type == 1) {
                             if (bleLockInfo.getBattery() != -1 && bleLockInfo.getBattery() < 20) {
-                                ToastUtil.getInstance().showLong(R.string.low_power_warring);
+                                ToastUtils.showLong(R.string.low_power_warring);
                                 return;
                             }
                             SPUtils.put(KeyConstants.DEVICE_SN + bleLockInfo.getServerLockInfo().getMacLock(), SN);    //Key
@@ -163,7 +163,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
         hiddenLoading();
         LogUtils.e("有两个固件需要升级");
         if (bleLockInfo.getBleType() != 1) { //Ti升级
-            ToastUtil.getInstance().showLong(getString(R.string.check_update_failed2) + bleLockInfo.getBleType());
+            ToastUtils.showLong(getString(R.string.check_update_failed2) + bleLockInfo.getBleType());
             return;
         }
         AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint)
@@ -176,7 +176,7 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
                     @Override
                     public void right() {
                         if (bleLockInfo.getBattery() != -1 && bleLockInfo.getBattery() < 20) {
-                            ToastUtil.getInstance().showLong(R.string.low_power_warring);
+                            ToastUtils.showLong(R.string.low_power_warring);
                             return;
                         }
                         isEnterOta = true;
@@ -215,13 +215,13 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 
     @Override
     public void readInfoFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(getString(R.string.check_update_failed));
+        ToastUtils.showLong(getString(R.string.check_update_failed));
         hiddenLoading();
     }
 
     @Override
     public void unknowError(String errorCode) {
-        ToastUtil.getInstance().showLong(R.string.unknown_error);
+        ToastUtils.showLong(R.string.unknown_error);
         hiddenLoading();
     }
 

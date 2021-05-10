@@ -29,7 +29,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -105,7 +105,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 if (isLoadingBleRecord) {  //正在获取开锁记录，提示用户
-                    ToastUtil.getInstance().showShort(R.string.is_loading_ble_record_please_wait);
+                    ToastUtils.showShort(R.string.is_loading_ble_record_please_wait);
                     refreshlayout.finishRefresh();
                 } else {   //真正在
                     refreshlayout.setEnableLoadMore(true);
@@ -127,7 +127,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
         switch (v.getId()) {
             case R.id.tv_synchronized_record:
                 if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                    ToastUtil.getInstance().showShort(R.string.is_loading_lock_record);
+                    ToastUtils.showShort(R.string.is_loading_lock_record);
                     return;
                 }
                 if (mPresenter.isAuth(bleLockInfo, true)) {
@@ -158,7 +158,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
      */
     @Override
     public void noData() {
-        ToastUtil.getInstance().showShort(R.string.lock_no_record);
+        ToastUtils.showShort(R.string.lock_no_record);
         hiddenLoading();
     }
 
@@ -194,9 +194,9 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     @Override
     public void onLoadBleRecordFinish(boolean isComplete) {
         if (isComplete) {
-            ToastUtil.getInstance().showShort(R.string.sync_success);
+            ToastUtils.showShort(R.string.sync_success);
         } else {
-            ToastUtil.getInstance().showShort(R.string.get_record_failed_please_wait);
+            ToastUtils.showShort(R.string.get_record_failed_please_wait);
             hiddenLoading();
         }
         //加载完了   设置正在加载数据
@@ -241,12 +241,12 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
 //        ToastUtil.getInstance().showShort(R.string.get_record_failed);
-        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(getActivity(),throwable));
+        ToastUtils.showShort( HttpUtils.httpProtocolErrorCode(getActivity(),throwable));
     }
 
     @Override
     public void onLoadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort( HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtils.showShort( HttpUtils.httpErrorCode(getActivity(), result.getCode()));
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
@@ -256,12 +256,12 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtil.getInstance().showShort(R.string.server_no_data);
+        ToastUtils.showShort(R.string.server_no_data);
     }
 
     @Override
     public void noMoreData() {   //没有更多数据   提示用户  且禁止掉上拉加载更多功能
-        ToastUtil.getInstance().showShort(R.string.no_more_data);
+        ToastUtils.showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
     }
@@ -269,19 +269,19 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     @Override
     public void onUploadServerRecordSuccess() {
         LogUtils.e("记录上传成功");
-        ToastUtil.getInstance().showShort(R.string.lock_record_upload_success);
+        ToastUtils.showShort(R.string.lock_record_upload_success);
     }
 
     @Override
     public void onUploadServerRecordFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort( HttpUtils.httpProtocolErrorCode(getActivity(),throwable));
+        ToastUtils.showShort( HttpUtils.httpProtocolErrorCode(getActivity(),throwable));
         LogUtils.e("记录上传失败");
 //        ToastUtil.getInstance().showShort(R.string.record_upload_failed);
     }
 
     @Override
     public void onUploadServerRecordFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort( HttpUtils.httpErrorCode(getActivity(), result.getCode()));
+        ToastUtils.showShort( HttpUtils.httpErrorCode(getActivity(), result.getCode()));
     }
 
 

@@ -17,10 +17,9 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.RotateTransformation;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import java.util.List;
-
-import la.xiong.androidquick.tool.SizeUtils;
 
 public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAlarmRecord, BaseViewHolder> {
     List<WifiVideoLockAlarmRecord> data;
@@ -80,11 +79,11 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
 /*        if(record.getThumbUrl() != null ){
             if(record.isThumbState()){
                 ivContent.setVisibility(View.VISIBLE);
-                view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1), SizeUtils.dp2px(70)));
+                view.setLayoutParams(new LinearLayout.LayoutParams(DensityUtil.dp2px(1), DensityUtil.dp2px(70)));
             }else{
                 if(record.getFileDate() == null){
                     ivContent.setVisibility(View.GONE);
-                    view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1),SizeUtils.dp2px(27)));
+                    view.setLayoutParams(new LinearLayout.LayoutParams(DensityUtil.dp2px(1),DensityUtil.dp2px(27)));
                 }
             }
         }*/
@@ -92,14 +91,14 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
         if(record.getThumbUrl() == null && !record.isThumbState()){
             if(record.getFileName() == null || record.getFileName().isEmpty()){
                 rlPic.setVisibility(View.GONE);
-                view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1),SizeUtils.dp2px(27)));
+                view.setLayoutParams(new LinearLayout.LayoutParams(DensityUtil.dp2px(1),DensityUtil.dp2px(27)));
             }else{
                 rlPic.setVisibility(View.VISIBLE);
-                view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1), SizeUtils.dp2px(70)));
+                view.setLayoutParams(new LinearLayout.LayoutParams(DensityUtil.dp2px(1), DensityUtil.dp2px(70)));
             }
         }else{
             rlPic.setVisibility(View.VISIBLE);
-            view.setLayoutParams(new LinearLayout.LayoutParams(SizeUtils.dp2px(1), SizeUtils.dp2px(70)));
+            view.setLayoutParams(new LinearLayout.LayoutParams(DensityUtil.dp2px(1), DensityUtil.dp2px(70)));
         }
 
         switch (record.getType()){

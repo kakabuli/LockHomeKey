@@ -19,7 +19,7 @@ import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.clothesHangerMachineUtil.ClothesHangerMachineUtil;
 import com.kaadas.lock.utils.dialog.MessageDialog;
 
@@ -77,11 +77,11 @@ public class ClothesHangerMachineAddActivity extends BaseActivity<IClothesHanger
             case R.id.add:
                 String name = wifi_lock_choose_to_input.getText().toString().trim();
                 if (TextUtils.isEmpty(name)) {
-                    ToastUtil.getInstance().showShort(R.string.not_empty);
+                    ToastUtils.showShort(R.string.not_empty);
                     return;
                 }
                 if (!StringUtil.nicknameJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                    ToastUtils.showShort(R.string.nickname_verify_error);
                     return;
                 }
                 mPresenter.searchClothesMachine(name);

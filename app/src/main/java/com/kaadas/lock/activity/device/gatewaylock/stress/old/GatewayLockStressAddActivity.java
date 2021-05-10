@@ -20,7 +20,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +102,7 @@ public class GatewayLockStressAddActivity extends BaseActivity<IGatewayLockStres
                 }
                 String strForeverPassword = etPassword.getText().toString().trim();
                 if (!StringUtil.randomJudge(strForeverPassword)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 if (StringUtil.checkSimplePassword(strForeverPassword)) {

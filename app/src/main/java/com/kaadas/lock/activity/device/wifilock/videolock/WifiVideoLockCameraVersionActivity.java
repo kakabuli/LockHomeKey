@@ -5,15 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +22,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
@@ -439,7 +434,7 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
                     if (flag) {
 
                     } else {
-                        ToastUtil.getInstance().showLong(getString(R.string.ota_fail));
+                        ToastUtils.showLong(getString(R.string.ota_fail));
                     }
                     if (avi != null) {
                         avi.hide();

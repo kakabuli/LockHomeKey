@@ -14,8 +14,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,7 +27,6 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.bluetooth.BleDeviceInfoActivity;
-import com.kaadas.lock.activity.device.oldbluetooth.OldBleDetailActivity;
 import com.kaadas.lock.activity.device.oldbluetooth.OldDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OldAndAuthBleDetailPresenter;
@@ -45,7 +42,7 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import net.sdvn.cmapi.util.LogUtils;
 
@@ -314,7 +311,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     @Override
     public void onElectricUpdataFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
@@ -328,7 +325,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     @Override
     public void onDeleteDeviceSuccess() {
-        ToastUtil.getInstance().showLong(R.string.delete_success);
+        ToastUtils.showLong(R.string.delete_success);
         hiddenLoading();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -338,7 +335,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     @Override
     public void onDeleteDeviceFailed(Throwable throwable) {
         LogUtils.e("删除失败   " + throwable.getMessage());
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
         hiddenLoading();
     }
 
@@ -346,7 +343,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     public void onDeleteDeviceFailedServer(BaseResult result) {
         LogUtils.e("删除失败   " + result.toString());
         String httpErrorCode = HttpUtils.httpErrorCode(this, result.getCode());
-        ToastUtil.getInstance().showLong(httpErrorCode);
+        ToastUtils.showLong(httpErrorCode);
         hiddenLoading();
     }
 
@@ -357,7 +354,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     @Override
     public void notAdminMustHaveNet() {
-        ToastUtil.getInstance().showLong(R.string.not_admin_must_have_net);
+        ToastUtils.showLong(R.string.not_admin_must_have_net);
     }
 
     @Override
@@ -381,7 +378,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
             public void onClick(View v) {
                 String name = editText.getText().toString().trim();
                 if (!StringUtil.randomJudge(name)) {
-                    ToastUtil.getInstance().showShort(R.string.random_verify_error);
+                    ToastUtils.showShort(R.string.random_verify_error);
                     return;
                 }
                 mPresenter.realOpenLock(name, false);
@@ -392,7 +389,7 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
 
     @Override
     public void authFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
@@ -423,12 +420,12 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
     public void openLockFailed(Throwable throwable) {
         changLockStatus(5);
         if (throwable instanceof TimeoutException) {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+            ToastUtils.showShort(getString(R.string.open_lock_failed));
         } else if (throwable instanceof BleProtocolFailedException) {
             BleProtocolFailedException bleProtocolFailedException = (BleProtocolFailedException) throwable;
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+            ToastUtils.showShort(getString(R.string.open_lock_failed));
         } else {
-            ToastUtil.getInstance().showShort(getString(R.string.open_lock_failed));
+            ToastUtils.showShort(getString(R.string.open_lock_failed));
         }
         handler.postDelayed(lockRunnable, 3000);
     }
@@ -450,9 +447,9 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
                 if (mPresenter.isAuth(bleLockInfo, true)) {
                     if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
                         if (bleLockInfo.getSafeMode() == 1) {
-                            ToastUtil.getInstance().showLong(R.string.safe_mode_can_not_open);
+                            ToastUtils.showLong(R.string.safe_mode_can_not_open);
                         } else if (bleLockInfo.getBackLock() == 0) {
-                            ToastUtil.getInstance().showLong(R.string.back_lock_can_not_open);
+                            ToastUtils.showLong(R.string.back_lock_can_not_open);
                             changLockStatus(2);
                         }
                         return;

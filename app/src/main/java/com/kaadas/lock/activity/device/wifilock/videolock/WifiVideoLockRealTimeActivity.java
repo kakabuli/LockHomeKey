@@ -24,10 +24,9 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -533,9 +532,9 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
                 public void run() {
 
                     if(flag){
-                        ToastUtil.getInstance().showShort(getString(R.string.modify_success));
+                        ToastUtils.showShort(getString(R.string.modify_success));
                     }else{
-                        ToastUtil.getInstance().showShort(getString(R.string.modify_failed));
+                        ToastUtils.showShort(getString(R.string.modify_failed));
                     }
                     if(avi != null){
                         tvTips.setVisibility(View.GONE);

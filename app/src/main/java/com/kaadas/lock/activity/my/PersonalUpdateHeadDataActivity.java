@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
@@ -31,7 +30,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.IPersonalDataView;
 import com.kaadas.lock.widget.BottomMenuDialog;
 import com.kaadas.lock.widget.CircleImageView;
@@ -246,7 +245,7 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
                 uploadPhoto();
 
             } else {
-                ToastUtil.getInstance().showShort(R.string.no_data);
+                ToastUtils.showShort(R.string.no_data);
             }
         }
 
@@ -313,12 +312,12 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
 
     @Override
     public void photoUploadFail(BaseResult baseResult) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, baseResult.getCode()));
     }
 
     @Override
     public void photoUploadError(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.upload_hear) + HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(getString(R.string.upload_hear) + HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
 

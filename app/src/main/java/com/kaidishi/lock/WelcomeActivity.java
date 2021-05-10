@@ -3,7 +3,6 @@ package com.kaidishi.lock;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -33,8 +32,8 @@ import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ServiceUtils;
-import com.kaadas.lock.utils.ToastUtil;
+import com.kaadas.lock.utils.ServiceAliveUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
 import com.kaadas.lock.mvp.view.ISplashView;
@@ -144,7 +143,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         if (NetUtil.isNetworkAvailable()) {
 //            mPresenter.getAppVersion();
         } else {
-            ToastUtil.getInstance().showShort(R.string.noNet);
+            ToastUtils.showShort(R.string.noNet);
         }
     }
 
@@ -274,7 +273,7 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
             startService(bleServiceIntent);
         }*/
 //        //启动linphoneService
-        boolean isService = ServiceUtils.isServiceRunning(WelcomeActivity.this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
+        boolean isService = ServiceAliveUtils.isServiceRunning(WelcomeActivity.this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
         if (!isService) {
             Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
             startService(linphoneServiceIntent);

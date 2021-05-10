@@ -33,7 +33,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StorageUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.personalview.IPersonalVerifyFingerPrintView;
 import com.kaadas.lock.utils.cachefloder.ACache;
 import com.kaadas.lock.utils.cachefloder.CacheFloder;
@@ -264,7 +264,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
             }
             Intent successIntent = new Intent(mContext, MainActivity.class);
             startActivity(successIntent);
-            ToastUtil.getInstance().showShort(R.string.fingerprint_success);
+            ToastUtils.showShort(R.string.fingerprint_success);
             finish();
         }
 
@@ -308,7 +308,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
             if (translateAnimation != null && fingeprintImg != null) {
                 fingeprintImg.startAnimation(translateAnimation);
             }
-            ToastUtil.getInstance().showShort(R.string.fingerprint_fail_check);
+            ToastUtils.showShort(R.string.fingerprint_fail_check);
         }
 
         @Override
@@ -322,7 +322,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
                 fingeprintImg.startAnimation(translateAnimation);
             }
 
-            ToastUtil.getInstance().showShort(R.string.fingerprint_unidentifiable);
+            ToastUtils.showShort(R.string.fingerprint_unidentifiable);
         }
     };
 
@@ -343,7 +343,7 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     public void onBackPressed() {
         if (System.currentTimeMillis() - lastClickBackTime > 2000) {
             lastClickBackTime = System.currentTimeMillis();
-            ToastUtil.getInstance().showLong(R.string.exit);
+            ToastUtils.showLong(R.string.exit);
         } else {
             System.exit(0);
         }

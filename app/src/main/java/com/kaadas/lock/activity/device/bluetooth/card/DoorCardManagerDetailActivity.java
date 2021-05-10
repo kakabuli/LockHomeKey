@@ -26,7 +26,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.StringUtil;
-import com.kaadas.lock.utils.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -114,11 +114,11 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
                     public void onClick(View v) {
                         String name = editText.getText().toString().trim();
                         if (!StringUtil.nicknameJudge(name)) {
-                            ToastUtil.getInstance().showShort(R.string.nickname_verify_error);
+                            ToastUtils.showShort(R.string.nickname_verify_error);
                             return;
                         }
                         if (StringUtil.judgeNicknameWhetherSame(card.getNickName(),name)){
-                            ToastUtil.getInstance().showShort(R.string.nickname_not_modify);
+                            ToastUtils.showShort(R.string.nickname_not_modify);
                             alertDialog.dismiss();
                             return;
                         }
@@ -151,7 +151,7 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
                         }
                     });
                 } else {
-                    ToastUtil.getInstance().showShort(getString(R.string.network_exception));
+                    ToastUtils.showShort(getString(R.string.network_exception));
                 }
                 break;
         }
@@ -164,7 +164,7 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
 
     @Override
     public void onDeletePwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.delete_fialed));
+        ToastUtils.showShort(getString(R.string.delete_fialed));
         hiddenLoading();
     }
 
@@ -179,7 +179,7 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
 
     @Override
     public void onDeleteServerPwdFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync) );
+        ToastUtils.showShort(getString(R.string.lock_delete_success_please_sync) );
         LogUtils.e("删除服务器密码失败   ");
         hiddenLoading();
         finish();
@@ -187,14 +187,14 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
 
     @Override
     public void onDeleteServerPwdFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(getString(R.string.lock_delete_success_please_sync) );
+        ToastUtils.showShort(getString(R.string.lock_delete_success_please_sync) );
         hiddenLoading();
         finish();
     }
 
     @Override
     public void updateNickNameSuccess(String nickName) {
-        ToastUtil.getInstance().showShort(R.string.modify_success);
+        ToastUtils.showShort(R.string.modify_success);
         hiddenLoading();
         Intent intent = new Intent(this, DoorCardManagerActivity.class);
         startActivity(intent);
@@ -203,23 +203,23 @@ public class DoorCardManagerDetailActivity extends BaseBleActivity<IPasswordDeta
 
     @Override
     public void updateNickNameFailed(Throwable throwable) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
+        ToastUtils.showShort(HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 
     @Override
     public void updateNickNameFailedServer(BaseResult result) {
-        ToastUtil.getInstance().showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
     }
 
     @Override
     public void onLockNoThisNumber() {
-        ToastUtil.getInstance().showLong(R.string.lock_no_this_card);
+        ToastUtils.showLong(R.string.lock_no_this_card);
         finish();
     }
 
     @Override
     public void onGetLockNumberFailed(Throwable throwable) {
-        ToastUtil.getInstance().showLong(R.string.get_lock_card_failed);
+        ToastUtils.showLong(R.string.get_lock_card_failed);
         finish();
     }
 }

@@ -18,15 +18,9 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.ToastUtil;
 import com.kaadas.lock.utils.greenDao.db.BleLockServiceInfoDao;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 
-import org.linphone.mediastream.Log;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;

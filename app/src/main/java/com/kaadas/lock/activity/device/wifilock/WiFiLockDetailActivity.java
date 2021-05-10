@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,7 +59,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import la.xiong.androidquick.tool.ToastUtil;
+import com.blankj.utilcode.util.ToastUtils;
 
 import static com.kaadas.lock.utils.PermissionUtil.REQUEST_AUDIO_PERMISSION_REQUEST_CODE;
 
@@ -714,7 +713,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                             (this,Manifest.permission.RECORD_AUDIO )) {
                         // ...
                     }
-                    ToastUtil.showShort(getString(R.string.wifi_video_lock_microphone_permission));
+                    ToastUtils.showShort(getString(R.string.wifi_video_lock_microphone_permission));
                 }
                 break;
         }
