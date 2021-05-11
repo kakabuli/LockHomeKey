@@ -197,7 +197,7 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
 
     public void checkMultiOTAInfo(String wifiSN,String frontPanelVersion,String backPanelVersion) {
         List<MultiOTABean.OTAParams> params = new ArrayList<>();
-        params.add(new MultiOTABean.OTAParams(6,frontPanelVersion));
+        //params.add(new MultiOTABean.OTAParams(6,frontPanelVersion));
         params.add(new MultiOTABean.OTAParams(7,backPanelVersion));
 
         XiaokaiNewServiceImp.getOtaMultiInfo(1,wifiSN,params)

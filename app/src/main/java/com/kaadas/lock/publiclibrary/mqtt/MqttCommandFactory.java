@@ -57,6 +57,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingFaceWanderingAlarm;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingLockingMethod;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenDirection;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenForce;
@@ -1066,6 +1067,18 @@ public class MqttCommandFactory {
         SettingVideoLockPir mSettingVideoLockAliveTime = new SettingVideoLockPir(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
                 wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
         return getMessage(mSettingVideoLockAliveTime, messageId);
+    }
+
+    /**
+     *  设置人脸识别模组 人脸徘徊报警设置
+     */
+    public static MqttMessage settingFaceWanderingAlarm(String wifiID,int hoverAlarm,int hoverAlarmLevel) {
+        int messageId = getMessageId();
+
+        SettingFaceWanderingAlarm.ParamsBean paramsBean = new SettingFaceWanderingAlarm.ParamsBean(hoverAlarm,hoverAlarmLevel);
+        SettingFaceWanderingAlarm mSettingFaceWanderingAlarm = new SettingFaceWanderingAlarm(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_LOCK,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingFaceWanderingAlarm, messageId);
     }
 
     /**

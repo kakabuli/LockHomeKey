@@ -365,10 +365,12 @@
     <string name="message_push">消息推送</string>
     <string name="real_time_video">实时视频设置</string>
     <string name="wandering_alarm">徘徊报警</string>
+    <string name="face_wandering_alarm">人脸徘徊报警</string>
     <string name="wandering_pir_sensitivity">PIR灵敏度</string>
     <string name="wandering_judge_time">徘徊判定时间</string>
     <string name="wandering_alarm_close">已关闭</string>
     <string name="wandering_alarm_text">开启后，可摄像头会侦测门外徘徊人员，比较耗电</string>
+    <string name="face_wandering_alarm_text">对逗留人员进行人脸识别，识别失败后抓拍视频并发送报警信息</string>
     <string name="wandering_pir_sensitivity_text">高度灵敏会增加频繁检测距离，导致耗电</string>
     <string name="wandering_judge_time_text">判定时间不宜太短，防止误报</string>
     <string name="serial_number">序列号</string>
@@ -2090,6 +2092,9 @@
     <string name="activity_wifi_video_wamdering_3meters">远（3米内）</string>
     <string name="activity_wifi_video_wamdering_2meters">中（2米内）</string>
     <string name="activity_wifi_video_wamdering_1meters">近（1米内）</string>
+    <string name="activity_wifi_video_wamdering_1ci">人脸识别失败1次报警</string>
+    <string name="activity_wifi_video_wamdering_2ci">人脸识别失败2次报警</string>
+    <string name="activity_wifi_video_wamdering_3ci">人脸识别失败3次报警</string>
 
 
     <string name="activity_wifi_am_auto_mode">模式</string>

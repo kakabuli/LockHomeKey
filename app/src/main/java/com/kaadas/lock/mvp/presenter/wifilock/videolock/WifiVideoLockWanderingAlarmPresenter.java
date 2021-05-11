@@ -17,6 +17,7 @@ import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockAmModeResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockLangResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeModeResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingFaceWanderingAlarmResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPirResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -501,6 +502,114 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                         }
                     });
 
+        }
+    }
+
+    public void setConnectFaceWanderingAlarm(String wifiSN,int hoverAlarm,int hoverAlarmLevel){
+        DeviceInfo deviceInfo=new DeviceInfo();
+        deviceInfo.setDeviceDid(did);
+        deviceInfo.setP2pPassword(p2pPassword);
+        deviceInfo.setDeviceSn(sn);
+        deviceInfo.setServiceString(serviceString);
+        XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
+            @Override
+            public void onConnectFailed(int paramInt) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+            }
+
+            @Override
+            public void onConnectSuccess() {
+                XMP2PManager.getInstance().mqttCtrl(1);
+                XMP2PManager.getInstance().setOnMqttCtrl(new XMP2PManager.XMP2PMqttCtrlListener() {
+                    @Override
+                    public void onMqttCtrl(JSONObject jsonObject) {
+                        if(isSafe()){
+                            try {
+                                if (jsonObject.getString("result").equals("ok")){
+                                    setFaceWanderingAlarm(wifiSN,hoverAlarm,hoverAlarmLevel);
+                                }else{
+                                    mViewRef.get().onSettingCallBack(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onStartConnect(String paramString) {
+
+            }
+
+            @Override
+            public void onErrorMessage(String message) {
+                if(isSafe()){
+                    mViewRef.get().onSettingCallBack(false);
+                }
+            }
+
+            @Override
+            public void onNotifyGateWayNewVersion(String paramString) {
+
+            }
+
+            @Override
+            public void onRebootDevice(String paramString) {
+
+            }
+        });
+        int param = XMP2PManager.getInstance().connectDevice(deviceInfo);
+    }
+
+    public void setFaceWanderingAlarm(String wifiSN,int hoverAlarm,int hoverAlarmLevel){
+        if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
+
+            MqttMessage mqttMessage = MqttCommandFactory.settingFaceWanderingAlarm(wifiSN,hoverAlarm,hoverAlarmLevel);
+            toDisposable(setWanderingAlarmLinstenerDisposable);
+            setWanderingAlarmLinstenerDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+                    .filter(new Predicate<MqttData>() {
+                        @Override
+                        public boolean test(MqttData mqttData) throws Exception {
+                            if(MqttConstant.SET_CAMERA.equals(mqttData.getFunc())){
+                                return true;
+                            }
+                            return false;
+                        }
+                    })
+                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
+                    .compose(RxjavaHelper.observeOnMainThread())
+                    .subscribe(new Consumer<MqttData>() {
+                        @Override
+                        public void accept(MqttData mqttData) throws Exception {
+                            SettingFaceWanderingAlarmResult settingFaceWanderingAlarmResult = new Gson().fromJson(mqttData.getPayload(), SettingFaceWanderingAlarmResult.class);
+                            if(settingFaceWanderingAlarmResult != null){
+                                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                if("200".equals(settingFaceWanderingAlarmResult.getCode() + "")){
+                                    if(isSafe()){
+                                        mViewRef.get().onSettingCallBack(true);
+                                    }
+                                }else{
+                                    if(isSafe()){
+                                        mViewRef.get().onSettingCallBack(false);
+                                    }
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+
+                        }
+                    });
+            compositeDisposable.add(setWanderingAlarmLinstenerDisposable);
+        }else{
+            if(isSafe()){
+                mViewRef.get().onSettingCallBack(false);
+            }
         }
     }
 

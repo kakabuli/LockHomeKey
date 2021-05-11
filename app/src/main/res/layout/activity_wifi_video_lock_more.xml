@@ -381,6 +381,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:textSize="@dimen/sp_12"
                     android:text="@string/wandering_alarm_close"/>
 
                 <LinearLayout
@@ -399,9 +400,11 @@
                         android:textSize="@dimen/sp_13" />
 
                     <TextView
+                        android:id="@+id/tv_wandering_alarm_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_wandering_alarm"
+                        android:layout_marginTop="@dimen/dp_4"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="@string/wandering_alarm_text"
                         android:textColor="#999999"

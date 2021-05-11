@@ -155,6 +155,9 @@
         <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockFaceWanderingAlarmActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.addDevice.singleswitch.SwipchSeetingArgus"/>
         <activity android:name=".activity.addDevice.singleswitch.SwipchLinkSettingActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkSucActivity" />

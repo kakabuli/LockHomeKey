@@ -54,39 +54,41 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property Language = new Property(20, String.class, "language", false, "LANGUAGE");
         public final static Property OperatingMode = new Property(21, int.class, "operatingMode", false, "OPERATING_MODE");
         public final static Property Volume = new Property(22, int.class, "volume", false, "VOLUME");
-        public final static Property BleVersion = new Property(23, String.class, "bleVersion", false, "BLE_VERSION");
-        public final static Property WifiVersion = new Property(24, String.class, "wifiVersion", false, "WIFI_VERSION");
-        public final static Property MqttVersion = new Property(25, String.class, "mqttVersion", false, "MQTT_VERSION");
-        public final static Property FaceVersion = new Property(26, String.class, "faceVersion", false, "FACE_VERSION");
-        public final static Property LockFirmwareVersion = new Property(27, String.class, "lockFirmwareVersion", false, "LOCK_FIRMWARE_VERSION");
-        public final static Property RandomCode = new Property(28, String.class, "randomCode", false, "RANDOM_CODE");
-        public final static Property DistributionNetwork = new Property(29, int.class, "distributionNetwork", false, "DISTRIBUTION_NETWORK");
-        public final static Property CreateTime = new Property(30, long.class, "createTime", false, "CREATE_TIME");
-        public final static Property WifiName = new Property(31, String.class, "wifiName", false, "WIFI_NAME");
-        public final static Property Power = new Property(32, int.class, "power", false, "POWER");
-        public final static Property UpdateTime = new Property(33, long.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property OpenStatus = new Property(34, int.class, "openStatus", false, "OPEN_STATUS");
-        public final static Property OpenStatusTime = new Property(35, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
-        public final static Property Device_did = new Property(36, String.class, "device_did", false, "DEVICE_DID");
-        public final static Property Device_sn = new Property(37, String.class, "device_sn", false, "DEVICE_SN");
-        public final static Property P2p_password = new Property(38, String.class, "p2p_password", false, "P2P_PASSWORD");
-        public final static Property SingleFireSwitchInfo = new Property(39, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
-        public final static Property SetPir = new Property(40, String.class, "setPir", false, "SET_PIR");
-        public final static Property Alive_time = new Property(41, String.class, "alive_time", false, "ALIVE_TIME");
-        public final static Property Stay_status = new Property(42, int.class, "stay_status", false, "STAY_STATUS");
-        public final static Property Camera_version = new Property(43, String.class, "camera_version", false, "CAMERA_VERSION");
-        public final static Property Mcu_version = new Property(44, String.class, "mcu_version", false, "MCU_VERSION");
-        public final static Property Device_model = new Property(45, String.class, "device_model", false, "DEVICE_MODEL");
-        public final static Property Keep_alive_status = new Property(46, int.class, "keep_alive_status", false, "KEEP_ALIVE_STATUS");
-        public final static Property Mac = new Property(47, String.class, "mac", false, "MAC");
-        public final static Property LockMac = new Property(48, String.class, "lockMac", false, "LOCK_MAC");
-        public final static Property RSSI = new Property(49, String.class, "RSSI", false, "RSSI");
-        public final static Property WifiStrength = new Property(50, int.class, "wifiStrength", false, "WIFI_STRENGTH");
-        public final static Property OpenDirection = new Property(51, int.class, "openDirection", false, "OPEN_DIRECTION");
-        public final static Property OpenForce = new Property(52, int.class, "openForce", false, "OPEN_FORCE");
-        public final static Property LockingMethod = new Property(53, int.class, "lockingMethod", false, "LOCKING_METHOD");
-        public final static Property FrontPanelVersion = new Property(54, String.class, "frontPanelVersion", false, "FRONT_PANEL_VERSION");
-        public final static Property BackPanelVersion = new Property(55, String.class, "backPanelVersion", false, "BACK_PANEL_VERSION");
+        public final static Property HoverAlarm = new Property(23, int.class, "hoverAlarm", false, "HOVER_ALARM");
+        public final static Property HoverAlarmLevel = new Property(24, int.class, "hoverAlarmLevel", false, "HOVER_ALARM_LEVEL");
+        public final static Property BleVersion = new Property(25, String.class, "bleVersion", false, "BLE_VERSION");
+        public final static Property WifiVersion = new Property(26, String.class, "wifiVersion", false, "WIFI_VERSION");
+        public final static Property MqttVersion = new Property(27, String.class, "mqttVersion", false, "MQTT_VERSION");
+        public final static Property FaceVersion = new Property(28, String.class, "faceVersion", false, "FACE_VERSION");
+        public final static Property LockFirmwareVersion = new Property(29, String.class, "lockFirmwareVersion", false, "LOCK_FIRMWARE_VERSION");
+        public final static Property RandomCode = new Property(30, String.class, "randomCode", false, "RANDOM_CODE");
+        public final static Property DistributionNetwork = new Property(31, int.class, "distributionNetwork", false, "DISTRIBUTION_NETWORK");
+        public final static Property CreateTime = new Property(32, long.class, "createTime", false, "CREATE_TIME");
+        public final static Property WifiName = new Property(33, String.class, "wifiName", false, "WIFI_NAME");
+        public final static Property Power = new Property(34, int.class, "power", false, "POWER");
+        public final static Property UpdateTime = new Property(35, long.class, "updateTime", false, "UPDATE_TIME");
+        public final static Property OpenStatus = new Property(36, int.class, "openStatus", false, "OPEN_STATUS");
+        public final static Property OpenStatusTime = new Property(37, long.class, "openStatusTime", false, "OPEN_STATUS_TIME");
+        public final static Property Device_did = new Property(38, String.class, "device_did", false, "DEVICE_DID");
+        public final static Property Device_sn = new Property(39, String.class, "device_sn", false, "DEVICE_SN");
+        public final static Property P2p_password = new Property(40, String.class, "p2p_password", false, "P2P_PASSWORD");
+        public final static Property SingleFireSwitchInfo = new Property(41, String.class, "singleFireSwitchInfo", false, "SINGLE_FIRE_SWITCH_INFO");
+        public final static Property SetPir = new Property(42, String.class, "setPir", false, "SET_PIR");
+        public final static Property Alive_time = new Property(43, String.class, "alive_time", false, "ALIVE_TIME");
+        public final static Property Stay_status = new Property(44, int.class, "stay_status", false, "STAY_STATUS");
+        public final static Property Camera_version = new Property(45, String.class, "camera_version", false, "CAMERA_VERSION");
+        public final static Property Mcu_version = new Property(46, String.class, "mcu_version", false, "MCU_VERSION");
+        public final static Property Device_model = new Property(47, String.class, "device_model", false, "DEVICE_MODEL");
+        public final static Property Keep_alive_status = new Property(48, int.class, "keep_alive_status", false, "KEEP_ALIVE_STATUS");
+        public final static Property Mac = new Property(49, String.class, "mac", false, "MAC");
+        public final static Property LockMac = new Property(50, String.class, "lockMac", false, "LOCK_MAC");
+        public final static Property RSSI = new Property(51, String.class, "RSSI", false, "RSSI");
+        public final static Property WifiStrength = new Property(52, int.class, "wifiStrength", false, "WIFI_STRENGTH");
+        public final static Property OpenDirection = new Property(53, int.class, "openDirection", false, "OPEN_DIRECTION");
+        public final static Property OpenForce = new Property(54, int.class, "openForce", false, "OPEN_FORCE");
+        public final static Property LockingMethod = new Property(55, int.class, "lockingMethod", false, "LOCKING_METHOD");
+        public final static Property FrontPanelVersion = new Property(56, String.class, "frontPanelVersion", false, "FRONT_PANEL_VERSION");
+        public final static Property BackPanelVersion = new Property(57, String.class, "backPanelVersion", false, "BACK_PANEL_VERSION");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -128,39 +130,41 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"LANGUAGE\" TEXT," + // 20: language
                 "\"OPERATING_MODE\" INTEGER NOT NULL ," + // 21: operatingMode
                 "\"VOLUME\" INTEGER NOT NULL ," + // 22: volume
-                "\"BLE_VERSION\" TEXT," + // 23: bleVersion
-                "\"WIFI_VERSION\" TEXT," + // 24: wifiVersion
-                "\"MQTT_VERSION\" TEXT," + // 25: mqttVersion
-                "\"FACE_VERSION\" TEXT," + // 26: faceVersion
-                "\"LOCK_FIRMWARE_VERSION\" TEXT," + // 27: lockFirmwareVersion
-                "\"RANDOM_CODE\" TEXT," + // 28: randomCode
-                "\"DISTRIBUTION_NETWORK\" INTEGER NOT NULL ," + // 29: distributionNetwork
-                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 30: createTime
-                "\"WIFI_NAME\" TEXT," + // 31: wifiName
-                "\"POWER\" INTEGER NOT NULL ," + // 32: power
-                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 33: updateTime
-                "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 34: openStatus
-                "\"OPEN_STATUS_TIME\" INTEGER NOT NULL ," + // 35: openStatusTime
-                "\"DEVICE_DID\" TEXT," + // 36: device_did
-                "\"DEVICE_SN\" TEXT," + // 37: device_sn
-                "\"P2P_PASSWORD\" TEXT," + // 38: p2p_password
-                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT," + // 39: singleFireSwitchInfo
-                "\"SET_PIR\" TEXT," + // 40: setPir
-                "\"ALIVE_TIME\" TEXT," + // 41: alive_time
-                "\"STAY_STATUS\" INTEGER NOT NULL ," + // 42: stay_status
-                "\"CAMERA_VERSION\" TEXT," + // 43: camera_version
-                "\"MCU_VERSION\" TEXT," + // 44: mcu_version
-                "\"DEVICE_MODEL\" TEXT," + // 45: device_model
-                "\"KEEP_ALIVE_STATUS\" INTEGER NOT NULL ," + // 46: keep_alive_status
-                "\"MAC\" TEXT," + // 47: mac
-                "\"LOCK_MAC\" TEXT," + // 48: lockMac
-                "\"RSSI\" TEXT," + // 49: RSSI
-                "\"WIFI_STRENGTH\" INTEGER NOT NULL ," + // 50: wifiStrength
-                "\"OPEN_DIRECTION\" INTEGER NOT NULL ," + // 51: openDirection
-                "\"OPEN_FORCE\" INTEGER NOT NULL ," + // 52: openForce
-                "\"LOCKING_METHOD\" INTEGER NOT NULL ," + // 53: lockingMethod
-                "\"FRONT_PANEL_VERSION\" TEXT," + // 54: frontPanelVersion
-                "\"BACK_PANEL_VERSION\" TEXT);"); // 55: backPanelVersion
+                "\"HOVER_ALARM\" INTEGER NOT NULL ," + // 23: hoverAlarm
+                "\"HOVER_ALARM_LEVEL\" INTEGER NOT NULL ," + // 24: hoverAlarmLevel
+                "\"BLE_VERSION\" TEXT," + // 25: bleVersion
+                "\"WIFI_VERSION\" TEXT," + // 26: wifiVersion
+                "\"MQTT_VERSION\" TEXT," + // 27: mqttVersion
+                "\"FACE_VERSION\" TEXT," + // 28: faceVersion
+                "\"LOCK_FIRMWARE_VERSION\" TEXT," + // 29: lockFirmwareVersion
+                "\"RANDOM_CODE\" TEXT," + // 30: randomCode
+                "\"DISTRIBUTION_NETWORK\" INTEGER NOT NULL ," + // 31: distributionNetwork
+                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 32: createTime
+                "\"WIFI_NAME\" TEXT," + // 33: wifiName
+                "\"POWER\" INTEGER NOT NULL ," + // 34: power
+                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 35: updateTime
+                "\"OPEN_STATUS\" INTEGER NOT NULL ," + // 36: openStatus
+                "\"OPEN_STATUS_TIME\" INTEGER NOT NULL ," + // 37: openStatusTime
+                "\"DEVICE_DID\" TEXT," + // 38: device_did
+                "\"DEVICE_SN\" TEXT," + // 39: device_sn
+                "\"P2P_PASSWORD\" TEXT," + // 40: p2p_password
+                "\"SINGLE_FIRE_SWITCH_INFO\" TEXT," + // 41: singleFireSwitchInfo
+                "\"SET_PIR\" TEXT," + // 42: setPir
+                "\"ALIVE_TIME\" TEXT," + // 43: alive_time
+                "\"STAY_STATUS\" INTEGER NOT NULL ," + // 44: stay_status
+                "\"CAMERA_VERSION\" TEXT," + // 45: camera_version
+                "\"MCU_VERSION\" TEXT," + // 46: mcu_version
+                "\"DEVICE_MODEL\" TEXT," + // 47: device_model
+                "\"KEEP_ALIVE_STATUS\" INTEGER NOT NULL ," + // 48: keep_alive_status
+                "\"MAC\" TEXT," + // 49: mac
+                "\"LOCK_MAC\" TEXT," + // 50: lockMac
+                "\"RSSI\" TEXT," + // 51: RSSI
+                "\"WIFI_STRENGTH\" INTEGER NOT NULL ," + // 52: wifiStrength
+                "\"OPEN_DIRECTION\" INTEGER NOT NULL ," + // 53: openDirection
+                "\"OPEN_FORCE\" INTEGER NOT NULL ," + // 54: openForce
+                "\"LOCKING_METHOD\" INTEGER NOT NULL ," + // 55: lockingMethod
+                "\"FRONT_PANEL_VERSION\" TEXT," + // 56: frontPanelVersion
+                "\"BACK_PANEL_VERSION\" TEXT);"); // 57: backPanelVersion
     }
 
     /** Drops the underlying database table. */
@@ -247,122 +251,124 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         }
         stmt.bindLong(22, entity.getOperatingMode());
         stmt.bindLong(23, entity.getVolume());
+        stmt.bindLong(24, entity.getHoverAlarm());
+        stmt.bindLong(25, entity.getHoverAlarmLevel());
  
         String bleVersion = entity.getBleVersion();
         if (bleVersion != null) {
-            stmt.bindString(24, bleVersion);
+            stmt.bindString(26, bleVersion);
         }
  
         String wifiVersion = entity.getWifiVersion();
         if (wifiVersion != null) {
-            stmt.bindString(25, wifiVersion);
+            stmt.bindString(27, wifiVersion);
         }
  
         String mqttVersion = entity.getMqttVersion();
         if (mqttVersion != null) {
-            stmt.bindString(26, mqttVersion);
+            stmt.bindString(28, mqttVersion);
         }
  
         String faceVersion = entity.getFaceVersion();
         if (faceVersion != null) {
-            stmt.bindString(27, faceVersion);
+            stmt.bindString(29, faceVersion);
         }
  
         String lockFirmwareVersion = entity.getLockFirmwareVersion();
         if (lockFirmwareVersion != null) {
-            stmt.bindString(28, lockFirmwareVersion);
+            stmt.bindString(30, lockFirmwareVersion);
         }
  
         String randomCode = entity.getRandomCode();
         if (randomCode != null) {
-            stmt.bindString(29, randomCode);
+            stmt.bindString(31, randomCode);
         }
-        stmt.bindLong(30, entity.getDistributionNetwork());
-        stmt.bindLong(31, entity.getCreateTime());
+        stmt.bindLong(32, entity.getDistributionNetwork());
+        stmt.bindLong(33, entity.getCreateTime());
  
         String wifiName = entity.getWifiName();
         if (wifiName != null) {
-            stmt.bindString(32, wifiName);
+            stmt.bindString(34, wifiName);
         }
-        stmt.bindLong(33, entity.getPower());
-        stmt.bindLong(34, entity.getUpdateTime());
-        stmt.bindLong(35, entity.getOpenStatus());
-        stmt.bindLong(36, entity.getOpenStatusTime());
+        stmt.bindLong(35, entity.getPower());
+        stmt.bindLong(36, entity.getUpdateTime());
+        stmt.bindLong(37, entity.getOpenStatus());
+        stmt.bindLong(38, entity.getOpenStatusTime());
  
         String device_did = entity.getDevice_did();
         if (device_did != null) {
-            stmt.bindString(37, device_did);
+            stmt.bindString(39, device_did);
         }
  
         String device_sn = entity.getDevice_sn();
         if (device_sn != null) {
-            stmt.bindString(38, device_sn);
+            stmt.bindString(40, device_sn);
         }
  
         String p2p_password = entity.getP2p_password();
         if (p2p_password != null) {
-            stmt.bindString(39, p2p_password);
+            stmt.bindString(41, p2p_password);
         }
  
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(40, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(42, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
  
         WifiVideoLockSetPirBean setPir = entity.getSetPir();
         if (setPir != null) {
-            stmt.bindString(41, setPirConverter.convertToDatabaseValue(setPir));
+            stmt.bindString(43, setPirConverter.convertToDatabaseValue(setPir));
         }
  
         WifiVideoLockAliveTimeBean alive_time = entity.getAlive_time();
         if (alive_time != null) {
-            stmt.bindString(42, alive_timeConverter.convertToDatabaseValue(alive_time));
+            stmt.bindString(44, alive_timeConverter.convertToDatabaseValue(alive_time));
         }
-        stmt.bindLong(43, entity.getStay_status());
+        stmt.bindLong(45, entity.getStay_status());
  
         String camera_version = entity.getCamera_version();
         if (camera_version != null) {
-            stmt.bindString(44, camera_version);
+            stmt.bindString(46, camera_version);
         }
  
         String mcu_version = entity.getMcu_version();
         if (mcu_version != null) {
-            stmt.bindString(45, mcu_version);
+            stmt.bindString(47, mcu_version);
         }
  
         String device_model = entity.getDevice_model();
         if (device_model != null) {
-            stmt.bindString(46, device_model);
+            stmt.bindString(48, device_model);
         }
-        stmt.bindLong(47, entity.getKeep_alive_status());
+        stmt.bindLong(49, entity.getKeep_alive_status());
  
         String mac = entity.getMac();
         if (mac != null) {
-            stmt.bindString(48, mac);
+            stmt.bindString(50, mac);
         }
  
         String lockMac = entity.getLockMac();
         if (lockMac != null) {
-            stmt.bindString(49, lockMac);
+            stmt.bindString(51, lockMac);
         }
  
         String RSSI = entity.getRSSI();
         if (RSSI != null) {
-            stmt.bindString(50, RSSI);
+            stmt.bindString(52, RSSI);
         }
-        stmt.bindLong(51, entity.getWifiStrength());
-        stmt.bindLong(52, entity.getOpenDirection());
-        stmt.bindLong(53, entity.getOpenForce());
-        stmt.bindLong(54, entity.getLockingMethod());
+        stmt.bindLong(53, entity.getWifiStrength());
+        stmt.bindLong(54, entity.getOpenDirection());
+        stmt.bindLong(55, entity.getOpenForce());
+        stmt.bindLong(56, entity.getLockingMethod());
  
         String frontPanelVersion = entity.getFrontPanelVersion();
         if (frontPanelVersion != null) {
-            stmt.bindString(55, frontPanelVersion);
+            stmt.bindString(57, frontPanelVersion);
         }
  
         String backPanelVersion = entity.getBackPanelVersion();
         if (backPanelVersion != null) {
-            stmt.bindString(56, backPanelVersion);
+            stmt.bindString(58, backPanelVersion);
         }
     }
 
@@ -444,122 +450,124 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         }
         stmt.bindLong(22, entity.getOperatingMode());
         stmt.bindLong(23, entity.getVolume());
+        stmt.bindLong(24, entity.getHoverAlarm());
+        stmt.bindLong(25, entity.getHoverAlarmLevel());
  
         String bleVersion = entity.getBleVersion();
         if (bleVersion != null) {
-            stmt.bindString(24, bleVersion);
+            stmt.bindString(26, bleVersion);
         }
  
         String wifiVersion = entity.getWifiVersion();
         if (wifiVersion != null) {
-            stmt.bindString(25, wifiVersion);
+            stmt.bindString(27, wifiVersion);
         }
  
         String mqttVersion = entity.getMqttVersion();
         if (mqttVersion != null) {
-            stmt.bindString(26, mqttVersion);
+            stmt.bindString(28, mqttVersion);
         }
  
         String faceVersion = entity.getFaceVersion();
         if (faceVersion != null) {
-            stmt.bindString(27, faceVersion);
+            stmt.bindString(29, faceVersion);
         }
  
         String lockFirmwareVersion = entity.getLockFirmwareVersion();
         if (lockFirmwareVersion != null) {
-            stmt.bindString(28, lockFirmwareVersion);
+            stmt.bindString(30, lockFirmwareVersion);
         }
  
         String randomCode = entity.getRandomCode();
         if (randomCode != null) {
-            stmt.bindString(29, randomCode);
+            stmt.bindString(31, randomCode);
         }
-        stmt.bindLong(30, entity.getDistributionNetwork());
-        stmt.bindLong(31, entity.getCreateTime());
+        stmt.bindLong(32, entity.getDistributionNetwork());
+        stmt.bindLong(33, entity.getCreateTime());
  
         String wifiName = entity.getWifiName();
         if (wifiName != null) {
-            stmt.bindString(32, wifiName);
+            stmt.bindString(34, wifiName);
         }
-        stmt.bindLong(33, entity.getPower());
-        stmt.bindLong(34, entity.getUpdateTime());
-        stmt.bindLong(35, entity.getOpenStatus());
-        stmt.bindLong(36, entity.getOpenStatusTime());
+        stmt.bindLong(35, entity.getPower());
+        stmt.bindLong(36, entity.getUpdateTime());
+        stmt.bindLong(37, entity.getOpenStatus());
+        stmt.bindLong(38, entity.getOpenStatusTime());
  
         String device_did = entity.getDevice_did();
         if (device_did != null) {
-            stmt.bindString(37, device_did);
+            stmt.bindString(39, device_did);
         }
  
         String device_sn = entity.getDevice_sn();
         if (device_sn != null) {
-            stmt.bindString(38, device_sn);
+            stmt.bindString(40, device_sn);
         }
  
         String p2p_password = entity.getP2p_password();
         if (p2p_password != null) {
-            stmt.bindString(39, p2p_password);
+            stmt.bindString(41, p2p_password);
         }
  
         SingleFireSwitchInfo singleFireSwitchInfo = entity.getSingleFireSwitchInfo();
         if (singleFireSwitchInfo != null) {
-            stmt.bindString(40, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
+            stmt.bindString(42, singleFireSwitchInfoConverter.convertToDatabaseValue(singleFireSwitchInfo));
         }
  
         WifiVideoLockSetPirBean setPir = entity.getSetPir();
         if (setPir != null) {
-            stmt.bindString(41, setPirConverter.convertToDatabaseValue(setPir));
+            stmt.bindString(43, setPirConverter.convertToDatabaseValue(setPir));
         }
  
         WifiVideoLockAliveTimeBean alive_time = entity.getAlive_time();
         if (alive_time != null) {
-            stmt.bindString(42, alive_timeConverter.convertToDatabaseValue(alive_time));
+            stmt.bindString(44, alive_timeConverter.convertToDatabaseValue(alive_time));
         }
-        stmt.bindLong(43, entity.getStay_status());
+        stmt.bindLong(45, entity.getStay_status());
  
         String camera_version = entity.getCamera_version();
         if (camera_version != null) {
-            stmt.bindString(44, camera_version);
+            stmt.bindString(46, camera_version);
         }
  
         String mcu_version = entity.getMcu_version();
         if (mcu_version != null) {
-            stmt.bindString(45, mcu_version);
+            stmt.bindString(47, mcu_version);
         }
  
         String device_model = entity.getDevice_model();
         if (device_model != null) {
-            stmt.bindString(46, device_model);
+            stmt.bindString(48, device_model);
         }
-        stmt.bindLong(47, entity.getKeep_alive_status());
+        stmt.bindLong(49, entity.getKeep_alive_status());
  
         String mac = entity.getMac();
         if (mac != null) {
-            stmt.bindString(48, mac);
+            stmt.bindString(50, mac);
         }
  
         String lockMac = entity.getLockMac();
         if (lockMac != null) {
-            stmt.bindString(49, lockMac);
+            stmt.bindString(51, lockMac);
         }
  
         String RSSI = entity.getRSSI();
         if (RSSI != null) {
-            stmt.bindString(50, RSSI);
+            stmt.bindString(52, RSSI);
         }
-        stmt.bindLong(51, entity.getWifiStrength());
-        stmt.bindLong(52, entity.getOpenDirection());
-        stmt.bindLong(53, entity.getOpenForce());
-        stmt.bindLong(54, entity.getLockingMethod());
+        stmt.bindLong(53, entity.getWifiStrength());
+        stmt.bindLong(54, entity.getOpenDirection());
+        stmt.bindLong(55, entity.getOpenForce());
+        stmt.bindLong(56, entity.getLockingMethod());
  
         String frontPanelVersion = entity.getFrontPanelVersion();
         if (frontPanelVersion != null) {
-            stmt.bindString(55, frontPanelVersion);
+            stmt.bindString(57, frontPanelVersion);
         }
  
         String backPanelVersion = entity.getBackPanelVersion();
         if (backPanelVersion != null) {
-            stmt.bindString(56, backPanelVersion);
+            stmt.bindString(58, backPanelVersion);
         }
     }
 
@@ -594,39 +602,41 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // language
             cursor.getInt(offset + 21), // operatingMode
             cursor.getInt(offset + 22), // volume
-            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23), // bleVersion
-            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // wifiVersion
-            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // mqttVersion
-            cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // faceVersion
-            cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27), // lockFirmwareVersion
-            cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28), // randomCode
-            cursor.getInt(offset + 29), // distributionNetwork
-            cursor.getLong(offset + 30), // createTime
-            cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31), // wifiName
-            cursor.getInt(offset + 32), // power
-            cursor.getLong(offset + 33), // updateTime
-            cursor.getInt(offset + 34), // openStatus
-            cursor.getLong(offset + 35), // openStatusTime
-            cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36), // device_did
-            cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37), // device_sn
-            cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38), // p2p_password
-            cursor.isNull(offset + 39) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 39)), // singleFireSwitchInfo
-            cursor.isNull(offset + 40) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 40)), // setPir
-            cursor.isNull(offset + 41) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 41)), // alive_time
-            cursor.getInt(offset + 42), // stay_status
-            cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43), // camera_version
-            cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44), // mcu_version
-            cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // device_model
-            cursor.getInt(offset + 46), // keep_alive_status
-            cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47), // mac
-            cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48), // lockMac
-            cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49), // RSSI
-            cursor.getInt(offset + 50), // wifiStrength
-            cursor.getInt(offset + 51), // openDirection
-            cursor.getInt(offset + 52), // openForce
-            cursor.getInt(offset + 53), // lockingMethod
-            cursor.isNull(offset + 54) ? null : cursor.getString(offset + 54), // frontPanelVersion
-            cursor.isNull(offset + 55) ? null : cursor.getString(offset + 55) // backPanelVersion
+            cursor.getInt(offset + 23), // hoverAlarm
+            cursor.getInt(offset + 24), // hoverAlarmLevel
+            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25), // bleVersion
+            cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26), // wifiVersion
+            cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27), // mqttVersion
+            cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28), // faceVersion
+            cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29), // lockFirmwareVersion
+            cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30), // randomCode
+            cursor.getInt(offset + 31), // distributionNetwork
+            cursor.getLong(offset + 32), // createTime
+            cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33), // wifiName
+            cursor.getInt(offset + 34), // power
+            cursor.getLong(offset + 35), // updateTime
+            cursor.getInt(offset + 36), // openStatus
+            cursor.getLong(offset + 37), // openStatusTime
+            cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38), // device_did
+            cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39), // device_sn
+            cursor.isNull(offset + 40) ? null : cursor.getString(offset + 40), // p2p_password
+            cursor.isNull(offset + 41) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 41)), // singleFireSwitchInfo
+            cursor.isNull(offset + 42) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 42)), // setPir
+            cursor.isNull(offset + 43) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 43)), // alive_time
+            cursor.getInt(offset + 44), // stay_status
+            cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45), // camera_version
+            cursor.isNull(offset + 46) ? null : cursor.getString(offset + 46), // mcu_version
+            cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47), // device_model
+            cursor.getInt(offset + 48), // keep_alive_status
+            cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49), // mac
+            cursor.isNull(offset + 50) ? null : cursor.getString(offset + 50), // lockMac
+            cursor.isNull(offset + 51) ? null : cursor.getString(offset + 51), // RSSI
+            cursor.getInt(offset + 52), // wifiStrength
+            cursor.getInt(offset + 53), // openDirection
+            cursor.getInt(offset + 54), // openForce
+            cursor.getInt(offset + 55), // lockingMethod
+            cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56), // frontPanelVersion
+            cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57) // backPanelVersion
         );
         return entity;
     }
@@ -656,39 +666,41 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setLanguage(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
         entity.setOperatingMode(cursor.getInt(offset + 21));
         entity.setVolume(cursor.getInt(offset + 22));
-        entity.setBleVersion(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
-        entity.setWifiVersion(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
-        entity.setMqttVersion(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
-        entity.setFaceVersion(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
-        entity.setLockFirmwareVersion(cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27));
-        entity.setRandomCode(cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28));
-        entity.setDistributionNetwork(cursor.getInt(offset + 29));
-        entity.setCreateTime(cursor.getLong(offset + 30));
-        entity.setWifiName(cursor.isNull(offset + 31) ? null : cursor.getString(offset + 31));
-        entity.setPower(cursor.getInt(offset + 32));
-        entity.setUpdateTime(cursor.getLong(offset + 33));
-        entity.setOpenStatus(cursor.getInt(offset + 34));
-        entity.setOpenStatusTime(cursor.getLong(offset + 35));
-        entity.setDevice_did(cursor.isNull(offset + 36) ? null : cursor.getString(offset + 36));
-        entity.setDevice_sn(cursor.isNull(offset + 37) ? null : cursor.getString(offset + 37));
-        entity.setP2p_password(cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38));
-        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 39) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 39)));
-        entity.setSetPir(cursor.isNull(offset + 40) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 40)));
-        entity.setAlive_time(cursor.isNull(offset + 41) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 41)));
-        entity.setStay_status(cursor.getInt(offset + 42));
-        entity.setCamera_version(cursor.isNull(offset + 43) ? null : cursor.getString(offset + 43));
-        entity.setMcu_version(cursor.isNull(offset + 44) ? null : cursor.getString(offset + 44));
-        entity.setDevice_model(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
-        entity.setKeep_alive_status(cursor.getInt(offset + 46));
-        entity.setMac(cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47));
-        entity.setLockMac(cursor.isNull(offset + 48) ? null : cursor.getString(offset + 48));
-        entity.setRSSI(cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49));
-        entity.setWifiStrength(cursor.getInt(offset + 50));
-        entity.setOpenDirection(cursor.getInt(offset + 51));
-        entity.setOpenForce(cursor.getInt(offset + 52));
-        entity.setLockingMethod(cursor.getInt(offset + 53));
-        entity.setFrontPanelVersion(cursor.isNull(offset + 54) ? null : cursor.getString(offset + 54));
-        entity.setBackPanelVersion(cursor.isNull(offset + 55) ? null : cursor.getString(offset + 55));
+        entity.setHoverAlarm(cursor.getInt(offset + 23));
+        entity.setHoverAlarmLevel(cursor.getInt(offset + 24));
+        entity.setBleVersion(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
+        entity.setWifiVersion(cursor.isNull(offset + 26) ? null : cursor.getString(offset + 26));
+        entity.setMqttVersion(cursor.isNull(offset + 27) ? null : cursor.getString(offset + 27));
+        entity.setFaceVersion(cursor.isNull(offset + 28) ? null : cursor.getString(offset + 28));
+        entity.setLockFirmwareVersion(cursor.isNull(offset + 29) ? null : cursor.getString(offset + 29));
+        entity.setRandomCode(cursor.isNull(offset + 30) ? null : cursor.getString(offset + 30));
+        entity.setDistributionNetwork(cursor.getInt(offset + 31));
+        entity.setCreateTime(cursor.getLong(offset + 32));
+        entity.setWifiName(cursor.isNull(offset + 33) ? null : cursor.getString(offset + 33));
+        entity.setPower(cursor.getInt(offset + 34));
+        entity.setUpdateTime(cursor.getLong(offset + 35));
+        entity.setOpenStatus(cursor.getInt(offset + 36));
+        entity.setOpenStatusTime(cursor.getLong(offset + 37));
+        entity.setDevice_did(cursor.isNull(offset + 38) ? null : cursor.getString(offset + 38));
+        entity.setDevice_sn(cursor.isNull(offset + 39) ? null : cursor.getString(offset + 39));
+        entity.setP2p_password(cursor.isNull(offset + 40) ? null : cursor.getString(offset + 40));
+        entity.setSingleFireSwitchInfo(cursor.isNull(offset + 41) ? null : singleFireSwitchInfoConverter.convertToEntityProperty(cursor.getString(offset + 41)));
+        entity.setSetPir(cursor.isNull(offset + 42) ? null : setPirConverter.convertToEntityProperty(cursor.getString(offset + 42)));
+        entity.setAlive_time(cursor.isNull(offset + 43) ? null : alive_timeConverter.convertToEntityProperty(cursor.getString(offset + 43)));
+        entity.setStay_status(cursor.getInt(offset + 44));
+        entity.setCamera_version(cursor.isNull(offset + 45) ? null : cursor.getString(offset + 45));
+        entity.setMcu_version(cursor.isNull(offset + 46) ? null : cursor.getString(offset + 46));
+        entity.setDevice_model(cursor.isNull(offset + 47) ? null : cursor.getString(offset + 47));
+        entity.setKeep_alive_status(cursor.getInt(offset + 48));
+        entity.setMac(cursor.isNull(offset + 49) ? null : cursor.getString(offset + 49));
+        entity.setLockMac(cursor.isNull(offset + 50) ? null : cursor.getString(offset + 50));
+        entity.setRSSI(cursor.isNull(offset + 51) ? null : cursor.getString(offset + 51));
+        entity.setWifiStrength(cursor.getInt(offset + 52));
+        entity.setOpenDirection(cursor.getInt(offset + 53));
+        entity.setOpenForce(cursor.getInt(offset + 54));
+        entity.setLockingMethod(cursor.getInt(offset + 55));
+        entity.setFrontPanelVersion(cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56));
+        entity.setBackPanelVersion(cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57));
      }
     
     @Override

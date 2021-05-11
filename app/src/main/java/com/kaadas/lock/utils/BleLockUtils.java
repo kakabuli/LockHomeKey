@@ -160,10 +160,9 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x76, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
         FUNCTION_SET.put(0x77, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
         FUNCTION_SET.put(0x78, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
-        //TODO:Test 更改7A—>79顺序 2021510
-        FUNCTION_SET.put(0x7A, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 26, 27, 28, 29, 30, 33, 38, 40, 46, 47, 49, 51, 52, 53, 54, 55});
+        FUNCTION_SET.put(0x79, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 32, 33, 34, 38, 46, 47, 51, 52, 53, 54, 55, 59, 63, 64, 65, 66, 67});
 
-        FUNCTION_SET.put(0x79, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 39, 46, 47, 49, 51, 52, 53, 54, 55, 57, 58, 59});//2020年9月28日11:24:09
+        FUNCTION_SET.put(0x7A, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 39, 46, 47, 49, 51, 52, 53, 54, 55, 57, 58, 59});//2020年9月28日11:24:09
 
 
         FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 32, 33, 36, 41, 42, 44});
@@ -590,11 +589,11 @@ public class BleLockUtils {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.real_time_video_function),R.mipmap.wifi_lock_video,TYPE_VIDEO));
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.dynamic_recording),R.mipmap.wifi_lock_recording,TYPE_RECORD));
         }
-        if (integers.contains(26)) {
-            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
-        }
         if (integers.contains(7)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+        }
+        if (integers.contains(26)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
         }
         if (integers.contains(8)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
@@ -1051,5 +1050,4 @@ public class BleLockUtils {
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(28);
     }
-
 }
