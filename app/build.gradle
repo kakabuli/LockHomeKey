@@ -61,8 +61,16 @@ android {
     productFlavors {
         kaadas {
             applicationId rootProject.ext.appId["kaadas"]
-            buildConfigField('String', 'HTTP_HOST', '"https://app1.orangeiot.cn:8008"')
-            buildConfigField('String', 'HTTP_VERSION', '"1"')
+            if(rootProject.ext.env){
+                buildConfigField('String', 'HTTP_HOST', rootProject.ext.HOST.HTTPS)
+                buildConfigField('String', 'MQTT_HOST', rootProject.ext.HOST.MQTT)
+                buildConfigField('String', 'SIP_HOST', rootProject.ext.HOST.LINPHONE_SIP)
+            }else{
+                buildConfigField('String', 'HTTP_HOST', rootProject.ext.HOST.HTTPS_DEV)
+                buildConfigField('String', 'MQTT_HOST', rootProject.ext.HOST.MQTT_DEV)
+                buildConfigField('String', 'SIP_HOST', rootProject.ext.HOST.LINPHONE_SIP_DEV)
+            }
+            buildConfigField('String', 'HTTP_VERSION', rootProject.ext.HOST.VERSION)
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
                                     appname            : "@string/app_name"
                                     , app_icon         : "@drawable/logo",
@@ -96,14 +104,14 @@ android {
 
     buildTypes {
         release {
-            debuggable true
+            debuggable rootProject.ext.isDeBug
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
-            debuggable true  //启用debug的buildType配置
+            debuggable rootProject.ext.isDeBug  //启用debug的buildType配置
         }
     }
 

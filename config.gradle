@@ -1,5 +1,22 @@
 ext {
 
+    //日志打印 true打印 false禁止
+    isDeBug = true
+    //Net环境 true正式 false测试
+    env = true
+
+    HOST = [
+            HTTPS                   :'"https://app.kaadas.com:34000/"',
+            MQTT                    :'"tcp://mqtt-kaadas.juziwulian.com:1883"',
+            LINPHONE_SIP            :'"sip-kaadas.juziwulian.com:5061"',
+
+            HTTPS_DEV               :'"https://test.juziwulian.com:8090/"',
+            MQTT_DEV                :'"tcp://test.juziwulian.com:1883"',
+            LINPHONE_SIP_DEV        :'"test.juziwulian.com:5061"',
+
+            VERSION                 :'"1"'//HTTPS加密版本
+    ]
+
     android = [
             compileSdkVersion       :30,
             minSdkVersion           :22,
