@@ -51,6 +51,9 @@ android {
                 VIVO_APP_ID     : "18137",
                 VIVO_APP_KEY    : "11e24474-cf3b-447c-9052-feb08012f033"
         ]
+        configurations.all {
+            resolutionStrategy.force 'androidx.camera:camera-core:[1.0.0-rc01]'
+        }
 
     }
 

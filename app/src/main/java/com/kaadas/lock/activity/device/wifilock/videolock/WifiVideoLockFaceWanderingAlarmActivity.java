@@ -81,7 +81,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
     private void initData() {
         if(wifiLockInfo != null) {
             mPresenter.settingDevice(wifiLockInfo);
-            hoverAlarm = 1;
+            hoverAlarm = wifiLockInfo.getHoverAlarm();
             if(hoverAlarm == 1){
                 ivWanderingAlarm.setSelected(true);
                 llFaceWanderingAlarm.setVisibility(View.VISIBLE);
@@ -89,7 +89,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
                 ivWanderingAlarm.setSelected(false);
                 llFaceWanderingAlarm.setVisibility(View.GONE);
             }
-            hoverAlarmLevel = 1;
+            hoverAlarmLevel = wifiLockInfo.getHoverAlarmLevel();
             if(hoverAlarmLevel == 0){
                 ivSensitivity1.setChecked(true);
                 ivSensitivity2.setChecked(false);

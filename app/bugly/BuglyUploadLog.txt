@@ -12,3 +12,10 @@ appChannel=kaadas
 appPackage=com.kaidishi.lock
 appVersion=4.4.0.2
 
+file=E:\work\android\Kaadas19\Kaadas19\app\build\outputs\mapping\kaadas\release\mapping.txt
+sha1=b4643ae2343a67768e2a9a4377f89e639057b2b3
+appId=3ac95f5a71
+appChannel=kaadas
+appPackage=com.kaidishi.lock
+appVersion=4.4.1
+
