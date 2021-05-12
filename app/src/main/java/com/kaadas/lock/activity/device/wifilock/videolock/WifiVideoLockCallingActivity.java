@@ -567,7 +567,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void onConnectFailed(int paramInt) {
-        mPresenter.handler.post(new Runnable() {
+        tvTips.post(new Runnable() {
             @Override
             public void run() {
                 if(!WifiVideoLockCallingActivity.this.isFinishing()){
@@ -595,11 +595,8 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     creteDialog(errorStringWithCode + "");
 
                 }
-
             }
         });
-
-
     }
 
     private void resetStatus() {

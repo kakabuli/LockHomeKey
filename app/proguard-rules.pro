@@ -448,3 +448,8 @@ public static java.lang.String TABLENAME;
      <init>(...);
 }
 # ----------------CymChad:BaseRecyclerViewAdapterHelper------------------
+
+# -----------------eclipse mqtt--------------------------------------------------
+-keep class org.eclipse.paho.android.service.** { *; }
+-keep class org.eclipse.paho.client.mqttv3.** { *; }
+# -----------------eclipse mqtt--------------------------------------------------
