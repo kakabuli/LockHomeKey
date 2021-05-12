@@ -28,7 +28,8 @@ public String[] permission=new String[] {
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.RECORD_AUDIO};
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.MANAGE_EXTERNAL_STORAGE};
 
 
 
