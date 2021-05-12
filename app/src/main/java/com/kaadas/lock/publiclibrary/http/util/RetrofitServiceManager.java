@@ -21,7 +21,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.fastjson.FastJsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
@@ -71,7 +71,7 @@ public class RetrofitServiceManager {
                     .client(builder.build())
                     .baseUrl(HttpConstants.BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(FastJsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
@@ -109,7 +109,7 @@ public class RetrofitServiceManager {
                     .client(noBuilder.build())
                     .baseUrl(HttpConstants.BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(FastJsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
@@ -211,7 +211,7 @@ public class RetrofitServiceManager {
                 .client(builder.build())
                 .baseUrl(HttpConstants.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(FastJsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 //        }

@@ -190,8 +190,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     //Retrofit通过GSON将结果转换为Bean对象
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    //会解析list data为返回[]类型和boolean类型返回Integer 1和0 会转会boolean型
+    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.2.0'
 
     //okhttp拦截器
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
