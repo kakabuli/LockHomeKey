@@ -42,6 +42,7 @@ dependencies {
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     // if u use AndroidX, use the following
     api 'com.blankj:utilcodex:1.30.6'
+    api 'com.google.code.gson:gson:2.8.6'
 
 }
 
