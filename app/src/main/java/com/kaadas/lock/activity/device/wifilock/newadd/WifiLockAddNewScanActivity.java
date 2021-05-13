@@ -142,6 +142,7 @@ public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
         boolean disconnected = info == null
                 || info.getNetworkId() == -1
                 || "<unknown ssid>".equals(info.getSSID());
+        LogUtils.e("网络切换 shulan  disconnected-?>" + disconnected);
         if (disconnected) {
             LogUtils.e("网络切换  from WifiLockAddNewScanActivity");
             String ssid = info.getSSID();
