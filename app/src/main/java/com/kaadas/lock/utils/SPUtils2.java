@@ -120,7 +120,7 @@ public class SPUtils2 {
 //            return sp.getLong(key, (Long) defaultObject);
 			return MMKVUtils.getLongMMKV(FILE_NAME,key,(long)defaultObject);
 		}
-		return null;
+		return defaultObject;
 	}
 	public static Object getProtect(Context context, String key, Object defaultObject) {
 //        SharedPreferences sp = context.getSharedPreferences(PROTECT_FILE_NAME, Context.MODE_PRIVATE);
@@ -140,7 +140,7 @@ public class SPUtils2 {
 //            return sp.getLong(key, (Long) defaultObject);
 			return MMKVUtils.getLongMMKV(PROTECT_FILE_NAME,key,(long)defaultObject);
 		}
-		return null;
+		return defaultObject;
 	}
 	
 	/**

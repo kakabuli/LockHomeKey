@@ -150,7 +150,7 @@ public class SPUtils {
 //            return sp.getLong(key, (Long) defaultObject);
             return MMKVUtils.getLongMMKV(FILE_NAME,key,(long)defaultObject);
         }
-        return null;
+        return defaultObject;
     }
 
     public static Object getProtect(String key, Object defaultObject) {
@@ -171,7 +171,7 @@ public class SPUtils {
 //            return sp.getLong(key, (Long) defaultObject);
             return MMKVUtils.getLongMMKV(PROTECT_FILE_NAME,key,(long)defaultObject);
         }
-        return null;
+        return defaultObject;
     }
 
     /**
