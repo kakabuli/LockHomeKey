@@ -589,11 +589,11 @@ public class BleLockUtils {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.real_time_video_function),R.mipmap.wifi_lock_video,TYPE_VIDEO));
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.dynamic_recording),R.mipmap.wifi_lock_recording,TYPE_RECORD));
         }
-        if (integers.contains(26)) {
-            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
-        }
         if (integers.contains(7)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.password), R.mipmap.bluetooth_password, TYPE_PASSWORD));
+        }
+        if (integers.contains(26)) {
+            functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.face_password), R.mipmap.face_password, TYPE_FACE_PASSWORD));
         }
         if (integers.contains(8)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.fingerprint), R.mipmap.bluetooth_fingerprint, TYPE_FINGER));
@@ -601,7 +601,9 @@ public class BleLockUtils {
         if(integers.contains(53)){
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.my_album),R.mipmap.wifi_lock_album,TYPE_ALBUM));
         }
-        if (!integers.contains(53) && integers.contains(9)) {
+        // TODO: 2021/5/16 根据K10FV的功能集去掉53（远程视频通话） 判断
+        //if (!integers.contains(53) && integers.contains(9)) {
+        if (integers.contains(9)) {
             functionBeans.add(new WifiLockFunctionBean(MyApplication.getInstance().getString(R.string.card), R.mipmap.bluetooth_card, TYPE_CARD));
         }
         if (!integers.contains(53) && integers.contains(45)) {
