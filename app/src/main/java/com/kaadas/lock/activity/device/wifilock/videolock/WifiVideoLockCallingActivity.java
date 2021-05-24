@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -339,6 +340,15 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         return new WifiVideoLockCallingPresenter<>();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     @OnClick({R.id.back,R.id.mark_back,R.id.iv_answer_icon, R.id.iv_refuse_icon,R.id.iv_setting,
             R.id.iv_mute,R.id.iv_screenshot,R.id.iv_calling,R.id.iv_recoring,R.id.iv_album,R.id.iv_temporary_pwd,R.id.iv_real_time_refuse_icon})
     public void onViewClicked(View view) {
@@ -470,7 +480,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         mSufaceView.setVisibility(View.GONE);
         mSufaceView.setVisibility(View.VISIBLE);
         int keepAliveStatus = 0;
@@ -546,7 +555,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override
@@ -557,12 +565,12 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
     @Override
     public void finish() {
-        super.finish();
         isCalling = 0;
         mPresenter.release();
         if(getIntent().getBooleanExtra("VIDEO_CALLING_IS_MAINACTIVITY",false)){
             startActivity(new Intent(this, MainActivity.class));
         }
+        super.finish();
     }
 
     @Override
