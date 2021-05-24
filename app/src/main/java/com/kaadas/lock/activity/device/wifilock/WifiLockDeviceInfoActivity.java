@@ -109,7 +109,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             if(BleLockUtils.isSupportWiFiFaceOTA(wifiLockInfo.getFunctionSet())){
                 rlFaceModelFirmwareVersion.setVisibility(View.VISIBLE);
                 faceModelFirmwareVersion = wifiLockInfo.getFaceVersion();
-                tvFaceModelFirmwareVersion.setText(TextUtils.isEmpty(faceModelFirmwareVersion) ? "" : wifiLockInfo.getFaceVersion());
+                tvFaceModelFirmwareVersion.setText(faceModelFirmwareVersion);
 
             }
             else {//不支持
