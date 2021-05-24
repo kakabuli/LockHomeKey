@@ -52,6 +52,7 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     private static final int OVER_TIME_TIMES = 10;
     private long startTime = 0;
     private int connectTimes = 0;
+    private boolean isFinish = false;
 
     @Override
     public void attachView(IWifiLockVideoCallingView view) {
@@ -114,6 +115,12 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                 if(isSafe()){
                     mViewRef.get().onConnectFailed(errno);
                     errno = 0;
+                }
+                return;
+            }
+            if(isFinish){
+                if(isSafe()){
+                    mViewRef.get().onConnectFailed(paramInt);
                 }
                 return;
             }
@@ -194,10 +201,12 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
 
 
     public void release(){
+        LogUtils.e("shulan callingActivity release");
         XMP2PManager.getInstance().stopConnect();//
         XMP2PManager.getInstance().stopCodec();
         this.startTime = 0;
         this.connectTimes = 0;
+        this.isFinish = true;
     }
 
     public void stopConnect(){
@@ -388,5 +397,6 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
     public void setStartTime() {
         this.startTime = System.currentTimeMillis();
         this.connectTimes = 0;
+        this.isFinish = false;
     }
 }
