@@ -160,7 +160,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x76, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
         FUNCTION_SET.put(0x77, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
         FUNCTION_SET.put(0x78, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 16, 17, 19, 20, 21, 22, 23, 41, 43, 50});
-        FUNCTION_SET.put(0x79, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 32, 33, 34, 38, 46, 47, 51, 52, 53, 54, 55, 59, 63, 64, 65, 66, 67});
+        FUNCTION_SET.put(0x79, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 32, 33, 34, 38, 46, 47, 51, 52, 53, 54, 55, 59, 64, 65, 66, 67, 86});
 
         FUNCTION_SET.put(0x7A, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 39, 46, 47, 49, 51, 52, 53, 54, 55, 57, 58, 59});//2020年9月28日11:24:09
 
@@ -533,6 +533,45 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(63);
+    }
+
+    public static boolean isSupportVideoPanelMultiOTA(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(87);
+    }
+
+    public static boolean isSupportLockOTA(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(20);
+    }
+
+    public static boolean isSupportSinglePanelOTA(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(86);
     }
 
     /**

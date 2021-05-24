@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +39,23 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
     TextView tvHardwareVersion;
     @BindView(R.id.tv_hard_version)
     TextView tvHardVersion;
+    @BindView(R.id.tv_fornt_hard_version)
+    TextView tvFrontHardVersion;
+    @BindView(R.id.tv_back_hard_version)
+    TextView tvBackHardVersion;
     @BindView(R.id.iv_hard_version)
     ImageView ivHardVersion;
+    @BindView(R.id.iv_fornt_hard_version)
+    ImageView ivForntHardVersion;
+    @BindView(R.id.iv_back_hard_version)
+    ImageView ivBackHardVersion;
+    @BindView(R.id.rl_back_hard_version)
+    RelativeLayout rlBackHardVersion;
+    @BindView(R.id.rl_fornt_hard_version)
+    RelativeLayout rlFrontHardVersion;
+    @BindView(R.id.rl_hard_version)
+    RelativeLayout rlHardVersion;
+
 
     private String wifiSN;
     private WifiLockInfo wifiLockInfoBySn;
@@ -59,9 +75,31 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
     }
 
     private void initData(){
+
         if (wifiLockInfoBySn != null) {
-            if (wifiLockInfoBySn.getLockFirmwareVersion() != null) {
-                tvHardVersion.setText(wifiLockInfoBySn.getLockFirmwareVersion());
+            if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())
+                    || BleLockUtils.isSupportVideoPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())){//多固件升级
+                rlHardVersion.setVisibility(View.VISIBLE);
+                rlBackHardVersion.setVisibility(View.GONE);
+                rlFrontHardVersion.setVisibility(View.GONE);
+                if (wifiLockInfoBySn.getLockFirmwareVersion() != null) {
+                    tvHardVersion.setText(wifiLockInfoBySn.getLockFirmwareVersion());
+                }
+            }else if(BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())){
+                rlHardVersion.setVisibility(View.GONE);
+                rlBackHardVersion.setVisibility(View.VISIBLE);
+                rlFrontHardVersion.setVisibility(View.VISIBLE);
+                if(wifiLockInfoBySn.getFrontPanelVersion() != null)
+                    tvFrontHardVersion.setText(wifiLockInfoBySn.getFrontPanelVersion());
+                if(wifiLockInfoBySn.getBackPanelVersion() != null)
+                    tvBackHardVersion.setText(wifiLockInfoBySn.getBackPanelVersion());
+            }else{
+                rlHardVersion.setVisibility(View.VISIBLE);
+                rlBackHardVersion.setVisibility(View.GONE);
+                rlFrontHardVersion.setVisibility(View.GONE);
+                if (wifiLockInfoBySn.getLockFirmwareVersion() != null) {
+                    tvHardVersion.setText(wifiLockInfoBySn.getLockFirmwareVersion());
+                }
             }
 
             if (wifiLockInfoBySn.getWifiVersion() != null) {
@@ -83,7 +121,7 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
     }
 
 
-    @OnClick({R.id.back,R.id.rl_hard_version})
+    @OnClick({R.id.back,R.id.rl_hard_version,R.id.rl_fornt_hard_version,R.id.rl_back_hard_version})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -91,12 +129,41 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
                 break;
             case R.id.rl_hard_version:
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
+                    if(!BleLockUtils.isSupportLockOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
-                    multiOTAflag = false;
-                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 3);
+                    if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())
+                            || BleLockUtils.isSupportVideoPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())) {
+                        multiOTAflag = true;
+                        mPresenter.checkMultiOTAInfo(wifiSN,wifiLockInfoBySn.getFrontPanelVersion() + "",wifiLockInfoBySn.getBackPanelVersion() + "");
+                    }else{
+                        multiOTAflag = false;
+                        mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 2);
+                    }
                 } else {
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.rl_back_hard_version:
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
+                    if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
+                    showLoading(getString(R.string.is_check_version));
+                    multiOTAflag = false;
+                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 7);
+                }else{
+                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+            case R.id.rl_fornt_hard_version:
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
+                    if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
+                    showLoading(getString(R.string.is_check_version));
+                    multiOTAflag = false;
+                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 6);
+                }else{
+                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
 

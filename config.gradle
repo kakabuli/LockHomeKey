@@ -23,8 +23,8 @@ ext {
             compileSdkVersion       :30,
             minSdkVersion           :22,
             targetSdkVersion        :27,
-            versionCode             :202105161,
-            versionName             :"4.4.3",
+            versionCode             :202105171,
+            versionName             :"4.4.3.1",
             buildToolsVersion       :"30.0.2",
 
             coreVersionCode         :201909250,
@@ -41,6 +41,9 @@ ext {
             "app"                   :"com.kaadas.lock",
             "kaadas"                :"com.kaidishi.lock"
     ]
+
+    //开启保活进程打印
+    Keep_Alive_Debug = false
 
     greendao_schemaVersion = 37
     constraintlayoutVersion = "2.0.4"

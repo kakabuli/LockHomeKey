@@ -1576,6 +1576,8 @@
     <string name="device_id1">设备ID</string>
     <string name="ip_address">IP地址</string>
     <string name="hard_version">固件版本</string>
+    <string name="front_hard_version">前面板版本</string>
+    <string name="back_hard_version">后面板版本</string>
     <string name="bind_time1">绑定时间</string>
     <string name="rg4300_timer_manager_notice_empty">暂无定时任务</string>
     <string name="add_timer">添加定时</string>
