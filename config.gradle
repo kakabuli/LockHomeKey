@@ -4,6 +4,8 @@ ext {
     isDeBug = true
     //Net环境 true正式 false测试
     env = true
+    //是否事release版本
+    isRelease = checkRelease()
 
     HOST = [
             HTTPS                   :'"https://app.kaadas.com:34000/"',
@@ -43,4 +45,15 @@ ext {
     greendao_schemaVersion = 37
     constraintlayoutVersion = "2.0.4"
     espresso_core_version = "3.3.0"
+}
+
+def checkRelease() {
+    def runTasks = gradle.startParameter.taskNames
+    for (String task : runTasks) {
+        // 我这里根据task为"assemble"和非"Debug"认定为release
+        if (task.contains("assemble") && !task.contains("Debug")) {
+            return true
+        }
+    }
+    return false
 }
