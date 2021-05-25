@@ -144,22 +144,22 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
                 }
                 break;
             case R.id.rl_back_hard_version:
-                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getBackPanelVersion())) {
                     if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
                     multiOTAflag = false;
-                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 7);
+                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getBackPanelVersion(), 7);
                 }else{
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
 
                 break;
             case R.id.rl_fornt_hard_version:
-                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
+                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getFrontPanelVersion())) {
                     if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
                     multiOTAflag = false;
-                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 6);
+                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getFrontPanelVersion(), 6);
                 }else{
                     Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
@@ -274,6 +274,10 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
         }
         else if (type == 3) { //人脸模组
             content = getString(R.string.hava_face_model_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        }else if(type == 6){
+            content = getString(R.string.hava_front_panel_model_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
+        }else if(type == 7){
+            content = getString(R.string.hava_back_panel_model_new_version) + appInfo.getFileVersion() + getString(R.string.is_update);
         }else{
             if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())){
                 content = getString(R.string.have_panel_multi_new_version) + "";

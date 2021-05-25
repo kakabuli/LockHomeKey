@@ -1539,6 +1539,8 @@
     <string name="hava_wifi_new_version">检测有新Wi-Fi模块版本</string>
     <string name="hava_lock_new_version">检测有新Wi-Fi锁版本</string>
     <string name="hava_face_model_new_version">检测到人脸模组版本</string>
+    <string name="hava_front_panel_model_new_version">检测到前面板版本</string>
+    <string name="hava_back_panel_model_new_version">检测到后面板版本</string>
     <string name="is_update">,是否升级?</string>
     <string name="temp_password_open_lock">临时密码开锁</string>
     <string name="dsfkjasdfsdfsdfshj">① 触摸按键区唤醒面板\n② 按键区先输入“*”两次\n③ 输入管理密码 :“******”\n④按“#”确认，“已进入管理模式”</string>
