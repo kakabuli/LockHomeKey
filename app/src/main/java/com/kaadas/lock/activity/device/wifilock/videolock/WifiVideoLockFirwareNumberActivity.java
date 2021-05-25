@@ -362,6 +362,8 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
 
             AlertDialogUtil.getInstance().haveTitleContentNoButtonDialog(this, getString(R.string.wakeup_lock)
                     , getString(R.string.wakeup_lock_face_ota_tips), 5);
+        }else{
+            hiddenLoading();
         }
     }
 
