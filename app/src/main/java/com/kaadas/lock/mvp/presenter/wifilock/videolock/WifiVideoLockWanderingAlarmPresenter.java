@@ -574,7 +574,7 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if(MqttConstant.SET_CAMERA.equals(mqttData.getFunc())){
+                            if(MqttConstant.SET_LOCK.equals(mqttData.getFunc())){
                                 return true;
                             }
                             return false;
