@@ -38,6 +38,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -739,6 +740,11 @@ public class MyApplication extends Application {
                         wifiLockInfo.setVolume(actionBean.getEventparams().getVolume());
                         wifiLockInfo.setPowerSave(actionBean.getEventparams().getPowerSave());
                         wifiLockInfo.setFaceStatus(actionBean.getEventparams().getFaceStatus());
+
+                        if(BleLockUtils.isSupportFacePir(wifiLockInfo.getFunctionSet())){
+                            wifiLockInfo.setHoverAlarm(actionBean.getEventparams().getHoverAlarm());
+                            wifiLockInfo.setHoverAlarmLevel(actionBean.getEventparams().getHoverAlarmLevel());
+                        }
                         long updateTime = Long.parseLong(actionBean.getTimestamp());
                         LogUtils.e("更新的时间为   " + DateUtils.getDateTimeFromMillisecond(updateTime * 1000));
                         wifiLockInfo.setUpdateTime(updateTime);

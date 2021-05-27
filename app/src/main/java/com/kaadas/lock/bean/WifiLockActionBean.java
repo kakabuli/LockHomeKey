@@ -117,6 +117,25 @@ public class WifiLockActionBean {
         private int powerSave;
         private int faceStatus;
 
+        private int hoverAlarm;
+        private int hoverAlarmLevel;
+
+        public int getHoverAlarm() {
+            return hoverAlarm;
+        }
+
+        public void setHoverAlarm(int hoverAlarm) {
+            this.hoverAlarm = hoverAlarm;
+        }
+
+        public int getHoverAlarmLevel() {
+            return hoverAlarmLevel;
+        }
+
+        public void setHoverAlarmLevel(int hoverAlarmLevel) {
+            this.hoverAlarmLevel = hoverAlarmLevel;
+        }
+
         public int getAmMode() {
             return amMode;
         }

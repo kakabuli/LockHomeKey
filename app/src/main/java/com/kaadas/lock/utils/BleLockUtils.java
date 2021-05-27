@@ -522,6 +522,19 @@ public class BleLockUtils {
         return integers.contains(26);
     }
 
+    public static boolean isSupportFacePir(String functionSet) {
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(65) || integers.contains(66) || integers.contains(67);
+    }
+
     public static boolean isSupportPanelMultiOTA(String functionSet){
         if(TextUtils.isEmpty(functionSet)){
             return false;
