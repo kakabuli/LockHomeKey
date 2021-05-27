@@ -2076,7 +2076,7 @@
     <string name="activity_wifi_video_real_time_close">您确定要关闭吗?</string>
     <string name="activity_wifi_video_real_time_close_no_remote">关闭会导致APP无法远程查看门外情况</string>
     <string name="activity_wifi_video_real_time_belling_video">有人按门铃（或锁被唤醒）时，可视对讲不受影响</string>
-    <string name="activity_wifi_video_safe_mode_double">双重验证（指纹+密码）</string>
+    <string name="activity_wifi_video_safe_mode_double">双重验证</string>
     <string name="activity_wifi_video_scan_network">正在配网中，请稍后...</string>
     <string name="activity_wifi_video_scan_wifi_fail">Wi-Fi账号或密码输错已超过3次</string>
     <string name="activity_wifi_video_sixth_fail">门锁管理密码验证失败，\n请重新输入</string>

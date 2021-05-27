@@ -54,7 +54,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_24"
                 android:drawablePadding="@dimen/dp_27"
-                android:text="普通模式（指纹或密码）"
+                android:text="普通模式"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_13" />
 
