@@ -67,6 +67,11 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     RelativeLayout rlCameraVersion;
     @BindView(R.id.rl_lock_firware_number)
     RelativeLayout rlLockFirwareNumber;
+    @BindView(R.id.rl_voice_model_firmware_version)
+    RelativeLayout rlVoiceModelFirmwareVersion;
+    @BindView(R.id.tv_voice_model_firmware_version)
+    TextView tvVoiceModelFirmWareVersion;
+
     private WifiLockInfo wifiLockInfo;
     private String wifiSN;
     private String faceModelFirmwareVersion;
@@ -128,6 +133,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 rlLockFirwareNumber.setVisibility(View.GONE);
             }
 
+            if(BleLockUtils.isSupportVoiceModel(wifiLockInfo.getFunctionSet())){
+                rlVoiceModelFirmwareVersion.setVisibility(View.VISIBLE);
+            }else{
+                rlVoiceModelFirmwareVersion.setVisibility(View.GONE);
+            }
+
             if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
                 lockFirmwareVersion = wifiLockInfo.getFrontPanelVersion() + "";
             }else{
@@ -148,7 +159,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
         finish();
     }
 
-    @OnClick({R.id.rl_face_model_firmware_version, R.id.rl_lock_model_firmware_version, R.id.rl_wifi_model_firmware_version,R.id.rl_camera_version,R.id.rl_lock_firware_number})
+    @OnClick({R.id.rl_face_model_firmware_version, R.id.rl_lock_model_firmware_version, R.id.rl_wifi_model_firmware_version,
+            R.id.rl_camera_version,R.id.rl_lock_firware_number,R.id.rl_voice_model_firmware_version})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_face_model_firmware_version:
@@ -193,7 +205,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 intent1.putExtra(KeyConstants.WIFI_SN, wifiSN);
                 startActivity(intent1);
                 break;
-
+            case R.id.rl_voice_model_firmware_version:
+                break;
         }
     }
 

@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/wifi_video_lock_auto_mode"
+            android:text="@string/wifi_video_lock_locking_mode"
             android:textColor="#000000"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold" />

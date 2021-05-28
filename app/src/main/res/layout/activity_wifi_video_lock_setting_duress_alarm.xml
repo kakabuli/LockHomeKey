@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2">
+
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_16"
+            android:paddingBottom="@dimen/dp_5"
+            android:src="@mipmap/back_gray"/>
+
+        <TextView
+            android:id="@+id/head_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/setting_stress_alarm"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_17"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relativelayout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_1"
+        android:layout_height="@dimen/dp_60"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <TextView
+            android:id="@+id/tv_rl_duress_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/stress_alarm"
+            android:textColor="@color/color_333333"
+            android:textSize="@dimen/sp_13" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_rl_duress_1"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="3dp"
+            android:text="@string/device_duress_alarm_des_check_tips"
+            android:textColor="@color/c999999"
+            android:textSize="@dimen/sp_10" />
+
+        <ImageView
+            android:id="@+id/iv_duress_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_13"
+            android:src="@drawable/wandering_alarm_selector" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_recevice_duress_arlam"
+        app:layout_constraintTop_toBottomOf="@+id/relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_14"
+        android:text="@string/setting_app_stress_alarm"
+        android:layout_marginStart="@dimen/dp_16"
+        android:paddingTop="@dimen/dp_10"
+        android:textColor="#666666"
+        android:paddingBottom="@dimen/dp_10"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_duress_alarm_app_recevice"
+        app:layout_constraintTop_toBottomOf="@+id/tv_recevice_duress_arlam"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="@dimen/dp_60">
+
+        <TextView
+            android:id="@+id/tv_duress_alarm_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/color_333333"
+            android:text="@string/setting_duress_alarm_app_receiver"
+            android:textSize="@dimen/sp_13"/>
+
+
+        <TextView
+            android:layout_below="@id/tv_duress_alarm_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/c999999"
+            android:text="@string/setting_app_stress_alarm"
+            android:textSize="@dimen/sp_10"/>
+
+        <TextView
+            android:id="@+id/tv_duress_alarm_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_14"
+            android:drawableRight="@mipmap/right"
+            android:drawablePadding="@dimen/dp_7"
+            android:textColor="@color/c999999"
+            android:textSize="@dimen/sp_12"/>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_num"
+        app:layout_constraintTop_toBottomOf="@+id/rl_duress_alarm_app_recevice"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:paddingStart="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text=""
+        android:gravity="center_vertical"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/color_333333"
+        android:layout_height="@dimen/dp_60"></TextView>
+
+
+    <View
+        android:id="@+id/v_1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_num"
+        android:layout_marginLeft="@dimen/dp_17"
+        android:background="#EAE9E9"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl_duress_alarm_password_add_time"
+        app:layout_constraintTop_toBottomOf="@+id/v_1"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="@dimen/dp_60">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:textColor="@color/color_333333"
+            android:textSize="@dimen/sp_13"
+            android:layout_centerVertical="true"
+            android:text="@string/setting_duress_alarm_app_add_time"
+            />
+
+        <TextView
+            android:id="@+id/tv_duress_alarm_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/c999999"
+            />
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -556,7 +556,7 @@
     <string name="warring_broken">已监测到您的门锁异常,请联系家人或小区保安</string>
     <string name="warring_mechanical_key">您的智能锁正在被机械方式开启,请回家或联系保安查看</string>
     <string name="warring_low_power">您的门锁电量过低，请及时更换</string>
-<!--    <string name="warring_door_not_lock">您的门锁有故障,请注意</string>-->
+    <!--    <string name="warring_door_not_lock">您的门锁有故障,请注意</string>-->
     <string name="warring_door_not_lock">您的门锁未上锁，请检查锁舌是否弹出</string>
     <string name="warring_arm">您的门锁处于布防状态,有从门内开锁情况</string>
     <string name="warrign_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
@@ -913,6 +913,7 @@
     <string name="lock_firware_hardware_number">门锁硬件版本</string>
     <string name="lock_firware__number">门锁版本</string>
     <string name="face_model_firware_version_number">人脸模组版本</string>
+    <string name="voice_model_firware_version_number">语音模组版本</string>
     <string name="lock_software_version">门锁软件版本</string>
     <string name="no_lock_alarm">暂无预警信息</string>
     <string name="no_catEye_alarm">暂无猫眼动态信息</string>
@@ -920,6 +921,7 @@
     <string name="validation_failed_three_times">系统被锁定报警</string>
     <string name="pick_proof">防撬报警</string>
     <string name="stress_alarm">胁迫报警</string>
+    <string name="voice_quality_setting">语音设置</string>
     <string name="pir_trigger">pir触发事件</string>
     <string name="low_power_alarm">低电量报警</string>
     <string name="cat_head_is_drawn">猫头被拔事件</string>
@@ -1641,6 +1643,8 @@
     <string name="am_mode">A-M自动/手动模式</string>
     <string name="lock_type">上锁方式</string>
     <string name="open_power">开门力量</string>
+    <string name="screen_brightness">显示屏亮度</string>
+    <string name="screen_duration">显示屏时间</string>
     <string name="door_direction">开门方向</string>
     <string name="power_Save_mode">节能模式</string>
     <string name="face_function">面容识别功能</string>
@@ -2037,6 +2041,7 @@
     <string name="wifi_video_lock_microphone_permission">请先获取麦克风权限</string>
     <string name="wifi_video_lock_normal_mode">手动上锁</string>
     <string name="wifi_video_lock_auto_mode">自动上锁</string>
+    <string name="wifi_video_lock_locking_mode">上锁方式</string>
     <string name="wifi_video_lock_waiting">请稍等</string>
     <string name="wifi_video_lock_delete_show_toast">没有要删除的哦~</string>
     <string name="wifi_video_lock_find_file_show_toast">找不到文件</string>
@@ -2146,8 +2151,12 @@
     <string name="activity_wifi_lock_wifi_detail_name">Wi-Fi名称</string>
     <string name="activity_wifi_lock_wifi_detail_strength">Wi-Fi强度</string>
     <string name="activity_clothes_hanger_machine_qrcode_scan">%1$s 晾衣机，是否进入配网？</string>
-
-
-
+    <string name="device_duress_alarm_des_check_tips">开启后，输入指纹APP实时接收报警信息</string>
+    <string name="device_duress_alarm_notification">警报通知</string>
+    <string name="setting_stress_alarm">设置胁迫密码</string>
+    <string name="setting_app_stress_alarm">APP实时推送胁迫报警消息</string>
+    <string name="setting_duress_alarm_app_receiver">APP接收</string>
+    <string name="setting_duress_alarm_app_add_time">添加时间</string>
+    <string name="setting_duress_alarm_receiver">接收账号</string>
 
 </resources>

@@ -1,22 +1,30 @@
 package com.kaadas.lock.activity.device.wifilock.x9;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockLanguageSettingActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.x9.WifiLockLockingMethodPresenter;
 import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockLockingMethodView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.blankj.utilcode.util.ToastUtils;
+import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,9 +53,18 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     CheckBox ckSecond15;
     @BindView(R.id.ck_close)
     CheckBox ckClose;
+    @BindView(R.id.avi)
+    AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private String wifiSn = "";
     private WifiLockInfo wifiLockInfo;
+
+    private int lockingMethod;
+
+
+    private InnerRecevier mInnerRecevier = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +77,9 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
 
         if(wifiLockInfo != null){
             showLockingMethod(wifiLockInfo.getLockingMethod());
+            if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
+                mPresenter.settingDevice(wifiLockInfo);
+            }
         }
     }
 
@@ -125,6 +145,12 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     @Override
     protected void onResume() {
         super.onResume();
+
+        registerBroadcast();
+        if(avi != null){
+            avi.hide();
+            tvTips.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -135,6 +161,7 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unRegisterBroadcast();
     }
 
     @Override
@@ -173,39 +200,144 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     }
 
     private void setLockingMethod(){
-        int lockingMethod = getLockingMethod();
+        lockingMethod = getLockingMethod();
         if(wifiLockInfo.getLockingMethod() == lockingMethod){
             finish();
         }else{
-            showLoading(getString(R.string.wifi_video_lock_waiting));
-            mPresenter.setLockingMethod(wifiSn,lockingMethod);
+            if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
+                setConnectLockingMethod(wifiSn,lockingMethod);
+            }else{
+                showLoading(getString(R.string.wifi_video_lock_waiting));
+                mPresenter.setLockingMethod(wifiSn,lockingMethod);
+            }
         }
         Intent intent = new Intent(this, WifiLockMoreActivity.class);
         intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
         setResult(RESULT_OK,intent);
     }
 
-    @Override
-    public void settingThrowable(Throwable throwable) {
-        hiddenLoading();
-        ToastUtils.showShort(getString(R.string.modify_failed));
-        finish();
+    private void setConnectLockingMethod(String wifiSn, int lockingMethod) {
+        if(avi.isShow()) {
+            if (wifiLockInfo.getPowerSave() == 0) {
+                tvTips.setVisibility(View.VISIBLE);
+                avi.setVisibility(View.VISIBLE);
+                avi.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setConnectLockingMethod(wifiSn,lockingMethod);
+                    }
+                }).start();
+            }else{
+                powerStatusDialog();
+            }
+        }
+    }
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
+
+    private void registerBroadcast(){
+        if(mInnerRecevier == null){
+            mInnerRecevier = new InnerRecevier();
+        }
+        IntentFilter homeFilter = new IntentFilter();
+        homeFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        homeFilter.addAction(Intent.ACTION_SCREEN_ON);
+        homeFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        homeFilter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(mInnerRecevier, homeFilter);
+    }
+
+    private void unRegisterBroadcast(){
+        if(mInnerRecevier != null){
+            unregisterReceiver(mInnerRecevier);
+        }
+    }
+
+    private class InnerRecevier extends BroadcastReceiver {
+
+        final String SYSTEM_DIALOG_REASON_KEY = "reason";
+
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (reason != null) {
+                    if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        // home键
+                        mPresenter.release();
+                    } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
+                        //多任务
+                        mPresenter.release();
+                    }
+                }
+            }else if(action.equals(Intent.ACTION_SCREEN_ON)){
+            }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
+                mPresenter.release();
+            }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
+
+            }
+
+        }
     }
 
     @Override
-    public void settingFailed() {
-        hiddenLoading();
-        ToastUtils.showShort(getString(R.string.modify_failed));
-        finish();
+    public void finish() {
+        super.finish();
+        mPresenter.release();
     }
 
     @Override
-    public void settingSuccess(int lockingMethod) {
-        hiddenLoading();
-        ToastUtils.showShort(getString(R.string.modify_success));
-        Intent intent = new Intent(this, WifiLockMoreActivity.class);
-        intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
-        setResult(RESULT_OK,intent);
-        finish();
+    public void onSettingCallBack(boolean flag) {
+        if(!WifiLockLockingMethodActivity.this.isFinishing()){
+            mPresenter.setMqttCtrl(0);
+            mPresenter.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    hiddenLoading();
+                    if(flag){
+                        ToastUtils.showLong(getString(R.string.modify_success));
+                        Intent intent = new Intent(WifiLockLockingMethodActivity.this, WifiLockMoreActivity.class);
+                        intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
+                        setResult(RESULT_OK,intent);
+                    }else{
+                        ToastUtils.showLong(getString(R.string.modify_failed));
+                    }
+                    if(avi != null){
+                        tvTips.setVisibility(View.GONE);
+                        avi.hide();
+                    }
+                    finish();
+                }
+            });
+        }
     }
 }

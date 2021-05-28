@@ -4,9 +4,9 @@
     package="com.kaadas.lock">
     <!-- // 使用蓝牙设备的权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 它可以监听用户的连接状态并在用户重新连接到网络时重启之前失败的请求 -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /><!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <!--<uses-permission android:name="android.permission.READ_CONTACTS" /> --><!-- MQTT -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.READ_PROFILE" /> <!-- <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
+    <!-- MQTT -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 微信分享 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,8 +20,8 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-<!--    用于硬盘缓存和读取-->
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> <!-- 用于硬盘缓存和读取 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
@@ -29,14 +29,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 个推3.0电子围栏功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" /><!-- OPPO辅助 SDK -->
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE" /> <!-- OPPO辅助 SDK -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" /> <!-- 使用网络 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- android 10.0使用wifi api新添加的权限 -->
-
-
     <!-- 魅族辅助 SDK -->
     <permission
         android:name="${applicationId}.push.permission.MESSAGE"
@@ -44,31 +42,33 @@
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
     <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
     <uses-permission android:name="${applicationId}.push.permission.MESSAGE" />
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
-
-    <!--<queries>
+    <!--
+<queries>
         <intent>
             <action android:name="com.huawei.hms.core.aidlservice" />
         </intent>
-    </queries>-->
-
+    </queries>
+    -->
     <meta-data
         android:name="push_kit_auto_init_enabled"
-        android:value="true"/>
+        android:value="true" />
 
     <application
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:name,android:allowBackup"
-        android:requestLegacyExternalStorage="true">
+        tools:replace="android:name,android:allowBackup">
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockVoiceQualitySettingActivity"></activity>
         <activity
             android:name=".activity.device.wifilock.videolock.WifiVideoLockCallingTestActivity"
             android:launchMode="singleTop"
@@ -97,98 +97,144 @@
             android:name=".activity.device.wifilock.videolock.WifiVideoLockLanguageSettingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockDeviceRecordActivity"
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoScreenBrightnessActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockPreViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoScreenDurationActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockCameraVersionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockDuressAlarmAvtivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockFirwareNumberActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockSettingDuressAlarmAvtivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockSettingDuressAlarmReceiverAvtivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockAlbumActivity"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeVideoActivity"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockCallingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockDeviceRecordActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockAddSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockPreViewActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockScanFailedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockCameraVersionActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockFirwareNumberActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockFourthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockAlbumDetailActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockFifthActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockAlbumActivity" />
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeVideoActivity" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockCallingActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockSixthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockAddSuccessActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeWeekPeriodActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockScanFailedActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingJudgeTimeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockScanActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingPIRSensitivityActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockFourthActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimePeriodActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockFifthActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.WifiLockMessagePushActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockSixthActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeWeekPeriodActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingJudgeTimeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockFaceWanderingAlarmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingPIRSensitivityActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.addDevice.singleswitch.SwipchSeetingArgus"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimePeriodActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.WifiLockMessagePushActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockRealTimeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockWanderingAlarmActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.videolock.WifiVideoLockFaceWanderingAlarmActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.addDevice.singleswitch.SwipchSeetingArgus" />
         <activity android:name=".activity.addDevice.singleswitch.SwipchLinkSettingActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkSucActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkFailActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkThreeActivity" />
         <activity android:name=".activity.addDevice.singleswitch.SwipLinkTwoActivity" />
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkOne"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkNo"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activity.addDevice.singleswitch.SwipchLinkActivity"
+        <activity
+            android:name=".activity.addDevice.singleswitch.SwipchLinkOne"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity"
+        <activity
+            android:name=".activity.addDevice.singleswitch.SwipchLinkNo"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity"
+        <activity
+            android:name=".activity.addDevice.singleswitch.SwipchLinkActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.wifilock.newadd.WifiLockWaitForSwitchActivity"
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddToSetSwitchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddActivity"
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewToChooseActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.device.clotheshangermachine.ClothesHangerMachineQrCodeScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockWaitForSwitchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineAddActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.clotheshangermachine.ClothesHangerMachineQrCodeScanActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -256,19 +302,15 @@
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
 
-             <intent-filter>
-             <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
 
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-
-
-             <action android:name="android.intent.action.oppopush" />
-             </intent-filter>
+                <action android:name="android.intent.action.oppopush" />
+            </intent-filter>
         </activity> <!-- 登录 -->
         <activity
             android:name=".activity.login.LoginActivity"
@@ -907,13 +949,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.device.wifilock.add.WifiLockAddSuccessToSetSwitchActivity"
-            android:theme="@style/DialogTransparent"
             android:screenOrientation="portrait"
-        />
-
+            android:theme="@style/DialogTransparent" />
         <activity android:name=".publiclibrary.ota.face.FaceOtaActivity" />
         <activity android:name=".activity.device.gatewaylock.password.test.PasswordTestActivity" />
-
         <activity
             android:name=".activity.device.wifilock.add.WifiLockSetUpActivity"
             android:launchMode="singleTask"
@@ -1310,7 +1349,8 @@
             android:name=".activity.my.PrivacyActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <service android:name=".publiclibrary.xm.DoorbellingService"/>
+
+        <service android:name=".publiclibrary.xm.DoorbellingService" />
         <service android:name=".publiclibrary.ble.BleService" />
         <service android:name=".publiclibrary.ota.ble.p6.BluetoothLeService" />
         <service android:name=".publiclibrary.linphone.linphonenew.LinphoneService" />
@@ -1322,7 +1362,6 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAResponseReceiver_v1"
             android:enabled="true"
@@ -1330,9 +1369,7 @@
             <intent-filter>
                 <action android:name="com.cysmart.bluetooth.le.ACTION_OTA_DATA_AVAILABLE_V1" />
             </intent-filter>
-        </receiver>
-
-        <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
+        </receiver> <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
         <service
             android:name="com.kaidishi.lock.service.GeTuiPushService"
             android:exported="true"
@@ -1340,23 +1377,25 @@
             android:process=":pushservice" /> <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
         <service
             android:name="com.kaidishi.lock.service.GeTuiIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <!-- 魅族辅助 SDK start -->
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 魅族辅助 SDK start -->
         <meta-data
             android:name="MEIZUPUSH_APPID"
             android:value="MZ_${MEIZU_APP_ID}" />
         <meta-data
             android:name="MEIZUPUSH_APPKEY"
             android:value="MZ_${MEIZU_APP_KEY}" />
+
         <service
             android:name="com.meizu.cloud.pushsdk.NotificationService"
             android:exported="true"
             android:process=":pushservice" />
+
         <receiver
             android:name="com.meizu.cloud.pushsdk.SystemReceiver"
             android:process=":pushservice">
             <intent-filter>
                 <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -1369,10 +1408,10 @@
                 <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
                 <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
                 <action android:name="com.meizu.c2dm.intent.RECEIVE" />
+
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver>
-        <!-- 魅族辅助 SDK end -->
+        </receiver> <!-- 魅族辅助 SDK end -->
         <!-- VIVO辅助 SDK start -->
         <meta-data
             android:name="com.vivo.push.app_id"
@@ -1401,8 +1440,7 @@
                 <!-- 接收 push 消息 -->
                 <action android:name="com.vivo.pushclient.action.RECEIVE" />
             </intent-filter>
-        </receiver>
-        <!-- VIVO辅助 SDK end -->
+        </receiver> <!-- VIVO辅助 SDK end -->
         <!-- OPPO辅助 SDK start -->
         <meta-data
             android:name="OPPOPUSH_APPKEY"
@@ -1417,21 +1455,19 @@
             <intent-filter>
                 <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
             </intent-filter>
-        </service>
-        <!-- OPPO辅助 SDK end -->
-
-        <!--  华为core辅助  -->
+        </service> <!-- OPPO辅助 SDK end -->
+        <!-- 华为core辅助 -->
         <meta-data
             android:name="com.huawei.hms.client.channel.androidMarket"
             android:value="false" />
+
         <service
             android:name="com.kaidishi.lock.push.HuaWeiPushService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

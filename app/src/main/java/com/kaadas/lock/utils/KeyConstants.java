@@ -382,6 +382,12 @@ public class KeyConstants {
     //X9上锁方式
     public static final int WIFI_LOCK_LOCKING_METHOD = 3003;
 
+    //显示屏时间
+    public static final int WIFI_VIDEO_LOCK_SCREEN_DURATION = 3010;
+
+    //显示屏亮度
+    public static final int WIFI_VIDEO_LOCK_SCREEN_BRIGHTNESS = 3011;
+
     /**
      * 传递蓝牙设备信息的Key
      */
