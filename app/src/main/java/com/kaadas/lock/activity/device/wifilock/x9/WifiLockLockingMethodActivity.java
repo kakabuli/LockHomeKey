@@ -15,6 +15,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockLanguageSettingActivity;
+import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.x9.WifiLockLockingMethodPresenter;
 import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockLockingMethodView;
@@ -211,9 +212,6 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
                 mPresenter.setLockingMethod(wifiSn,lockingMethod);
             }
         }
-        Intent intent = new Intent(this, WifiLockMoreActivity.class);
-        intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
-        setResult(RESULT_OK,intent);
     }
 
     private void setConnectLockingMethod(String wifiSn, int lockingMethod) {
@@ -325,7 +323,13 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
                     hiddenLoading();
                     if(flag){
                         ToastUtils.showLong(getString(R.string.modify_success));
-                        Intent intent = new Intent(WifiLockLockingMethodActivity.this, WifiLockMoreActivity.class);
+                        Intent intent;
+                        if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
+
+                            intent = new Intent(WifiLockLockingMethodActivity.this, WifiVideoLockMoreActivity.class);
+                        }else{
+                            intent = new Intent(WifiLockLockingMethodActivity.this, WifiLockMoreActivity.class);
+                        }
                         intent.putExtra(MqttConstant.SET_LOCKING_METHOD,lockingMethod);
                         setResult(RESULT_OK,intent);
                     }else{

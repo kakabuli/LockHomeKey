@@ -31,6 +31,7 @@ import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivi
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewThirdActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.x9.WifiLockLockingMethodActivity;
+import com.kaadas.lock.activity.device.wifilock.x9.WifiLockOpenDirectionActivity;
 import com.kaadas.lock.activity.device.wifilock.x9.WifiLockOpenForceActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -643,6 +644,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         break;
 
                     case R.id.rl_real_time_video:
+                        if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())) return;
                         if (avi.isShow()) {
 
                             intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
@@ -662,6 +664,14 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                                 startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE);
                             }
+                            mPresenter.release();
+                        }
+                        break;
+                    case R.id.rl_door_direction:
+                        if (avi.isShow()) {
+                            intent = new Intent(this, WifiLockOpenDirectionActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
                             mPresenter.release();
                         }
                         break;
@@ -705,6 +715,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                             mPresenter.release();
                         }
                         break;
+
                 }
             } else {
                 LogUtils.e("--kaadas--取功能集为空");
@@ -962,6 +973,12 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 case KeyConstants.WIFI_LOCK_LOCKING_METHOD:
                     int lockingMethod = data.getIntExtra(MqttConstant.SET_LOCKING_METHOD,0);
                     setLockingMethod(lockingMethod);
+                    break;
+                case KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION:
+                    if(data != null){
+                        int openDirection = data.getIntExtra(MqttConstant.SET_OPEN_DIRECTION, 0);
+                        setOpenDirection(openDirection);
+                    }
                     break;
                 case KeyConstants.WIFI_LOCK_SET_OPEN_FORCE:
                     int openForce = data.getIntExtra(MqttConstant.SET_OPEN_FORCE,0);
