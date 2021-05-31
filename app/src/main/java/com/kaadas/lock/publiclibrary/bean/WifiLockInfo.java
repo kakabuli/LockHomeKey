@@ -166,8 +166,10 @@ public class WifiLockInfo implements Serializable {
     private String frontPanelVersion;
     private String backPanelVersion;
 
+    private int volLevel;
 
-    @Generated(hash = 515251372)
+
+    @Generated(hash = 1827986161)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -182,7 +184,8 @@ public class WifiLockInfo implements Serializable {
             WifiVideoLockAliveTimeBean alive_time, int stay_status, String camera_version,
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
-            int lockingMethod, String frontPanelVersion, String backPanelVersion) {
+            int lockingMethod, String frontPanelVersion, String backPanelVersion,
+            int volLevel) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -241,6 +244,7 @@ public class WifiLockInfo implements Serializable {
         this.lockingMethod = lockingMethod;
         this.frontPanelVersion = frontPanelVersion;
         this.backPanelVersion = backPanelVersion;
+        this.volLevel = volLevel;
     }
 
     @Generated(hash = 666757199)
@@ -762,5 +766,13 @@ public class WifiLockInfo implements Serializable {
 
     public void setHoverAlarmLevel(int hoverAlarmLevel) {
         this.hoverAlarmLevel = hoverAlarmLevel;
+    }
+
+    public int getVolLevel() {
+        return volLevel;
+    }
+
+    public void setVolLevel(int volLevel) {
+        this.volLevel = volLevel;
     }
 }

@@ -89,6 +89,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property LockingMethod = new Property(55, int.class, "lockingMethod", false, "LOCKING_METHOD");
         public final static Property FrontPanelVersion = new Property(56, String.class, "frontPanelVersion", false, "FRONT_PANEL_VERSION");
         public final static Property BackPanelVersion = new Property(57, String.class, "backPanelVersion", false, "BACK_PANEL_VERSION");
+        public final static Property VolLevel = new Property(58, int.class, "volLevel", false, "VOL_LEVEL");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -164,7 +165,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"OPEN_FORCE\" INTEGER NOT NULL ," + // 54: openForce
                 "\"LOCKING_METHOD\" INTEGER NOT NULL ," + // 55: lockingMethod
                 "\"FRONT_PANEL_VERSION\" TEXT," + // 56: frontPanelVersion
-                "\"BACK_PANEL_VERSION\" TEXT);"); // 57: backPanelVersion
+                "\"BACK_PANEL_VERSION\" TEXT," + // 57: backPanelVersion
+                "\"VOL_LEVEL\" INTEGER NOT NULL );"); // 58: volLevel
     }
 
     /** Drops the underlying database table. */
@@ -370,6 +372,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         if (backPanelVersion != null) {
             stmt.bindString(58, backPanelVersion);
         }
+        stmt.bindLong(59, entity.getVolLevel());
     }
 
     @Override
@@ -569,6 +572,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         if (backPanelVersion != null) {
             stmt.bindString(58, backPanelVersion);
         }
+        stmt.bindLong(59, entity.getVolLevel());
     }
 
     @Override
@@ -636,7 +640,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getInt(offset + 54), // openForce
             cursor.getInt(offset + 55), // lockingMethod
             cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56), // frontPanelVersion
-            cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57) // backPanelVersion
+            cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57), // backPanelVersion
+            cursor.getInt(offset + 58) // volLevel
         );
         return entity;
     }
@@ -701,6 +706,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setLockingMethod(cursor.getInt(offset + 55));
         entity.setFrontPanelVersion(cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56));
         entity.setBackPanelVersion(cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57));
+        entity.setVolLevel(cursor.getInt(offset + 58));
      }
     
     @Override

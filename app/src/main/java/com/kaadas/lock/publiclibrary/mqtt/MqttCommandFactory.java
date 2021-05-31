@@ -65,6 +65,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenBrightness;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenTime;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockAliveTime;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPir;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVoiceQuality;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevNickNameBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UpdateDevPushSwitchBean;
@@ -1118,6 +1119,18 @@ public class MqttCommandFactory {
         SetVideoLockLang lockLang = new SetVideoLockLang(MqttConstant.MSG_TYPE_REQUEST, MyApplication.getInstance().getUid(),
                 messageId, wifiID, MqttConstant.SET_LOCK, paramsBean,  System.currentTimeMillis() + "",0);
         return getMessage(lockLang, messageId);
+    }
+
+    /**
+     *  设置语音质量
+     */
+    public static MqttMessage settingVoiceQuality(String wifiID,int voiceQuality) {
+        int messageId = getMessageId();
+
+        SettingVoiceQuality.ParamsBean paramsBean = new SettingVoiceQuality.ParamsBean(voiceQuality);
+        SettingVoiceQuality mSettingFaceWanderingAlarm = new SettingVoiceQuality(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_LOCK,paramsBean,System.currentTimeMillis()+"");
+        return getMessage(mSettingFaceWanderingAlarm, messageId);
     }
 
     /**

@@ -388,6 +388,9 @@ public class KeyConstants {
     //显示屏亮度
     public static final int WIFI_VIDEO_LOCK_SCREEN_BRIGHTNESS = 3011;
 
+    //设置语音质量
+    public static final int WIFI_VICEO_LOCK_VOICE_QUALITY = 3012;
+
     /**
      * 传递蓝牙设备信息的Key
      */

@@ -35,4 +35,137 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_voice_mute"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60">
+
+            <TextView
+                android:id="@+id/tv_voice_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/mute_name"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_13" />
+
+            <CheckBox
+                android:id="@+id/ck_voice_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_voice_low"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_voice_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/voice_quality_low"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_13" />
+
+            <CheckBox
+                android:id="@+id/ck_voice_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_voice_high"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_voice_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_24"
+                android:drawablePadding="@dimen/dp_27"
+                android:text="@string/voice_quality_high"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_13" />
+
+            <CheckBox
+                android:id="@+id/ck_voice_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_17"
+                android:button="@drawable/language_selector"
+                android:clickable="false" />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginLeft="@dimen/dp_13"
+            android:layout_marginRight="@dimen/dp_13"
+            android:background="@color/more_line" />
+
+    </LinearLayout>
+
+    <com.kaadas.lock.widget.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView.Large"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
+        android:layout_centerInParent="true"
+        app:indicatorColor="#333333"
+        android:layout_marginTop="@dimen/dp_150" />
+
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/wifi_video_lock_waiting"
+        android:layout_marginTop="@dimen/dp_10"
+        android:textSize="@dimen/sp_14"
+        android:layout_below="@id/avi"/>
+
 </RelativeLayout>

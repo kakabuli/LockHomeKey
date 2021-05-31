@@ -235,6 +235,9 @@ public class MqttConstant {
     //设置上锁方式
     public static final String SET_LOCKING_METHOD = "setLockingMethod";
 
+    //设置语音质量
+    public static final String SET_VOICE_QUALITY = "setVoiceQuality";
+
     public static final String WIFI_LOCK_DEVTYPE = "kdswflock";
 
     //视频锁 讯美

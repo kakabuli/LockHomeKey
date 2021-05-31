@@ -49,6 +49,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
+import java.text.BreakIterator;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -366,6 +368,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //语音设置
             if(BleLockUtils.isSupportVoiceQuality(wifiLockInfo.getFunctionSet())){
                 rlVoiceQualitySetting.setVisibility(View.VISIBLE);
+                setVoiceQuality(wifiLockInfo.getVolLevel());
                 rlSilentMode.setVisibility(View.GONE);
             }else{
                 rlVoiceQualitySetting.setVisibility(View.GONE);
@@ -711,7 +714,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         if (avi.isShow()) {
                             intent = new Intent(this, WifiVideoLockVoiceQualitySettingActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivity(intent);
+                            startActivityForResult(intent,KeyConstants.WIFI_VICEO_LOCK_VOICE_QUALITY);
                             mPresenter.release();
                         }
                         break;
@@ -988,8 +991,22 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_SCREEN_DURATION:
                     break;
+                case KeyConstants.WIFI_VICEO_LOCK_VOICE_QUALITY:
+                    int voiceQuality = data.getIntExtra(MqttConstant.SET_VOICE_QUALITY,0);
+                    setVoiceQuality(voiceQuality);
+                    break;
             }
 
+        }
+    }
+
+    private void setVoiceQuality(int voiceQuality) {
+        if(voiceQuality == 0){
+            tvVoiceQualitySetting.setText(R.string.mute_name);
+        }else if(voiceQuality == 1){
+            tvVoiceQualitySetting.setText(R.string.voice_quality_low);
+        }else if(voiceQuality == 2){
+            tvVoiceQualitySetting.setText(R.string.voice_quality_high);
         }
     }
 
