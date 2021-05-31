@@ -61,6 +61,8 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingFaceWanderingAlarm;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingLockingMethod;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenDirection;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenForce;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenBrightness;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenTime;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockAliveTime;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVideoLockPir;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.UnBindGatewayBean;
@@ -1067,6 +1069,30 @@ public class MqttCommandFactory {
         SettingVideoLockPir mSettingVideoLockAliveTime = new SettingVideoLockPir(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
                 wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
         return getMessage(mSettingVideoLockAliveTime, messageId);
+    }
+
+    /**
+     * 设置视频模组 屏幕亮度
+     *
+     */
+    public static MqttMessage settingScreenBrightness(String wifiID,int screenBrightness ) {
+        int messageId = getMessageId();
+        SettingScreenBrightness.ParamsBean paramsBean = new SettingScreenBrightness.ParamsBean(screenBrightness);
+        SettingScreenBrightness mSettingScreenBrightness = new SettingScreenBrightness(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
+        return getMessage(mSettingScreenBrightness, messageId,2);
+    }
+
+    /**
+     * 设置视频模组 屏幕时长
+     *
+     */
+    public static MqttMessage settingScreenTime(String wifiID,int screemLightSwitch,int screemLightTime ) {
+        int messageId = getMessageId();
+        SettingScreenTime.ParamsBean paramsBean = new SettingScreenTime.ParamsBean(screemLightSwitch,screemLightTime);
+        SettingScreenTime mSettingScreenTime = new SettingScreenTime(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
+        return getMessage(mSettingScreenTime, messageId,2);
     }
 
     /**

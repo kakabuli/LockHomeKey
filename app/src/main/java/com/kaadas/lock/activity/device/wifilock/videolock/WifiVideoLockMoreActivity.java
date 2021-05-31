@@ -11,6 +11,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -76,6 +77,18 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     TextView ivPowerSave;
 //    @BindView(R.id.rl_faceStatus)
 //    RelativeLayout rlFaceStatus;
+    @BindView(R.id.rl_ams_sensing)
+    RelativeLayout rlAMSSensing;
+    @BindView(R.id.tv_ams_sensing)
+    TextView tvAMSSensing;
+    @BindView(R.id.rl_sensing_door_handle)
+    RelativeLayout rlSensingDoorHandle;
+    @BindView(R.id.tv_sensing_door_handle)
+    TextView tvSensingDoorHandle;
+    @BindView(R.id.rl_face_recognition_switch)
+    RelativeLayout rlFaceRecognitionSwitch;
+    @BindView(R.id.tv_face_recognition_switch)
+    TextView tvFaceRecognitionSwitch;
     @BindView(R.id.rl_duress_alarm)
     RelativeLayout rlDuressAlarm;
     @BindView(R.id.rl_voice_quality_setting)
@@ -90,6 +103,10 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     RelativeLayout rlScreenDuration;
     @BindView(R.id.tv_screen_duration)
     TextView tvScreenDuration;
+    @BindView(R.id.rl_door_direction)
+    RelativeLayout rlDoorDirection;
+    @BindView(R.id.tv_door_direction)
+    TextView tvDoorDirection;
     @BindView(R.id.rl_open_force)
     RelativeLayout rlOpenForce;
     @BindView(R.id.tv_open_force)
@@ -290,6 +307,40 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 rlOpenForce.setVisibility(View.GONE);
             }
 
+            //开门方向
+            if(BleLockUtils.isSupportDoorDirection(func)){
+                rlDoorDirection.setVisibility(View.VISIBLE);
+                try{
+                    setOpenDirection(wifiLockInfo.getOpenDirection());
+                }catch (Exception e){}
+            }else{
+                rlDoorDirection.setVisibility(View.GONE);
+            }
+
+            //感应把手开关显示
+            if(BleLockUtils.isSupportSensingHandleSwitch(wifiLockInfo.getFunctionSet())){
+                rlSensingDoorHandle.setVisibility(View.VISIBLE);
+                tvSensingDoorHandle.setText("");
+            }else{
+                rlSensingDoorHandle.setVisibility(View.GONE);
+            }
+
+            //人脸识别开关显示
+            if(BleLockUtils.isSupportFacereCognitionSwitch(wifiLockInfo.getFunctionSet())){
+                rlFaceRecognitionSwitch.setVisibility(View.VISIBLE);
+                tvFaceRecognitionSwitch.setText("");
+            }else{
+                rlFaceRecognitionSwitch.setVisibility(View.GONE);
+            }
+
+            //AMS传感器显示
+            if(BleLockUtils.isSupportAMSSensor(wifiLockInfo.getFunctionSet())){
+                rlAMSSensing.setVisibility(View.VISIBLE);
+                tvAMSSensing.setText("");
+            }else{
+                rlAMSSensing.setVisibility(View.GONE);
+            }
+
             //显示屏亮度
             if(BleLockUtils.isSupportScreenBrightness(wifiLockInfo.getFunctionSet())){
                 rlScreenBrightness.setVisibility(View.VISIBLE);
@@ -314,8 +365,26 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //语音设置
             if(BleLockUtils.isSupportVoiceQuality(wifiLockInfo.getFunctionSet())){
                 rlVoiceQualitySetting.setVisibility(View.VISIBLE);
+                rlSilentMode.setVisibility(View.GONE);
             }else{
                 rlVoiceQualitySetting.setVisibility(View.GONE);
+            }
+
+            //视频模式显示
+            if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
+                ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.wifi_lock_video_mode);
+                ((TextView)findViewById(R.id.tv_real_time)).setCompoundDrawables(null,null,null,null);
+                ((TextView)findViewById(R.id.tv_real_time)).setText("");
+            }else{
+                ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.real_time_video);
+                ((TextView)findViewById(R.id.tv_real_time)).setText("");
+
+            }
+
+            if(func == 165){
+                findViewById(R.id.view_show).setVisibility(View.VISIBLE);
+            }else {
+                findViewById(R.id.view_show).setVisibility(View.GONE);
             }
 
             if (isWifiVideoLockType) {
@@ -352,6 +421,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         rlRealTimeVideo.setOnClickListener(this);
         ivSilentMode.setOnClickListener(this);
         rlOpenForce.setOnClickListener(this);
+        rlDoorDirection.setOnClickListener(this);
         rlScreenDuration.setOnClickListener(this);
         rlScreenBrightness.setOnClickListener(this);
         rlDuressAlarm.setOnClickListener(this);
@@ -923,6 +993,14 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             case 5:
                 ivAm.setText(getString(R.string.wifi_lock_x9_locking_method_5));
                 break;
+        }
+    }
+
+    private void setOpenDirection(int openDirection) {
+        if(openDirection == 1){
+            tvDoorDirection.setText(getString(R.string.wifi_lock_x9_door_direction_left));
+        }else if(openDirection == 2){
+            tvDoorDirection.setText(getString(R.string.wifi_lock_x9_door_direction_right));
         }
     }
 

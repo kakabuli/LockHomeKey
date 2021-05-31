@@ -364,6 +364,7 @@
     <string name="device_information">设备信息</string>
     <string name="message_push">消息推送</string>
     <string name="real_time_video">实时视频设置</string>
+    <string name="wifi_lock_video_mode">视频模式</string>
     <string name="wandering_alarm">徘徊报警</string>
     <string name="face_wandering_alarm">人脸徘徊报警</string>
     <string name="wandering_pir_sensitivity">PIR灵敏度</string>
@@ -1646,6 +1647,9 @@
     <string name="screen_brightness">显示屏亮度</string>
     <string name="screen_duration">显示屏时间</string>
     <string name="door_direction">开门方向</string>
+    <string name="sensing_door_handle">感应门把手</string>
+    <string name="ams_sensing">红外传感器</string>
+    <string name="face_recognition_switch">人脸识别</string>
     <string name="power_Save_mode">节能模式</string>
     <string name="face_function">面容识别功能</string>
     <string name="open">开启</string>
