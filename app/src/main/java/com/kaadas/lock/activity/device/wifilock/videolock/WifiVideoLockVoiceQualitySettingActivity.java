@@ -100,13 +100,7 @@ public class WifiVideoLockVoiceQualitySettingActivity extends BaseActivity<IWifi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(wifiLockInfo.getPowerSave() == 0){
-                if(avi.isShow())
-                    setVoiceQuality();
-            }else {
-
-                finish();
-            }
+            setVoiceQuality();
             return true;
         }
         return super.onKeyDown(keyCode, event);

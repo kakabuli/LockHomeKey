@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
@@ -166,9 +168,12 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setLockingMethod();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setLockingMethod();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick({R.id.back,R.id.auto_layout,R.id.second_5_layout,R.id.second_10_layout,R.id.second_15_layout,R.id.close_layout})

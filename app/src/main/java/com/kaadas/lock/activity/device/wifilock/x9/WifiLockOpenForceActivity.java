@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
@@ -101,9 +103,12 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setOpenForce();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setOpenForce();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick({R.id.back,R.id.low_layout,R.id.high_layout})

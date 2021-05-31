@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
@@ -99,9 +101,12 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        setOpenDirection();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            setOpenDirection();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick({R.id.back,R.id.left_layout,R.id.right_layout})
