@@ -129,12 +129,30 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
-                mPresenter.setConnectOpenForce(wifiSn,openForce);
+                setConnectOpenForce(wifiSn,openForce);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
                 mPresenter.setOpenForce(wifiSn,openForce);
             }
             showLoading(getString(R.string.wifi_video_lock_waiting));
+        }
+    }
+
+    private void setConnectOpenForce(String wifiSn, int openForce) {
+        if(avi.isShow()) {
+            if (wifiLockInfo.getPowerSave() == 0) {
+                tvTips.setVisibility(View.VISIBLE);
+                avi.setVisibility(View.VISIBLE);
+                avi.show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPresenter.setConnectOpenForce(wifiSn,openForce);
+                    }
+                }).start();
+            }else{
+                powerStatusDialog();
+            }
         }
     }
 
