@@ -1009,9 +1009,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         if(screenLightTime <= 5){
             tvScreenDuration.setText(R.string.more_screen_light_duration_5s);
         }else if(screenLightTime > 5 && screenLightTime <= 10){
-            tvScreenBrightness.setText(R.string.more_screen_light_duration_10s);
+            tvScreenDuration.setText(R.string.more_screen_light_duration_10s);
         }else if(screenLightTime > 10 && screenLightTime <= 15){
-            tvScreenBrightness.setText(R.string.more_screen_light_duration_15s);
+            tvScreenDuration.setText(R.string.more_screen_light_duration_15s);
         }
     }
 
