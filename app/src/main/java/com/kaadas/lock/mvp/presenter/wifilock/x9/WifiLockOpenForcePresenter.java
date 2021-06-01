@@ -44,7 +44,7 @@ public class WifiLockOpenForcePresenter<T> extends BasePresenter<IWifiLockOpenFo
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if(MqttConstant.SET_OPEN_FORCE.equals(mqttData.getFunc())){
+                            if(MqttConstant.SET_OPEN_FORCE.equals(mqttData.getFunc()) || MqttConstant.SET_LOCK.equals(mqttData.getFunc())){
                                 return true;
                             }
                             return false;

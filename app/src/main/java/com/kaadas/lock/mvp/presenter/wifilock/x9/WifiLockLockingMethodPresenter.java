@@ -45,7 +45,7 @@ public class WifiLockLockingMethodPresenter<T> extends BasePresenter<IWifiLockLo
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if(MqttConstant.SET_LOCKING_METHOD.equals(mqttData.getFunc())){
+                            if(MqttConstant.SET_LOCKING_METHOD.equals(mqttData.getFunc()) || MqttConstant.SET_LOCK.equals(mqttData.getFunc())){
                                 return true;
                             }
                             return false;
