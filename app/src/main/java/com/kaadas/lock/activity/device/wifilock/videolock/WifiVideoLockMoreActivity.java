@@ -347,7 +347,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //显示屏亮度
             if(BleLockUtils.isSupportScreenBrightness(wifiLockInfo.getFunctionSet())){
                 rlScreenBrightness.setVisibility(View.VISIBLE);
-                setScreenLightLevel(wifiLockInfo.getScreemLightLevel());
+                setScreenLightLevel(wifiLockInfo.getScreenLightLevel());
             }else{
                 rlScreenBrightness.setVisibility(View.GONE);
             }
@@ -993,6 +993,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     setScreenLightLevel(screenLightLevel);
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_SCREEN_DURATION:
+                    int screenLightTime = data.getIntExtra(MqttConstant.SET_SREEN_LIGHT_TIME,10);
+                    setScreenLightTime(screenLightTime);
                     break;
                 case KeyConstants.WIFI_VICEO_LOCK_VOICE_QUALITY:
                     int voiceQuality = data.getIntExtra(MqttConstant.SET_VOICE_QUALITY,0);
@@ -1003,12 +1005,22 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         }
     }
 
+    private void setScreenLightTime(int screenLightTime) {
+        if(screenLightTime <= 5){
+            tvScreenDuration.setText(R.string.more_screen_light_duration_5s);
+        }else if(screenLightTime > 5 && screenLightTime <= 10){
+            tvScreenBrightness.setText(R.string.more_screen_light_duration_10s);
+        }else if(screenLightTime > 10 && screenLightTime <= 15){
+            tvScreenBrightness.setText(R.string.more_screen_light_duration_15s);
+        }
+    }
+
     private void setScreenLightLevel(int screenLightLevel) {
         if(screenLightLevel <= 30){
             tvScreenBrightness.setText(R.string.low);
         }else if(screenLightLevel > 30 && screenLightLevel <= 50){
             tvScreenBrightness.setText(R.string.centre);
-        }else if(screenLightLevel > 50){
+        }else if(screenLightLevel > 50 && screenLightLevel <= 80){
             tvScreenBrightness.setText(R.string.high);
         }
     }

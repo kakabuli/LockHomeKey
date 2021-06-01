@@ -167,12 +167,17 @@ public class WifiLockInfo implements Serializable {
     private String backPanelVersion;
 
     private int volLevel;
-    private int screemLightLevel;
-    private int screemLightTime;
-    private int screemLightSwitch;
+    private int screenLightLevel;
+    private int screenLightTime;
+    private int screenLightSwitch;
 
 
-    @Generated(hash = 3493309)
+    @Generated(hash = 666757199)
+    public WifiLockInfo() {
+    }
+
+
+    @Generated(hash = 991685387)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -188,7 +193,7 @@ public class WifiLockInfo implements Serializable {
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
             int lockingMethod, String frontPanelVersion, String backPanelVersion,
-            int volLevel, int screemLightLevel, int screemLightTime, int screemLightSwitch) {
+            int volLevel, int screenLightLevel, int screenLightTime, int screenLightSwitch) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -248,13 +253,9 @@ public class WifiLockInfo implements Serializable {
         this.frontPanelVersion = frontPanelVersion;
         this.backPanelVersion = backPanelVersion;
         this.volLevel = volLevel;
-        this.screemLightLevel = screemLightLevel;
-        this.screemLightTime = screemLightTime;
-        this.screemLightSwitch = screemLightSwitch;
-    }
-
-    @Generated(hash = 666757199)
-    public WifiLockInfo() {
+        this.screenLightLevel = screenLightLevel;
+        this.screenLightTime = screenLightTime;
+        this.screenLightSwitch = screenLightSwitch;
     }
 
 
@@ -782,27 +783,28 @@ public class WifiLockInfo implements Serializable {
         this.volLevel = volLevel;
     }
 
-    public int getScreemLightLevel() {
-        return screemLightLevel;
+
+    public int getScreenLightLevel() {
+        return screenLightLevel;
     }
 
-    public void setScreemLightLevel(int screemLightLevel) {
-        this.screemLightLevel = screemLightLevel;
+    public void setScreenLightLevel(int screenLightLevel) {
+        this.screenLightLevel = screenLightLevel;
     }
 
-    public int getScreemLightTime() {
-        return screemLightTime;
+    public int getScreenLightTime() {
+        return screenLightTime;
     }
 
-    public void setScreemLightTime(int screemLightTime) {
-        this.screemLightTime = screemLightTime;
+    public void setScreenLightTime(int screenLightTime) {
+        this.screenLightTime = screenLightTime;
     }
 
-    public int getScreemLightSwitch() {
-        return screemLightSwitch;
+    public int getScreenLightSwitch() {
+        return screenLightSwitch;
     }
 
-    public void setScreemLightSwitch(int screemLightSwitch) {
-        this.screemLightSwitch = screemLightSwitch;
+    public void setScreenLightSwitch(int screenLightSwitch) {
+        this.screenLightSwitch = screenLightSwitch;
     }
 }

@@ -90,9 +90,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property FrontPanelVersion = new Property(56, String.class, "frontPanelVersion", false, "FRONT_PANEL_VERSION");
         public final static Property BackPanelVersion = new Property(57, String.class, "backPanelVersion", false, "BACK_PANEL_VERSION");
         public final static Property VolLevel = new Property(58, int.class, "volLevel", false, "VOL_LEVEL");
-        public final static Property ScreemLightLevel = new Property(59, int.class, "screemLightLevel", false, "SCREEM_LIGHT_LEVEL");
-        public final static Property ScreemLightTime = new Property(60, int.class, "screemLightTime", false, "SCREEM_LIGHT_TIME");
-        public final static Property ScreemLightSwitch = new Property(61, int.class, "screemLightSwitch", false, "SCREEM_LIGHT_SWITCH");
+        public final static Property ScreenLightLevel = new Property(59, int.class, "screenLightLevel", false, "SCREEN_LIGHT_LEVEL");
+        public final static Property ScreenLightTime = new Property(60, int.class, "screenLightTime", false, "SCREEN_LIGHT_TIME");
+        public final static Property ScreenLightSwitch = new Property(61, int.class, "screenLightSwitch", false, "SCREEN_LIGHT_SWITCH");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -170,9 +170,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"FRONT_PANEL_VERSION\" TEXT," + // 56: frontPanelVersion
                 "\"BACK_PANEL_VERSION\" TEXT," + // 57: backPanelVersion
                 "\"VOL_LEVEL\" INTEGER NOT NULL ," + // 58: volLevel
-                "\"SCREEM_LIGHT_LEVEL\" INTEGER NOT NULL ," + // 59: screemLightLevel
-                "\"SCREEM_LIGHT_TIME\" INTEGER NOT NULL ," + // 60: screemLightTime
-                "\"SCREEM_LIGHT_SWITCH\" INTEGER NOT NULL );"); // 61: screemLightSwitch
+                "\"SCREEN_LIGHT_LEVEL\" INTEGER NOT NULL ," + // 59: screenLightLevel
+                "\"SCREEN_LIGHT_TIME\" INTEGER NOT NULL ," + // 60: screenLightTime
+                "\"SCREEN_LIGHT_SWITCH\" INTEGER NOT NULL );"); // 61: screenLightSwitch
     }
 
     /** Drops the underlying database table. */
@@ -379,9 +379,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(58, backPanelVersion);
         }
         stmt.bindLong(59, entity.getVolLevel());
-        stmt.bindLong(60, entity.getScreemLightLevel());
-        stmt.bindLong(61, entity.getScreemLightTime());
-        stmt.bindLong(62, entity.getScreemLightSwitch());
+        stmt.bindLong(60, entity.getScreenLightLevel());
+        stmt.bindLong(61, entity.getScreenLightTime());
+        stmt.bindLong(62, entity.getScreenLightSwitch());
     }
 
     @Override
@@ -582,9 +582,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             stmt.bindString(58, backPanelVersion);
         }
         stmt.bindLong(59, entity.getVolLevel());
-        stmt.bindLong(60, entity.getScreemLightLevel());
-        stmt.bindLong(61, entity.getScreemLightTime());
-        stmt.bindLong(62, entity.getScreemLightSwitch());
+        stmt.bindLong(60, entity.getScreenLightLevel());
+        stmt.bindLong(61, entity.getScreenLightTime());
+        stmt.bindLong(62, entity.getScreenLightSwitch());
     }
 
     @Override
@@ -654,9 +654,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56), // frontPanelVersion
             cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57), // backPanelVersion
             cursor.getInt(offset + 58), // volLevel
-            cursor.getInt(offset + 59), // screemLightLevel
-            cursor.getInt(offset + 60), // screemLightTime
-            cursor.getInt(offset + 61) // screemLightSwitch
+            cursor.getInt(offset + 59), // screenLightLevel
+            cursor.getInt(offset + 60), // screenLightTime
+            cursor.getInt(offset + 61) // screenLightSwitch
         );
         return entity;
     }
@@ -722,9 +722,9 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setFrontPanelVersion(cursor.isNull(offset + 56) ? null : cursor.getString(offset + 56));
         entity.setBackPanelVersion(cursor.isNull(offset + 57) ? null : cursor.getString(offset + 57));
         entity.setVolLevel(cursor.getInt(offset + 58));
-        entity.setScreemLightLevel(cursor.getInt(offset + 59));
-        entity.setScreemLightTime(cursor.getInt(offset + 60));
-        entity.setScreemLightSwitch(cursor.getInt(offset + 61));
+        entity.setScreenLightLevel(cursor.getInt(offset + 59));
+        entity.setScreenLightTime(cursor.getInt(offset + 60));
+        entity.setScreenLightSwitch(cursor.getInt(offset + 61));
      }
     
     @Override

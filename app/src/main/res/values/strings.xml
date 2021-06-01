@@ -374,6 +374,14 @@
     <string name="face_wandering_alarm_text">对逗留人员进行人脸识别，识别失败后抓拍视频并发送报警信息</string>
     <string name="wandering_pir_sensitivity_text">高度灵敏会增加频繁检测距离，导致耗电</string>
     <string name="wandering_judge_time_text">判定时间不宜太短，防止误报</string>
+    <string name="screen_duration_text">自动亮屏</string>
+    <string name="screen_duration_des">开启后，按门铃时显示屏将自动点亮</string>
+    <string name="screen_light_duration_5s">持续亮屏5S</string>
+    <string name="screen_light_duration_10s">持续亮屏10S</string>
+    <string name="screen_light_duration_15s">持续亮屏15S</string>
+    <string name="more_screen_light_duration_5s">5s</string>
+    <string name="more_screen_light_duration_10s">10s</string>
+    <string name="more_screen_light_duration_15s">15s</string>
     <string name="serial_number">序列号</string>
     <string name="device_signal">设备信号</string>
     <string name="link_signal">链路信号</string>
