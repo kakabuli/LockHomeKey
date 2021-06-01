@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -82,11 +84,13 @@ public class ClothesHangerMachineAddSuccessActivity extends BaseAddToApplication
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent data = new Intent(ClothesHangerMachineAddSuccessActivity.this, MainActivity.class);
-        startActivity(data);
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent data = new Intent(ClothesHangerMachineAddSuccessActivity.this, MainActivity.class);
+            startActivity(data);
+            finish();
+        }
+        return super.onKeyDown(keyCode,event);
     }
 
     @OnClick({R.id.back})

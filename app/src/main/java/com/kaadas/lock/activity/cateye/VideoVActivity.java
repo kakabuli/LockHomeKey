@@ -19,6 +19,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -1108,9 +1109,11 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
     }
 
     @Override
-    public void onBackPressed() {
-        mPresenter.hangup();
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            mPresenter.hangup();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

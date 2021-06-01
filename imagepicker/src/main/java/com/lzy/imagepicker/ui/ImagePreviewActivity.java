@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.viewpager.widget.ViewPager;
 import android.text.format.Formatter;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -168,12 +169,15 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
-        setResult(ImagePicker.RESULT_CODE_BACK, intent);
-        finish();
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent intent = new Intent();
+            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+            setResult(ImagePicker.RESULT_CODE_BACK, intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

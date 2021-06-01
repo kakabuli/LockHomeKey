@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,22 +34,21 @@ public class AddDeviceZigbeeLockNewSuccessActivity extends BaseAddToApplicationA
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
+            case R.id.button_next:
                 Intent backIntent = new Intent(this, MainActivity.class);
                 startActivity(backIntent);
-                break;
-            case R.id.button_next:
-                Intent finishIntent = new Intent(this, MainActivity.class);
-                startActivity(finishIntent);
                 break;
         }
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent finishIntent = new Intent(this, MainActivity.class);
-        startActivity(finishIntent);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent finishIntent = new Intent(this, MainActivity.class);
+            startActivity(finishIntent);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
-
 
 }

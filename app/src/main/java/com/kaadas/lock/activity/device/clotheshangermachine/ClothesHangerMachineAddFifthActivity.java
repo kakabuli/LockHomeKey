@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -114,16 +115,19 @@ public class ClothesHangerMachineAddFifthActivity extends BaseActivity<IClothesH
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent data = new Intent(ClothesHangerMachineAddFifthActivity.this,ClothesHangerMachineAddTourthActivity.class);
-        data.putExtra(KeyConstants.CLOTHES_HANGER_PASSWORD_TIMES,times + 1);
-        data.putExtra(KeyConstants.BLE_VERSION, bleVersion);
-        data.putExtra(KeyConstants.BLE_DEVICE_SN, deviceSN);
-        data.putExtra(KeyConstants.BLE_MAC, deviceMAC);
-        data.putExtra(KeyConstants.DEVICE_NAME, deviceName);
-        setResult(RESULT_OK,data);
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent data = new Intent(ClothesHangerMachineAddFifthActivity.this,ClothesHangerMachineAddTourthActivity.class);
+            data.putExtra(KeyConstants.CLOTHES_HANGER_PASSWORD_TIMES,times + 1);
+            data.putExtra(KeyConstants.BLE_VERSION, bleVersion);
+            data.putExtra(KeyConstants.BLE_DEVICE_SN, deviceSN);
+            data.putExtra(KeyConstants.BLE_MAC, deviceMAC);
+            data.putExtra(KeyConstants.DEVICE_NAME, deviceName);
+            setResult(RESULT_OK,data);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick({R.id.back})

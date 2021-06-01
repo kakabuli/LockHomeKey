@@ -67,11 +67,6 @@ public class WifiLockAddSecondActivity extends BaseAddToApplicationActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     @OnClick({R.id.back, R.id.bt_ap, R.id.bt_smart_config, R.id.help})
     public void onViewClicked(View view) {
         Intent intent;

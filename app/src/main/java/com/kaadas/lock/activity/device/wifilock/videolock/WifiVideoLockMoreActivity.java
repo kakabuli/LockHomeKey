@@ -420,7 +420,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         rlWifiName.setOnClickListener(this);
         rlCheckFirmwareUpdate.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
-        ivAm.setOnClickListener(this);
+        rlAm.setOnClickListener(this);
         rlWanderingAlarm.setOnClickListener(this);
         rlRealTimeVideo.setOnClickListener(this);
         ivSilentMode.setOnClickListener(this);
@@ -503,7 +503,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         }
                         break;
 
-                    case R.id.iv_am:   //手动自动模式
+                    case R.id.rl_am:   //手动自动模式
                         if (avi.isShow()) {
                             if(BleLockUtils.isSupportLockType(func)){
                                 intent = new Intent(this, WifiLockLockingMethodActivity.class);

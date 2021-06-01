@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -93,8 +94,11 @@ public class WifiLockAddNewInputAdminPasswotdActivity extends BaseAddToApplicati
     }
 
     @Override
-    public void onBackPressed() {
-        showWarring();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            showWarring();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void showWarring(){

@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.kaadas.lock.R;
@@ -24,10 +25,12 @@ public class WifiLockAddNewBindFailedActivity extends BaseAddToApplicationActivi
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(WifiLockAddNewBindFailedActivity.this, WifiLockAddNewFirstActivity.class);
-        startActivity(intent);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent intent = new Intent(WifiLockAddNewBindFailedActivity.this, WifiLockAddNewFirstActivity.class);
+            startActivity(intent);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair, R.id.tv_support_list, R.id.help, R.id.et_other_method, R.id.cancel})

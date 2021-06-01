@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.viewpager.widget.ViewPager;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -92,13 +94,16 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        //带回最新数据
-        intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, mImageItems);
-        setResult(ImagePicker.RESULT_CODE_BACK, intent);
-        finish();
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent intent = new Intent();
+            //带回最新数据
+            intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, mImageItems);
+            setResult(ImagePicker.RESULT_CODE_BACK, intent);
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /** 单击时，隐藏头和尾 */

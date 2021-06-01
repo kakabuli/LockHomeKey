@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.addDevice.cateye;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,12 +41,9 @@ public class AddDeviceCatEyeFailActivity extends BaseAddToApplicationActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
-                startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
-                break;
             case R.id.button_reconnection:
                 //重新连接的页面---返回开始添加设备的页面
                 startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
-
                 break;
             case R.id.button_out:
                 //退出
@@ -59,7 +58,13 @@ public class AddDeviceCatEyeFailActivity extends BaseAddToApplicationActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            startActivity(new Intent(AddDeviceCatEyeFailActivity.this,DeviceBindGatewayListActivity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 }

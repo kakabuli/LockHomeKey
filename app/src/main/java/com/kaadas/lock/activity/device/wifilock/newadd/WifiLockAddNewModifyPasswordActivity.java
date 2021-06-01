@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -99,11 +100,12 @@ public class WifiLockAddNewModifyPasswordActivity extends BaseAddToApplicationAc
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        showWarring();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            showWarring();
+        }
+        return super.onKeyDown(keyCode, event);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

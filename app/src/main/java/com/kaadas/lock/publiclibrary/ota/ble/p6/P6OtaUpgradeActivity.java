@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -260,15 +262,18 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         warring.setVisibility(View.INVISIBLE);
     }
 
-
     @Override
-    public void onBackPressed() {
-        if (isUpdating){
-            ToastUtils.showLong(R.string.isupdating_can_not_back);
-        }else {
-            finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if (isUpdating){
+                ToastUtils.showLong(R.string.isupdating_can_not_back);
+            }else {
+                finish();
+            }
         }
+        return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     public void onClick(View view) {

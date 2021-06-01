@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -111,9 +113,13 @@ public class WifiLockApInputAdminPasswordActivity extends BaseAddToApplicationAc
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApAddThirdActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(WifiLockApInputAdminPasswordActivity.this, WifiLockApAddThirdActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onKeyDown(keyCode,event);
     }
+
 }

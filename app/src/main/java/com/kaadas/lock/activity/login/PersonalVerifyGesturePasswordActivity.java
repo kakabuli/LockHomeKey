@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -110,13 +111,16 @@ public class PersonalVerifyGesturePasswordActivity extends BaseAddToApplicationA
     private long lastClickBackTime = 0;
 
     @Override
-    public void onBackPressed() {
-        if (System.currentTimeMillis() - lastClickBackTime > 2000) {
-            lastClickBackTime = System.currentTimeMillis();
-            ToastUtils.showLong(R.string.exit);
-        } else {
-            System.exit(0);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if (System.currentTimeMillis() - lastClickBackTime > 2000) {
+                lastClickBackTime = System.currentTimeMillis();
+                ToastUtils.showLong(R.string.exit);
+            } else {
+                System.exit(0);
+            }
         }
+        return super.onKeyDown(keyCode, event);
     }
 
 

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CancellationSignal;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -339,14 +340,17 @@ public class PersonalVerifyFingerPrintActivity extends BaseActivity<IPersonalVer
     }
 
     private long lastClickBackTime = 0;
-    @Override
-    public void onBackPressed() {
-        if (System.currentTimeMillis() - lastClickBackTime > 2000) {
-            lastClickBackTime = System.currentTimeMillis();
-            ToastUtils.showLong(R.string.exit);
-        } else {
-            System.exit(0);
-        }
-    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if (System.currentTimeMillis() - lastClickBackTime > 2000) {
+                lastClickBackTime = System.currentTimeMillis();
+                ToastUtils.showLong(R.string.exit);
+            } else {
+                System.exit(0);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

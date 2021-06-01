@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +43,7 @@ public class AddDeviceZigbeeLockNewScanFailActivity extends BaseAddToApplication
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.back:
+            case R.id.scan_cancel:
                 Intent backIntent=new Intent(this, DeviceAdd2Activity.class);
                 startActivity(backIntent);
                 finish();
@@ -56,19 +59,19 @@ public class AddDeviceZigbeeLockNewScanFailActivity extends BaseAddToApplication
                 }
 
                 break;
-            case R.id.scan_cancel:
-                Intent scanCancelntent=new Intent(this, DeviceAdd2Activity.class);
-                startActivity(scanCancelntent);
-                finish();
-                break;
         }
     }
 
     @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, DeviceAdd2Activity.class));
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            startActivity(new Intent(this, DeviceAdd2Activity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

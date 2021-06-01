@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -142,9 +143,13 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
     }
 
     @Override
-    public void onBackPressed() {
-        showWarring();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            showWarring();
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     protected void onResume() {

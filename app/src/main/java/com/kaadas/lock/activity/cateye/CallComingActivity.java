@@ -174,9 +174,4 @@ public class CallComingActivity extends BaseAddToApplicationActivity implements 
         });
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
-
 }

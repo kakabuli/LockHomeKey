@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -242,18 +243,19 @@ public class FaceOtaActivity extends BaseBleActivity<IFaceOtaView, FaceOtaPresen
 
     }
 
-
     @Override
-    public void onBackPressed() {
-        if (isStarting) {
-            ToastUtils.showLong(getString(R.string.isupdating_can_not_back));
-            return;
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            if (isStarting) {
+                ToastUtils.showLong(getString(R.string.isupdating_can_not_back));
+                return true;
+            }
+            mPresenter.finishOta((byte) moduleNumber, (byte) otaType, version);
+            if (socketOtaUtil != null) {
+                socketOtaUtil.release();
+            }
         }
-        mPresenter.finishOta((byte) moduleNumber, (byte) otaType, version);
-        if (socketOtaUtil != null) {
-            socketOtaUtil.release();
-        }
-        super.onBackPressed();
+        return super.onKeyDown(keyCode, event);
     }
 
     private void showNotice() {

@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.wifilock.add;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddSuccessActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.KeyConstants;
 
@@ -49,17 +51,19 @@ public class WifiLockAPAddFailedActivity extends BaseAddToApplicationActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent;
-        if (isAp) {
-            intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAPAddFirstActivity.class);
-            startActivity(intent);
-        } else {
-            intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
-            intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
-            startActivity(intent);
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent;
+            if (isAp) {
+                intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAPAddFirstActivity.class);
+                startActivity(intent);
+            } else {
+                intent = new Intent(WifiLockAPAddFailedActivity.this, WifiLockAddFirstActivity.class);
+                intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, false);
+                startActivity(intent);
+            }
         }
+        return super.onKeyDown(keyCode,event);
     }
 
     @OnClick({R.id.back, R.id.to_look_support_route, R.id.bt_repair,  R.id.tv_support_list, R.id.help, R.id.et_other_method, R.id.cancel})

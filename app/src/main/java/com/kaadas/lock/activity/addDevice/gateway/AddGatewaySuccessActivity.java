@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.addDevice.gateway;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,8 +56,13 @@ public class AddGatewaySuccessActivity extends BaseAddToApplicationActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, DeviceAdd2Activity.class));
-        finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            startActivity(new Intent(this, DeviceAdd2Activity.class));
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 }

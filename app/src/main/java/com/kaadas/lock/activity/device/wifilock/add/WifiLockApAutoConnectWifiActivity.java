@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.WifiUtil;
@@ -152,8 +154,11 @@ public class WifiLockApAutoConnectWifiActivity extends BaseAddToApplicationActiv
     }
 
     @Override
-    public void onBackPressed() {
-        Toast.makeText(this, getString(R.string.is_connect_wifi_please_wait), Toast.LENGTH_SHORT).show();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Toast.makeText(this, getString(R.string.is_connect_wifi_please_wait), Toast.LENGTH_SHORT).show();
+        }
+        return super.onKeyDown(keyCode,event);
     }
 
     @OnClick(R.id.help)

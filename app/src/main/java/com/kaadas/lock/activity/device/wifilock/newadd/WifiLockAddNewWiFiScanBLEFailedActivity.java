@@ -2,6 +2,7 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,8 +58,11 @@ public class WifiLockAddNewWiFiScanBLEFailedActivity extends BaseAddToApplicatio
     }
 
     @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this,WifiLockAddNewScanBLEActivity.class));
-        super.onBackPressed();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            startActivity(new Intent(this,WifiLockAddNewScanBLEActivity.class));
+        }
+        return super.onKeyDown(keyCode, event);
     }
+
 }

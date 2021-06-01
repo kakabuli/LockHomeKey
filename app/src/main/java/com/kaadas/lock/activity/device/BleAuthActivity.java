@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -524,12 +525,12 @@ public class BleAuthActivity extends BaseBleActivity<IOldBleDetailView, OldAndAu
         }
     }
 
-
     @Override
-    public void onBackPressed() {
-        setBatteryResult();
-        super.onBackPressed();
-
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            setBatteryResult();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     //震动milliseconds毫秒
