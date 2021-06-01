@@ -25,7 +25,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWifiVideoLockScreenLightLevelView> {
-    private Disposable setOpenDirectionDisposable;
+    private Disposable setScreenLightLevelDisposable;
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
 
@@ -36,8 +36,8 @@ public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWi
     public void setScreenLightLevel(String wifiSN,int screenLightLevel) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
             MqttMessage mqttMessage = MqttCommandFactory.settingScreenBrightness(wifiSN,screenLightLevel);
-            toDisposable(setOpenDirectionDisposable);
-            setOpenDirectionDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
+            toDisposable(setScreenLightLevelDisposable);
+            setScreenLightLevelDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
@@ -70,7 +70,7 @@ public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWi
                             }
                         }
                     });
-            compositeDisposable.add(setOpenDirectionDisposable);
+            compositeDisposable.add(setScreenLightLevelDisposable);
         }
     }
 

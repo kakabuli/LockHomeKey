@@ -65,7 +65,7 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if(wifiLockInfo != null){
-            screenLightLevel = wifiLockInfo.getScreemLightLevel();
+            screenLightLevel = wifiLockInfo.getScreenLightLevel();
             setScreenLightLevelView(screenLightLevel);
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
                 mPresenter.settingDevice(wifiLockInfo);
@@ -144,7 +144,7 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
 
     private void setScreenLightLevel() {
         screenLightLevel = getScreenLightLevel();
-        if(wifiLockInfo.getScreemLightLevel() == screenLightLevel){
+        if(wifiLockInfo.getScreenLightLevel() == screenLightLevel){
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){

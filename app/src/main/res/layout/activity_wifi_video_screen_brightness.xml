@@ -105,6 +105,12 @@
                 android:button="@drawable/language_selector"
                 android:clickable="false" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:background="#F2F2F2"></View>
 
         </RelativeLayout>
 
