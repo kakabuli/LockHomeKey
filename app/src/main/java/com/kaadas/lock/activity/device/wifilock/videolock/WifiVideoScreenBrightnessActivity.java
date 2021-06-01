@@ -1,10 +1,8 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kotlin.BuilderInference;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,12 +19,9 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
-import com.kaadas.lock.activity.device.wifilock.x9.WifiLockOpenDirectionActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockScreenLevelPresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.x9.WifiLockOpenDirectionPresenter;
-import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLevelView;
-import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockOpenDirectionView;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockScreenLightLevelPresenter;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLightLevelView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -34,8 +29,8 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
-public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLockScreenLevelView, WifiVideoLockScreenLevelPresenter<IWifiVideoLockScreenLevelView>>
-        implements IWifiVideoLockScreenLevelView {
+public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLockScreenLightLevelView, WifiVideoLockScreenLightLevelPresenter<IWifiVideoLockScreenLightLevelView>>
+        implements IWifiVideoLockScreenLightLevelView {
 
     @BindView(R.id.rl_screen_brightness_high)
     RelativeLayout rlScreenBrightnessHigh;
@@ -116,8 +111,8 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
     }
 
     @Override
-    protected WifiVideoLockScreenLevelPresenter<IWifiVideoLockScreenLevelView> createPresent() {
-        return new WifiVideoLockScreenLevelPresenter<>();
+    protected WifiVideoLockScreenLightLevelPresenter<IWifiVideoLockScreenLightLevelView> createPresent() {
+        return new WifiVideoLockScreenLightLevelPresenter<>();
     }
 
     @Override

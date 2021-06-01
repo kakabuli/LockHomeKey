@@ -3,13 +3,10 @@ package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
-import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLevelView;
-import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockOpenDirectionView;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLightLevelView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenBrightness;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingOpenDirectionResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingScreenBrightnessResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -27,7 +24,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class WifiVideoLockScreenLevelPresenter<T> extends BasePresenter<IWifiVideoLockScreenLevelView> {
+public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWifiVideoLockScreenLightLevelView> {
     private Disposable setOpenDirectionDisposable;
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020

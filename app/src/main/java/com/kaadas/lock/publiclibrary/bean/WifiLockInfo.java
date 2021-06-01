@@ -172,7 +172,7 @@ public class WifiLockInfo implements Serializable {
     private int screemLightSwitch;
 
 
-    @Generated(hash = 1827986161)
+    @Generated(hash = 3493309)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -188,7 +188,7 @@ public class WifiLockInfo implements Serializable {
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
             int lockingMethod, String frontPanelVersion, String backPanelVersion,
-            int volLevel) {
+            int volLevel, int screemLightLevel, int screemLightTime, int screemLightSwitch) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -248,6 +248,9 @@ public class WifiLockInfo implements Serializable {
         this.frontPanelVersion = frontPanelVersion;
         this.backPanelVersion = backPanelVersion;
         this.volLevel = volLevel;
+        this.screemLightLevel = screemLightLevel;
+        this.screemLightTime = screemLightTime;
+        this.screemLightSwitch = screemLightSwitch;
     }
 
     @Generated(hash = 666757199)
