@@ -167,6 +167,9 @@ public class WifiLockInfo implements Serializable {
     private String backPanelVersion;
 
     private int volLevel;
+    private int screemLightLevel;
+    private int screemLightTime;
+    private int screemLightSwitch;
 
 
     @Generated(hash = 1827986161)
@@ -774,5 +777,29 @@ public class WifiLockInfo implements Serializable {
 
     public void setVolLevel(int volLevel) {
         this.volLevel = volLevel;
+    }
+
+    public int getScreemLightLevel() {
+        return screemLightLevel;
+    }
+
+    public void setScreemLightLevel(int screemLightLevel) {
+        this.screemLightLevel = screemLightLevel;
+    }
+
+    public int getScreemLightTime() {
+        return screemLightTime;
+    }
+
+    public void setScreemLightTime(int screemLightTime) {
+        this.screemLightTime = screemLightTime;
+    }
+
+    public int getScreemLightSwitch() {
+        return screemLightSwitch;
+    }
+
+    public void setScreemLightSwitch(int screemLightSwitch) {
+        this.screemLightSwitch = screemLightSwitch;
     }
 }

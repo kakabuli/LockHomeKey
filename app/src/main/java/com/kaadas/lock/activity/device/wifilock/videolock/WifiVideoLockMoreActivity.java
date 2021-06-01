@@ -347,6 +347,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //显示屏亮度
             if(BleLockUtils.isSupportScreenBrightness(wifiLockInfo.getFunctionSet())){
                 rlScreenBrightness.setVisibility(View.VISIBLE);
+                setScreenLightLevel(wifiLockInfo.getScreemLightLevel());
             }else{
                 rlScreenBrightness.setVisibility(View.GONE);
             }
@@ -988,6 +989,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     setOpenForce(openForce);
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_SCREEN_BRIGHTNESS:
+                    int screenLightLevel = data.getIntExtra(MqttConstant.SET_SCREEN_LIGHT_LEVEL,50);
+                    setScreenLightLevel(screenLightLevel);
                     break;
                 case KeyConstants.WIFI_VIDEO_LOCK_SCREEN_DURATION:
                     break;
@@ -997,6 +1000,16 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     break;
             }
 
+        }
+    }
+
+    private void setScreenLightLevel(int screenLightLevel) {
+        if(screenLightLevel <= 30){
+            tvScreenBrightness.setText(R.string.low);
+        }else if(screenLightLevel > 30 && screenLightLevel <= 50){
+            tvScreenBrightness.setText(R.string.centre);
+        }else if(screenLightLevel > 50){
+            tvScreenBrightness.setText(R.string.high);
         }
     }
 

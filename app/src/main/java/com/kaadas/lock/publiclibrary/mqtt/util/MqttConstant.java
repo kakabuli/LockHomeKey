@@ -238,6 +238,12 @@ public class MqttConstant {
     //设置语音质量
     public static final String SET_VOICE_QUALITY = "setVoiceQuality";
 
+    //设置屏幕亮度
+    public static final String SET_SCREEN_LIGHT_LEVEL = "setScreenLightLevel";
+
+    //设置屏幕时长
+    public static final String SET_SREEN_LIGHT_TIME = "setScreenLightTime";
+
     public static final String WIFI_LOCK_DEVTYPE = "kdswflock";
 
     //视频锁 讯美

@@ -3,14 +3,14 @@ package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
-import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockVoiceQualitySettingView;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLevelView;
 import com.kaadas.lock.mvp.view.wifilock.x9.IWifiLockOpenDirectionView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingVoiceQuality;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingScreenBrightness;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingOpenDirectionResult;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingVoiceQualityResult;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingScreenBrightnessResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
-public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<IWifiVideoLockVoiceQualitySettingView> {
+public class WifiVideoLockScreenLevelPresenter<T> extends BasePresenter<IWifiVideoLockScreenLevelView> {
     private Disposable setOpenDirectionDisposable;
     private static  String did ="";//AYIOTCN-000337-FDFTF
     private static  String sn ="";//010000000020500020
@@ -36,15 +36,15 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
 
     private static  String serviceString= XMP2PManager.serviceString;;
 
-    public void setVoiceQuality(String wifiSN,int voiceQuality) {
+    public void setScreenLightLevel(String wifiSN,int screenLightLevel) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
-            MqttMessage mqttMessage = MqttCommandFactory.settingVoiceQuality(wifiSN,voiceQuality);
+            MqttMessage mqttMessage = MqttCommandFactory.settingScreenBrightness(wifiSN,screenLightLevel);
             toDisposable(setOpenDirectionDisposable);
             setOpenDirectionDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if(MqttConstant.SET_LOCK.equals(mqttData.getFunc())){
+                            if(MqttConstant.SET_CAMERA.equals(mqttData.getFunc())){
                                 return true;
                             }
                             return false;
@@ -55,12 +55,12 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SettingVoiceQualityResult mSettingVoiceQualityResult = new Gson().fromJson(mqttData.getPayload(), SettingVoiceQualityResult.class);
-                            LogUtils.e("shulan mSettingVoiceQualityResult-->" + mSettingVoiceQualityResult.toString());
-                            if(mSettingVoiceQualityResult != null && isSafe()){
-                                if("200".equals(mSettingVoiceQualityResult.getCode() + "")){
+                            SettingScreenBrightnessResult mSettingScreenBrightnessResult = new Gson().fromJson(mqttData.getPayload(), SettingScreenBrightnessResult.class);
+                            LogUtils.e("shulan mSettingScreenBrightnessResult-->" + mSettingScreenBrightnessResult.toString());
+                            if(mSettingScreenBrightnessResult != null && isSafe()){
+                                if("200".equals(mSettingScreenBrightnessResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(true);
-                                }else if("201".equals(mSettingVoiceQualityResult.getCode() + "")){
+                                }else if("201".equals(mSettingScreenBrightnessResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);
                                 }
                             }
@@ -77,7 +77,7 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
         }
     }
 
-    public void setConnectVoiceQuality(String wifiSN,int voiceQuality) {
+    public void setConnectScreenLightLevel(String wifiSN,int screenLightLevel) {
         DeviceInfo deviceInfo=new DeviceInfo();
         deviceInfo.setDeviceDid(did);
         deviceInfo.setP2pPassword(p2pPassword);
@@ -101,7 +101,7 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    setVoiceQuality(wifiSN,voiceQuality);
+                                    setScreenLightLevel(wifiSN,screenLightLevel);
                                 }else{
                                     mViewRef.get().onSettingCallBack(false);
                                 }
