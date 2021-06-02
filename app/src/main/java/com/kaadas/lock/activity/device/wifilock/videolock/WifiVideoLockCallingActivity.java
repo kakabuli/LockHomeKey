@@ -994,7 +994,8 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         });
 
         if(!WifiVideoLockCallingActivity.this.isFinishing()){
-            dialog.show();
+            if(dialog != null)
+                dialog.show();
         }
 
     }
