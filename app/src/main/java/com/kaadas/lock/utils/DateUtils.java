@@ -25,7 +25,7 @@ public class DateUtils {
      */
     public static String getDateTimeFromMillisecond(Long millisecond) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+//        simpleDateFormat.setTimeZone(TimeZone.getDefault());//获取手机系统时区
         Date date = new Date(millisecond);
         String dateStr = simpleDateFormat.format(date);
         return dateStr;
@@ -42,7 +42,7 @@ public class DateUtils {
     public static String getDayTimeFromMillisecond(Long millisecond) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd ");
 //		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Beijing"));
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());//获取手机系统时区
         Date date = new Date(millisecond);
         String dateStr = simpleDateFormat.format(date);
         return dateStr;
@@ -58,7 +58,7 @@ public class DateUtils {
     public static String getDayTimeFromat(Long millisecond) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM ");
 //		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Beijing"));
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());//获取手机系统时区
         Date date = new Date(millisecond);
         String dateStr = simpleDateFormat.format(date);
         return dateStr;
@@ -149,7 +149,7 @@ public class DateUtils {
         Date curDate = new Date(time);
         //格式化
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-        formatter.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        formatter.setTimeZone(TimeZone.getDefault());
         return formatter.format(curDate);
     }
 
