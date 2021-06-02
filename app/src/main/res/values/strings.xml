@@ -2177,4 +2177,8 @@
     <string name="setting_duress_alarm_app_add_time">添加时间</string>
     <string name="setting_duress_alarm_receiver">接收账号</string>
 
+
+    <string name="video_lock_ota_powersave_title">已开启节能模式</string>
+    <string name="video_lock_ota_powersave_content">1.请检查设备电量，电量过低时请更换电池\n2.电量正常时，请输入密码开锁或按门铃后再试</string>
+
 </resources>
