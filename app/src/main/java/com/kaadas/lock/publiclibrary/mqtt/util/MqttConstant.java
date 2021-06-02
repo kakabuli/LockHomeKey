@@ -238,6 +238,9 @@ public class MqttConstant {
     //设置语音质量
     public static final String SET_VOICE_QUALITY = "setVoiceQuality";
 
+    //设置AMS灵敏度
+    public static final String SET_AMS_SENSITIVITY = "setAMSSensitivity";
+
     //设置屏幕亮度
     public static final String SET_SCREEN_LIGHT_LEVEL = "setScreenLightLevel";
 

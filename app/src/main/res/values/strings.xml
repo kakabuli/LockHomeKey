@@ -379,6 +379,9 @@
     <string name="screen_light_duration_5s">持续亮屏5S</string>
     <string name="screen_light_duration_10s">持续亮屏10S</string>
     <string name="screen_light_duration_15s">持续亮屏15S</string>
+    <string name="setting_ams_sensing_high">高灵敏</string>
+    <string name="setting_ams_sensing_mid">中灵敏</string>
+    <string name="setting_ams_sensing_low">低灵敏</string>
     <string name="more_screen_light_duration_5s">5s</string>
     <string name="more_screen_light_duration_10s">10s</string>
     <string name="more_screen_light_duration_15s">15s</string>
@@ -1659,6 +1662,7 @@
     <string name="door_direction">开门方向</string>
     <string name="sensing_door_handle">感应门把手</string>
     <string name="ams_sensing">红外传感器</string>
+    <string name="ams_sensing_des">关闭后，人脸识别需要唤醒锁面板才能使用</string>
     <string name="face_recognition_switch">人脸识别</string>
     <string name="power_Save_mode">节能模式</string>
     <string name="face_function">面容识别功能</string>

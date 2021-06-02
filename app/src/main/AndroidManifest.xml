@@ -68,7 +68,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:name,android:allowBackup">
-        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockVoiceQualitySettingActivity"></activity>
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockSettingAMSSensingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockVoiceQualitySettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.device.wifilock.videolock.WifiVideoLockCallingTestActivity"
             android:launchMode="singleTop"

@@ -432,6 +432,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         rlScreenBrightness.setOnClickListener(this);
         rlDuressAlarm.setOnClickListener(this);
         rlVoiceQualitySetting.setOnClickListener(this);
+        rlAMSSensing.setOnClickListener(this);
     }
 
     @Override
@@ -720,6 +721,14 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                             mPresenter.release();
                         }
                         break;
+                    case R.id.rl_ams_sensing:
+                        if(avi.isShow()){
+                            intent = new Intent(this, WifiVideoLockSettingAMSSensingActivity.class);
+                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                            startActivityForResult(intent,KeyConstants.WIFI_VICEO_LOCK_AMS_SETTING);
+                            mPresenter.release();
+                        }
+                        break;
 
                 }
             } else {
@@ -1001,6 +1010,10 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     int voiceQuality = data.getIntExtra(MqttConstant.SET_VOICE_QUALITY,0);
                     setVoiceQuality(voiceQuality);
                     break;
+                case KeyConstants.WIFI_VICEO_LOCK_AMS_SETTING:
+                    int setAMSSentivity = data.getIntExtra(MqttConstant.SET_AMS_SENSITIVITY,0);
+                    setAMSSenstivity(setAMSSentivity);
+                    break;
             }
 
         }
@@ -1024,6 +1037,10 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         }else if(screenLightLevel > 50 && screenLightLevel <= 80){
             tvScreenBrightness.setText(R.string.high);
         }
+    }
+
+    private void setAMSSenstivity(int setAMSSentivity){
+        tvAMSSensing.setText("");
     }
 
     private void setVoiceQuality(int voiceQuality) {

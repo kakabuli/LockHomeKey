@@ -1,5 +1,10 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
+import androidx.appcompat.app.AppCompatActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +23,10 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockScreenLightLevelPresenter;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockScreenLightTimePresenter;
-import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLightLevelView;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockSettingAMSSensingPresenter;
 import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockScreenLightTimeView;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockSettingAMSSensingView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.utils.AlertDialogUtil;
@@ -29,28 +34,21 @@ import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
-import org.apache.commons.net.bsd.RLoginClient;
+public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVideoLockSettingAMSSensingView, WifiVideoLockSettingAMSSensingPresenter<IWifiVideoLockSettingAMSSensingView>>
+        implements IWifiVideoLockSettingAMSSensingView {
 
-import androidx.appcompat.app.AppCompatActivity;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLockScreenLightTimeView, WifiVideoLockScreenLightTimePresenter<IWifiVideoLockScreenLightTimeView>>
-        implements IWifiVideoLockScreenLightTimeView {
-
-    @BindView(R.id.rl_screen_light_duration)
-    RelativeLayout rlScreenLightDuration;
-    @BindView(R.id.ll_screen_light_duration)
-    LinearLayout llScreenLightDuration;
-    @BindView(R.id.iv_screen_light_duration)
-    ImageView ivScreenLightDuration;
-    @BindView(R.id.ck_screen_light_duration_15s)
-    CheckBox ckScreenLightDuration15s;
-    @BindView(R.id.ck_screen_light_duration_10s)
-    CheckBox ckScreenLightDuration10s;
-    @BindView(R.id.ck_screen_light_duration_5s)
-    CheckBox ckScreenLightDuration5s;
+    @BindView(R.id.rl_setting_ams_sensing)
+    RelativeLayout rlSettingAMSSensing;
+    @BindView(R.id.ll_setting_ams_sensing)
+    LinearLayout llSettingAMSSensing;
+    @BindView(R.id.iv_setting_ams_sensing)
+    ImageView ivSettingAMSSensing;
+    @BindView(R.id.ck_setting_ams_sensing_high)
+    CheckBox ckSettingAMSSensingHigh;
+    @BindView(R.id.ck_setting_ams_sensing_mid)
+    CheckBox ckSettingAMSSensingMid;
+    @BindView(R.id.ck_setting_ams_sensing_low)
+    CheckBox ckSettingAMSSensingLow;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
     @BindView(R.id.tv_tips)
@@ -59,24 +57,25 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
     private String wifiSn = "";
     private WifiLockInfo wifiLockInfo;
 
-    private int screenLightTime;
-    private int screenLightSwitch;
-
     private InnerRecevier mInnerRecevier = null;
 
+    private int settingAMSSensing;
+    private int settingAMSSensingSwitch;
+
+    private final int AMS_SENSING_HIGH = 80;
+    private final int AMS_SENSING_MID = 50;
+    private final int AMS_SENSING_LOW = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_wifi_video_lock_setting_ams_sensing);
         ButterKnife.bind(this);
-        setContentView(R.layout.activity_wifi_video_screen_duration);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if(wifiLockInfo != null){
-            screenLightSwitch = wifiLockInfo.getScreenLightSwitch();
-            screenLightTime = wifiLockInfo.getScreenLightTime();
-            setScreenLightTimeView(screenLightTime);
-            setScreenLightTimeShow(screenLightSwitch);
+            settingAMSSensingView(settingAMSSensing);
+            settingAMSSensingShow(settingAMSSensingSwitch);
         }
     }
 
@@ -102,65 +101,65 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
     }
 
     @Override
-    protected WifiVideoLockScreenLightTimePresenter<IWifiVideoLockScreenLightTimeView> createPresent() {
-        return new WifiVideoLockScreenLightTimePresenter<>();
+    protected WifiVideoLockSettingAMSSensingPresenter<IWifiVideoLockSettingAMSSensingView> createPresent() {
+        return new WifiVideoLockSettingAMSSensingPresenter<>();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            setScreenLightTime();
+            settingAMSSensing();
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    @OnClick({R.id.back,R.id.rl_screen_light_duration_5s,R.id.rl_screen_light_duration_10s,R.id.rl_screen_light_duration_15s,
-        R.id.rl_screen_light_duration})
+    @OnClick({R.id.back,R.id.rl_setting_ams_sensing_high,R.id.rl_setting_ams_sensing_mid,R.id.rl_setting_ams_sensing_low,
+            R.id.rl_setting_ams_sensing})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                setScreenLightTime();
+                settingAMSSensing();
                 break;
-            case R.id.rl_screen_light_duration_5s:
-                setScreenLightTimeView(5);
+            case R.id.rl_setting_ams_sensing_high:
+                settingAMSSensingView(AMS_SENSING_HIGH);
                 break;
-            case R.id.rl_screen_light_duration_10s:
-                setScreenLightTimeView(10);
+            case R.id.rl_setting_ams_sensing_mid:
+                settingAMSSensingView(AMS_SENSING_MID);
                 break;
-            case R.id.rl_screen_light_duration_15s:
-                setScreenLightTimeView(15);;
+            case R.id.rl_setting_ams_sensing_low:
+                settingAMSSensingView(AMS_SENSING_LOW);;
                 break;
-            case R.id.rl_screen_light_duration:
-                if(ivScreenLightDuration.isSelected()){
-                    llScreenLightDuration.setVisibility(View.GONE);
-                    ivScreenLightDuration.setSelected(false);
-                    screenLightSwitch = 0;
+            case R.id.rl_setting_ams_sensing:
+                if(ivSettingAMSSensing.isSelected()){
+                    llSettingAMSSensing.setVisibility(View.GONE);
+                    ivSettingAMSSensing.setSelected(false);
+                    settingAMSSensingSwitch = 0;
                 }else{
-                    llScreenLightDuration.setVisibility(View.VISIBLE);
-                    ivScreenLightDuration.setSelected(true);
-                    screenLightSwitch = 1;
+                    llSettingAMSSensing.setVisibility(View.VISIBLE);
+                    ivSettingAMSSensing.setSelected(true);
+                    settingAMSSensingSwitch = 1;
                 }
                 break;
         }
     }
 
-    private void setScreenLightTime() {
-        screenLightSwitch = ivScreenLightDuration.isSelected() ? 1 : 0;
-        screenLightTime = getScreenLightTime();
-        if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){
+    private void settingAMSSensing() {
+        settingAMSSensingSwitch = ivSettingAMSSensing.isSelected() ? 1 : 0;
+        settingAMSSensing = getAMSSensing();
+        if(wifiLockInfo.getScreenLightSwitch() == settingAMSSensingSwitch && wifiLockInfo.getScreenLightTime() == settingAMSSensing){
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
-                setConnectScreenLightTime(wifiSn,screenLightSwitch,screenLightTime);
+                setConnectAMSSensing(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
-                mPresenter.setScreenLightTime(wifiSn,screenLightSwitch,screenLightTime);
+                mPresenter.settingAMSSensting(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
             }
         }
     }
 
-    private void setConnectScreenLightTime(String wifiSn, int screenLightSwitch, int screenLightTime) {
+    private void setConnectAMSSensing(String wifiSn, int settingAMSSensingSwitch, int settingAMSSensing) {
         if(avi.isShow()) {
             if (wifiLockInfo.getPowerSave() == 0) {
                 tvTips.setVisibility(View.VISIBLE);
@@ -169,7 +168,7 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mPresenter.setConnectScreenLightTime(wifiSn,screenLightSwitch,screenLightTime);
+                        mPresenter.setConnectAMSSensing(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
                     }
                 }).start();
             }else{
@@ -178,45 +177,47 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
         }
     }
 
-    private int getScreenLightTime() {
-        if(ckScreenLightDuration15s.isChecked()){
-            return 15;
+    private int getAMSSensing() {
+        if(ckSettingAMSSensingHigh.isChecked()){
+            return AMS_SENSING_HIGH;
         }
 
-        if(ckScreenLightDuration10s.isChecked()){
-            return 10;
+        if(ckSettingAMSSensingMid.isChecked()){
+            return AMS_SENSING_MID;
         }
 
-        if(ckScreenLightDuration5s.isChecked()){
-            return 5;
+        if(ckSettingAMSSensingLow.isChecked()){
+            return AMS_SENSING_LOW;
         }
 
-        return 10;
+        return AMS_SENSING_LOW;
+
     }
 
-    private void setScreenLightTimeView(int screenLightTime) {
-        if(screenLightTime <= 5){
-            ckScreenLightDuration5s.setChecked(true);
-            ckScreenLightDuration10s.setChecked(false);
-            ckScreenLightDuration15s.setChecked(false);
-        }else if(screenLightTime > 5 && screenLightTime <= 10){
-            ckScreenLightDuration5s.setChecked(false);
-            ckScreenLightDuration10s.setChecked(true);
-            ckScreenLightDuration15s.setChecked(false);
-        }else if(screenLightTime > 10 && screenLightTime <= 15){
-            ckScreenLightDuration5s.setChecked(false);
-            ckScreenLightDuration10s.setChecked(false);
-            ckScreenLightDuration15s.setChecked(true);
+
+    private void settingAMSSensingView(int settingAMSSensing) {
+        if(settingAMSSensing <= AMS_SENSING_LOW){
+            ckSettingAMSSensingLow.setChecked(true);
+            ckSettingAMSSensingMid.setChecked(false);
+            ckSettingAMSSensingHigh.setChecked(false);
+        }else if(settingAMSSensing > AMS_SENSING_LOW && settingAMSSensing <= AMS_SENSING_MID){
+            ckSettingAMSSensingLow.setChecked(false);
+            ckSettingAMSSensingMid.setChecked(true);
+            ckSettingAMSSensingHigh.setChecked(false);
+        }else if(settingAMSSensing > AMS_SENSING_MID && settingAMSSensing <= AMS_SENSING_HIGH){
+            ckSettingAMSSensingLow.setChecked(false);
+            ckSettingAMSSensingMid.setChecked(false);
+            ckSettingAMSSensingHigh.setChecked(true);
         }
     }
 
-    private void setScreenLightTimeShow(int screenLightSwitch) {
-        if(screenLightSwitch == 1){
-            llScreenLightDuration.setVisibility(View.VISIBLE);
-            ivScreenLightDuration.setSelected(true);
+    private void settingAMSSensingShow(int settingAMSSensingSwitch) {
+        if(settingAMSSensingSwitch == 1){
+            llSettingAMSSensing.setVisibility(View.VISIBLE);
+            ivSettingAMSSensing.setSelected(true);
         }else{
-            llScreenLightDuration.setVisibility(View.GONE);
-            ivScreenLightDuration.setSelected(false);
+            llSettingAMSSensing.setVisibility(View.GONE);
+            ivSettingAMSSensing.setSelected(false);
         }
     }
 
@@ -303,7 +304,7 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
 
     @Override
     public void onSettingCallBack(boolean flag) {
-        if(!WifiVideoScreenDurationActivity.this.isFinishing()){
+        if(!WifiVideoLockSettingAMSSensingActivity.this.isFinishing()){
             mPresenter.setMqttCtrl(0);
             mPresenter.handler.post(new Runnable() {
                 @Override
@@ -313,12 +314,12 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                         ToastUtils.showLong(getString(R.string.modify_success));
                         Intent intent;
                         if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
-                            intent = new Intent(WifiVideoScreenDurationActivity.this, WifiVideoLockMoreActivity.class);
+                            intent = new Intent(WifiVideoLockSettingAMSSensingActivity.this, WifiVideoLockMoreActivity.class);
                         }else {
-                            intent = new Intent(WifiVideoScreenDurationActivity.this, WifiLockMoreActivity.class);
+                            intent = new Intent(WifiVideoLockSettingAMSSensingActivity.this, WifiLockMoreActivity.class);
                         }
 
-                        intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,screenLightTime);
+                        intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,settingAMSSensing);
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtils.showLong(getString(R.string.modify_failed));
