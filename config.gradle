@@ -1,9 +1,9 @@
 ext {
 
     //日志打印 true打印 false禁止
-    isDeBug = false
+    isDeBug = true
     //Net环境 true正式 false测试
-    env = true
+    env = false
     //是否事release版本
     isRelease = checkRelease()
 
@@ -23,8 +23,8 @@ ext {
             compileSdkVersion       :30,
             minSdkVersion           :22,
             targetSdkVersion        :27,
-            versionCode             :202105253,
-            versionName             :"4.4.5",
+            versionCode             :202106021,
+            versionName             :"4.4.6.1",
             buildToolsVersion       :"30.0.2",
 
             coreVersionCode         :201909250,
@@ -33,8 +33,8 @@ ext {
             keepAliveVersionCode    :2021050601,
             keepAliveVersionName    :"1.3.0",
 
-            linphoneVersionCode    :1,
-            linphoneVersionName    :"1.0.0"
+            linphoneVersionCode     :1,
+            linphoneVersionName     :"1.0.0"
     ]
 
     appId = [
@@ -45,14 +45,14 @@ ext {
     //开启保活进程打印
     Keep_Alive_Debug = false
 
-    greendao_schemaVersion = 37
+    greendao_schemaVersion = 38
     constraintlayoutVersion = "2.0.4"
     espresso_core_version = "3.3.0"
 }
 
 def checkRelease() {
     def runTasks = gradle.startParameter.taskNames
-    for (String task : runTasks) {
+    for (def task : runTasks) {
         // 我这里根据task为"assemble"和非"Debug"认定为release
         if (task.contains("assemble") && !task.contains("Debug")) {
             return true
