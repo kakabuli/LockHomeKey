@@ -277,6 +277,9 @@ public class HttpUtils<T> {
             case 416:
                 errorMsg=activity.getString(R.string.user_exit);
                 break;
+            case 453:
+                errorMsg = activity.getString(R.string.user_exit);
+                break;
         }
         return errorMsg;
     }

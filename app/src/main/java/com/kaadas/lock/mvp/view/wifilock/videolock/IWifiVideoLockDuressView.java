@@ -23,4 +23,7 @@ public interface IWifiVideoLockDuressView extends IBaseView {
      * @param throwable
      */
     void onGetPasswordFailed(Throwable throwable);
+
+
+    void onSettingDuress(BaseResult baseResult);
 }

@@ -14,12 +14,16 @@ public class WiFiLockPassword {
     private List<FingerprintNicknameBean> fingerprintNickname;
     private List<CardNicknameBean> cardNickname;
     private List<FaceNicknameBean> faceNickname;
+    private List<DuressBean> pwdDuress;
+    private List<DuressBean> fingerprintDuress;
 
 
     public WiFiLockPassword() {
     }
 
-    public WiFiLockPassword(List<PwdListBean> pwdList, List<FingerprintListBean> fingerprintList, List<CardListBean> cardList,List<FaceListBean> faceList, List<PwdNicknameBean> pwdNickname, List<FingerprintNicknameBean> fingerprintNickname, List<CardNicknameBean> cardNickname, List<FaceNicknameBean> faceNickname) {
+    public WiFiLockPassword(List<PwdListBean> pwdList, List<FingerprintListBean> fingerprintList, List<CardListBean> cardList,List<FaceListBean> faceList,
+                            List<PwdNicknameBean> pwdNickname, List<FingerprintNicknameBean> fingerprintNickname, List<CardNicknameBean> cardNickname,
+                            List<FaceNicknameBean> faceNickname, List<DuressBean> pwdDuress, List<DuressBean> fingerprintDuress) {
         this.pwdList = pwdList;
         this.fingerprintList = fingerprintList;
         this.cardList = cardList;
@@ -30,6 +34,8 @@ public class WiFiLockPassword {
         this.cardNickname = cardNickname;
         this.faceNickname = faceNickname;
 
+        this.pwdDuress = pwdDuress;
+        this.fingerprintDuress = fingerprintDuress;
     }
 
     public List<PwdListBean> getPwdList() {
@@ -94,6 +100,22 @@ public class WiFiLockPassword {
 
     public void setFaceNickname(List<FaceNicknameBean> faceNickname) {
         this.faceNickname = faceNickname;
+    }
+
+    public List<DuressBean> getPwdDuress() {
+        return pwdDuress;
+    }
+
+    public void setPwdDuress(List<DuressBean> pwdDuress) {
+        this.pwdDuress = pwdDuress;
+    }
+
+    public List<DuressBean> getFingerprintDuress() {
+        return fingerprintDuress;
+    }
+
+    public void setFingerprintDuress(List<DuressBean> fingerprintDuress) {
+        this.fingerprintDuress = fingerprintDuress;
     }
 
     public static class PwdListBean {
@@ -461,6 +483,60 @@ public class WiFiLockPassword {
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
+        }
+    }
+
+
+    public static class DuressBean {
+        /**
+         {
+         "num": 1,
+         "pwdDuressSwitch": 1,
+         "duressAlarmAccount" : "XXXXXXX"
+         }
+         */
+
+        private int num;
+        private int pwdDuressSwitch;
+        private String duressAlarmAccount;
+
+        public DuressBean(int num, int pwdDuressSwitch, String duressAlarmAccount) {
+            this.num = num;
+            this.pwdDuressSwitch = pwdDuressSwitch;
+            this.duressAlarmAccount = duressAlarmAccount;
+        }
+
+        public int getNum() {
+            return num;
+        }
+
+        public void setNum(int num) {
+            this.num = num;
+        }
+
+        public int getDuressSwitch() {
+            return pwdDuressSwitch;
+        }
+
+        public void setDuressSwitch(int pwdDuressSwitch) {
+            this.pwdDuressSwitch = pwdDuressSwitch;
+        }
+
+        public String getDuressAlarmAccount() {
+            return duressAlarmAccount;
+        }
+
+        public void setDuressAlarmAccount(String duressAlarmAccount) {
+            this.duressAlarmAccount = duressAlarmAccount;
+        }
+
+        @Override
+        public String toString() {
+            return "DuressBean{" +
+                    "num=" + num +
+                    ", pwdDuressSwitch=" + pwdDuressSwitch +
+                    ", duressAlarmAccount='" + duressAlarmAccount + '\'' +
+                    '}';
         }
     }
 

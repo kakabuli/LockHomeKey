@@ -394,6 +394,24 @@ public class KeyConstants {
     //设置AMS
     public static final int WIFI_VICEO_LOCK_AMS_SETTING = 3013;
 
+    //设置胁迫密钥账号
+    public static final int WIFI_LOCK_SETTING_DURESS_ACCOUNT = 3014;
+
+    /**
+     * 传递胁迫密码信息
+     */
+    public static final String DURESS_PASSWORD_INfO = "duressPasswordInfo";
+
+    /**
+     * 胁迫密码账号
+     */
+    public static final String DURESS_AUTHORIZATION_TELEPHONE = "duress_authorization_telephone";
+
+    /**
+     * 传递第i个胁迫密码信息
+     */
+    public static final String DURESS_PASSWORD_POSITION_INfO = "duressPasswordPositionInfo";
+
     /**
      * 传递蓝牙设备信息的Key
      */

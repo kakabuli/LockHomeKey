@@ -23,9 +23,9 @@ public class DuressAlarmAdapter extends BaseQuickAdapter<DuressBean, BaseViewHol
         if(bean == null) return;
 
         if(bean.isHead()){
-            if(bean.getType() == 1){
+            if(bean.getPwdType() == 1){
                 holder.setText(R.id.tv_password,R.string.password);
-            }else if(bean.getType() == 2){
+            }else if(bean.getPwdType() == 2){
                 holder.setText(R.id.tv_password,R.string.fingerprint);
             }
             holder.getView(R.id.tv_password).setVisibility(View.VISIBLE);
@@ -37,19 +37,19 @@ public class DuressAlarmAdapter extends BaseQuickAdapter<DuressBean, BaseViewHol
             holder.getView(R.id.tv_password).setVisibility(View.GONE);
         }
 
-        if(bean.getDuressToggle() == 0){
+        if(bean.getPwdDuressSwitch() == 0){
             holder.setText(R.id.tv_duress_alarm_toggle,R.string.close);
             holder.getView(R.id.rl_duress_alarm_password_notification).setVisibility(View.GONE);
-        }else if(bean.getDuressToggle() == 1){
+        }else if(bean.getPwdDuressSwitch() == 1){
             holder.setText(R.id.tv_duress_alarm_toggle,R.string.open);
-            holder.setText(R.id.tv_duress_alarm_phone,bean.getDuressPhone());
+            holder.setText(R.id.tv_duress_alarm_phone,bean.getDuressAlarmAccount());
             holder.getView(R.id.rl_duress_alarm_password_notification).setVisibility(View.VISIBLE);
         }
-
+        String sNum = bean.getNum() > 9 ? "" + bean.getNum() : "0" + bean.getNum();;
         if(bean.getNickName() != null && !bean.getNickName().isEmpty()){
-            holder.setText(R.id.tv_password_num,bean.getNickName().isEmpty() ? bean.getNum() : bean.getNickName());
+            holder.setText(R.id.tv_password_num,bean.getNickName().isEmpty() ? mContext.getString(R.string.duress_number,sNum) : bean.getNickName());
         }else{
-            holder.setText(R.id.tv_password_num,bean.getNum());
+            holder.setText(R.id.tv_password_num,mContext.getString(R.string.duress_number,sNum));
         }
 
         holder.getView(R.id.rl_duress_alarm_toggle).setOnClickListener(v -> {

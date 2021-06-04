@@ -93,6 +93,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         public final static Property ScreenLightLevel = new Property(59, int.class, "screenLightLevel", false, "SCREEN_LIGHT_LEVEL");
         public final static Property ScreenLightTime = new Property(60, int.class, "screenLightTime", false, "SCREEN_LIGHT_TIME");
         public final static Property ScreenLightSwitch = new Property(61, int.class, "screenLightSwitch", false, "SCREEN_LIGHT_SWITCH");
+        public final static Property DuressAlarmSwitch = new Property(62, int.class, "duressAlarmSwitch", false, "DURESS_ALARM_SWITCH");
     }
 
     private final SingleFireSwitchInfoConvert singleFireSwitchInfoConverter = new SingleFireSwitchInfoConvert();
@@ -172,7 +173,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
                 "\"VOL_LEVEL\" INTEGER NOT NULL ," + // 58: volLevel
                 "\"SCREEN_LIGHT_LEVEL\" INTEGER NOT NULL ," + // 59: screenLightLevel
                 "\"SCREEN_LIGHT_TIME\" INTEGER NOT NULL ," + // 60: screenLightTime
-                "\"SCREEN_LIGHT_SWITCH\" INTEGER NOT NULL );"); // 61: screenLightSwitch
+                "\"SCREEN_LIGHT_SWITCH\" INTEGER NOT NULL ," + // 61: screenLightSwitch
+                "\"DURESS_ALARM_SWITCH\" INTEGER NOT NULL );"); // 62: duressAlarmSwitch
     }
 
     /** Drops the underlying database table. */
@@ -382,6 +384,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(60, entity.getScreenLightLevel());
         stmt.bindLong(61, entity.getScreenLightTime());
         stmt.bindLong(62, entity.getScreenLightSwitch());
+        stmt.bindLong(63, entity.getDuressAlarmSwitch());
     }
 
     @Override
@@ -585,6 +588,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         stmt.bindLong(60, entity.getScreenLightLevel());
         stmt.bindLong(61, entity.getScreenLightTime());
         stmt.bindLong(62, entity.getScreenLightSwitch());
+        stmt.bindLong(63, entity.getDuressAlarmSwitch());
     }
 
     @Override
@@ -656,7 +660,8 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
             cursor.getInt(offset + 58), // volLevel
             cursor.getInt(offset + 59), // screenLightLevel
             cursor.getInt(offset + 60), // screenLightTime
-            cursor.getInt(offset + 61) // screenLightSwitch
+            cursor.getInt(offset + 61), // screenLightSwitch
+            cursor.getInt(offset + 62) // duressAlarmSwitch
         );
         return entity;
     }
@@ -725,6 +730,7 @@ public class WifiLockInfoDao extends AbstractDao<WifiLockInfo, Long> {
         entity.setScreenLightLevel(cursor.getInt(offset + 59));
         entity.setScreenLightTime(cursor.getInt(offset + 60));
         entity.setScreenLightSwitch(cursor.getInt(offset + 61));
+        entity.setDuressAlarmSwitch(cursor.getInt(offset + 62));
      }
     
     @Override

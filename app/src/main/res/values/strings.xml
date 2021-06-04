@@ -124,6 +124,7 @@
     <string name="account_or_password_empty">账号或密码为空</string>
     <string name="modify_nickname_fail">修改昵称失败</string>
     <string name="user_exit">用户已经存在</string>
+    <string name="user_not_registered">该用户未注册</string>
     <string name="server_back_exception">服务器返回异常</string>
     <string name="tiem_out">超时</string>
     <string name="connect_exception">连接异常</string>
@@ -2181,4 +2182,6 @@
     <string name="video_lock_ota_powersave_title">已开启节能模式</string>
     <string name="video_lock_ota_powersave_content">1.请检查设备电量，电量过低时请更换电池\n2.电量正常时，请输入密码开锁或按门铃后再试</string>
 
+    <string name="duress_number">编号%1$s</string>
+    <string name="set_duress_account">请设置胁迫报警账号</string>
 </resources>

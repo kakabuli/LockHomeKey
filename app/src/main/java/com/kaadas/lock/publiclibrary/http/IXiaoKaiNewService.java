@@ -719,6 +719,27 @@ public interface IXiaoKaiNewService {
     @Headers({KeyConstants.VERSION})
     Observable<BaseResult> updateSwitchNickname(@Header("timestamp") String timestamp,@Body RequestBody info);
 
+    /**
+     *  设置胁迫报警开关
+     */
+    @POST(HttpUrlConstants.WIFI_DURESS_ALARM_SWITCH)
+    @Headers({KeyConstants.VERSION})
+    Observable<BaseResult> wifiDuressAlarmSwitch(@Header("timestamp") String timestamp,@Body RequestBody info);
+
+    /**
+     *  设置密钥胁迫报警开关
+     */
+    @POST(HttpUrlConstants.WIFI_PWD_DURESS_ALARM)
+    @Headers({KeyConstants.VERSION})
+    Observable<BaseResult> wifiPwdDuressAlarm(@Header("timestamp") String timestamp,@Body RequestBody info);
+
+    /**
+     *  设置密钥胁迫报警接收账户
+     */
+    @POST(HttpUrlConstants.WIFI_PWD_DURESS_ACCOUNT)
+    @Headers({KeyConstants.VERSION})
+    Observable<BaseResult> wifiPwdDuressAccount(@Header("timestamp") String timestamp,@Body RequestBody info);
+
     ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
 
     /**

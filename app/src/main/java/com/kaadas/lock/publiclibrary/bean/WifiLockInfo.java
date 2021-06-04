@@ -170,6 +170,7 @@ public class WifiLockInfo implements Serializable {
     private int screenLightLevel;
     private int screenLightTime;
     private int screenLightSwitch;
+    private int duressAlarmSwitch;
 
 
     @Generated(hash = 666757199)
@@ -177,7 +178,7 @@ public class WifiLockInfo implements Serializable {
     }
 
 
-    @Generated(hash = 991685387)
+    @Generated(hash = 1654678876)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -193,7 +194,8 @@ public class WifiLockInfo implements Serializable {
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
             int lockingMethod, String frontPanelVersion, String backPanelVersion,
-            int volLevel, int screenLightLevel, int screenLightTime, int screenLightSwitch) {
+            int volLevel, int screenLightLevel, int screenLightTime, int screenLightSwitch,
+            int duressAlarmSwitch) {
         this.id = id;
         this.deviceID = deviceID;
         this.wifiSN = wifiSN;
@@ -256,8 +258,17 @@ public class WifiLockInfo implements Serializable {
         this.screenLightLevel = screenLightLevel;
         this.screenLightTime = screenLightTime;
         this.screenLightSwitch = screenLightSwitch;
+        this.duressAlarmSwitch = duressAlarmSwitch;
     }
 
+
+    public int getDuressAlarmSwitch() {
+        return duressAlarmSwitch;
+    }
+
+    public void setDuressAlarmSwitch(int duressAlarmSwitch) {
+        this.duressAlarmSwitch = duressAlarmSwitch;
+    }
 
     public String getFrontPanelVersion() {
         return frontPanelVersion;

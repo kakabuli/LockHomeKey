@@ -406,6 +406,21 @@ public class HttpUrlConstants {
      */
     public static final String UPDATE_SWITCH_NICK_NAME = BASE_URL + "wifi/device/updateSwitchNickname";
 
+    /**
+     * 设置密钥胁迫报警接收账户
+     */
+    public static final String WIFI_PWD_DURESS_ACCOUNT = BASE_URL + "user/edit/pwdDuressAccount";
+
+    /**
+     * 设置密钥胁迫报警开关
+     */
+    public static final String WIFI_PWD_DURESS_ALARM = BASE_URL + "user/edit/pwdDuressAlarm";
+
+    /**
+     * 设置胁迫报警开关
+     */
+    public static final String WIFI_DURESS_ALARM_SWITCH = BASE_URL + "user/edit/duressAlarmSwitch";
+
 
     ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
 

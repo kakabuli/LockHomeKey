@@ -8,6 +8,7 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockDuressView;
 import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.postbean.SettingPwdDuressAlarmSwitchBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
@@ -20,7 +21,7 @@ import java.util.List;
 import io.reactivex.disposables.Disposable;
 
 public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLockDuressView> {
-
+    private Disposable duressSwitchDisposable;
 
     @Override
     public void attachView(IWifiVideoLockDuressView view) {
@@ -75,8 +76,12 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
         if(wiFiLockPassword.getPwdList() != null && wiFiLockPassword.getPwdList().size() > 0){
             list.add(new DuressBean(wifisn,1,true));
             for(WiFiLockPassword.PwdListBean bean : wiFiLockPassword.getPwdList()){
+                if(bean.getType() != 0) continue;
+
                 String sNum = bean.getNum() > 9 ? "" + bean.getNum() : "0" + bean.getNum();
                 String nickName = "";
+                String duressAlarmAccount = "";
+                int pwdDuressSwitch = 0;
                 for(WiFiLockPassword.PwdNicknameBean li :wiFiLockPassword.getPwdNickname()){
                     if(li.getNum() == bean.getNum()){
                         if(li.getNickName().isEmpty()){
@@ -86,7 +91,17 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
                         }
                     }
                 }
-                list.add(new DuressBean(wifisn,1,0,"138***8083",sNum,bean.getCreateTime(),nickName));
+
+                if(wiFiLockPassword.getPwdDuress() != null && wiFiLockPassword.getPwdDuress().size() > 0){
+                    for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getPwdDuress()){
+                        if(oi.getNum() == bean.getNum()){
+                            duressAlarmAccount = oi.getDuressAlarmAccount();
+                            pwdDuressSwitch = oi.getDuressSwitch();
+                        }
+                    }
+                }
+
+                list.add(new DuressBean(wifisn,1,pwdDuressSwitch,duressAlarmAccount,bean.getNum(),bean.getCreateTime(),nickName));
             }
         }
 
@@ -95,6 +110,8 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
             for(WiFiLockPassword.FingerprintListBean bean : wiFiLockPassword.getFingerprintList()){
                 String sNum = bean.getNum() > 9 ? "" + bean.getNum() : "0" + bean.getNum();
                 String nickName = "";
+                String duressAlarmAccount = "";
+                int pwdDuressSwitch = 0;
                 for(WiFiLockPassword.FingerprintNicknameBean li : wiFiLockPassword.getFingerprintNickname()){
                     if(li.getNum() == bean.getNum()){
                         if(li.getNickName().isEmpty()){
@@ -104,9 +121,48 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
                         }
                     }
                 }
-                list.add(new DuressBean(wifisn,2,0,"138***8083",sNum,bean.getCreateTime(),nickName));
+
+                if(wiFiLockPassword.getFingerprintDuress() != null && wiFiLockPassword.getFingerprintDuress().size() > 0){
+                    for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getFingerprintDuress()){
+                        if(oi.getNum() == bean.getNum()){
+                            duressAlarmAccount = oi.getDuressAlarmAccount();
+                            pwdDuressSwitch = oi.getDuressSwitch();
+                        }
+                    }
+                }
+                list.add(new DuressBean(wifisn,2,pwdDuressSwitch,duressAlarmAccount,bean.getNum(),bean.getCreateTime(),nickName));
             }
         }
         return list;
+    }
+
+    public void setDuressSwitch(String wifiSN,int duressSwitch){
+        SettingPwdDuressAlarmSwitchBean mSettingPwdDuressAlarmSwitchBean = new SettingPwdDuressAlarmSwitchBean(MyApplication.getInstance().getUid(),wifiSN,duressSwitch);
+        toDisposable(duressSwitchDisposable);
+        XiaokaiNewServiceImp.wifiPwdDuressAlarmSwitch(mSettingPwdDuressAlarmSwitchBean).subscribe(new BaseObserver<BaseResult>() {
+            @Override
+            public void onSuccess(BaseResult baseResult) {
+                if(isSafe()){
+                    mViewRef.get().onSettingDuress(baseResult);
+                }
+            }
+
+            @Override
+            public void onAckErrorCode(BaseResult baseResult) {
+                if(isSafe()){
+                    mViewRef.get().onSettingDuress(baseResult);
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSubscribe1(Disposable d) {
+                duressSwitchDisposable = d;
+            }
+        });
     }
 }

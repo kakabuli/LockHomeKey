@@ -4,28 +4,36 @@ import java.io.Serializable;
 
 public class DuressBean implements Serializable {
     private String wifiSN;
-    private int type;
-    private int duressToggle;
-    private String duressPhone;
+    private int pwdType;
+    private int pwdDuressSwitch;
+    private String duressAlarmAccount;
     private boolean isHead = false;
-    private String num;
+    private int num;
     private long createTime;
     private String nickName;
 
-    public DuressBean(String wifiSN, int type, boolean isHead) {
+    public DuressBean(String wifiSN, int pwdType, boolean isHead) {
         this.wifiSN = wifiSN;
-        this.type = type;
+        this.pwdType = pwdType;
         this.isHead = isHead;
     }
 
-    public DuressBean(String wifiSN, int type, int duressToggle, String duressPhone, String num, long createTime, String nickName) {
+    public DuressBean(String wifiSN, int pwdType, int pwdDuressSwitch, String duressAlarmAccount, int num, long createTime, String nickName) {
         this.wifiSN = wifiSN;
-        this.type = type;
-        this.duressToggle = duressToggle;
-        this.duressPhone = duressPhone;
+        this.pwdType = pwdType;
+        this.pwdDuressSwitch = pwdDuressSwitch;
+        this.duressAlarmAccount = duressAlarmAccount;
         this.num = num;
         this.createTime = createTime;
         this.nickName = nickName;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public int getNum() {
+        return num;
     }
 
     public String getWifiSN() {
@@ -36,28 +44,28 @@ public class DuressBean implements Serializable {
         this.wifiSN = wifiSN;
     }
 
-    public int getType() {
-        return type;
+    public int getPwdType() {
+        return pwdType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setPwdType(int pwdType) {
+        this.pwdType = pwdType;
     }
 
-    public int getDuressToggle() {
-        return duressToggle;
+    public int getPwdDuressSwitch() {
+        return pwdDuressSwitch;
     }
 
-    public void setDuressToggle(int duressToggle) {
-        this.duressToggle = duressToggle;
+    public void setPwdDuressSwitch(int pwdDuressSwitch) {
+        this.pwdDuressSwitch = pwdDuressSwitch;
     }
 
-    public String getDuressPhone() {
-        return duressPhone;
+    public String getDuressAlarmAccount() {
+        return duressAlarmAccount;
     }
 
-    public void setDuressPhone(String duressPhone) {
-        this.duressPhone = duressPhone;
+    public void setDuressAlarmAccount(String duressAlarmAccount) {
+        this.duressAlarmAccount = duressAlarmAccount;
     }
 
     public boolean isHead() {
@@ -66,14 +74,6 @@ public class DuressBean implements Serializable {
 
     public void setHead(boolean head) {
         isHead = head;
-    }
-
-    public String getNum() {
-        return num;
-    }
-
-    public void setNum(String num) {
-        this.num = num;
     }
 
     public long getCreateTime() {
@@ -95,9 +95,9 @@ public class DuressBean implements Serializable {
     @Override
     public String toString() {
         return "PhilipsDuressBean{" +
-                "type=" + type +
-                ", duressToggle=" + duressToggle +
-                ", duressPhone=" + duressPhone +
+                "pwdType=" + pwdType +
+                ", pwdDuressSwitch=" + pwdDuressSwitch +
+                ", duressAlarmAccount=" + duressAlarmAccount +
                 ", isHead=" + isHead +
                 ", num='" + num + '\'' +
                 ", createTime=" + createTime +
