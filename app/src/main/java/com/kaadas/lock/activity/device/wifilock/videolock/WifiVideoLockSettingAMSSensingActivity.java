@@ -60,11 +60,11 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
     private InnerRecevier mInnerRecevier = null;
 
     private int settingAMSSensing;
-    private int settingAMSSensingSwitch;
 
-    private final int AMS_SENSING_HIGH = 80;
-    private final int AMS_SENSING_MID = 50;
-    private final int AMS_SENSING_LOW = 30;
+    private final int AMS_SENSING_HIGH = 1;
+    private final int AMS_SENSING_MID = 2;
+    private final int AMS_SENSING_LOW = 3;
+    private final int AMS_SENSING_CLOSE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +73,10 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
         ButterKnife.bind(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        settingAMSSensing = wifiLockInfo.getBodySensor();
         if(wifiLockInfo != null){
             settingAMSSensingView(settingAMSSensing);
-            settingAMSSensingShow(settingAMSSensingSwitch);
+            settingAMSSensingShow(settingAMSSensing);
         }
     }
 
@@ -123,43 +124,44 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
                 break;
             case R.id.rl_setting_ams_sensing_high:
                 settingAMSSensingView(AMS_SENSING_HIGH);
+                settingAMSSensing = AMS_SENSING_HIGH;
                 break;
             case R.id.rl_setting_ams_sensing_mid:
                 settingAMSSensingView(AMS_SENSING_MID);
+                settingAMSSensing = AMS_SENSING_MID;
                 break;
             case R.id.rl_setting_ams_sensing_low:
-                settingAMSSensingView(AMS_SENSING_LOW);;
+                settingAMSSensingView(AMS_SENSING_LOW);
+                settingAMSSensing = AMS_SENSING_LOW;
                 break;
             case R.id.rl_setting_ams_sensing:
                 if(ivSettingAMSSensing.isSelected()){
                     llSettingAMSSensing.setVisibility(View.GONE);
                     ivSettingAMSSensing.setSelected(false);
-                    settingAMSSensingSwitch = 0;
+                    settingAMSSensing = 0;
                 }else{
                     llSettingAMSSensing.setVisibility(View.VISIBLE);
                     ivSettingAMSSensing.setSelected(true);
-                    settingAMSSensingSwitch = 1;
+                    settingAMSSensing = 2;
                 }
                 break;
         }
     }
 
     private void settingAMSSensing() {
-        settingAMSSensingSwitch = ivSettingAMSSensing.isSelected() ? 1 : 0;
-        settingAMSSensing = getAMSSensing();
-        if(wifiLockInfo.getScreenLightSwitch() == settingAMSSensingSwitch && wifiLockInfo.getScreenLightTime() == settingAMSSensing){
+        if(wifiLockInfo.getBodySensor() == settingAMSSensing ){
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
-                setConnectAMSSensing(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
+                setConnectAMSSensing(wifiSn,settingAMSSensing);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
-                mPresenter.settingAMSSensting(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
+                mPresenter.settingAMSSensting(wifiSn,settingAMSSensing);
             }
         }
     }
 
-    private void setConnectAMSSensing(String wifiSn, int settingAMSSensingSwitch, int settingAMSSensing) {
+    private void setConnectAMSSensing(String wifiSn , int settingAMSSensing) {
         if(avi.isShow()) {
             if (wifiLockInfo.getPowerSave() == 0) {
                 tvTips.setVisibility(View.VISIBLE);
@@ -168,7 +170,7 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mPresenter.setConnectAMSSensing(wifiSn,settingAMSSensingSwitch,settingAMSSensing);
+                        mPresenter.setConnectAMSSensing(wifiSn,settingAMSSensing);
                     }
                 }).start();
             }else{
@@ -177,47 +179,30 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
         }
     }
 
-    private int getAMSSensing() {
-        if(ckSettingAMSSensingHigh.isChecked()){
-            return AMS_SENSING_HIGH;
-        }
-
-        if(ckSettingAMSSensingMid.isChecked()){
-            return AMS_SENSING_MID;
-        }
-
-        if(ckSettingAMSSensingLow.isChecked()){
-            return AMS_SENSING_LOW;
-        }
-
-        return AMS_SENSING_LOW;
-
-    }
-
 
     private void settingAMSSensingView(int settingAMSSensing) {
-        if(settingAMSSensing <= AMS_SENSING_LOW){
-            ckSettingAMSSensingLow.setChecked(true);
-            ckSettingAMSSensingMid.setChecked(false);
-            ckSettingAMSSensingHigh.setChecked(false);
-        }else if(settingAMSSensing > AMS_SENSING_LOW && settingAMSSensing <= AMS_SENSING_MID){
-            ckSettingAMSSensingLow.setChecked(false);
-            ckSettingAMSSensingMid.setChecked(true);
-            ckSettingAMSSensingHigh.setChecked(false);
-        }else if(settingAMSSensing > AMS_SENSING_MID && settingAMSSensing <= AMS_SENSING_HIGH){
+        if(settingAMSSensing == AMS_SENSING_HIGH){
             ckSettingAMSSensingLow.setChecked(false);
             ckSettingAMSSensingMid.setChecked(false);
             ckSettingAMSSensingHigh.setChecked(true);
+        }else if(settingAMSSensing == AMS_SENSING_MID){
+            ckSettingAMSSensingLow.setChecked(false);
+            ckSettingAMSSensingMid.setChecked(true);
+            ckSettingAMSSensingHigh.setChecked(false);
+        }else if(settingAMSSensing == AMS_SENSING_LOW){
+            ckSettingAMSSensingLow.setChecked(true);
+            ckSettingAMSSensingMid.setChecked(false);
+            ckSettingAMSSensingHigh.setChecked(false);
         }
     }
 
     private void settingAMSSensingShow(int settingAMSSensingSwitch) {
-        if(settingAMSSensingSwitch == 1){
-            llSettingAMSSensing.setVisibility(View.VISIBLE);
-            ivSettingAMSSensing.setSelected(true);
-        }else{
+        if(settingAMSSensingSwitch == AMS_SENSING_CLOSE){
             llSettingAMSSensing.setVisibility(View.GONE);
             ivSettingAMSSensing.setSelected(false);
+        }else{
+            llSettingAMSSensing.setVisibility(View.VISIBLE);
+            ivSettingAMSSensing.setSelected(true);
         }
     }
 

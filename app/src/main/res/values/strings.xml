@@ -1670,6 +1670,10 @@
     <string name="open">开启</string>
     <string name="close">关闭</string>
 
+    <string name="high_sensitivity">高灵敏度</string>
+    <string name="medium_sensitivity">中灵敏度</string>
+    <string name="low_sensitivity">低灵敏度</string>
+
     <string name="lock_auto_mode">门锁自动模式状态</string>
     <string name="lock_hand_mode">门锁手动模式状态</string>
     <string name="hand">手动</string>

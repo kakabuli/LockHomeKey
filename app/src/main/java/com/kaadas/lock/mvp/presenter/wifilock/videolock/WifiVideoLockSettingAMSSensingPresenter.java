@@ -7,6 +7,7 @@ import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockSettingAMSSensi
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
+import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingAMSResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.SettingScreenTimeResult;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
@@ -33,15 +34,15 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
 
     private static  String serviceString= XMP2PManager.serviceString;;
 
-    public void settingAMSSensting(String wifiSN, int settingAMSSenstingSwitch, int settingAMSSensting) {
+    public void settingAMSSensting(String wifiSN, int settingAMSSensting) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
-            MqttMessage mqttMessage = MqttCommandFactory.settingScreenTime(wifiSN,settingAMSSenstingSwitch,settingAMSSensting);
+            MqttMessage mqttMessage = MqttCommandFactory.settingAMSSensting(wifiSN,settingAMSSensting);
             toDisposable(settingAMSSenstingDisposable);
             settingAMSSenstingDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
                         @Override
                         public boolean test(MqttData mqttData) throws Exception {
-                            if(MqttConstant.SET_CAMERA.equals(mqttData.getFunc())){
+                            if(MqttConstant.SET_LOCK.equals(mqttData.getFunc())){
                                 return true;
                             }
                             return false;
@@ -52,12 +53,12 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            SettingScreenTimeResult mSettingScreenTimeResult = new Gson().fromJson(mqttData.getPayload(), SettingScreenTimeResult.class);
-                            LogUtils.e("shulan mSettingScreenTimeResult-->" + mSettingScreenTimeResult.toString());
-                            if(mSettingScreenTimeResult != null && isSafe()){
-                                if("200".equals(mSettingScreenTimeResult.getCode() + "")){
+                            SettingAMSResult mSettingAMSResult = new Gson().fromJson(mqttData.getPayload(), SettingAMSResult.class);
+                            LogUtils.e("shulan mSettingAMSResult-->" + mSettingAMSResult.toString());
+                            if(mSettingAMSResult != null && isSafe()){
+                                if("200".equals(mSettingAMSResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(true);
-                                }else if("201".equals(mSettingScreenTimeResult.getCode() + "")){
+                                }else if("201".equals(mSettingAMSResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);
                                 }
                             }
@@ -74,7 +75,7 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
         }
     }
 
-    public void setConnectAMSSensing(String wifiSN,int settingAMSSenstingSwitch,int settingAMSSensting) {
+    public void setConnectAMSSensing(String wifiSN,int settingAMSSensting) {
         DeviceInfo deviceInfo=new DeviceInfo();
         deviceInfo.setDeviceDid(did);
         deviceInfo.setP2pPassword(p2pPassword);
@@ -98,7 +99,7 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    settingAMSSensting(wifiSN,settingAMSSenstingSwitch,settingAMSSensting);
+                                    settingAMSSensting(wifiSN,settingAMSSensting);
                                 }else{
                                     mViewRef.get().onSettingCallBack(false);
                                 }

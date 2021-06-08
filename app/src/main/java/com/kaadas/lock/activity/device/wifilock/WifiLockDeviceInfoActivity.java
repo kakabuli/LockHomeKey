@@ -77,6 +77,7 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     private String faceModelFirmwareVersion;
     private String sWifiVersion;
     private String lockFirmwareVersion;
+    private String voiceModelFirmWareVersion;
     private List<ProductInfo> productList = new ArrayList<>();
     private boolean multiOTAflag = false;
 
@@ -135,6 +136,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
             if(BleLockUtils.isSupportVoiceModel(wifiLockInfo.getFunctionSet())){
                 rlVoiceModelFirmwareVersion.setVisibility(View.VISIBLE);
+                voiceModelFirmWareVersion = wifiLockInfo.getVoiceVersion();
+                tvVoiceModelFirmWareVersion.setText(voiceModelFirmWareVersion);
             }else{
                 rlVoiceModelFirmwareVersion.setVisibility(View.GONE);
             }

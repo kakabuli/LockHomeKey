@@ -57,6 +57,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockSafeMode;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetVideoLockVolume;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetWiFiBasic;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SetZBChannel;
+import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingAMSBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingFaceWanderingAlarm;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingLockingMethod;
 import com.kaadas.lock.publiclibrary.mqtt.publishbean.SettingOpenDirection;
@@ -1094,6 +1095,18 @@ public class MqttCommandFactory {
         SettingScreenTime mSettingScreenTime = new SettingScreenTime(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
                 wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
         return getMessage(mSettingScreenTime, messageId,2);
+    }
+
+    /**
+     * 设置红外传感器
+     *
+     */
+    public static MqttMessage settingAMSSensting(String wifiID,int settingAMSSensting ) {
+        int messageId = getMessageId();
+        SettingAMSBean.ParamsBean paramsBean = new SettingAMSBean.ParamsBean(settingAMSSensting);
+        SettingAMSBean settingAMSBean = new SettingAMSBean(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
+                wifiID,MqttConstant.SET_LOCK,paramsBean,System.currentTimeMillis()+"",0);
+        return getMessage(settingAMSBean, messageId,2);
     }
 
     /**

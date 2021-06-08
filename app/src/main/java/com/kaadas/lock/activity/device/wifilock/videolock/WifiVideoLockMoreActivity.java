@@ -323,7 +323,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //感应把手开关显示
             if(BleLockUtils.isSupportSensingHandleSwitch(wifiLockInfo.getFunctionSet())){
                 rlSensingDoorHandle.setVisibility(View.VISIBLE);
-                tvSensingDoorHandle.setText("");
+                int touchHandleStatus = wifiLockInfo.getTouchHandleStatus();
+                tvSensingDoorHandle.setText(touchHandleStatus == 1 ? getString(R.string.open) : getString(R.string.close));
             }else{
                 rlSensingDoorHandle.setVisibility(View.GONE);
             }
@@ -331,7 +332,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //人脸识别开关显示
             if(BleLockUtils.isSupportFacereCognitionSwitch(wifiLockInfo.getFunctionSet())){
                 rlFaceRecognitionSwitch.setVisibility(View.VISIBLE);
-                tvFaceRecognitionSwitch.setText("");
+                int faceStatus = wifiLockInfo.getFaceStatus();
+                tvFaceRecognitionSwitch.setText(faceStatus == 0 ? getString(R.string.open) : getString(R.string.close));
             }else{
                 rlFaceRecognitionSwitch.setVisibility(View.GONE);
             }
@@ -339,7 +341,16 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //AMS传感器显示
             if(BleLockUtils.isSupportAMSSensor(wifiLockInfo.getFunctionSet())){
                 rlAMSSensing.setVisibility(View.VISIBLE);
-                tvAMSSensing.setText("");
+                int bodySensor = wifiLockInfo.getBodySensor();
+                if(bodySensor == 1){
+                    tvAMSSensing.setText(getString(R.string.high_sensitivity));
+                }else if(bodySensor == 2){
+                    tvAMSSensing.setText(getString(R.string.medium_sensitivity));
+                }else if(bodySensor == 3){
+                    tvAMSSensing.setText(getString(R.string.low_sensitivity));
+                }else if(bodySensor == 4){
+                    tvAMSSensing.setText(getString(R.string.close));
+                }
             }else{
                 rlAMSSensing.setVisibility(View.GONE);
             }
@@ -380,7 +391,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
                 ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.wifi_lock_video_mode);
                 ((TextView)findViewById(R.id.tv_real_time)).setCompoundDrawables(null,null,null,null);
-                ((TextView)findViewById(R.id.tv_real_time)).setText("");
+                int KeepAliveStatus = wifiLockInfo.getKeep_alive_status();
+                ((TextView)findViewById(R.id.tv_real_time)).setText(KeepAliveStatus == 1 ? getString(R.string.open) : getString(R.string.close));
             }else{
                 ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.real_time_video);
                 ((TextView)findViewById(R.id.tv_real_time)).setText("");

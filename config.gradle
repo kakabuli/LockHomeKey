@@ -45,7 +45,7 @@ ext {
     //开启保活进程打印
     Keep_Alive_Debug = false
 
-    greendao_schemaVersion = 38
+    greendao_schemaVersion = 39
     constraintlayoutVersion = "2.0.4"
     espresso_core_version = "3.3.0"
 }

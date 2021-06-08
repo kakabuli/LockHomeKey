@@ -166,10 +166,13 @@ public class WifiLockInfo implements Serializable {
     private String frontPanelVersion;
     private String backPanelVersion;
 
-    private int volLevel;
+    private String voiceVersion;
+    private int touchHandleStatus;
     private int screenLightLevel;
-    private int screenLightTime;
     private int screenLightSwitch;
+    private int screenLightTime;
+    private int bodySensor;
+    private int volLevel;
     private int duressAlarmSwitch;
 
 
@@ -178,7 +181,7 @@ public class WifiLockInfo implements Serializable {
     }
 
 
-    @Generated(hash = 1654678876)
+    @Generated(hash = 1524929990)
     public WifiLockInfo(Long id, String deviceID, String wifiSN, int isAdmin, String adminUid,
             String adminName, String productSN, String productModel, int appId,
             String lockNickname, String lockSoftwareVersion, String functionSet, String uid,
@@ -194,7 +197,8 @@ public class WifiLockInfo implements Serializable {
             String mcu_version, String device_model, int keep_alive_status, String mac,
             String lockMac, String RSSI, int wifiStrength, int openDirection, int openForce,
             int lockingMethod, String frontPanelVersion, String backPanelVersion,
-            int volLevel, int screenLightLevel, int screenLightTime, int screenLightSwitch,
+            String voiceVersion, int touchHandleStatus, int screenLightLevel,
+            int screenLightSwitch, int screenLightTime, int bodySensor, int volLevel,
             int duressAlarmSwitch) {
         this.id = id;
         this.deviceID = deviceID;
@@ -254,10 +258,13 @@ public class WifiLockInfo implements Serializable {
         this.lockingMethod = lockingMethod;
         this.frontPanelVersion = frontPanelVersion;
         this.backPanelVersion = backPanelVersion;
-        this.volLevel = volLevel;
+        this.voiceVersion = voiceVersion;
+        this.touchHandleStatus = touchHandleStatus;
         this.screenLightLevel = screenLightLevel;
-        this.screenLightTime = screenLightTime;
         this.screenLightSwitch = screenLightSwitch;
+        this.screenLightTime = screenLightTime;
+        this.bodySensor = bodySensor;
+        this.volLevel = volLevel;
         this.duressAlarmSwitch = duressAlarmSwitch;
     }
 
@@ -324,6 +331,30 @@ public class WifiLockInfo implements Serializable {
 
     public void setKeep_alive_status(int keep_alive_status) {
         this.keep_alive_status = keep_alive_status;
+    }
+
+    public String getVoiceVersion() {
+        return voiceVersion;
+    }
+
+    public void setVoiceVersion(String voiceVersion) {
+        this.voiceVersion = voiceVersion;
+    }
+
+    public int getTouchHandleStatus() {
+        return touchHandleStatus;
+    }
+
+    public void setTouchHandleStatus(int touchHandleStatus) {
+        this.touchHandleStatus = touchHandleStatus;
+    }
+
+    public int getBodySensor() {
+        return bodySensor;
+    }
+
+    public void setBodySensor(int bodySensor) {
+        this.bodySensor = bodySensor;
     }
 
     public WifiVideoLockSetPirBean getSetPir() {
