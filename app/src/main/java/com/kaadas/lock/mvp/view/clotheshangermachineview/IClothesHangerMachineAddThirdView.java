@@ -15,7 +15,7 @@ public interface IClothesHangerMachineAddThirdView extends IBaseView {
      * @param devices
      * @param broadcastList
      */
-    void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastListBean> broadcastList);
+    void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastBean>  broadcastList);
 
     /**
      * 停止搜索
