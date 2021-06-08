@@ -108,7 +108,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        if(aLong != 0){
+                        if(aLong != 0 && aLong > 0){
                             updateCountDownTime(imgHangerLighting,tvHangerLighting);
                             updateCountDownTime(imgHangerAirdry,tvHangerAirDry);
                             updateCountDownTime(imgHangerBaking,tvHangerBaking);
@@ -122,6 +122,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     private void updateCountDownTime(ImageView imageView,TextView textView) {
         if(imageView.isSelected()){
             int time = DateUtils.getTimeToInt(textView.getText().toString().trim());
+            if(time < 0) return;
             textView.setText(DateUtils.getStringTime3(--time));
         }
     }
