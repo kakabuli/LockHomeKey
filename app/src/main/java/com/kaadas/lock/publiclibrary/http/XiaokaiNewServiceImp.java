@@ -1426,8 +1426,7 @@ public class XiaokaiNewServiceImp {
         String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .wifiDuressAlarmSwitch(timestamp,new HttpUtils<SettingPwdDuressAlarmSwitchBean>().getBodyToken(settingPwdDuressAlarmSwitchBean,timestamp))
-                .compose(RxjavaHelper.observeOnMainThread())
-                ;
+                .compose(RxjavaHelper.observeOnMainThread());
     }
 
     ////////////////////////////////////////////           WiFi视频锁api功能            ///////////////////////////////////////////////
