@@ -128,19 +128,22 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
                 finish();
                 break;
             case R.id.rl_hard_version:
-                if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())) {
-                    if(!BleLockUtils.isSupportLockOTA(wifiLockInfoBySn.getFunctionSet())) return;
-                    showLoading(getString(R.string.is_check_version));
-                    if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())
-                            || BleLockUtils.isSupportVideoPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())) {
-                        multiOTAflag = true;
-                        mPresenter.checkMultiOTAInfo(wifiSN,wifiLockInfoBySn.getFrontPanelVersion() + "",wifiLockInfoBySn.getBackPanelVersion() + "");
-                    }else{
-                        multiOTAflag = false;
-                        mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 2);
+                if(!BleLockUtils.isSupportLockOTA(wifiLockInfoBySn.getFunctionSet())) return;
+                showLoading(getString(R.string.is_check_version));
+                if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())) {
+                    if(TextUtils.isEmpty(wifiLockInfoBySn.getFrontPanelVersion()) && TextUtils.isEmpty(wifiLockInfoBySn.getBackPanelVersion())){
+                        Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                } else {
-                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                    multiOTAflag = true;
+                    mPresenter.checkMultiOTAInfo(wifiSN,wifiLockInfoBySn.getFrontPanelVersion() + "",wifiLockInfoBySn.getBackPanelVersion() + "");
+                }else{
+                    if(TextUtils.isEmpty(wifiLockInfoBySn.getLockFirmwareVersion())){
+                        Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    multiOTAflag = false;
+                    mPresenter.checkOtaInfo(wifiSN, wifiLockInfoBySn.getLockFirmwareVersion(), 2);
                 }
                 break;
             case R.id.rl_back_hard_version:
