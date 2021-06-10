@@ -75,6 +75,7 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         settingAMSSensing = wifiLockInfo.getBodySensor();
         if(wifiLockInfo != null){
+            mPresenter.settingDevice(wifiLockInfo);
             settingAMSSensingView(settingAMSSensing);
             settingAMSSensingShow(settingAMSSensing);
         }

@@ -229,7 +229,6 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("zdx", "setConnectLockingMethod: ");
                         mPresenter.setConnectLockingMethod(wifiSn,lockingMethod);
                     }
                 }).start();

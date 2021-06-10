@@ -163,7 +163,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0x79, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 33, 34, 38, 46, 47, 51, 52, 53, 54, 55, 59, 64, 65, 66, 67, 86});
 
         FUNCTION_SET.put(0x7A, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 39, 46, 47, 49, 51, 52, 53, 54, 55, 57, 58, 59});//2020年9月28日11:24:09
-        FUNCTION_SET.put(0x7C, new Integer[]{1,2,3,4,5,6,7,8,10,13,14,15,16,17,19,21,22,23,33,34,38,39,47,51,52,53,54,55,57,58,59,86});//2021年6月10日16:34:09
+        FUNCTION_SET.put(0x7C, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17, 19, 21, 22, 23, 33, 34, 38, 39, 47, 51, 52, 53, 54, 55, 57, 58, 59, 95});//2021年6月10日16:34:09
 
 
         FUNCTION_SET.put(0xC0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 31, 32, 33, 36, 41, 42, 44});
@@ -767,6 +767,18 @@ public class BleLockUtils {
         return integers.contains(86);
     }
 
+    public static boolean isSupportFrontPanelOnlyShow(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(95);
+    }
     /**
      * 根据功能集判断显示蓝牙锁的界面
      *
