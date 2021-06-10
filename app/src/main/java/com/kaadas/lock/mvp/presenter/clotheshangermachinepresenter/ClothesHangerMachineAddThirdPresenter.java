@@ -74,13 +74,13 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
             }
         }
 
-        if (devices != null || broadcastList != null) {  //每次重新搜索都清空搜索到的设备，然后传递给界面让界面刷新
+        if (devices != null || broadcastItemList != null) {  //每次重新搜索都清空搜索到的设备，然后传递给界面让界面刷新
             devices.clear();
-            broadcastList.clear();//清空数据
+            broadcastItemList.clear();//清空数据
             if (isSafe()) {
                 LogUtils.e("--kaadas--每次重新搜索都清空搜索到的设备");
 //                mViewRef.get().loadDevices(devices);
-                mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastList);
+                mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastItemList);
 
             }
         }
@@ -123,7 +123,7 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
                         broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));
                         //搜索到设备
                         if (mViewRef != null) {
-                            mViewRef.get().loadBLEWiFiModelDevices(devices,broadcastList);
+                            mViewRef.get().loadBLEWiFiModelDevices(devices,broadcastItemList);
 
                         }
                     }
@@ -155,7 +155,7 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
         }
     };
 
-    public void checkBind(String wifiModelType,BluetoothDevice device) {
+    public void checkBind(String wifiModelType,BluetoothLockBroadcastBean device) {
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -176,16 +176,16 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
 
         String name = "";
 
-        List<BluetoothLockBroadcastBean> mItemList ;
-        for (BluetoothLockBroadcastListBean broadcastListBean:broadcastList) {
-
-            mItemList = broadcastListBean.getList();
-
-            for (BluetoothLockBroadcastBean broadcastBean : mItemList) {
-
-                if (device.getName().equals(broadcastBean.getDeviceName())) {
-                    if (broadcastBean.getDeviceModel() != null && broadcastBean.getDeviceSN() != null) {
-                        name = broadcastBean.getDeviceSN();
+        List<BluetoothDevice> mItemList ;
+        int[] list = new int[2];
+        for(int i = 0;i<broadcastList.size();i++){
+            mItemList = broadcastList.get(i).getDevices();
+            for(int j = 0;j<mItemList.size();j++){
+                if(device.getDeviceName().equals(mItemList.get(j).getName())){
+                    if(device.getDeviceModel() != null && device.getDeviceSN() != null){
+                        list[0] = i;
+                        list[1] = j;
+                        name = device.getDeviceSN();
                     }
                 }
             }
@@ -196,11 +196,11 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
             public void onSuccess(ClothesHangerMachineCheckBindingResult clothesHangerMachineCheckBindingResult) {
                 if(clothesHangerMachineCheckBindingResult.getCode().equals("201")){
                     if (isSafe()) {
-                        mViewRef.get().onNoBind(device);
+                        mViewRef.get().onNoBind(broadcastList.get(list[0]).getDevices().get(list[1]));
                     }
                 }else if(clothesHangerMachineCheckBindingResult.getCode().equals("202")){
                     if (isSafe()) {
-                        mViewRef.get().onAlreadyBind(device,clothesHangerMachineCheckBindingResult.getData().getUname() + "");
+                        mViewRef.get().onAlreadyBind(broadcastList.get(list[0]).getDevices().get(list[1]),clothesHangerMachineCheckBindingResult.getData().getUname() + "");
                     }
                 }else if ("444".equals(clothesHangerMachineCheckBindingResult.getCode())) {
                     if (mqttService != null) {

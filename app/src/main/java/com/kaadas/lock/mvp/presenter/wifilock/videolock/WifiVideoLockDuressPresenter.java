@@ -143,6 +143,7 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
             @Override
             public void onSuccess(BaseResult baseResult) {
                 if(isSafe()){
+                    LogUtils.e("shulan setDuressSwitch--> " + baseResult.toString());
                     mViewRef.get().onSettingDuress(baseResult);
                 }
             }

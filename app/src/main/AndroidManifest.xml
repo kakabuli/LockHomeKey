@@ -1375,6 +1375,15 @@
                 <action android:name="com.cysmart.bluetooth.le.ACTION_OTA_DATA_AVAILABLE_V1" />
             </intent-filter>
         </receiver> <!-- &lt;!&ndash; process必须指定为":pushservice"，切勿随意更改 &ndash;&gt; -->
+
+        <activity android:name="com.kaidishi.lock.activity.GeTuiPushAvtivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
+
         <service
             android:name="com.kaidishi.lock.service.GeTuiPushService"
             android:exported="true"

@@ -3,6 +3,7 @@ package com.kaidishi.lock.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
@@ -16,15 +17,22 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
+import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
+import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
+import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.NotificationUtils;
 import com.kaadas.lock.utils.Rom;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.reactivex.disposables.Disposable;
 
 /**
  * 继承 GTIntentService 接收来自个推的消息, 所有消息在线程中回调, 如果注册了该服务, 则务必要在 AndroidManifest中声明, 否则无法接受消息<br>
@@ -152,9 +160,10 @@ public class GeTuiIntentService extends GTIntentService {
     public void onReceiveClientId(Context context, String clientid) {
         Log.e(TAG, "onReceiveClientId -> " + "clientid = " + clientid);
         LogUtils.e("shulan -- onReceiveClientId-->clientid=" + clientid);
-	//	SPUtils.put(context,"clientId_GetTui",clientid);
-		SPUtils2.put(context, GeTui.JPUSH_ID,clientid);
         sendMessage(clientid, 1);
+        if(!Rom.isEmui() && !Rom.isMiui()){
+            refreshedTokenToServer(clientid);
+        }
     }
     // App初始化以后会回调这个方法
     @Override
@@ -358,5 +367,39 @@ public class GeTuiIntentService extends GTIntentService {
         msg.what = what;
         msg.obj = data;
       //  DemoApplication.sendMessage(msg);
+    }
+
+    private void refreshedTokenToServer(String jpush) {
+        LogUtils.d(TAG, "sending token to server. token:" + jpush);
+        uploadpushmethod(2,jpush);
+        SPUtils.put(GeTui.JPUSH_ID,jpush);
+    }
+
+    public void uploadpushmethod(int type , String JpushId) {
+        String uid = MMKVUtils.getStringMMKV(SPUtils.UID);
+        if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(JpushId)) {
+            XiaokaiNewServiceImp.uploadPushId(uid, JpushId, type).subscribe(new BaseObserver<BaseResult>() {
+                @Override
+                public void onSuccess(BaseResult baseResult) {
+                }
+
+                @Override
+                public void onAckErrorCode(BaseResult baseResult) {
+                    LogUtils.e(GeTui.VideoLog, "pushid上传失败,服务返回:" + baseResult);
+                }
+
+                @Override
+                public void onFailed(Throwable throwable) {
+                    LogUtils.e(GeTui.VideoLog, "pushid上传失败");
+                }
+
+                @Override
+                public void onSubscribe1(Disposable d) {
+                }
+            });
+        }else {
+            LogUtils.e("jpushid上传失败");
+        }
+
     }
 }

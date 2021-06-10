@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.ClothesHangerMachineBleWiFiSearchAdapter;
 import com.kaadas.lock.adapter.inf.OnBindClickListener;
+import com.kaadas.lock.adapter.inf.OnHangerBindClickListener;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
 import com.kaadas.lock.bean.BluetoothLockBroadcastListBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesHangerMachineAddThirdView,
-        ClothesHangerMachineAddThirdPresenter<IClothesHangerMachineAddThirdView>> implements IClothesHangerMachineAddThirdView, OnBindClickListener {
+        ClothesHangerMachineAddThirdPresenter<IClothesHangerMachineAddThirdView>> implements IClothesHangerMachineAddThirdView, OnHangerBindClickListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -171,7 +172,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
     }
 
     @Override
-    public void onItemClickListener(View view, int position, BluetoothDevice device) {
+    public void onItemClickListener(View view, int position, BluetoothLockBroadcastBean device) {
         //添加设备
         if (NetUtil.isNetworkAvailable()) {
             mPresenter.checkBind(wifiModelType,device);
@@ -182,7 +183,7 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
     }
 
     @Override
-    public void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastListBean> broadcastList) {
+    public void loadBLEWiFiModelDevices(List<BluetoothDevice> devices, List<BluetoothLockBroadcastBean> broadcastList) {
         if (devices == null) {
             return;
         }
@@ -190,11 +191,9 @@ public class ClothesHangerMachineAddThirdActivity extends BaseActivity<IClothesH
             return;
         }
         mDevices = devices;
-        LogUtils.e("shulan -------->" + mDevices.size());
         if (clothesHangerMachineBleWiFiSearchAdapter == null) {
-            clothesHangerMachineBleWiFiSearchAdapter = new ClothesHangerMachineBleWiFiSearchAdapter(mDevices);
+            clothesHangerMachineBleWiFiSearchAdapter = new ClothesHangerMachineBleWiFiSearchAdapter(broadcastList);
             clothesHangerMachineBleWiFiSearchAdapter.setBindClickListener(this);
-            clothesHangerMachineBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
 
             searchRecycler.setAdapter(clothesHangerMachineBleWiFiSearchAdapter);
         } else {

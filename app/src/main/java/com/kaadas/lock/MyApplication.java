@@ -56,6 +56,7 @@ import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.utils.greenDao.db.ProductInfoDao;
 import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
+import com.kaidishi.lock.activity.GeTuiPushAvtivity;
 import com.kaidishi.lock.service.GeTuiPushService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
@@ -156,11 +157,23 @@ public class MyApplication extends Application {
         }else if(Rom.isMiui()){
                 MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
-        PushManager.getInstance().initialize(this);
+        GeTuiPushInit();
         LogUtils.e("attachView  App启动完成 ");
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
         setRxJavaErrorHandler();
+    }
+
+    private void GeTuiPushInit() {
+        try {
+            Method method = PushManager.class.getDeclaredMethod("registerPushActivity", Context.class, Class.class);
+                    method.setAccessible(true);
+            method.invoke(PushManager.getInstance(), this.getApplicationContext(),
+                    GeTuiPushAvtivity.class);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        PushManager.getInstance().initialize(this);
     }
 
     private void initMMKV(MyApplication myApplication) {

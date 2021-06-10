@@ -186,6 +186,9 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
     }
 
     private void showClothesMachineDialog(String content) {
+        if(mCameraScan != null) {
+            mCameraScan.stopCamera();
+        }
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, content, "否", "是",
                 "#9A9A9A", "#1F96F7", new AlertDialogUtil.ClickListener() {
             @Override

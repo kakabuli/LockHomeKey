@@ -146,8 +146,6 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
                 setDuressAlarmSwitch();
             }
         });
-
-
     }
 
     @Override

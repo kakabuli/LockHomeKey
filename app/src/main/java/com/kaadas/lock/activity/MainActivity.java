@@ -409,7 +409,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             LogUtils.e("上传成功token...");
             return;
         }
-        if (Rom.isEmui()) {
+        if (Rom.isEmui() || Rom.isHarmony()) {
             // no get token
               String huawei = (String) SPUtils.get(GeTui.HUAWEI_KEY, "");
             if (TextUtils.isEmpty(huawei)) {
@@ -430,7 +430,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //            } else {
 //                Log.e(GeTui.VideoLog, "getui upload to success");
 //            }
-                String JpushId = (String) SPUtils2.get(MyApplication.getInstance(), GeTui.JPUSH_ID, "");
+                String JpushId = (String) SPUtils.get(GeTui.JPUSH_ID, "");
             LogUtils.e("shulan---JpushId-->---" + JpushId );
                 uploadToken(2,JpushId);
         }
