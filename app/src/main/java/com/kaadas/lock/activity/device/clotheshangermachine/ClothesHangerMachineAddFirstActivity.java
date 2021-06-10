@@ -137,7 +137,7 @@ public class ClothesHangerMachineAddFirstActivity extends BaseAddToApplicationAc
                 ClothesHangerMachineAddFirstActivity.this
                 , "温馨提示",
                 "请到设置>隐私>定位服务中开启【凯迪仕智能】\n定位服务，否则无法添加Wi-Fi锁",
-                getString(R.string.cancel), "取消","#1F96F7", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                getString(R.string.confirm),getString(R.string.cancel),"#1F96F7", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
