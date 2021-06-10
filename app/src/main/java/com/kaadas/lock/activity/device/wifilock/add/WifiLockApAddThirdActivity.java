@@ -116,6 +116,6 @@ public class WifiLockApAddThirdActivity extends BaseAddToApplicationActivity {
         }
         byte[] ssidOriginalData = TouchNetUtil.getOriginalSsidBytes(info);
         LogUtils.e("获取到的   byte数据是    " + Rsa.bytesToHexString(ssidOriginalData));
-        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
+        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, (Rsa.bytesToHexString(ssidOriginalData) + ""));
     }
 }

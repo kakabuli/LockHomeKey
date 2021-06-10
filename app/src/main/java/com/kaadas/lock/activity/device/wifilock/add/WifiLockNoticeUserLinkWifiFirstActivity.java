@@ -102,7 +102,7 @@ public class WifiLockNoticeUserLinkWifiFirstActivity extends BaseAddToApplicatio
             SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
             return;
         }
-        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, Rsa.bytesToHexString(ssidOriginalData));
+        SPUtils.put(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, (Rsa.bytesToHexString(ssidOriginalData) + ""));
     }
 
     private void onWifiChanged(WifiInfo info) {
