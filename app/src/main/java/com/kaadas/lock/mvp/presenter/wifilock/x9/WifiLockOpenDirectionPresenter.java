@@ -36,9 +36,9 @@ public class WifiLockOpenDirectionPresenter<T> extends BasePresenter<IWifiLockOp
 
     private static  String serviceString= XMP2PManager.serviceString;;
 
-    public void setOpenDirection(String wifiSN,int openDirection) {
+    public void setOpenDirection(String wifiSN,int openDirection , String func) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
-            MqttMessage mqttMessage = MqttCommandFactory.settingOpenDirection(wifiSN,openDirection);
+            MqttMessage mqttMessage = MqttCommandFactory.settingOpenDirection(wifiSN,openDirection,func);
             toDisposable(setOpenDirectionDisposable);
             setOpenDirectionDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
@@ -101,7 +101,7 @@ public class WifiLockOpenDirectionPresenter<T> extends BasePresenter<IWifiLockOp
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    setOpenDirection(wifiSN,openDirection);
+                                    setOpenDirection(wifiSN,openDirection,MqttConstant.SET_LOCK);
                                 }else{
                                     mViewRef.get().onSettingCallBack(false);
                                 }

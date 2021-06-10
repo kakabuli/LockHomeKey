@@ -1014,36 +1014,36 @@ public class MqttCommandFactory {
     /**
      * 设置开门方向
      */
-    public static MqttMessage settingOpenDirection(String wifiID,int openDirection) {
+    public static MqttMessage settingOpenDirection(String wifiID,int openDirection , String func) {
         int messageId = getMessageId();
         SettingOpenDirection.ParamsBean paramsBean = new SettingOpenDirection.ParamsBean();
         paramsBean.setOpenDirection(openDirection);
         SettingOpenDirection mSettingOpenDirection = new SettingOpenDirection(MqttConstant.MSG_TYPE_REQUEST,MyApplication.getInstance().getUid(),messageId,
-                wifiID,MqttConstant.SET_OPEN_DIRECTION,paramsBean,System.currentTimeMillis()+"");
+                wifiID,func,paramsBean,System.currentTimeMillis()+"");
         return getMessage(mSettingOpenDirection, messageId,2);
     }
 
     /**
      * 设置开门力量
      */
-    public static MqttMessage settingOpenForce(String wifiID,int openForce) {
+    public static MqttMessage settingOpenForce(String wifiID,int openForce,String func) {
         int messageId = getMessageId();
         SettingOpenForce.ParamsBean paramsBean = new SettingOpenForce.ParamsBean();
         paramsBean.setOpenForce(openForce);
         SettingOpenForce mSettingOpenDirection = new SettingOpenForce(MqttConstant.MSG_TYPE_REQUEST,messageId,MyApplication.getInstance().getUid(),
-                wifiID,MqttConstant.SET_OPEN_FORCE,paramsBean,System.currentTimeMillis()+"");
+                wifiID,func,paramsBean,System.currentTimeMillis()+"");
         return getMessage(mSettingOpenDirection, messageId,2);
     }
 
     /**
      * 设置上锁方式
      */
-    public static MqttMessage settingLockingMethod(String wifiID,int lockingMethod) {
+    public static MqttMessage settingLockingMethod(String wifiID,int lockingMethod,String func) {
         int messageId = getMessageId();
         SettingLockingMethod.ParamsBean paramsBean = new SettingLockingMethod.ParamsBean();
         paramsBean.setLockingMethod(lockingMethod);
         SettingLockingMethod mSettingOpenDirection = new SettingLockingMethod(MqttConstant.MSG_TYPE_REQUEST,messageId,MyApplication.getInstance().getUid(),
-                wifiID,MqttConstant.SET_LOCKING_METHOD,paramsBean,System.currentTimeMillis()+"");
+                wifiID,func,paramsBean,System.currentTimeMillis()+"");
         return getMessage(mSettingOpenDirection, messageId,2);
     }
 

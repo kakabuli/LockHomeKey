@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -214,7 +215,7 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
                 setConnectLockingMethod(wifiSn,lockingMethod);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
-                mPresenter.setLockingMethod(wifiSn,lockingMethod);
+                mPresenter.setLockingMethod(wifiSn,lockingMethod,MqttConstant.SET_LOCKING_METHOD);
             }
         }
     }
@@ -228,6 +229,7 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d("zdx", "setConnectLockingMethod: ");
                         mPresenter.setConnectLockingMethod(wifiSn,lockingMethod);
                     }
                 }).start();

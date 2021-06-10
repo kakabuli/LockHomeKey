@@ -135,7 +135,7 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
                 setConnectOpenDirection(wifiSn,openDirection);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
-                mPresenter.setOpenDirection(wifiSn,openDirection);
+                mPresenter.setOpenDirection(wifiSn,openDirection,MqttConstant.SET_OPEN_DIRECTION);
             }
         }
     }

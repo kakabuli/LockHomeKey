@@ -90,7 +90,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
                 llFaceWanderingAlarm.setVisibility(View.GONE);
             }
             hoverAlarmLevel = wifiLockInfo.getHoverAlarmLevel();
-            if(hoverAlarmLevel == 0){
+            if(hoverAlarmLevel == 2){
                 ivSensitivity1.setChecked(true);
                 ivSensitivity2.setChecked(false);
                 ivSensitivity3.setChecked(false);
@@ -98,7 +98,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
                 ivSensitivity1.setChecked(false);
                 ivSensitivity2.setChecked(true);
                 ivSensitivity3.setChecked(false);
-            }else if(hoverAlarmLevel == 1){
+            }else if(hoverAlarmLevel == 0){
                 ivSensitivity1.setChecked(false);
                 ivSensitivity2.setChecked(false);
                 ivSensitivity3.setChecked(true);
@@ -145,7 +145,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
                         ivSensitivity1.setChecked(true);
                         ivSensitivity2.setChecked(false);
                         ivSensitivity3.setChecked(false);
-                        hoverAlarmLevel = 0;
+                        hoverAlarmLevel = 2;
                     }
                 }else{
                     powerStatusDialog();
@@ -170,7 +170,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
                         ivSensitivity3.setChecked(true);
                         ivSensitivity2.setChecked(false);
                         ivSensitivity1.setChecked(false);
-                        hoverAlarmLevel = 2;
+                        hoverAlarmLevel = 0;
                     }
 
                 }else{
@@ -452,6 +452,5 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
             });
         }
     }
-
 
 }

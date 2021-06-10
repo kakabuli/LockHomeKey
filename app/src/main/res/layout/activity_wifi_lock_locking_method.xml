@@ -181,7 +181,8 @@
         <RelativeLayout
             android:id="@+id/close_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_60">
+            android:layout_height="@dimen/dp_60"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_close"

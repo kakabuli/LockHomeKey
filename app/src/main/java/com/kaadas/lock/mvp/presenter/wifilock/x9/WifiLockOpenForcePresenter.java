@@ -36,9 +36,9 @@ public class WifiLockOpenForcePresenter<T> extends BasePresenter<IWifiLockOpenFo
     private static  String serviceString=XMP2PManager.serviceString;;
 
 
-    public void setOpenForce(String wifiSN,int openForce) {
+    public void setOpenForce(String wifiSN,int openForce , String func) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
-            MqttMessage mqttMessage = MqttCommandFactory.settingOpenForce(wifiSN,openForce);
+            MqttMessage mqttMessage = MqttCommandFactory.settingOpenForce(wifiSN,openForce,func);
             toDisposable(setOpenForceDisposable);
             setOpenForceDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
@@ -101,7 +101,7 @@ public class WifiLockOpenForcePresenter<T> extends BasePresenter<IWifiLockOpenFo
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    setOpenForce(wifiSn,openForce);
+                                    setOpenForce(wifiSn,openForce,MqttConstant.SET_LOCK);
                                 }else{
                                     mViewRef.get().onSettingCallBack(false);
                                 }

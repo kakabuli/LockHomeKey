@@ -654,6 +654,8 @@ public class WifiLockInfo implements Serializable {
                 ", language='" + language + '\'' +
                 ", operatingMode=" + operatingMode +
                 ", volume=" + volume +
+                ", hoverAlarm=" + hoverAlarm +
+                ", hoverAlarmLevel=" + hoverAlarmLevel +
                 ", bleVersion='" + bleVersion + '\'' +
                 ", wifiVersion='" + wifiVersion + '\'' +
                 ", mqttVersion='" + mqttVersion + '\'' +
@@ -670,8 +672,31 @@ public class WifiLockInfo implements Serializable {
                 ", device_did='" + device_did + '\'' +
                 ", device_sn='" + device_sn + '\'' +
                 ", p2p_password='" + p2p_password + '\'' +
-                ", mac='" + mac + '\'' +
                 ", singleFireSwitchInfo=" + singleFireSwitchInfo +
+                ", setPir=" + setPir +
+                ", alive_time=" + alive_time +
+                ", stay_status=" + stay_status +
+                ", camera_version='" + camera_version + '\'' +
+                ", mcu_version='" + mcu_version + '\'' +
+                ", device_model='" + device_model + '\'' +
+                ", keep_alive_status=" + keep_alive_status +
+                ", mac='" + mac + '\'' +
+                ", lockMac='" + lockMac + '\'' +
+                ", RSSI='" + RSSI + '\'' +
+                ", wifiStrength=" + wifiStrength +
+                ", openDirection=" + openDirection +
+                ", openForce=" + openForce +
+                ", lockingMethod=" + lockingMethod +
+                ", frontPanelVersion='" + frontPanelVersion + '\'' +
+                ", backPanelVersion='" + backPanelVersion + '\'' +
+                ", voiceVersion='" + voiceVersion + '\'' +
+                ", touchHandleStatus=" + touchHandleStatus +
+                ", screenLightLevel=" + screenLightLevel +
+                ", screenLightSwitch=" + screenLightSwitch +
+                ", screenLightTime=" + screenLightTime +
+                ", bodySensor=" + bodySensor +
+                ", volLevel=" + volLevel +
+                ", duressAlarmSwitch=" + duressAlarmSwitch +
                 '}';
     }
 

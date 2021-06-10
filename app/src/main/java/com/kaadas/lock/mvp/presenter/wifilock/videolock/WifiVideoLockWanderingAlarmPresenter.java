@@ -602,7 +602,9 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
+                            if(isSafe()){
+                                mViewRef.get().onSettingCallBack(false);
+                            }
                         }
                     });
             compositeDisposable.add(setWanderingAlarmLinstenerDisposable);
@@ -711,7 +713,9 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
+                            if(isSafe()){
+                                mViewRef.get().onSettingCallBack(false);
+                            }
                         }
                     });
             compositeDisposable.add(setWanderingAlarmLinstenerDisposable);

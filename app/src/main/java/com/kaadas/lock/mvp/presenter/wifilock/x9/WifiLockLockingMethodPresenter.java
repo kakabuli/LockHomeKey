@@ -37,9 +37,9 @@ public class WifiLockLockingMethodPresenter<T> extends BasePresenter<IWifiLockLo
     private static  String serviceString=XMP2PManager.serviceString;;
 
 
-    public void setLockingMethod(String wifiSN,int lockingMethod) {
+    public void setLockingMethod(String wifiSN,int lockingMethod ,String func) {
         if (mqttService != null && mqttService.getMqttClient() != null && mqttService.getMqttClient().isConnected()) {
-            MqttMessage mqttMessage = MqttCommandFactory.settingLockingMethod(wifiSN,lockingMethod);
+            MqttMessage mqttMessage = MqttCommandFactory.settingLockingMethod(wifiSN,lockingMethod,func);
             toDisposable(setLockingMethodDisposable);
             setLockingMethodDisposable = mqttService.mqttPublish(MqttConstant.getCallTopic(MyApplication.getInstance().getUid()),mqttMessage)
                     .filter(new Predicate<MqttData>() {
@@ -69,6 +69,7 @@ public class WifiLockLockingMethodPresenter<T> extends BasePresenter<IWifiLockLo
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
+                            LogUtils.e("shulan settingLockingMethod-->" + throwable.getMessage());
                             if(isSafe()){
                                 mViewRef.get().onSettingCallBack(false);
                             }
@@ -102,7 +103,7 @@ public class WifiLockLockingMethodPresenter<T> extends BasePresenter<IWifiLockLo
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-                                    setLockingMethod(wifiSn,lockingMethod);
+                                    setLockingMethod(wifiSn,lockingMethod,MqttConstant.SET_LOCK);
                                 }else{
                                     mViewRef.get().onSettingCallBack(false);
                                 }

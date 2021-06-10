@@ -137,7 +137,7 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
                 setConnectOpenForce(wifiSn,openForce);
             }else{
                 showLoading(getString(R.string.wifi_video_lock_waiting));
-                mPresenter.setOpenForce(wifiSn,openForce);
+                mPresenter.setOpenForce(wifiSn,openForce,MqttConstant.SET_OPEN_FORCE);
             }
         }
     }

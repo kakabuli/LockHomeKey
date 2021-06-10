@@ -89,7 +89,7 @@
         android:orientation="vertical"
         android:layout_below="@+id/rl_wandering_alarm"
         android:layout_marginTop="@dimen/dp_10"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/rl_face_wandering_alarm_1"
