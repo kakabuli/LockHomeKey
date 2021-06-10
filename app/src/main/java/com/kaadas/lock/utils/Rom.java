@@ -18,6 +18,7 @@ public class Rom {
 
     public static final String ROM_MIUI = "MIUI";
     public static final String ROM_EMUI = "EMUI";
+    public static final String ROM_HARMONY = "HARMONY";
     public static final String ROM_FLYME = "FLYME";
     public static final String ROM_OPPO = "OPPO";
     public static final String ROM_SMARTISAN = "SMARTISAN";
@@ -29,12 +30,17 @@ public class Rom {
     private static final String KEY_VERSION_OPPO = "ro.build.version.opporom";
     private static final String KEY_VERSION_SMARTISAN = "ro.smartisan.version";
     private static final String KEY_VERSION_VIVO = "ro.vivo.os.version";
+    private static final String KEY_VERSION_HORMONY = "ro.build.ohos.devicetype";
 
     private static String sName;
     private static String sVersion;
 
     public static boolean isEmui() {
         return check(ROM_EMUI);
+    }
+
+    public static boolean isHarmony() {
+        return check(ROM_HARMONY);
     }
 
     public static boolean isMiui() {
@@ -84,6 +90,8 @@ public class Rom {
             sName = ROM_MIUI;
         } else if (!TextUtils.isEmpty(sVersion = getProp(KEY_VERSION_EMUI))) {
             sName = ROM_EMUI;
+        } else if(!TextUtils.isEmpty(sVersion = getProp(KEY_VERSION_EMUI))){
+            sName = ROM_HARMONY;
         } else if (!TextUtils.isEmpty(sVersion = getProp(KEY_VERSION_OPPO))) {
             sName = ROM_OPPO;
         } else if (!TextUtils.isEmpty(sVersion = getProp(KEY_VERSION_VIVO))) {
