@@ -59,6 +59,7 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
                             LogUtils.e("shulan mSettingVoiceQualityResult-->" + mSettingVoiceQualityResult.toString());
                             if(mSettingVoiceQualityResult != null && isSafe()){
                                 if("200".equals(mSettingVoiceQualityResult.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingVoiceQualityResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

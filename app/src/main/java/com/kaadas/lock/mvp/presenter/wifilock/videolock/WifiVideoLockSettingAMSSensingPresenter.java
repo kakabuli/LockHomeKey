@@ -57,6 +57,7 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
                             LogUtils.e("shulan mSettingAMSResult-->" + mSettingAMSResult.toString());
                             if(mSettingAMSResult != null && isSafe()){
                                 if("200".equals(mSettingAMSResult.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingAMSResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

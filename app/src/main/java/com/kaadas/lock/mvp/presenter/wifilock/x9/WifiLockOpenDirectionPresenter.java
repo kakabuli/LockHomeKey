@@ -59,6 +59,7 @@ public class WifiLockOpenDirectionPresenter<T> extends BasePresenter<IWifiLockOp
                             LogUtils.e("shulan settingOpenDirectionResult-->" + settingOpenDirectionResult.toString());
                             if(settingOpenDirectionResult != null && isSafe()){
                                 if("200".equals(settingOpenDirectionResult.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(settingOpenDirectionResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

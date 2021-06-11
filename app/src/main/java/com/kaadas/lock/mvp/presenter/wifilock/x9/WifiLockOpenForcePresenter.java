@@ -59,6 +59,7 @@ public class WifiLockOpenForcePresenter<T> extends BasePresenter<IWifiLockOpenFo
                             LogUtils.e("shulan settingOpenForce-->" + settingOpenForce.toString());
                             if(settingOpenForce != null && isSafe()){
                                 if("200".equals(settingOpenForce.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(settingOpenForce.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

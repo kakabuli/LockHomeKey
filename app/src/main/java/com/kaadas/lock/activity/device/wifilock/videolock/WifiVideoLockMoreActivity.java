@@ -203,9 +203,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
 //            ivSilentMode.setImageResource(wifiLockInfo.getVolume() == 1 ? R.mipmap.iv_open : R.mipmap.iv_close);             //静音非静音模式
             setVolume = wifiLockInfo.getVolume();
             if (wifiLockInfo.getVolume() == 1) {
-                ivSilentMode.setSelected(true);
+                ivSilentMode.setImageResource(R.mipmap.iv_open);
             } else {
-                ivSilentMode.setSelected(false);
+                ivSilentMode.setImageResource(R.mipmap.iv_close);
             }
 
             int pushSwitch = wifiLockInfo.getPushSwitch();
@@ -342,15 +342,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             if(BleLockUtils.isSupportAMSSensor(wifiLockInfo.getFunctionSet())){
                 rlAMSSensing.setVisibility(View.VISIBLE);
                 int bodySensor = wifiLockInfo.getBodySensor();
-                if(bodySensor == 1){
-                    tvAMSSensing.setText(getString(R.string.high_sensitivity));
-                }else if(bodySensor == 2){
-                    tvAMSSensing.setText(getString(R.string.medium_sensitivity));
-                }else if(bodySensor == 3){
-                    tvAMSSensing.setText(getString(R.string.low_sensitivity));
-                }else if(bodySensor == 4){
-                    tvAMSSensing.setText(getString(R.string.close));
-                }
+                setAMSSenstivity(bodySensor);
             }else{
                 rlAMSSensing.setVisibility(View.GONE);
             }
@@ -558,7 +550,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                                 tvTips.setVisibility(View.VISIBLE);
                                 avi.setVisibility(View.VISIBLE);
                                 avi.show();
-                                if (ivSilentMode.isSelected()) {
+                                if (setVolume == 1) {
                                     setVolume = 0;
                                     new Thread(new Runnable() {
                                         @Override
@@ -1023,7 +1015,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     setVoiceQuality(voiceQuality);
                     break;
                 case KeyConstants.WIFI_VICEO_LOCK_AMS_SETTING:
-                    int setAMSSentivity = data.getIntExtra(MqttConstant.SET_AMS_SENSITIVITY,0);
+                    int setAMSSentivity = data.getIntExtra(MqttConstant.SET_SREEN_LIGHT_TIME,0);
                     setAMSSenstivity(setAMSSentivity);
                     break;
             }
@@ -1051,8 +1043,16 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         }
     }
 
-    private void setAMSSenstivity(int setAMSSentivity){
-        tvAMSSensing.setText("");
+    private void setAMSSenstivity(int bodySensor){
+        if(bodySensor == 1){
+            tvAMSSensing.setText(getString(R.string.high_sensitivity));
+        }else if(bodySensor == 2){
+            tvAMSSensing.setText(getString(R.string.medium_sensitivity));
+        }else if(bodySensor == 3){
+            tvAMSSensing.setText(getString(R.string.low_sensitivity));
+        }else if(bodySensor == 4){
+            tvAMSSensing.setText(getString(R.string.close));
+        }
     }
 
     private void setVoiceQuality(int voiceQuality) {
@@ -1152,9 +1152,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     if (flag) {
                         ToastUtils.showShort(getString(R.string.modify_success));
                         if (code == 1) {
-                            ivSilentMode.setSelected(true);
+                            ivSilentMode.setImageResource(R.mipmap.iv_open);
                         } else {
-                            ivSilentMode.setSelected(false);
+                            ivSilentMode.setImageResource(R.mipmap.iv_close);
                         }
                     } else {
                         setVolume = code;

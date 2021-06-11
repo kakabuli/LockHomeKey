@@ -139,11 +139,12 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
                 if(ivSettingAMSSensing.isSelected()){
                     llSettingAMSSensing.setVisibility(View.GONE);
                     ivSettingAMSSensing.setSelected(false);
-                    settingAMSSensing = 0;
+                    settingAMSSensing = AMS_SENSING_CLOSE;
                 }else{
                     llSettingAMSSensing.setVisibility(View.VISIBLE);
                     ivSettingAMSSensing.setSelected(true);
-                    settingAMSSensing = 2;
+                    settingAMSSensing = AMS_SENSING_MID;
+                    settingAMSSensingView(settingAMSSensing);
                 }
                 break;
         }

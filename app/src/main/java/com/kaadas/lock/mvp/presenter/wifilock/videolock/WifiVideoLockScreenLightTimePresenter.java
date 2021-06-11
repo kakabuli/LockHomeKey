@@ -56,6 +56,7 @@ public class WifiVideoLockScreenLightTimePresenter<T> extends BasePresenter<IWif
                             LogUtils.e("shulan mSettingScreenTimeResult-->" + mSettingScreenTimeResult.toString());
                             if(mSettingScreenTimeResult != null && isSafe()){
                                 if("200".equals(mSettingScreenTimeResult.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingScreenTimeResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

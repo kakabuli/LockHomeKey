@@ -56,6 +56,7 @@ public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWi
                             LogUtils.e("shulan mSettingScreenBrightnessResult-->" + mSettingScreenBrightnessResult.toString());
                             if(mSettingScreenBrightnessResult != null && isSafe()){
                                 if("200".equals(mSettingScreenBrightnessResult.getCode() + "")){
+                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingScreenBrightnessResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

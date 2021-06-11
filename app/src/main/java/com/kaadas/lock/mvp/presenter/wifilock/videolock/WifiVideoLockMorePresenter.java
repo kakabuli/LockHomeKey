@@ -533,6 +533,7 @@ public class WifiVideoLockMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                             if(setVideoLockVolume != null){
                                 if("200".equals(setVideoLockVolume.getCode() + "")){
                                     if(isSafe()){
+                                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                                         mViewRef.get().onSettingCallBack(true,volume);
 
                                     }
