@@ -13,7 +13,7 @@ public class ClothesHangerMachineUtil {
         // -----------------------------------------
         PAIRING_MODE.put("WiFi",new String[]{});
         // -----------------------------------------
-        PAIRING_MODE.put("WiFi&BLE",new String[]{"M8-E1"});
+        PAIRING_MODE.put("WiFi&BLE",new String[]{"M8-E1","Q8-XHK"});
     }
 
 
