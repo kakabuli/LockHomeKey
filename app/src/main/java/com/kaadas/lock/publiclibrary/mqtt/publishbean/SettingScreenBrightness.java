@@ -12,7 +12,7 @@ public class SettingScreenBrightness implements Serializable {
      * "wfId": "WF123456789",
      * "func":"setCamera",
      * "params": {
-     * "screemLightLevel" : 80
+     * "screenLightLevel" : 80
      * },
      * "timestamp": "13433333333",
      * }
@@ -94,24 +94,24 @@ public class SettingScreenBrightness implements Serializable {
     }
 
     public static class ParamsBean {
-        private int screemLightLevel;
+        private int screenLightLevel;
 
-        public ParamsBean(int screemLightLevel) {
-            this.screemLightLevel = screemLightLevel;
+        public ParamsBean(int screenLightLevel) {
+            this.screenLightLevel = screenLightLevel;
         }
 
-        public int getScreemLightLevel() {
-            return screemLightLevel;
+        public int getscreenLightLevel() {
+            return screenLightLevel;
         }
 
-        public void setScreemLightLevel(int screemLightLevel) {
-            this.screemLightLevel = screemLightLevel;
+        public void setscreenLightLevel(int screenLightLevel) {
+            this.screenLightLevel = screenLightLevel;
         }
 
         @Override
         public String toString() {
             return "ParamsBean{" +
-                    "screemLightLevel=" + screemLightLevel +
+                    "screenLightLevel=" + screenLightLevel +
                     '}';
         }
     }
