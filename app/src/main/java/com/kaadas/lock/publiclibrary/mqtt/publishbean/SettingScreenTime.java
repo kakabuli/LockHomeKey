@@ -94,35 +94,35 @@ public class SettingScreenTime implements Serializable {
     }
 
     public static class ParamsBean {
-        private int screemLightSwitch;
-        private int screemLightTime;
+        private int screenLightSwitch;
+        private int screenLightTime;
 
         public ParamsBean(int screemLightSwitch, int screemLightTime) {
-            this.screemLightSwitch = screemLightSwitch;
-            this.screemLightTime = screemLightTime;
+            this.screenLightSwitch = screemLightSwitch;
+            this.screenLightTime = screemLightTime;
         }
 
-        public int getScreemLightSwitch() {
-            return screemLightSwitch;
+        public int getScreenLightSwitch() {
+            return screenLightSwitch;
         }
 
-        public void setScreemLightSwitch(int screemLightSwitch) {
-            this.screemLightSwitch = screemLightSwitch;
+        public void setScreenLightSwitch(int screenLightSwitch) {
+            this.screenLightSwitch = screenLightSwitch;
         }
 
-        public int getScreemLightTime() {
-            return screemLightTime;
+        public int getScreenLightTime() {
+            return screenLightTime;
         }
 
-        public void setScreemLightTime(int screemLightTime) {
-            this.screemLightTime = screemLightTime;
+        public void setScreenLightTime(int screenLightTime) {
+            this.screenLightTime = screenLightTime;
         }
 
         @Override
         public String toString() {
             return "ParamsBean{" +
-                    "screemLightSwitch=" + screemLightSwitch +
-                    ", screemLightTime=" + screemLightTime +
+                    "screemLightSwitch=" + screenLightSwitch +
+                    ", screemLightTime=" + screenLightTime +
                     '}';
         }
     }

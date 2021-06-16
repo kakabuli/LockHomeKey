@@ -1089,9 +1089,9 @@ public class MqttCommandFactory {
      * 设置视频模组 屏幕时长
      *
      */
-    public static MqttMessage settingScreenTime(String wifiID,int screemLightSwitch,int screemLightTime ) {
+    public static MqttMessage settingScreenTime(String wifiID,int screenLightSwitch,int screenLightTime ) {
         int messageId = getMessageId();
-        SettingScreenTime.ParamsBean paramsBean = new SettingScreenTime.ParamsBean(screemLightSwitch,screemLightTime);
+        SettingScreenTime.ParamsBean paramsBean = new SettingScreenTime.ParamsBean(screenLightSwitch,screenLightTime);
         SettingScreenTime mSettingScreenTime = new SettingScreenTime(MqttConstant.MSG_TYPE_REQUEST, messageId,MyApplication.getInstance().getUid(),
                 wifiID,MqttConstant.SET_CAMERA,paramsBean,System.currentTimeMillis()+"",0);
         return getMessage(mSettingScreenTime, messageId,2);
