@@ -1,5 +1,9 @@
 package com.kaadas.lock.activity.device.wifilock.videolock;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,7 +22,9 @@ import com.kaadas.lock.activity.device.wifilock.WifiLockDeviceInfoActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.WifiLockMorePresenter;
+import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockMoreOTAPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockMoreView;
+import com.kaadas.lock.mvp.view.wifilock.videolock.IWifiVideoLockMoreOTAView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
@@ -26,6 +32,7 @@ import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -33,7 +40,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockMoreView, WifiLockMorePresenter<IWifiLockMoreView>> implements IWifiLockMoreView{
+public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideoLockMoreOTAView, WifiVideoLockMoreOTAPresenter<IWifiVideoLockMoreOTAView>> implements IWifiVideoLockMoreOTAView {
 
     @BindView(R.id.tv_hardware_version)
     TextView tvHardwareVersion;
@@ -55,11 +62,15 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
     RelativeLayout rlFrontHardVersion;
     @BindView(R.id.rl_hard_version)
     RelativeLayout rlHardVersion;
+    @BindView(R.id.avi)
+    AVLoadingIndicatorView avi;
 
+    private InnerRecevier mInnerRecevier = null;
 
     private String wifiSN;
     private WifiLockInfo wifiLockInfoBySn;
     private boolean multiOTAflag = false;
+    private boolean updataSuccess = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,9 +85,23 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
         initData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(avi != null){
+            avi.hide();
+        }
+        registerBroadcast();
+    }
+
+
     private void initData(){
 
         if (wifiLockInfoBySn != null) {
+            if(BleLockUtils.isSupportXMConnect(wifiLockInfoBySn.getFunctionSet())){
+                mPresenter.settingDevice(wifiLockInfoBySn);
+            }
+
             if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())
                     || BleLockUtils.isSupportVideoPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())){//多固件升级
                 rlHardVersion.setVisibility(View.VISIBLE);
@@ -121,10 +146,76 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unRegisterBroadcast();
+    }
 
     @Override
-    protected WifiLockMorePresenter<IWifiLockMoreView> createPresent() {
-        return new WifiLockMorePresenter<>();
+    public void finish() {
+        super.finish();
+        if(!updataSuccess){
+            mPresenter.release();
+        }
+    }
+
+    private void registerBroadcast(){
+        if(mInnerRecevier == null){
+            mInnerRecevier = new InnerRecevier();
+        }
+        IntentFilter homeFilter = new IntentFilter();
+        homeFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        homeFilter.addAction(Intent.ACTION_SCREEN_ON);
+        homeFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        homeFilter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(mInnerRecevier, homeFilter);
+    }
+
+    private void unRegisterBroadcast(){
+        if(mInnerRecevier != null){
+            unregisterReceiver(mInnerRecevier);
+        }
+    }
+
+    private class InnerRecevier extends BroadcastReceiver {
+
+        final String SYSTEM_DIALOG_REASON_KEY = "reason";
+
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (reason != null) {
+                    if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        // home键
+                        mPresenter.release();
+                    } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
+                        //多任务
+                        mPresenter.release();
+                    }
+                }
+            }else if(action.equals(Intent.ACTION_SCREEN_ON)){
+
+            }else if(action.equals(Intent.ACTION_SCREEN_OFF)){
+
+                mPresenter.release();
+            }else if(action.equals(Intent.ACTION_USER_PRESENT)){// 解锁
+
+
+            }
+
+        }
+    }
+
+    @Override
+    protected WifiVideoLockMoreOTAPresenter<IWifiVideoLockMoreOTAView> createPresent() {
+        return new WifiVideoLockMoreOTAPresenter<>();
     }
 
 
@@ -360,6 +451,17 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
 
     @Override
     public void uploadSuccess(int type) {
+        if(BleLockUtils.isSupportXMConnect(wifiLockInfoBySn.getFunctionSet())){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    updataSuccess = true;
+                    //升级
+                    mPresenter.connectNotifyGateWayNewVersion();
+                }
+            }).start();
+            return;
+        }
         if (type == 1) {
             hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_wifi_update), Toast.LENGTH_SHORT).show();
@@ -381,5 +483,39 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiLockM
     public void uploadFailed() {
         hiddenLoading();
         Toast.makeText(this, getString(R.string.notice_lock_update_uploadFailed), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMqttCtrl(boolean flag) {
+        if(!WifiVideoLockFirwareNumberActivity.this.isFinishing()){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(avi != null)
+                        avi.hide();
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public void onSettingCallBack(boolean flag) {
+        if (!WifiVideoLockFirwareNumberActivity.this.isFinishing()) {
+            mPresenter.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (flag) {
+
+                    } else {
+                        ToastUtils.showLong(getString(R.string.ota_fail));
+                    }
+                    if (avi != null) {
+                        avi.hide();
+                    }
+//                    finish();
+                }
+            });
+        }
     }
 }
