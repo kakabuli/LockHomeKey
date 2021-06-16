@@ -704,9 +704,6 @@ public class MyApplication extends Application {
                 HomeShowBean homeShowBean = homeShowDevices.get(i);
                 if (homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_LOCK || homeShowBean.getDeviceType() == HomeShowBean.TYPE_WIFI_VIDEO_LOCK) {
                     WifiLockInfo wifiLockInfo = (WifiLockInfo) homeShowBean.getObject();
-                    if(wifiLockInfo.getWifiSN().equals("8VP0212310008")){
-                        wifiLockInfo.setIsAdmin(1);
-                    }
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
                         return wifiLockInfo;
                     }
