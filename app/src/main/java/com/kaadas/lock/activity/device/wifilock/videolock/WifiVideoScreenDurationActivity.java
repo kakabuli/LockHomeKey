@@ -73,10 +73,19 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
         if(wifiLockInfo != null){
-            screenLightSwitch = wifiLockInfo.getScreenLightSwitch();
-            screenLightTime = wifiLockInfo.getScreenLightTime();
-            setScreenLightTimeView(screenLightTime);
+            try {
+                screenLightSwitch = wifiLockInfo.getScreenLightSwitch();
+            }catch (Exception e){
+                screenLightSwitch = 0;
+            }
+            try {
+                screenLightTime = wifiLockInfo.getScreenLightTime();
+            }catch (Exception e){
+                screenLightTime = 5;
+            }
+
             setScreenLightTimeShow(screenLightSwitch);
+            setScreenLightTimeView(screenLightTime);
         }
     }
 
