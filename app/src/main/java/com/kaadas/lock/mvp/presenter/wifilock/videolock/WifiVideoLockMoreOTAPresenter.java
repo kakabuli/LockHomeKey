@@ -666,7 +666,9 @@ public class WifiVideoLockMoreOTAPresenter<T> extends BasePresenter<IWifiVideoLo
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
-
+                        if (isSafe()) {
+                            mViewRef.get().uploadSuccess(-1);
+                        }
                     }
 
                     @Override
