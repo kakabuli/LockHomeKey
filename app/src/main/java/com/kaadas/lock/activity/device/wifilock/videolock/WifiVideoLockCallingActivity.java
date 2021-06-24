@@ -244,6 +244,11 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             String lockNickname = wifiLockInfo.getLockNickname();
             tvHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
             tvBigHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
+            if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
+                ivSetting.setVisibility(View.GONE);
+            }else{
+                ivSetting.setVisibility(View.VISIBLE);
+            }
         }
 
         rlVideoLayout.setVisibility(View.GONE);

@@ -106,7 +106,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:inputType="textMultiLine"
-                android:text="16:40"
+                android:text=""
                 android:textColor="#999999"
                 android:textSize="@dimen/sp_12" />
 
