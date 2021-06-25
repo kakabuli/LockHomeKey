@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.internal.$Gson$Preconditions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -17,6 +18,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.blankj.utilcode.util.ToastUtils;
+import com.kaadas.lock.utils.LogUtils;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import butterknife.BindView;
@@ -52,6 +54,10 @@ public class WifiLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeVie
     LinearLayout noCard;
     @BindView(R.id.rl_notice)
     RelativeLayout rlNotice;
+    @BindView(R.id.lly_face1)
+    LinearLayout llyFace1;
+    @BindView(R.id.lly_face)
+    LinearLayout llyFace;
     private String wifiSn;
 
     @Override
@@ -84,9 +90,21 @@ public class WifiLockSafeModelActivity extends BaseActivity<IWifiLockSafeModeVie
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
             lp.setMargins(0, 0, 0, DensityUtil.dp2px( 60));
             rlNotice.setLayoutParams(lp);
+
+            llyFace.setVisibility(View.GONE);
+            if(BleLockUtils.isSupportFace(func + "")){
+                llyFace1.setVisibility(View.VISIBLE);
+            }else{
+                llyFace1.setVisibility(View.GONE);
+            }
         } else {
             all.setVisibility(View.GONE);
             noCard.setVisibility(View.VISIBLE);
+            if(BleLockUtils.isSupportFace(func + "")){
+                llyFace.setVisibility(View.VISIBLE);
+            }else{
+                llyFace.setVisibility(View.GONE);
+            }
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(rlNotice.getLayoutParams());
             lp.setMargins(0, 0, 0, DensityUtil.dp2px( 100));
             rlNotice.setLayoutParams(lp);
