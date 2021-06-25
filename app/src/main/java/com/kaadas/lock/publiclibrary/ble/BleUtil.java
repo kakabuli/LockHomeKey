@@ -666,6 +666,7 @@ public class BleUtil {
     public static final int CLOSE_FACE = 0x80;
     public static final int DOOR_BELL = 0x60;
     public static final int PIR_ALARM = 0x70;
+    public static final int FACE_PIR_ALARM = 0x71;
 
     /**
      * @param type  	报警类型：1锁定 2劫持 3三次错误 4防撬 8机械方式报警 16低电压 32锁体异常 64布防 128低电量关人脸 96门铃 112pir报警
@@ -701,6 +702,8 @@ public class BleUtil {
             case CLOSE_FACE://128低电量关人脸
                 content = context.getString(R.string.wifi_lock_alarm_lower_power_close_face);
                 break;
+            case FACE_PIR_ALARM:
+                content = context.getString(R.string.face_wandering_alarm) + "~";
             case PIR_ALARM:
                 content = context.getString(R.string.wandering_alarm) + "~";
                 break;

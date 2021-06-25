@@ -123,6 +123,10 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
                 tvRight.setText(Html.fromHtml("<font color='#666666'>"+ mContext.getText(R.string.pick_proof) +"</font>" + "<br><font color='#999999'>已监测到您的门锁异常</font>"));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_prylock);
                 break;
+            case 0x71:
+                tvRight.setText(mContext.getText(R.string.face_wandering_alarm));
+                iv.setImageResource(R.mipmap.video_lock_alarm_icon_alert);
+                break;
             case 0x70:// 徘徊报警
                 tvRight.setText(mContext.getText(R.string.wandering_alarm));
                 iv.setImageResource(R.mipmap.video_lock_alarm_icon_alert);
