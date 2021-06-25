@@ -399,7 +399,6 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
 
             if (isWifiVideoLockType) {
                 rlMessageFree.setVisibility(View.GONE);
-                rlPowerSave.setVisibility(View.GONE);
                 rlMessagePush.setVisibility(View.VISIBLE);
             } else {
                 rlMessageFree.setVisibility(View.VISIBLE);
@@ -417,7 +416,11 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         rlMessageFree.setOnClickListener(this);
         rlSafeMode.setOnClickListener(this);
         rlAm.setOnClickListener(this);
-        rlPowerSave.setOnClickListener(this);
+        if(Integer.parseInt(wifiLockInfo.getFunctionSet() + "") == 0x79){
+            ivPowerSave.setCompoundDrawables(null,null,null,null);
+        }else{
+            rlPowerSave.setOnClickListener(this);
+        }
 //        rlFaceStatus.setOnClickListener(this);
         rlDoorLockLanguageSwitch.setOnClickListener(this);
         rlSilentMode.setOnClickListener(this);
