@@ -161,7 +161,7 @@ public class GeTuiIntentService extends GTIntentService {
         Log.e(TAG, "onReceiveClientId -> " + "clientid = " + clientid);
         LogUtils.e("shulan -- onReceiveClientId-->clientid=" + clientid);
         sendMessage(clientid, 1);
-        if(!Rom.isEmui() && !Rom.isMiui()){
+        if(!Rom.isEmui() && !Rom.isMiui() && !clientid.equals(SPUtils.get(GeTui.JPUSH_ID,"").toString())){
             refreshedTokenToServer(clientid);
         }
     }
