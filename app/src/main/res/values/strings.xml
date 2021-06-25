@@ -368,12 +368,12 @@
     <string name="wifi_lock_video_mode">视频模式</string>
     <string name="wandering_alarm">徘徊报警</string>
     <string name="face_wandering_alarm">人脸徘徊报警</string>
-    <string name="wandering_pir_sensitivity">PIR灵敏度</string>
-    <string name="wandering_judge_time">徘徊判定时间</string>
+    <string name="wandering_pir_sensitivity">探测距离选择</string>
+    <string name="wandering_judge_time">判定时间选择</string>
     <string name="wandering_alarm_close">已关闭</string>
     <string name="wandering_alarm_text">开启后，可摄像头会侦测门外徘徊人员，比较耗电</string>
     <string name="face_wandering_alarm_text">对逗留人员进行人脸识别，识别失败后抓拍视频并发送报警信息</string>
-    <string name="wandering_pir_sensitivity_text">高度灵敏会增加频繁检测距离，导致耗电</string>
+    <string name="wandering_pir_sensitivity_text">远距离会增加频繁检测距离，导致耗电</string>
     <string name="wandering_judge_time_text">判定时间不宜太短，防止误报</string>
     <string name="screen_duration_text">自动亮屏</string>
     <string name="screen_duration_des">开启后，按门铃时显示屏将自动点亮</string>
