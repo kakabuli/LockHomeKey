@@ -107,8 +107,8 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 rlHardVersion.setVisibility(View.VISIBLE);
                 rlBackHardVersion.setVisibility(View.GONE);
                 rlFrontHardVersion.setVisibility(View.GONE);
-                if (wifiLockInfoBySn.getLockFirmwareVersion() != null) {
-                    tvHardVersion.setText(wifiLockInfoBySn.getLockFirmwareVersion());
+                if (wifiLockInfoBySn.getFrontPanelVersion() != null) {
+                    tvHardVersion.setText(wifiLockInfoBySn.getFrontPanelVersion());
                 }
             }else if(BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) {
                 rlHardVersion.setVisibility(View.GONE);

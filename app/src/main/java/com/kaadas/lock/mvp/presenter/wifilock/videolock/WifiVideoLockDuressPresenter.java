@@ -82,15 +82,16 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
                 String nickName = "";
                 String duressAlarmAccount = "";
                 int pwdDuressSwitch = 0;
-                for(WiFiLockPassword.PwdNicknameBean li :wiFiLockPassword.getPwdNickname()){
-                    if(li.getNum() == bean.getNum()){
-                        if(li.getNickName().isEmpty()){
-                            nickName = sNum;
-                        }else{
-                            nickName = li.getNickName();
+                if(wiFiLockPassword.getPwdNickname() != null && wiFiLockPassword.getPwdNickname().size() > 0)
+                    for(WiFiLockPassword.PwdNicknameBean li :wiFiLockPassword.getPwdNickname()){
+                        if(li.getNum() == bean.getNum()){
+                            if(li.getNickName().isEmpty()){
+                                nickName = sNum;
+                            }else{
+                                nickName = li.getNickName();
+                            }
                         }
                     }
-                }
 
                 if(wiFiLockPassword.getPwdDuress() != null && wiFiLockPassword.getPwdDuress().size() > 0){
                     for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getPwdDuress()){
@@ -112,15 +113,16 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
                 String nickName = "";
                 String duressAlarmAccount = "";
                 int pwdDuressSwitch = 0;
-                for(WiFiLockPassword.FingerprintNicknameBean li : wiFiLockPassword.getFingerprintNickname()){
-                    if(li.getNum() == bean.getNum()){
-                        if(li.getNickName().isEmpty()){
-                            nickName = sNum;
-                        }else{
-                            nickName = li.getNickName();
+                if(wiFiLockPassword.getFingerprintNickname() != null && wiFiLockPassword.getFingerprintNickname().size() > 0)
+                    for(WiFiLockPassword.FingerprintNicknameBean li : wiFiLockPassword.getFingerprintNickname()){
+                        if(li.getNum() == bean.getNum()){
+                            if(li.getNickName().isEmpty()){
+                                nickName = sNum;
+                            }else{
+                                nickName = li.getNickName();
+                            }
                         }
                     }
-                }
 
                 if(wiFiLockPassword.getFingerprintDuress() != null && wiFiLockPassword.getFingerprintDuress().size() > 0){
                     for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getFingerprintDuress()){
