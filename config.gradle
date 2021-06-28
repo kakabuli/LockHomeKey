@@ -23,7 +23,7 @@ ext {
             compileSdkVersion       :30,
             minSdkVersion           :22,
             targetSdkVersion        :27,
-            versionCode             :202106282,
+            versionCode             :202106283,
             versionName             :"4.5.1",
             buildToolsVersion       :"30.0.2",
 
