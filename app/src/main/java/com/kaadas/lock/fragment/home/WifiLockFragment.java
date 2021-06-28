@@ -225,7 +225,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if (powerSave == 1) {//已启动节能模式
             changeLockStatus(8);
         }
-        if (faceStatus == 1) {//面容识别已关闭
+        if (faceStatus == 0) {//面容识别已关闭
             changeLockStatus(7);
         }
         if (safeMode == 1) {//安全模式

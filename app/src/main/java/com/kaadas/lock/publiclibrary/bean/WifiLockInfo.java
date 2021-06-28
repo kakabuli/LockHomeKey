@@ -37,7 +37,7 @@ public class WifiLockInfo implements Serializable {
      * amMode : 1
      * safeMode : 1
      * powerSave : 1 节能模式开启 0 节能模式关闭
-     * faceStatus :  0 面容识别开启 1 面容识别关闭
+     * faceStatus :  1 面容识别开启 0 面容识别关闭
      * defences : 0
      * language : zh
      * operatingMode : 0
