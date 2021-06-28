@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockAddNewFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 
@@ -55,6 +56,8 @@ public class WifiVideoLockScanFailedActivity extends BaseAddToApplicationActivit
                 startActivity(intent);
                 break;
             case R.id.cancel:
+                Intent backIntent = new Intent(this, MainActivity.class);
+                startActivity(backIntent);
                 break;
         }
     }
