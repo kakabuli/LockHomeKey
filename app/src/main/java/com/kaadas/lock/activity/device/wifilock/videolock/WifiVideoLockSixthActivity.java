@@ -54,7 +54,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     public String wifiSn = "";
 
-    private String randomCode = "";
+//    private String randomCode = "";
 
     private String sSsid = "";
 
@@ -82,7 +82,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
         wifiLockVideoBindBean = (WifiLockVideoBindBean) getIntent().getSerializableExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA);
         wifiModelType = getIntent().getStringExtra("wifiModelType");
 
-        randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
+//        randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
         wifiLockVideoBindBean = (WifiLockVideoBindBean) getIntent().getSerializableExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA);
         wifiModelType = getIntent().getStringExtra("wifiModelType");
 
-        randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
+//        randomCode = wifiLockVideoBindBean.getEventparams().getRandomCode();
     }
 
     @OnClick({R.id.back,R.id.help,R.id.button_next,R.id.iv_password_status})
@@ -299,15 +299,16 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
 
     private void checkAdminPassword(String adminPassword){
-        if(!TextUtils.isEmpty(randomCode)){
-            WifiVideoPasswordFactorManager.FactorResult result = WifiVideoPasswordFactorManager.parsePasswordData(adminPassword,randomCode);
+        if(!TextUtils.isEmpty(wifiLockVideoBindBean.getEventparams().getRandomCode())){
+            WifiVideoPasswordFactorManager.FactorResult result = WifiVideoPasswordFactorManager.parsePasswordData(adminPassword,wifiLockVideoBindBean.getEventparams().getRandomCode());
+            LogUtils.e("shulan wifivideosixthactivity --> result-->" + result);
             if(result.result == 0){
 
-                randomCode = Rsa.bytesToHexString(result.password);
+//                randomCode = Rsa.bytesToHexString(result.password);
                 func = result.func;
                 if(MyApplication.getInstance().getWifiLockInfoBySn(wifiLockVideoBindBean.getWfId()) == null){
                     mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
-                            Rsa.bytesToHexString(result.password),sSsid,result.func,3,
+                            wifiLockVideoBindBean.getEventparams().getRandomCode(),sSsid,result.func,3,
                         wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
                         wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
                 );
@@ -316,10 +317,12 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
                 }else{
 
                     mPresenter.updateBindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
-                            Rsa.bytesToHexString(result.password),sSsid,result.func,wifiLockVideoBindBean.getEventparams().getDevice_did(),
+                            wifiLockVideoBindBean.getEventparams().getRandomCode(),sSsid,result.func,wifiLockVideoBindBean.getEventparams().getDevice_did(),
                             wifiLockVideoBindBean.getEventparams().getP2p_password());
                 }
 
+            }else if(result.result == -3){
+                mPresenter.unBindDeviceFail(wifiLockVideoBindBean.getWfId());
             }else{
                 mPresenter.handler.post(new Runnable() {
                     @Override
@@ -337,7 +340,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
 
     @Override
     public void onBindSuccess(String wifiSn) {
-        onSuccess(randomCode,func);
+        onSuccess(wifiLockVideoBindBean.getEventparams().getRandomCode(),func);
     }
 
     @Override

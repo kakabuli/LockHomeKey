@@ -45,7 +45,7 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
     TextView head;
 
     private String wifiSn;
-    private String randomCode;
+//    private String randomCode;
     private int func;
     private int times = 1;
     public String sSsid = "";
@@ -72,7 +72,7 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
         Glide.with(this).load(qrCode).into(ivQrcode);
         distributionAgain = getIntent().getBooleanExtra("distribution_again",false);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
+//        randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         distribution = getIntent().getBooleanExtra("distribution", false);
@@ -108,7 +108,7 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+//                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                 intent.putExtra("wifiModelType",wifiModelType);
@@ -185,7 +185,7 @@ public class WifiVideoLockFifthActivity extends BaseActivity<IWifiLockVideoFifth
                     intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                     intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
                     intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                    intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+//                    intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                     intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                     intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                     intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_DEVICE_DATA ,mWifiLockVideoBindBean);

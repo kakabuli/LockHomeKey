@@ -51,7 +51,7 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
     public String adminPassword;
     public String sSsid;
     private String wifiSn;
-    private String randomCode;
+//    private String randomCode;
     private int func;
     private int times = 1;
 
@@ -67,7 +67,7 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
         ButterKnife.bind(this);
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
-        randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
+//        randomCode = getIntent().getStringExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE);
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
         distributionAgain = getIntent().getBooleanExtra("distribution_again",false);
@@ -128,7 +128,7 @@ public class WifiVideoLockFourthActivity extends BaseAddToApplicationActivity {
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_SSID, sSsid);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_PASSWORD, sPassword);
                 intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
+//                intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, randomCode);
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
                 intent.putExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, times);
                 intent.putExtra("distribution_again",distributionAgain);

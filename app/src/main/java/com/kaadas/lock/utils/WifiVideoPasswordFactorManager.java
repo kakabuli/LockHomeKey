@@ -71,7 +71,7 @@ public class WifiVideoPasswordFactorManager {
 //        wifiResult.data = data;
 //        wifiResult.func = data[45] & 0xff;
         if(str.length() < 79){
-            result.result = -2;
+            result.result = -3;
             return result;
         }
         String s = str.substring(0,64) + str.substring(str.length() - 2);
