@@ -36,6 +36,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetWifiLockOperationRecordResul
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockOperationBean;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
@@ -171,8 +172,10 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         if (powerSave == 1) {//已启动节能模式
             changeLockStatus(8);
         }
-        if (faceStatus == 0) {//面容识别已关闭
-            changeLockStatus(7);
+        if(BleLockUtils.isSupportFacereCognitionSwitch(wifiLockInfo.getFunctionSet())){
+            if (faceStatus == 0) {//面容识别已关闭
+                changeLockStatus(7);
+            }
         }
         if (safeMode == 1) {//安全模式
             changeLockStatus(6);
