@@ -1027,21 +1027,21 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     }
 
     private void setScreenLightTime(int screenLightTime) {
-        if(screenLightTime <= 5){
+        if(/*screenLightTime <= 5*/ screenLightTime == 5){
             tvScreenDuration.setText(R.string.more_screen_light_duration_5s);
-        }else if(screenLightTime > 5 && screenLightTime <= 10){
+        }else if(/*screenLightTime > 5 && screenLightTime <= 10*/ screenLightTime == 10){
             tvScreenDuration.setText(R.string.more_screen_light_duration_10s);
-        }else if(screenLightTime > 10 && screenLightTime <= 15){
+        }else if(/*screenLightTime > 10 && screenLightTime <= 15*/ screenLightTime == 15){
             tvScreenDuration.setText(R.string.more_screen_light_duration_15s);
         }
     }
 
     private void setScreenLightLevel(int screenLightLevel) {
-        if(screenLightLevel <= 30){
+        if(/*screenLightLevel <= 30*/screenLightLevel == 30){
             tvScreenBrightness.setText(R.string.low);
-        }else if(screenLightLevel > 30 && screenLightLevel <= 50){
+        }else if(/*screenLightLevel > 30 && screenLightLevel <= 50*/ screenLightLevel == 50){
             tvScreenBrightness.setText(R.string.centre);
-        }else if(screenLightLevel > 50 && screenLightLevel <= 80){
+        }else if(/*screenLightLevel > 50 && screenLightLevel <= 80*/ screenLightLevel == 80){
             tvScreenBrightness.setText(R.string.high);
         }
     }
