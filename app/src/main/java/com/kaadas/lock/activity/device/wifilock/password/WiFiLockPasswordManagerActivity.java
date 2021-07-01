@@ -251,7 +251,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (refreshLayout != null) {
             refreshLayout.finishRefresh();
         }
-        ToastUtils.showLong(R.string.refresh_failed_please_retry_later);
+        ToastUtils.showShort(R.string.refresh_failed_please_retry_later);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
         if (refreshLayout != null) {
             refreshLayout.finishRefresh();
         }
-        ToastUtils.showLong(R.string.refresh_failed_please_retry_later);
+        ToastUtils.showShort(R.string.refresh_failed_please_retry_later);
     }
 
     @Override
