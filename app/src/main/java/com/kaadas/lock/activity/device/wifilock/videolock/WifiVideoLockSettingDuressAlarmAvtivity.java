@@ -91,6 +91,7 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
             intent.putExtra(KeyConstants.DURESS_PASSWORD_INfO, mDuressBean);
             intent.putExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO,position);
             startActivityForResult(intent,KeyConstants.WIFI_LOCK_SETTING_DURESS_ACCOUNT);
+            finish();
         });
 
         mIvDuressSelect.setOnClickListener(v -> {

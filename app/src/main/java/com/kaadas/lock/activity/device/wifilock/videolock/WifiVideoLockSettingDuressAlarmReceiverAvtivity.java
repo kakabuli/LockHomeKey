@@ -18,6 +18,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.StringUtil;
 
@@ -117,7 +118,10 @@ public class WifiVideoLockSettingDuressAlarmReceiverAvtivity extends BaseActivit
     private void initListener() {
 
         mBack.setOnClickListener(v -> {
-            settingDuressAccount();
+            Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
+            intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());
+            startActivity(intent);
+            finish();
         });
         confirm.setOnClickListener(v -> {
             settingDuressAccount();

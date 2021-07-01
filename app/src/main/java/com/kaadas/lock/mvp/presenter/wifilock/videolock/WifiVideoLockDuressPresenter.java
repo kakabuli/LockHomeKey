@@ -1,6 +1,5 @@
 package com.kaadas.lock.mvp.presenter.wifilock.videolock;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.DuressBean;
@@ -13,6 +12,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.WifiLockGetPasswordListResult;
 import com.kaadas.lock.publiclibrary.http.util.BaseObserver;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 
 import java.util.ArrayList;
@@ -126,6 +126,7 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
 
                 if(wiFiLockPassword.getFingerprintDuress() != null && wiFiLockPassword.getFingerprintDuress().size() > 0){
                     for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getFingerprintDuress()){
+                        //TODO: 请求获取的pwdDuressSwitch和JSON解析出来的pwdDuressSwitch不一致，JSON FIELD 问题，未查明
                         if(oi.getNum() == bean.getNum()){
                             duressAlarmAccount = oi.getDuressAlarmAccount();
                             pwdDuressSwitch = oi.getDuressSwitch();
@@ -145,7 +146,6 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
             @Override
             public void onSuccess(BaseResult baseResult) {
                 if(isSafe()){
-                    LogUtils.e("shulan setDuressSwitch--> " + baseResult.toString());
                     mViewRef.get().onSettingDuress(baseResult);
                 }
             }

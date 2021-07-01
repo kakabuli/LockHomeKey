@@ -20,8 +20,11 @@ import com.kaadas.lock.publiclibrary.bean.WiFiLockPassword;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.StatusBarUtils;
+
+import org.linphone.mediastream.Log;
 
 import java.util.List;
 
@@ -66,6 +69,12 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected WifiVideoLockDuressPresenter<IWifiVideoLockDuressView> createPresent() {
         return new WifiVideoLockDuressPresenter<>();
     }
@@ -84,7 +93,6 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
         }else{
             mPresenter.getPasswordList(wifiSn);
         }
-
         if(wifiLockInfo != null){
             if(wifiLockInfo.getDuressAlarmSwitch() == 0){
                 recycler.setVisibility(View.GONE);
