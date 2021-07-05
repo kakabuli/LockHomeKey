@@ -167,6 +167,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_face_model_firmware_version:
+                if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(faceModelFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     multiOTAflag = false;
@@ -176,6 +179,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 }
                 break;
             case R.id.rl_lock_model_firmware_version:
+                if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(lockFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
@@ -190,6 +196,9 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 }
                 break;
             case R.id.rl_wifi_model_firmware_version:
+                if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(sWifiVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     multiOTAflag = false;
@@ -209,6 +218,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 startActivity(intent1);
                 break;
             case R.id.rl_voice_model_firmware_version:
+                if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
+                    return;
+                }
+                //TODO:待设置语音模组OTA
                 break;
         }
     }
