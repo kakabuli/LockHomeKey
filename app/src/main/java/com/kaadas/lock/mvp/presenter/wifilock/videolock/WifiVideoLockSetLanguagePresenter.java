@@ -528,7 +528,7 @@ public class WifiVideoLockSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                             return false;
                         }
                     })
-                    .timeout(3 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override

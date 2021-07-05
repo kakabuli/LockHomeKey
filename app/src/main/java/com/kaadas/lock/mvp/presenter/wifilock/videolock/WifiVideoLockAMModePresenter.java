@@ -489,7 +489,7 @@ public class WifiVideoLockAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                             return false;
                         }
                     })
-                    .timeout(20 * 1000, TimeUnit.MILLISECONDS)
+                    .timeout(10 * 1000, TimeUnit.MILLISECONDS)
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<MqttData>() {
                         @Override

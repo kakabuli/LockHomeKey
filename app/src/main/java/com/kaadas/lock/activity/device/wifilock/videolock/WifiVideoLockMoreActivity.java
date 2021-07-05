@@ -333,7 +333,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             if(BleLockUtils.isSupportFacereCognitionSwitch(wifiLockInfo.getFunctionSet())){
                 rlFaceRecognitionSwitch.setVisibility(View.VISIBLE);
                 int faceStatus = wifiLockInfo.getFaceStatus();
-                tvFaceRecognitionSwitch.setText(faceStatus == 0 ? getString(R.string.open) : getString(R.string.close));
+                tvFaceRecognitionSwitch.setText(faceStatus == 1 ? getString(R.string.open) : getString(R.string.close));
             }else{
                 rlFaceRecognitionSwitch.setVisibility(View.GONE);
             }
