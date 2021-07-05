@@ -71,7 +71,7 @@ import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
-import com.kaidishi.lock.xiaomi.SPUtils2;
+import com.kaidishi.lock.xiaomi.MISPUtils;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 
 import net.sdvn.cmapi.CMAPI;
@@ -419,7 +419,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
                 uploadToken(3,huawei);
             }
         } else if(Rom.isMiui()){
-            String xiaoMiToken = (String) SPUtils2.get(MainActivity.this, XiaoMiConstant.XIAOMIKEY,"");
+            String xiaoMiToken = (String) MISPUtils.get(MainActivity.this, XiaoMiConstant.XIAOMIKEY,"");
             uploadToken(4,xiaoMiToken);
             LogUtils.e("shulan xiaoMiToken--->" + xiaoMiToken);
         } else{

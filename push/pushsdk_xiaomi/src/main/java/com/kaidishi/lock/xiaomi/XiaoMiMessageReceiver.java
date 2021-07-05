@@ -1,12 +1,8 @@
 package com.kaidishi.lock.xiaomi;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Message;
-import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -130,7 +126,7 @@ public class XiaoMiMessageReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
-                SPUtils2.put(context,XiaoMiConstant.XIAOMIKEY,mRegId);
+                MISPUtils.put(context,XiaoMiConstant.XIAOMIKEY,mRegId);
                 Log.e("denganzhi1","XiaoMI_onCommandResult==>"+mRegId);
              //   log = context.getString(R.string.register_success);
             } else {
