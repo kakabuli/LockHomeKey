@@ -56,6 +56,7 @@ public class WifiLockLockingMethodPresenter<T> extends BasePresenter<IWifiLockLo
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingLockingMethodResult settingLockingMethod = new Gson().fromJson(mqttData.getPayload(), SettingLockingMethodResult.class);
                             LogUtils.e("shulan settingLockingMethod-->" + settingLockingMethod.toString());
                             if(settingLockingMethod != null && isSafe()){

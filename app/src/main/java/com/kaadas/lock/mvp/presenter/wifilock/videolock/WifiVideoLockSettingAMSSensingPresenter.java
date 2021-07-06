@@ -53,6 +53,7 @@ public class WifiVideoLockSettingAMSSensingPresenter<T> extends BasePresenter<IW
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingAMSResult mSettingAMSResult = new Gson().fromJson(mqttData.getPayload(), SettingAMSResult.class);
                             LogUtils.e("shulan mSettingAMSResult-->" + mSettingAMSResult.toString());
                             if(mSettingAMSResult != null && isSafe()){

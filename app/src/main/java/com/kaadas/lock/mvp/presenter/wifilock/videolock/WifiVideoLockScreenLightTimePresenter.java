@@ -52,6 +52,7 @@ public class WifiVideoLockScreenLightTimePresenter<T> extends BasePresenter<IWif
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingScreenTimeResult mSettingScreenTimeResult = new Gson().fromJson(mqttData.getPayload(), SettingScreenTimeResult.class);
                             LogUtils.e("shulan mSettingScreenTimeResult-->" + mSettingScreenTimeResult.toString());
                             if(mSettingScreenTimeResult != null && isSafe()){

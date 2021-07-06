@@ -55,6 +55,7 @@ public class WifiVideoLockVoiceQualitySettingPresenter<T> extends BasePresenter<
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingVoiceQualityResult mSettingVoiceQualityResult = new Gson().fromJson(mqttData.getPayload(), SettingVoiceQualityResult.class);
                             LogUtils.e("shulan mSettingVoiceQualityResult-->" + mSettingVoiceQualityResult.toString());
                             if(mSettingVoiceQualityResult != null && isSafe()){

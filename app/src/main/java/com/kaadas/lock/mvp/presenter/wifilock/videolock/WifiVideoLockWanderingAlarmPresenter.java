@@ -585,6 +585,7 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingFaceWanderingAlarmResult settingFaceWanderingAlarmResult = new Gson().fromJson(mqttData.getPayload(), SettingFaceWanderingAlarmResult.class);
                             if(settingFaceWanderingAlarmResult != null){
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
@@ -696,6 +697,7 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
+                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingVideoLockPirResult settingVideoLockPir = new Gson().fromJson(mqttData.getPayload(), SettingVideoLockPirResult.class);
                             if(settingVideoLockPir != null){
                                 MyApplication.getInstance().getAllDevicesByMqtt(true);
