@@ -407,7 +407,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         ispush = (boolean) SPUtils.get(Constants.PUSHID, false);
         if(ispush){
             LogUtils.e("上传成功token...");
-            return;
+//            return;
         }
         if (Rom.isEmui() || Rom.isHarmony()) {
             // no get token
