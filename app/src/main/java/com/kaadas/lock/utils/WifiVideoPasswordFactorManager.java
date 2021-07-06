@@ -2,6 +2,7 @@ package com.kaadas.lock.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.zip.CRC32;
 
 public class WifiVideoPasswordFactorManager {
@@ -132,9 +133,7 @@ public class WifiVideoPasswordFactorManager {
         public String toString() {
             return "FactorResult{" +
                     "result=" + result +
-                    ", wifiSn=" + new String(wifiSn) +
-                    ", password=" + new String(password) +
-                    ", data=" + new  String(data) +
+                    ", wifiSn='" + wifiSn + '\'' +
                     ", func=" + func +
                     '}';
         }
