@@ -383,8 +383,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
                 ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.wifi_lock_video_mode);
                 ((TextView)findViewById(R.id.tv_real_time)).setCompoundDrawables(null,null,null,null);
-                int KeepAliveStatus = wifiLockInfo.getKeep_alive_status();
-                ((TextView)findViewById(R.id.tv_real_time)).setText(KeepAliveStatus == 1 ? getString(R.string.open) : getString(R.string.close));
+//                int KeepAliveStatus = wifiLockInfo.getKeep_alive_status();
+                int KeepAliveStatus = wifiLockInfo.getPowerSave();//因锁端的缺陷，故由powersave来显示视频模式
+                ((TextView)findViewById(R.id.tv_real_time)).setText(KeepAliveStatus == 0 ? getString(R.string.open) : getString(R.string.close));
             }else{
                 ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.real_time_video);
                 ((TextView)findViewById(R.id.tv_real_time)).setText("");
