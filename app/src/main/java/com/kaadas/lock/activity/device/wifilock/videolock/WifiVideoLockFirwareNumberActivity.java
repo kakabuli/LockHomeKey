@@ -226,6 +226,9 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 finish();
                 break;
             case R.id.rl_hard_version:
+                if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
+                    return;
+                }
                 if(!BleLockUtils.isSupportLockOTA(wifiLockInfoBySn.getFunctionSet())) return;
                 showLoading(getString(R.string.is_check_version));
                 if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())) {
@@ -245,6 +248,9 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 }
                 break;
             case R.id.rl_back_hard_version:
+                if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getBackPanelVersion())) {
                     if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
@@ -256,6 +262,9 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
 
                 break;
             case R.id.rl_fornt_hard_version:
+                if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getFrontPanelVersion())) {
                     if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
