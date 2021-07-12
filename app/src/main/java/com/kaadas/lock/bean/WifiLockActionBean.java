@@ -4,7 +4,8 @@ public class WifiLockActionBean {
 
     /**
      * devtype : kdswflock
-     * eventparams : {"amMode":1,"defences":1,"language":"zh/en","operatingMode":1,"safeMode":1,"volume":0,"powerSave":0,"faceStatus":1}
+     * eventparams : {"amMode":1,"defences":1,"language":"zh/en","operatingMode":1,"safeMode":1,"volume":0,
+     * "powerSave":0,"faceStatus":1,"openForce":1,"lockingMethod":1,"openDirection":1,"bodySensor":1,"TouchHandleStatus":0,"hoverAlarm":0,"hoverAlarmLevel":0}
      * eventtype : action
      * func : wfevent
      * lockId :  lockId
@@ -104,8 +105,16 @@ public class WifiLockActionBean {
          * operatingMode : 1
          * safeMode : 1
          * volume : 0
+         * volLevel：0
          * powerSave : 0
          * faceStatus : 1
+         * openForce  :1
+         * lockingMethod:1
+         * openDirection:1
+         * bodySensor:1
+         * touchHandleStatus:0
+         * hoverAlarm:0
+         * hoverAlarmLevel:0
          */
 
         private int amMode;
@@ -114,27 +123,18 @@ public class WifiLockActionBean {
         private int operatingMode;
         private int safeMode;
         private int volume;
+        private int volLevel;
         private int powerSave;
         private int faceStatus;
 
+        private int openForce;
+        private int lockingMethod;
+        private int openDirection;
+        private int bodySensor;
+        private int touchHandleStatus;
         private int hoverAlarm;
         private int hoverAlarmLevel;
 
-        public int getHoverAlarm() {
-            return hoverAlarm;
-        }
-
-        public void setHoverAlarm(int hoverAlarm) {
-            this.hoverAlarm = hoverAlarm;
-        }
-
-        public int getHoverAlarmLevel() {
-            return hoverAlarmLevel;
-        }
-
-        public void setHoverAlarmLevel(int hoverAlarmLevel) {
-            this.hoverAlarmLevel = hoverAlarmLevel;
-        }
 
         public int getAmMode() {
             return amMode;
@@ -184,6 +184,14 @@ public class WifiLockActionBean {
             this.volume = volume;
         }
 
+        public int getVolLevel() {
+            return volLevel;
+        }
+
+        public void setVolLevel(int volLevel) {
+            this.volLevel = volLevel;
+        }
+
         public int getPowerSave() {
             return powerSave;
         }
@@ -198,6 +206,62 @@ public class WifiLockActionBean {
 
         public void setFaceStatus(int faceStatus) {
             this.faceStatus = faceStatus;
+        }
+
+        public int getOpenForce() {
+            return openForce;
+        }
+
+        public void setOpenForce(int openForce) {
+            this.openForce = openForce;
+        }
+
+        public int getLockingMethod() {
+            return lockingMethod;
+        }
+
+        public void setLockingMethod(int lockingMethod) {
+            this.lockingMethod = lockingMethod;
+        }
+
+        public int getOpenDirection() {
+            return openDirection;
+        }
+
+        public void setOpenDirection(int openDirection) {
+            this.openDirection = openDirection;
+        }
+
+        public int getBodySensor() {
+            return bodySensor;
+        }
+
+        public void setBodySensor(int bodySensor) {
+            this.bodySensor = bodySensor;
+        }
+
+        public int getTouchHandleStatus() {
+            return touchHandleStatus;
+        }
+
+        public void setTouchHandleStatus(int touchHandleStatus) {
+            touchHandleStatus = touchHandleStatus;
+        }
+
+        public int getHoverAlarm() {
+            return hoverAlarm;
+        }
+
+        public void setHoverAlarm(int hoverAlarm) {
+            this.hoverAlarm = hoverAlarm;
+        }
+
+        public int getHoverAlarmLevel() {
+            return hoverAlarmLevel;
+        }
+
+        public void setHoverAlarmLevel(int hoverAlarmLevel) {
+            this.hoverAlarmLevel = hoverAlarmLevel;
         }
     }
 }

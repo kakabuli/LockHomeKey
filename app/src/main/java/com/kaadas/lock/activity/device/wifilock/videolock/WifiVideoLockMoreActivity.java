@@ -285,6 +285,12 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 rlRealTimeVideo.setVisibility(View.GONE);
             }
 
+            if (BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())) {
+                rlRealTimeVideo.setVisibility(View.VISIBLE);
+            } else {
+                rlRealTimeVideo.setVisibility(View.GONE);
+            }
+
             if (BleLockUtils.isSupportPirSetting(func)) {
                 rlWanderingAlarm.setVisibility(View.VISIBLE);
                 tvWanderingAlarm.setText(getString(R.string.wandering_alarm));
@@ -370,25 +376,33 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 rlDuressAlarm.setVisibility(View.GONE);
             }
 
-            //语音设置
+            //17静音模式设置
+            if(BleLockUtils.isSupportSilentMode(wifiLockInfo.getFunctionSet())){
+                rlSilentMode.setVisibility(View.VISIBLE);
+            }else{
+                rlSilentMode.setVisibility(View.GONE);
+            }
+
+            //88语音设置
             if(BleLockUtils.isSupportVoiceQuality(wifiLockInfo.getFunctionSet())){
                 rlVoiceQualitySetting.setVisibility(View.VISIBLE);
                 setVoiceQuality(wifiLockInfo.getVolLevel());
-                rlSilentMode.setVisibility(View.GONE);
             }else{
                 rlVoiceQualitySetting.setVisibility(View.GONE);
             }
 
-            //视频模式显示
+            //54实时视频设置
+            if(BleLockUtils.isSupportRealTimeVideo(Integer.parseInt(wifiLockInfo.getFunctionSet()))){
+                ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.real_time_video);
+                ((TextView)findViewById(R.id.tv_real_time)).setText("");
+            }
+
+            //93视频模式显示
             if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
                 ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.wifi_lock_video_mode);
                 ((TextView)findViewById(R.id.tv_real_time)).setCompoundDrawables(null,null,null,null);
                 int KeepAliveStatus = wifiLockInfo.getKeep_alive_status();
                 ((TextView)findViewById(R.id.tv_real_time)).setText(KeepAliveStatus == 1 ? getString(R.string.open) : getString(R.string.close));
-            }else{
-                ((TextView)findViewById(R.id.tv_real_time_title)).setText(R.string.real_time_video);
-                ((TextView)findViewById(R.id.tv_real_time)).setText("");
-
             }
 
             if(func == 165){

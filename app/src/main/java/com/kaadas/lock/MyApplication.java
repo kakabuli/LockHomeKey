@@ -741,8 +741,16 @@ public class MyApplication extends Application {
                      * operatingMode : 1
                      * safeMode : 1
                      * volume : 0
+                     * volLevel;
                      * powerSave : 0
                      * faceStatus : 1
+                     * openForce  :1
+                     * lockingMethod:1
+                     * openDirection:1
+                     * bodySensor:1
+                     * TouchHandleStatus:0
+                     * hoverAlarm:0
+                     * hoverAlarmLevel:0
                      */
                     if (wifiLockInfo.getWifiSN().equals(sn)) {
                         wifiLockInfo.setAmMode(actionBean.getEventparams().getAmMode());
@@ -751,8 +759,14 @@ public class MyApplication extends Application {
                         wifiLockInfo.setOperatingMode(actionBean.getEventparams().getOperatingMode());
                         wifiLockInfo.setSafeMode(actionBean.getEventparams().getSafeMode());
                         wifiLockInfo.setVolume(actionBean.getEventparams().getVolume());
+                        wifiLockInfo.setVolLevel(actionBean.getEventparams().getVolLevel());
                         wifiLockInfo.setPowerSave(actionBean.getEventparams().getPowerSave());
                         wifiLockInfo.setFaceStatus(actionBean.getEventparams().getFaceStatus());
+                        wifiLockInfo.setOpenForce(actionBean.getEventparams().getOpenForce());
+                        wifiLockInfo.setLockingMethod(actionBean.getEventparams().getLockingMethod());
+                        wifiLockInfo.setOpenDirection(actionBean.getEventparams().getOpenDirection());
+                        wifiLockInfo.setBodySensor(actionBean.getEventparams().getBodySensor());
+                        wifiLockInfo.setTouchHandleStatus(actionBean.getEventparams().getTouchHandleStatus());
 
                         if(BleLockUtils.isSupportFacePir(wifiLockInfo.getFunctionSet())){
                             wifiLockInfo.setHoverAlarm(actionBean.getEventparams().getHoverAlarm());
