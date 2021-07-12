@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -791,7 +792,6 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         if (avi != null) {
             avi.hide();
             tvTips.setVisibility(View.GONE);
@@ -802,7 +802,6 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override
@@ -967,6 +966,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     @Override
     public void onWifiLockActionUpdate() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        Log.d("zdx", "onWifiLockActionUpdate: " + wifiLockInfo.getBodySensor());
         initData();
     }
 
