@@ -308,7 +308,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
                 func = result.func;
                 if(MyApplication.getInstance().getWifiLockInfoBySn(wifiLockVideoBindBean.getWfId()) == null){
                     mPresenter.bindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
-                            wifiLockVideoBindBean.getEventparams().getRandomCode(),sSsid,result.func,3,
+                            Rsa.bytesToHexString(result.password),sSsid,result.func,3,
                         wifiLockVideoBindBean.getEventparams().getDevice_sn(),wifiLockVideoBindBean.getEventparams().getMac(),
                         wifiLockVideoBindBean.getEventparams().getDevice_did(),wifiLockVideoBindBean.getEventparams().getP2p_password()
                 );
@@ -317,7 +317,7 @@ public class WifiVideoLockSixthActivity extends BaseActivity<IWifiLockVideoSixth
                 }else{
 
                     mPresenter.updateBindDevice(wifiLockVideoBindBean.getWfId(),wifiLockVideoBindBean.getUserId(),
-                            wifiLockVideoBindBean.getEventparams().getRandomCode(),sSsid,result.func,wifiLockVideoBindBean.getEventparams().getDevice_did(),
+                            Rsa.bytesToHexString(result.password),sSsid,result.func,wifiLockVideoBindBean.getEventparams().getDevice_did(),
                             wifiLockVideoBindBean.getEventparams().getP2p_password());
                 }
 
