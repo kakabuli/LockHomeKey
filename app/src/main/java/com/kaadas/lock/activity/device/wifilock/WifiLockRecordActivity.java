@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import androidx.viewpager.widget.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -80,13 +81,16 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
             Bundle bundle = new Bundle();
             bundle.putString(KeyConstants.WIFI_SN,wifiSn);
             if(isVideoLock){
-                openRecordFragment = new WifiLockOpenRecordFragment();
+                if(openRecordFragment == null)
+                    openRecordFragment = new WifiLockOpenRecordFragment();
                 openRecordFragment.setArguments(bundle);
                 fragments.add(openRecordFragment);
-                vistorRecordFragment = new WifiLockVistorRecordFragment();
+                if(vistorRecordFragment == null)
+                    vistorRecordFragment = new WifiLockVistorRecordFragment();
                 vistorRecordFragment.setArguments(bundle);
                 fragments.add(vistorRecordFragment);
-                videoLockAlarmRecordFragment = new WifiVideoLockAlarmRecordFragment();
+                if(videoLockAlarmRecordFragment == null)
+                    videoLockAlarmRecordFragment = new WifiVideoLockAlarmRecordFragment();
                 videoLockAlarmRecordFragment.setArguments(bundle);
                 fragments.add(videoLockAlarmRecordFragment);
             }else {
@@ -120,6 +124,11 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                 @Override
                 public int getCount() {
                     return fragments.size();
+                }
+
+                @Override
+                public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+                    //super.destroyItem(container, position, object);
                 }
             };
             viewPager.setAdapter(adapter);
