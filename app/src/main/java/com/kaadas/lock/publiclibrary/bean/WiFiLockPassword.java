@@ -484,11 +484,11 @@ public class WiFiLockPassword {
             this.num = num;
         }
 
-        public int getDuressSwitch() {
+        public int getPwdDuressSwitch() {
             return pwdDuressSwitch;
         }
 
-        public void setDuressSwitch(int pwdDuressSwitch) {
+        public void setPwdDuressSwitch(int pwdDuressSwitch) {
             this.pwdDuressSwitch = pwdDuressSwitch;
         }
 
