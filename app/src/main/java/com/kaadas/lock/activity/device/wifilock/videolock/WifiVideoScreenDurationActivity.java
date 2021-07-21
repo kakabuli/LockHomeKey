@@ -86,6 +86,9 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
 
             setScreenLightTimeShow(screenLightSwitch);
             setScreenLightTimeView(screenLightTime);
+            if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
+                mPresenter.settingDevice(wifiLockInfo);
+            }
         }
     }
 
