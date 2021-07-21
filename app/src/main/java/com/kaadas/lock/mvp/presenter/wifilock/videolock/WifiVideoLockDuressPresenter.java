@@ -97,7 +97,7 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
                     for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getPwdDuress()){
                         if(oi.getNum() == bean.getNum()){
                             duressAlarmAccount = oi.getDuressAlarmAccount();
-                            pwdDuressSwitch = oi.getDuressSwitch();
+                            pwdDuressSwitch = oi.getPwdDuressSwitch();
                         }
                     }
                 }
@@ -126,10 +126,9 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
 
                 if(wiFiLockPassword.getFingerprintDuress() != null && wiFiLockPassword.getFingerprintDuress().size() > 0){
                     for(WiFiLockPassword.DuressBean oi : wiFiLockPassword.getFingerprintDuress()){
-                        //TODO: 请求获取的pwdDuressSwitch和JSON解析出来的pwdDuressSwitch不一致，JSON FIELD 问题，未查明
                         if(oi.getNum() == bean.getNum()){
                             duressAlarmAccount = oi.getDuressAlarmAccount();
-                            pwdDuressSwitch = oi.getDuressSwitch();
+                            pwdDuressSwitch = oi.getPwdDuressSwitch();
                         }
                     }
                 }
