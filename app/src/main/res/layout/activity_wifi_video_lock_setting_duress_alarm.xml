@@ -146,7 +146,7 @@
             android:text=""
             android:textColor="@color/color_333333"
             android:textSize="@dimen/sp_13"
-            app:layout_constraintTop_toBottomOf="@+id/rl_duress_alarm_app_recevice"></TextView>
+            app:layout_constraintTop_toBottomOf="@+id/rl_duress_alarm_app_recevice"/>
 
 
         <View

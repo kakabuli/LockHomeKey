@@ -281,7 +281,11 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     }
 
     public void powerStatusDialog(){
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.set_failed), "\n"+ getString(R.string.dialog_wifi_video_power_status) +"\n",
+        String content = getString(R.string.dialog_wifi_video_power_status);
+        if(wifiLockInfoBySn != null && wifiLockInfoBySn.getPower() < 30){
+            content = getString(R.string.dialog_wifi_video_low_power_status);
+        }
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getActivity(), getString(R.string.set_failed), "\n"+ content +"\n",
                 getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
