@@ -1036,7 +1036,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                     setVoiceQuality(voiceQuality);
                     break;
                 case KeyConstants.WIFI_VICEO_LOCK_AMS_SETTING:
-                    int setAMSSentivity = data.getIntExtra(MqttConstant.SET_SREEN_LIGHT_TIME,0);
+                    int setAMSSentivity = data.getIntExtra(MqttConstant.SET_AMS_SENSITIVITY,0);
                     setAMSSenstivity(setAMSSentivity);
                     break;
             }

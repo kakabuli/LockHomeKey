@@ -296,7 +296,7 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
                             intent = new Intent(WifiVideoScreenBrightnessActivity.this, WifiLockMoreActivity.class);
                         }
 
-                        intent.putExtra(MqttConstant.SET_OPEN_DIRECTION,screenLightLevel);
+                        intent.putExtra(MqttConstant.SET_SCREEN_LIGHT_LEVEL,screenLightLevel);
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtils.showLong(getString(R.string.modify_failed));

@@ -310,7 +310,7 @@ public class WifiVideoLockSettingAMSSensingActivity extends BaseActivity<IWifiVi
                             intent = new Intent(WifiVideoLockSettingAMSSensingActivity.this, WifiLockMoreActivity.class);
                         }
 
-                        intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,settingAMSSensing);
+                        intent.putExtra(MqttConstant.SET_AMS_SENSITIVITY,settingAMSSensing);
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtils.showLong(getString(R.string.modify_failed));
