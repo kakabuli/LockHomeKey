@@ -95,13 +95,13 @@ public class SLLocalService extends Service {
             play();
         }
         //像素保活
-        if (mOnepxReceiver == null) {
+        /*if (mOnepxReceiver == null) {
             mOnepxReceiver = new OnepxReceiver();
         }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(KeepAliveConfig.SYSTEM_SCREEN_OFF);
         intentFilter.addAction(KeepAliveConfig.SYSTEM_SCREEN_ON);
-        registerReceiver(mOnepxReceiver, intentFilter);
+        registerReceiver(mOnepxReceiver, intentFilter);*/
         //屏幕点亮状态监听，用于单独控制音乐播放
         if (screenStateReceiver == null) {
             screenStateReceiver = new ScreenStateReceiver();
@@ -206,9 +206,9 @@ public class SLLocalService extends Service {
     public void onDestroy() {
         super.onDestroy();
 //        unbindService(connection);
-        if(mOnepxReceiver != null){
+        /*if(mOnepxReceiver != null){
             unregisterReceiver(mOnepxReceiver);
-        }
+        }*/
         if(screenStateReceiver != null){
             unregisterReceiver(screenStateReceiver);
         }

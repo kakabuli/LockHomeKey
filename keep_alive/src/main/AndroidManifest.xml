@@ -21,17 +21,21 @@
         <service android:name=".service.SLRemoteService"
             android:exported="true"
             android:label="@string/slremote_service_name"
+            android:process=":sllocal"
             ></service>
         <!--android:process=":slremote"-->
-        <receiver android:name=".receive.NotificationClickReceiver">
+        <receiver android:name=".receive.NotificationClickReceiver"
+            android:process=":sllocal">
             <intent-filter>
                 <action android:name="CLICK_NOTIFICATION"></action>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".onepx.OnePixelActivity"></activity>
+        <activity android:name=".onepx.OnePixelActivity"
+            android:process=":sllocal"></activity>
 
         <service android:name=".service.JobHandlerService"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":sllocal"></service>
     </application>
 </manifest>
