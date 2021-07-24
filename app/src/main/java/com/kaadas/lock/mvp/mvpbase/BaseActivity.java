@@ -40,7 +40,7 @@ public abstract class BaseActivity<T extends IBaseView, V
         super.onCreate(savedInstanceState);
         mPresenter = createPresent();
         mPresenter.attachView((T) this);
-        MyApplication.getInstance().addActivity(this);
+//        MyApplication.getInstance().addActivity(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseActivity<T extends IBaseView, V
         mPresenter.detachView();
         //销毁时，删除回调，防止内存泄漏
         bHandler.removeCallbacksAndMessages(null);
-        MyApplication.getInstance().removeActivity(this);
+//        MyApplication.getInstance().removeActivity(this);
         unbinder.unbind();
         super.onDestroy();
     }

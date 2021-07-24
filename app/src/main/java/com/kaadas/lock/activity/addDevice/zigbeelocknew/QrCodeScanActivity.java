@@ -85,6 +85,7 @@ public class QrCodeScanActivity extends BaseAddToApplicationActivity implements 
             mCameraScan.release();
         }
         super.onDestroy();
+        MyApplication.getInstance().removeActivity(this);
     }
 
     private void checkVersion() {
