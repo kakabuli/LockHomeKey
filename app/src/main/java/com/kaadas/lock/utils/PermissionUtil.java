@@ -29,7 +29,8 @@ public String[] permission=new String[] {
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MANAGE_EXTERNAL_STORAGE};
+        Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA};
 
 
 
