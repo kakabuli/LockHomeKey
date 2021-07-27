@@ -409,19 +409,16 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
     @Override
     public void uploadSuccess(int type) {
+        hiddenLoading();
         if (type == 1) {
-            hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_wifi_update), Toast.LENGTH_SHORT).show();
         } else if (type == 2) {
-            hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_lock_update), Toast.LENGTH_SHORT).show();
         }
         else if (type == 3) {
-            hiddenLoading();
-
             AlertDialogUtil.getInstance().haveTitleContentNoButtonDialog(this, getString(R.string.wakeup_lock)
                     , getString(R.string.wakeup_lock_face_ota_tips), 5);
-            }
+        }
 
     }
 

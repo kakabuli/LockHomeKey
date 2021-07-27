@@ -460,6 +460,7 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
 
     @Override
     public void uploadSuccess(int type) {
+        hiddenLoading();
         if(BleLockUtils.isSupportXMConnect(wifiLockInfoBySn.getFunctionSet())){
             new Thread(new Runnable() {
                 @Override
@@ -472,19 +473,13 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
             return;
         }
         if (type == 1) {
-            hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_wifi_update), Toast.LENGTH_SHORT).show();
         } else if (type == 2) {
-            hiddenLoading();
             Toast.makeText(this, getString(R.string.notice_lock_update), Toast.LENGTH_SHORT).show();
         }
         else if (type == 3) {
-            hiddenLoading();
-
             AlertDialogUtil.getInstance().haveTitleContentNoButtonDialog(this, getString(R.string.wakeup_lock)
                     , getString(R.string.wakeup_lock_face_ota_tips), 5);
-        }else{
-            hiddenLoading();
         }
     }
 
