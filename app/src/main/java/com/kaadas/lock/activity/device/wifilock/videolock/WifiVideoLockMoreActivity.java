@@ -970,7 +970,6 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
     @Override
     public void onWifiLockActionUpdate() {
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
-        Log.d("zdx", "onWifiLockActionUpdate: " + wifiLockInfo.getBodySensor());
         initData();
     }
 
