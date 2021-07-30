@@ -1,5 +1,7 @@
 package com.kaadas.lock.activity.my;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +18,9 @@ import com.kaadas.lock.BuildConfig;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.SharedUtil;
-import com.weijiaxing.logviewer.LogcatActivity;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +49,7 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
 
     private boolean isOpen = false;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +76,7 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
                         default:
                             if(System.currentTimeMillis() - time > 5000 && !isOpen){
                                 //Use this method
-                                LogcatActivity.launch(AboutUsActivity.this);
+                              startInternalTestHelp();
                                 isOpen = true;
                             }
                             break;
@@ -81,6 +86,24 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
                 return false;
             }
         });
+    }
+
+    private void startInternalTestHelp(){
+        ClassLoader classLoader = AboutUsActivity.class.getClassLoader();
+
+        Class<?> clz;
+        try {
+            clz = classLoader.loadClass("com.kaadas.shulan.testmodule.InternalTestHelp");
+            if(clz != null){
+                Object obj = clz.newInstance();
+
+                Method startLogcatView = clz.getDeclaredMethod("startLogcatView", Context.class);
+                startLogcatView.setAccessible(true);
+                startLogcatView.invoke(obj, (Context) AboutUsActivity.this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
