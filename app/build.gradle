@@ -75,6 +75,7 @@ android {
                 buildConfigField('String', 'SIP_HOST', rootProject.ext.HOST.LINPHONE_SIP_DEV)
             }
             buildConfigField('String', 'HTTP_VERSION', rootProject.ext.HOST.VERSION)
+            buildConfigField('String', 'LOGCAT_SHOW', "\"" + rootProject.ext.isDeBug + "\"")
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
                                     appname            : "@string/app_name"
                                     , app_icon         : "@drawable/logo",
@@ -249,5 +250,7 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.github.weijiaxing:LogcatViewer:1.0.3'
 
 }
