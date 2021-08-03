@@ -54,8 +54,14 @@ android {
         ]
         configurations.all {
             resolutionStrategy.force 'androidx.camera:camera-core:[1.0.0-rc01]'
+            resolutionStrategy.force 'androidx.activity:activity:[1.2.3]'
         }
 
+        /*javaCompileOptions{
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }*/
     }
 
     dexOptions {
@@ -75,6 +81,7 @@ android {
                 buildConfigField('String', 'SIP_HOST', rootProject.ext.HOST.LINPHONE_SIP_DEV)
             }
             buildConfigField('String', 'HTTP_VERSION', rootProject.ext.HOST.VERSION)
+            buildConfigField('String', 'LOGCAT_SHOW', "\"" + rootProject.ext.isDeBug + "\"")
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "kaadas",
                                     appname            : "@string/app_name"
                                     , app_icon         : "@drawable/logo",
@@ -234,6 +241,9 @@ dependencies {
     implementation project(':push:pushsdk_xiaomi')
     implementation project(':Core')
     implementation project(':keep_alive')
+    if(rootProject.ext.isDeBug){
+        implementation project(':internalTestModule')
+    }
 
 
     //文件下载的SDK
@@ -249,5 +259,5 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    annotationProcessor "com.google.auto.service:auto-service:1.0"
 }
