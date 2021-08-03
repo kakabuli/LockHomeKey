@@ -3,10 +3,15 @@ package com.kaadas.lock.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +21,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.my.PersonalUserAgreementActivity;
+import com.kaadas.lock.activity.my.PrivacyActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -713,6 +722,66 @@ public class AlertDialogUtil {
             }
         });
     }
+
+    //声明于条款弹窗
+    public void statementAndTermsDialog(Context context, String title, String content, String left, String right, ClickListener clickListener){
+        View mView = LayoutInflater.from(context).inflate(R.layout.statements_and_terms_two_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvTitle.setText(title);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_query.setText(right);
+        String privacyPolicyStr = context.getResources().getString(R.string.privacy_policy);
+        SpannableString privacyPolicySpannable = new SpannableString(privacyPolicyStr);
+        LinkClickableSpan privacyPolicySpan = new LinkClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent primatyIntent = new Intent(context, PrivacyActivity.class);
+                context.startActivity(primatyIntent);
+            }
+        };
+        String termsOfUseStr = context.getResources().getString(R.string.user_protocol2);
+        SpannableString termsOfUseSpannable = new SpannableString(termsOfUseStr);
+        LinkClickableSpan termsOfUseSpan = new LinkClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent agreementIntent = new Intent(context, PersonalUserAgreementActivity.class);
+                context.startActivity(agreementIntent);
+            }
+        };
+        termsOfUseSpannable.setSpan(termsOfUseSpan, 0, privacyPolicySpannable.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        privacyPolicySpannable.setSpan(privacyPolicySpan, 0, privacyPolicySpannable.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tvContent.append(privacyPolicySpannable);
+        tvContent.append(context.getResources().getString(R.string.and));
+        tvContent.append(termsOfUseSpannable);
+        tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(false);
+    }
+
 
     public interface ClothesHangerMachineClickListener{
         void left();

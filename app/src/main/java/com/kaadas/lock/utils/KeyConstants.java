@@ -207,6 +207,11 @@ public class KeyConstants {
      * 引导页
      */
     public static final String SHOW_GUIDE_PAGE = "show_guide_page";
+
+    /**
+     * 声明弹窗
+     */
+    public static final String SHOW_STATEMENT_AND_TERMS = "show_statement_and_terms";
     //app通知
     public static final String APP_NOTIFICATION_STATUS = "app_notification_status";
     //智能监测
