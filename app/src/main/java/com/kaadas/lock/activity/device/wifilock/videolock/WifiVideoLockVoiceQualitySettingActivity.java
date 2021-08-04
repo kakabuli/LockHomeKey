@@ -107,6 +107,10 @@ public class WifiVideoLockVoiceQualitySettingActivity extends BaseActivity<IWifi
     }
 
     private void setVoiceQuality() {
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         voiceQuality = getVoiceQuality();
         if(wifiLockInfo.getVolLevel() == voiceQuality) {
             finish();

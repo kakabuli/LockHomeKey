@@ -196,7 +196,8 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
 
                 try {
                     if (productInfo.getSnHead().equals(wifiSn.substring(0,3))) {
-                        tvLockType.setText(getString(R.string.bluetooth_type)+productInfo.getProductModel());
+                        tvLockType.setText(getString(R.string.bluetooth_type)+(productInfo.getProductModel().length() > 12 ? productInfo.getProductModel().substring(0,12) + "..."
+                                :productInfo.getProductModel()));
                         return;
                     }
                 } catch (Exception e) {

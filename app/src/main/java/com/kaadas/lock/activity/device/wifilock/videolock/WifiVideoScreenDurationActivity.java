@@ -158,6 +158,10 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
     }
 
     private void setScreenLightTime() {
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         screenLightSwitch = ivScreenLightDuration.isSelected() ? 1 : 0;
         screenLightTime = getScreenLightTime();
         if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){

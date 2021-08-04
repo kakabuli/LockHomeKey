@@ -147,6 +147,10 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
     }
 
     private void setScreenLightLevel() {
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         screenLightLevel = getScreenLightLevel();
         if(wifiLockInfo.getScreenLightLevel() == screenLightLevel){
             finish();

@@ -129,6 +129,10 @@ public class WifiLockOpenForceActivity extends BaseActivity<IWifiLockOpenForceVi
     }
 
     private void setOpenForce() {
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         openForce = getOpenForce();
         if(wifiLockInfo.getOpenForce() == openForce){
             finish();

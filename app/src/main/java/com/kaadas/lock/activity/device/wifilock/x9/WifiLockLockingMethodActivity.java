@@ -207,6 +207,10 @@ public class WifiLockLockingMethodActivity extends BaseActivity<IWifiLockLocking
     }
 
     private void setLockingMethod(){
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         lockingMethod = getLockingMethod();
         if(wifiLockInfo.getLockingMethod() == lockingMethod){
             finish();

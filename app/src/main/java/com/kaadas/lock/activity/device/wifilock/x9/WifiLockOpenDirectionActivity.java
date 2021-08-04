@@ -127,6 +127,10 @@ public class WifiLockOpenDirectionActivity extends BaseActivity<IWifiLockOpenDir
     }
 
     private void setOpenDirection() {
+        if(wifiLockInfo.getPowerSave() == 1){
+            finish();
+            return;
+        }
         openDirection = getOpenDirection();
         if(wifiLockInfo.getOpenDirection() == openDirection){
             finish();
