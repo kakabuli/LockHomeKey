@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.my;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.kaadas.lock.BuildConfig;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.SharedUtil;
@@ -77,6 +79,7 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
                             if(System.currentTimeMillis() - time > 5000 && !isOpen){
                                 //Use this method
                               startInternalTestHelp();
+                              startDoKit();
                                 isOpen = true;
                             }
                             break;
@@ -86,6 +89,24 @@ public class AboutUsActivity extends BaseAddToApplicationActivity implements Vie
                 return false;
             }
         });
+    }
+
+    private void startDoKit() {
+        ClassLoader classLoader = AboutUsActivity.class.getClassLoader();
+
+        Class<?> clz;
+        try {
+            clz = classLoader.loadClass("com.kaadas.shulan.testmodule.InternalTestHelp");
+            if(clz != null){
+                Object obj = clz.newInstance();
+
+                Method startLogcatView = clz.getDeclaredMethod("initDoKit", Context.class);
+                startLogcatView.setAccessible(true);
+                startLogcatView.invoke(obj, MyApplication.getInstance().getBaseContext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void startInternalTestHelp(){

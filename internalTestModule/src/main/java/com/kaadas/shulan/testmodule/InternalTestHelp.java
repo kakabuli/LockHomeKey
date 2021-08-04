@@ -9,9 +9,9 @@ import com.weijiaxing.logviewer.LogcatActivity;
 
 public class InternalTestHelp {
 
-    private void initDoKit(Application context){
+    private void initDoKit(Context context){
         Log.d("InternalTestHelp","initDoKit");
-        new DoKit.Builder(context)
+        new DoKit.Builder((Application) context.getApplicationContext())
                 //.productId("需要使用平台功能的话，需要到dokit.cn平台申请id")
                 .build();
     }
