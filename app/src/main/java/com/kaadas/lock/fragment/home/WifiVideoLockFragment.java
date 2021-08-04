@@ -128,6 +128,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 return false;
             }
         });
+        tvUpdateTime.setVisibility(View.GONE);
         return view;
     }
 
