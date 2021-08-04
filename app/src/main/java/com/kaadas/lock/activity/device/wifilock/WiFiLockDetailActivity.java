@@ -627,11 +627,7 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
     }
 
     public void powerStatusDialog(){
-        String content = getString(R.string.dialog_wifi_video_power_status);
-        if(wifiLockInfo != null && wifiLockInfo.getPower() < 30){
-            content = getString(R.string.dialog_wifi_video_low_power_status);
-        }
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ content +"\n",
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "锁已开启节能模式，无法查看门外情况", "请更换电池或进入管理员模式进行关闭",
                 getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
