@@ -454,7 +454,8 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
 
     @Override
     public void unknowError(String errorCode) {
-        ToastUtils.showLong(R.string.unknown_error);
+//        ToastUtils.showLong(R.string.unknown_error);
+        ToastUtils.showShort(errorCode);
         hiddenLoading();
     }
 

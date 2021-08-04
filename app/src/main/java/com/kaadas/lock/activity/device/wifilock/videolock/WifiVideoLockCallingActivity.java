@@ -244,7 +244,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             String lockNickname = wifiLockInfo.getLockNickname();
             tvHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
             tvBigHeadPic.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
-            if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())){
+            if(/*BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())*/ true){//视频锁都不显示视频设置
                 ivSetting.setVisibility(View.GONE);
             }else{
                 ivSetting.setVisibility(View.VISIBLE);

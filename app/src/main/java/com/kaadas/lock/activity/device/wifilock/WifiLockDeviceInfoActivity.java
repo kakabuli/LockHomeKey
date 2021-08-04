@@ -403,7 +403,8 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
 
     @Override
     public void unknowError(String errorCode) {
-        ToastUtils.showLong(R.string.unknown_error);
+//        ToastUtils.showShort(R.string.unknown_error);
+        ToastUtils.showShort(errorCode);
         hiddenLoading();
     }
 

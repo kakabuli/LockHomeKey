@@ -221,7 +221,8 @@ public abstract class BaseBleCheckInfoActivity<T extends ICheckOtaView, V extend
 
     @Override
     public void unknowError(String errorCode) {
-        ToastUtils.showLong(R.string.unknown_error);
+//        ToastUtils.showLong(R.string.unknown_error);
+        ToastUtils.showShort(errorCode);
         hiddenLoading();
     }
 
