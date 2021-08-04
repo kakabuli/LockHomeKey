@@ -1422,7 +1422,7 @@
     <string name="wifi_lock_alarm_hijack">有人使用劫持密码开启门锁，赶紧联系或报警</string>
     <string name="wifi_lock_alarm_lower_power_close_face">您的智能门锁面容识别已关闭，如需重新开启面容识别，请更换电池</string>
     <string name="wifi_lock_alarm_many_failed">您的智能锁已多次验证开门失败，请回家或联系保安查看</string>
-    <string name="wifi_lock_alarm_lock_broken">防撬报警信息</string>
+    <string name="wifi_lock_alarm_lock_broken">已监测到您的门锁被撬，请联系家人或小区保安</string>
     <string name="wifi_lock_alarm_opens">门锁正在被机械方式开启，请回家或联系保安查看</string>
     <string name="wifi_lock_alarm_low_power">您的智能门锁低电量,请及时更换</string>
     <!--<string name="wifi_lock_alarm_problem">您的门锁有故障，请注意</string>-->
