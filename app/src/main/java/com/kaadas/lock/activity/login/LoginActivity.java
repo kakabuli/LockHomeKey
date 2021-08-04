@@ -6,8 +6,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import android.provider.Settings;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +23,7 @@ import android.widget.TextView;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
 
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.mvp.presenter.LoginPresenter;
@@ -28,6 +33,7 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DetectionEmailPhone;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LinkClickableSpan;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
@@ -78,6 +84,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
         ButterKnife.bind(this);
         initEvent();
         initData();
+        initStatement();
         //检查版本
         checkVersion();
         initView();
@@ -92,6 +99,35 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
             etAccount.setText(phone);
             etAccount.setSelection(phone.length());
         }
+    }
+
+    private void initStatement(){
+        boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
+        if(!showStatementAndTerms)return;
+        AlertDialogUtil.getInstance().statementAndTermsDialog(
+                this
+                , getString(R.string.statements_and_terms),
+                getString(R.string.statements_and_terms_content),
+                getString(R.string.no_agree),getString(R.string.agree),new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+                        finish();
+                    }
+
+                    @Override
+                    public void right() {
+                        SPUtils.putProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, false);
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     public void checkVersion() {
