@@ -2193,7 +2193,7 @@
 
 
     <string name="video_lock_ota_powersave_title">已开启节能模式</string>
-    <string name="video_lock_ota_powersave_content">1.请检查设备电量，电量过低时请更换电池\n2.电量正常时，请输入密码开锁或按门铃后再试</string>
+    <string name="video_lock_ota_powersave_content">不支持升级操作,\n请进入管理员模式进行关闭</string>
 
     <string name="duress_number">编号%1$s</string>
     <string name="set_duress_account">请设置胁迫报警账号</string>

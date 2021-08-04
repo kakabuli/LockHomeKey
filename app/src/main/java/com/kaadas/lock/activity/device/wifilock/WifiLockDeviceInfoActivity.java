@@ -170,6 +170,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
                     return;
                 }
+                if(wifiLockInfo.getPowerSave() == 1){
+                    powerStatusDialog();
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(faceModelFirmwareVersion)) {
                     showLoading(getString(R.string.is_check_version));
                     multiOTAflag = false;
@@ -219,6 +223,10 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                 break;
             case R.id.rl_voice_model_firmware_version:
                 if(wifiLockInfo != null && wifiLockInfo.getIsAdmin() != 1){
+                    return;
+                }
+                if(wifiLockInfo.getPowerSave() == 1){
+                    powerStatusDialog();
                     return;
                 }
                 //TODO:待设置语音模组OTA
@@ -421,6 +429,31 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                     , getString(R.string.wakeup_lock_face_ota_tips), 5);
         }
 
+    }
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.video_lock_ota_powersave_title), getString(R.string.video_lock_ota_powersave_content),
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     @Override

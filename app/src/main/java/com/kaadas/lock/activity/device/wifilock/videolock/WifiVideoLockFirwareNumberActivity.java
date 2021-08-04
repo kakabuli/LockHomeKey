@@ -229,6 +229,10 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
                     return;
                 }
+                if(wifiLockInfoBySn.getPowerSave() == 1){
+                    powerStatusDialog();
+                    return;
+                }
                 if(!BleLockUtils.isSupportLockOTA(wifiLockInfoBySn.getFunctionSet())) return;
                 showLoading(getString(R.string.is_check_version));
                 if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfoBySn.getFunctionSet())) {
@@ -251,6 +255,10 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
                     return;
                 }
+                if(wifiLockInfoBySn.getPowerSave() == 1){
+                    powerStatusDialog();
+                    return;
+                }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getBackPanelVersion())) {
                     if(!BleLockUtils.isSupportSinglePanelOTA(wifiLockInfoBySn.getFunctionSet())) return;
                     showLoading(getString(R.string.is_check_version));
@@ -263,6 +271,10 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 break;
             case R.id.rl_fornt_hard_version:
                 if(wifiLockInfoBySn != null && wifiLockInfoBySn.getIsAdmin() != 1){
+                    return;
+                }
+                if(wifiLockInfoBySn.getPowerSave() == 1){
+                    powerStatusDialog();
                     return;
                 }
                 if (!TextUtils.isEmpty(wifiSN) && !TextUtils.isEmpty(wifiLockInfoBySn.getFrontPanelVersion())) {
@@ -522,5 +534,30 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                 }
             });
         }
+    }
+
+    public void powerStatusDialog(){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.video_lock_ota_powersave_title), getString(R.string.video_lock_ota_powersave_content),
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 }
