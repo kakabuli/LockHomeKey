@@ -744,6 +744,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         }
                         break;
                     case R.id.rl_ams_sensing:
+                        // TODO: 2021/8/5 产品定义暂时只显示灵敏度不进去设置
+                        if(true)return;
                         if(avi.isShow()){
                             intent = new Intent(this, WifiVideoLockSettingAMSSensingActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
