@@ -280,7 +280,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 rlPowerSave.setVisibility(View.GONE);
             }
 
-            if (BleLockUtils.isSupportRealTimeVideo(func)) {
+            if (BleLockUtils.isSupportRealTimeVideo(func) || BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())) {
                 rlRealTimeVideo.setVisibility(View.VISIBLE);
             } else {
                 rlRealTimeVideo.setVisibility(View.GONE);
@@ -672,7 +672,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         break;
 
                     case R.id.rl_real_time_video:
-                        if(BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())) return;
+                        if(true/*BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())*/) return;
                         if (avi.isShow()) {
 
                             intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
