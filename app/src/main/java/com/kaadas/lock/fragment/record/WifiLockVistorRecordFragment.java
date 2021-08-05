@@ -89,9 +89,9 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     private void initData() {
         String localRecord = (String) SPUtils.get(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSn, "");
         Gson gson = new Gson();
-        List<WifiVideoLockAlarmRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiVideoLockAlarmRecord>>() {
+        List<WifiVideoLockAlarmRecord> list = gson.fromJson(localRecord, new TypeToken<List<WifiVideoLockAlarmRecord>>() {
         }.getType());
-        groupData(records);
+        groupData(list);
         operationGroupRecordAdapter.notifyDataSetChanged();
     }
 
@@ -181,7 +181,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+//        ((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 
@@ -195,10 +195,10 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         }
         int size = records.size();
         currentPage = page + 1;
-        groupData(lockRecords);
+        int sum = groupData(lockRecords);
 
         if (size>0){
-            operationGroupRecordAdapter.notifyItemRangeInserted(size,lockRecords.size());
+            operationGroupRecordAdapter.notifyItemRangeInserted(size,sum);
         }else {
             operationGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -211,8 +211,9 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         }
     }
 
-    private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
+    private int groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
         String lastTimeHead = "";
+        int sum = 0;
         WifiVideoLockAlarmRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -223,8 +224,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
                 boolean falg = false;
                 for(WifiVideoLockAlarmRecord list : records){
-                    if(list.get_id() != null && record.get_id() != null
-                            && list.get_id().equals(record.get_id()) ){
+                    if(list.getCreateTime() == record.getCreateTime()){
                         falg = true;
                         break;
                     }
@@ -248,10 +248,12 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         lastRecord.setLast(true);
                     }
                 }
+                sum += 1;
                 records.add(record);
 
             }
         }
+        return sum;
     }
 
 

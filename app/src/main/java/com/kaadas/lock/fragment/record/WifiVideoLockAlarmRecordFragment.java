@@ -176,7 +176,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+//        ((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 
@@ -189,10 +189,10 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         }
         int size = list.size();
         currentPage = page + 1;
-        groupData(alarmRecords);
+        int sum = groupData(alarmRecords);
 
         if (size>0){
-            wifiLockAlarmGroupRecordAdapter.notifyItemRangeInserted(size,alarmRecords.size());
+            wifiLockAlarmGroupRecordAdapter.notifyItemRangeInserted(size,sum);
         }else {
             wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -206,8 +206,9 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     }
 
-    private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
+    private int groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
         String lastTimeHead = "";
+        int sum = 0;
         WifiVideoLockAlarmRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -218,8 +219,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
                 boolean falg = false;
                 for(WifiVideoLockAlarmRecord li : list){
-                    if(li.get_id() != null && record.get_id() != null
-                            && li.get_id().equals(record.get_id()) ){
+                    if(li.getCreateTime() == record.getCreateTime()){
                         falg = true;
                         break;
                     }
@@ -243,10 +243,12 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         lastRecord.setLast(true);
                     }
                 }
+                sum += 1;
                 list.add(record);
 
             }
         }
+        return sum;
     }
 
     @Override
