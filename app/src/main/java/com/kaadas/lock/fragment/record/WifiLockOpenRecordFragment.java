@@ -84,9 +84,9 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     private void initData() {
         String localRecord = (String) SPUtils.get(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn, "");
         Gson gson = new Gson();
-        List<WifiLockOperationRecord> records = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
+        List<WifiLockOperationRecord> list = gson.fromJson(localRecord, new TypeToken<List<WifiLockOperationRecord>>() {
         }.getType());
-        groupData(records);
+        groupData(list);
         operationGroupRecordAdapter.notifyDataSetChanged();
     }
 
@@ -127,7 +127,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+//        ((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 
@@ -146,10 +146,10 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
         int size = records.size();
         currentPage = page + 1;
-        groupData(lockRecords);
+        int sum = groupData(lockRecords);
 
         if (size>0){
-            operationGroupRecordAdapter.notifyItemRangeInserted(size,lockRecords.size());
+            operationGroupRecordAdapter.notifyItemRangeInserted(size,sum);
         }else {
             operationGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -162,8 +162,9 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
     }
 
-    private void groupData(List<WifiLockOperationRecord> lockRecords) {
+    private int groupData(List<WifiLockOperationRecord> lockRecords) {
         String lastTimeHead = "";
+        int sum = 0;
         WifiLockOperationRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -174,8 +175,7 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                 WifiLockOperationRecord record = lockRecords.get(i);
                 boolean falg = false;
                 for(WifiLockOperationRecord list : records){
-                    if(list.get_id() != null && record.get_id() != null
-                            && list.get_id().equals(record.get_id()) ){
+                    if(list.getCreateTime() == record.getCreateTime()){
                         falg = true;
                         break;
                     }
@@ -194,9 +194,11 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                         lastRecord.setLast(true);
                     }
                 }
+                sum += 1;
                 records.add(record);
             }
         }
+        return sum;
     }
 
     @Override
