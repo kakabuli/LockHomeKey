@@ -337,8 +337,11 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                         }else {
                             intent = new Intent(WifiVideoScreenDurationActivity.this, WifiLockMoreActivity.class);
                         }
-
-                        intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,screenLightTime);
+                        if(screenLightSwitch == 0){
+                            intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,0);
+                        }else {
+                            intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,screenLightTime);
+                        }
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtils.showLong(getString(R.string.modify_failed));

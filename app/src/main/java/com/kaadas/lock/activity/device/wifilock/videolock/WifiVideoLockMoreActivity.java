@@ -365,7 +365,11 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             //显示屏时长
             if(BleLockUtils.isSupportScreenDuration(wifiLockInfo.getFunctionSet())){
                 rlScreenDuration.setVisibility(View.VISIBLE);
-                setScreenLightTime(wifiLockInfo.getScreenLightTime());
+                if(wifiLockInfo.getScreenLightSwitch() == 0){
+                    setScreenLightTime(0);
+                }else {
+                    setScreenLightTime(wifiLockInfo.getScreenLightTime());
+                }
             }else{
                 rlScreenDuration.setVisibility(View.GONE);
             }
@@ -1052,6 +1056,8 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
             tvScreenDuration.setText(R.string.more_screen_light_duration_10s);
         }else if(/*screenLightTime > 10 && screenLightTime <= 15*/ screenLightTime == 15){
             tvScreenDuration.setText(R.string.more_screen_light_duration_15s);
+        }else  if(/*screenLightTime > 10 && screenLightTime <= 15*/ screenLightTime == 0){
+            tvScreenDuration.setText(R.string.close);
         }
     }
 
