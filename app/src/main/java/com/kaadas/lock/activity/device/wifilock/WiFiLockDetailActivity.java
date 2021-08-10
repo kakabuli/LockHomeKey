@@ -159,11 +159,13 @@ public class WiFiLockDetailActivity extends BaseActivity<IWifiLockDetailView, Wi
                 lockNickname = wifiLockInfo.getLockNickname();
             tvBluetoothName.setText(TextUtils.isEmpty(lockNickname) ? wifiLockInfo.getWifiSN() : lockNickname);
 
-            if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+            /*if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
                 tvDate.setVisibility(View.GONE);
             }else{
                 tvDate.setVisibility(View.VISIBLE);
-            }
+            }*/
+            // TODO: 2021/8/10 测试反馈说时间不准，隐藏该时间
+            tvDate.setVisibility(View.GONE);
         }
 
     }

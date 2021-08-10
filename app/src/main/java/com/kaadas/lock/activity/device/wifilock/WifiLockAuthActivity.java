@@ -289,6 +289,8 @@ public class WifiLockAuthActivity extends BaseActivity<IWifiLockAuthView, WifiLo
                 tvDate.setText(DateUtils.formatYearMonthDay(readDeviceInfoTime));
             }
         }
+        // TODO: 2021/8/10 测试反馈说时间不准，隐藏该时间 
+        tvDate.setVisibility(View.GONE);
 
 
     }
