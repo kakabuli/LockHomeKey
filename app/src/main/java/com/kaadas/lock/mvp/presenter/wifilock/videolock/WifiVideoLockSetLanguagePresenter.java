@@ -550,7 +550,9 @@ public class WifiVideoLockSetLanguagePresenter<T> extends BasePresenter<IWifiVid
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
+                            if(isSafe()){
+                                mViewRef.get().onSettingCallBack(false);
+                            }
                         }
                     });
             compositeDisposable.add(setLanguageLinstenerDisposable);

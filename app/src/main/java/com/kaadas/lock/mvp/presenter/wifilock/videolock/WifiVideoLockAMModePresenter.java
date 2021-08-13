@@ -512,7 +512,9 @@ public class WifiVideoLockAMModePresenter<T> extends BasePresenter<IWifiVideoLoc
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
+                            if(isSafe()){
+                                mViewRef.get().onSettingCallBack(false);
+                            }
                         }
                     });
             compositeDisposable.add(setAMLinstenerDisposable);
