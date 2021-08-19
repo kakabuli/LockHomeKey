@@ -23,6 +23,7 @@ import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockVistorRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVistorRecordView;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.publiclibrary.bean.WifiLockOperationRecord;
 import com.kaadas.lock.publiclibrary.bean.WifiVideoLockAlarmRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
@@ -195,10 +196,10 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         }
         int size = records.size();
         currentPage = page + 1;
-        int sum = groupData(lockRecords);
+        groupData(lockRecords);
 
         if (size>0){
-            operationGroupRecordAdapter.notifyItemRangeInserted(size,sum);
+            operationGroupRecordAdapter.notifyItemRangeInserted(size,lockRecords.size());
         }else {
             operationGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -211,9 +212,8 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
         }
     }
 
-    private int groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
+    private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
         String lastTimeHead = "";
-        int sum = 0;
         WifiVideoLockAlarmRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -222,7 +222,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
-                boolean falg = false;
+                /*boolean falg = false;
                 for(WifiVideoLockAlarmRecord list : records){
                     if(list.getCreateTime() == record.getCreateTime()){
                         falg = true;
@@ -231,7 +231,7 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                 }
                 if(falg){
                     continue;
-                }
+                }*/
                 long openTime = 0;
                 try {
                     openTime = Long.parseLong(record.getTime());
@@ -248,12 +248,11 @@ public class WifiLockVistorRecordFragment extends BaseFragment<IWifiLockVistorRe
                         lastRecord.setLast(true);
                     }
                 }
-                sum += 1;
+
                 records.add(record);
 
             }
         }
-        return sum;
     }
 
 

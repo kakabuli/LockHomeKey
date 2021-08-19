@@ -189,10 +189,10 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
         }
         int size = list.size();
         currentPage = page + 1;
-        int sum = groupData(alarmRecords);
+        groupData(alarmRecords);
 
         if (size>0){
-            wifiLockAlarmGroupRecordAdapter.notifyItemRangeInserted(size,sum);
+            wifiLockAlarmGroupRecordAdapter.notifyItemRangeInserted(size,alarmRecords.size());
         }else {
             wifiLockAlarmGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -206,9 +206,8 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
 
     }
 
-    private int groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
+    private void groupData(List<WifiVideoLockAlarmRecord> lockRecords) {
         String lastTimeHead = "";
-        int sum = 0;
         WifiVideoLockAlarmRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -217,7 +216,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiVideoLockAlarmRecord record = lockRecords.get(i);
-                boolean falg = false;
+               /* boolean falg = false;
                 for(WifiVideoLockAlarmRecord li : list){
                     if(li.getCreateTime() == record.getCreateTime()){
                         falg = true;
@@ -226,7 +225,7 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                 }
                 if(falg){
                     continue;
-                }
+                }*/
                 long openTime = 0;
                 try{
                     openTime = Long.parseLong(record.getTime());
@@ -243,12 +242,11 @@ public class WifiVideoLockAlarmRecordFragment extends BaseFragment<IWifiVideoLoc
                         lastRecord.setLast(true);
                     }
                 }
-                sum += 1;
+//                sum += 1;
                 list.add(record);
 
             }
         }
-        return sum;
     }
 
     @Override

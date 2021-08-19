@@ -146,10 +146,10 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
         int size = records.size();
         currentPage = page + 1;
-        int sum = groupData(lockRecords);
+        groupData(lockRecords);
 
         if (size>0){
-            operationGroupRecordAdapter.notifyItemRangeInserted(size,sum);
+            operationGroupRecordAdapter.notifyItemRangeInserted(size,lockRecords.size());
         }else {
             operationGroupRecordAdapter.notifyDataSetChanged();
         }
@@ -162,9 +162,8 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         }
     }
 
-    private int groupData(List<WifiLockOperationRecord> lockRecords) {
+    private void groupData(List<WifiLockOperationRecord> lockRecords) {
         String lastTimeHead = "";
-        int sum = 0;
         WifiLockOperationRecord lastRecord = null;
         if (lockRecords != null && lockRecords.size() > 0) {
             for (int i = 0; i < lockRecords.size(); i++) {
@@ -173,16 +172,6 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                     lastTimeHead = lastRecord.getDayTime();
                 }
                 WifiLockOperationRecord record = lockRecords.get(i);
-                boolean falg = false;
-                for(WifiLockOperationRecord list : records){
-                    if(list.getCreateTime() == record.getCreateTime()){
-                        falg = true;
-                        break;
-                    }
-                }
-                if(falg){
-                    continue;
-                }
                 //获取开锁时间的毫秒数
                 long openTime = record.getTime();
                 String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime * 1000);
@@ -194,11 +183,9 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
                         lastRecord.setLast(true);
                     }
                 }
-                sum += 1;
                 records.add(record);
             }
         }
-        return sum;
     }
 
     @Override
