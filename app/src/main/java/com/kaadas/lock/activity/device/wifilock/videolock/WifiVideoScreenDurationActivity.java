@@ -164,7 +164,9 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
         }
         screenLightSwitch = ivScreenLightDuration.isSelected() ? 1 : 0;
         screenLightTime = getScreenLightTime();
-        if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){
+        if(screenLightSwitch == wifiLockInfo.getScreenLightSwitch()){
+            finish();
+        } else if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
