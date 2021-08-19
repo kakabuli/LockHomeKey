@@ -1797,7 +1797,7 @@
 
     <string name="wakeup_lock">请唤醒门锁</string>
     <string name="wakeup_lock_face_ota_tips">请确保门锁有充足的电量，人脸模组升级中，门锁面容识别不可用</string>
-    <string name="primary_user_agreement">隐私策略</string>
+    <string name="primary_user_agreement">隐私政策</string>
 
     <string name="video_lock_xm_connect_time_out_1">连接超时，请稍后再试</string>
     <string name="video_lock_xm_connect_time_out">视频连接超时，请稍后再试</string>

@@ -1,12 +1,14 @@
 package com.kaadas.lock.activity.my;
 
 import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.PersonalUserAgreementAdapter;
@@ -30,6 +32,8 @@ public class PrivacyActivity extends BaseAddToApplicationActivity implements Vie
     TextView tvContent;
     @BindView(R.id.iv_right)
     ImageView ivRight;
+    @BindView(R.id.webView)
+    WebView webView;
 
 
     //总数据
@@ -43,6 +47,7 @@ public class PrivacyActivity extends BaseAddToApplicationActivity implements Vie
         initView();
         ivBack.setOnClickListener(this);
         tvContent.setText(R.string.primary_user_agreement);
+        webView.loadUrl("http://www.kaadas.com/others/policy.html");
     }
 
 
