@@ -144,6 +144,7 @@ public class WifiVideoLockDuressPresenter<T> extends BasePresenter<IWifiVideoLoc
         XiaokaiNewServiceImp.wifiPwdDuressAlarmSwitch(mSettingPwdDuressAlarmSwitchBean).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
                 if(isSafe()){
                     mViewRef.get().onSettingDuress(baseResult);
                 }

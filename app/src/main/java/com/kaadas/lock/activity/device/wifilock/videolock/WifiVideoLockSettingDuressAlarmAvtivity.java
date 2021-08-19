@@ -58,9 +58,11 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
             mTvDuressDate.setText(DateUtils.getDayTimeFromMillisecond(mDuressBean.getCreateTime() * 1000));
 
             if(mDuressBean.getPwdDuressSwitch() == 0){
+                mIvDuressSelect.setSelected(false);
                 rlDuressAlarmShow.setVisibility(View.GONE);
             }else{
                 rlDuressAlarmShow.setVisibility(View.VISIBLE);
+                mIvDuressSelect.setSelected(true);
             }
         }
     }

@@ -61,7 +61,10 @@ public class WifiVideoLockSettingDuressAlarmReceiverAvtivity extends BaseActivit
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            settingDuressAccount();
+            Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
+            intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
