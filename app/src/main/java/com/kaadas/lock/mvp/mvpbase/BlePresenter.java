@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.bean.BluetoothLockBroadcastBean;
@@ -83,7 +84,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             }
         }
 
-        if (bleService.getBleLockInfo() != null  //1
+      /*  if (bleService.getBleLockInfo() != null  //1
                 && bleService.getBleLockInfo().getServerLockInfo().getLockName().equals(bleLockInfo.getServerLockInfo().getLockName())) { //1
             ServerBleDevice serviceLockInfo = bleService.getBleLockInfo().getServerLockInfo(); //1
             ServerBleDevice serverLockInfo = bleLockInfo.getServerLockInfo();
@@ -98,7 +99,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                     return;
                 }
             }
-        }
+        }*/
         bleService.setBleLockInfo(bleLockInfo); //1
         this.bleLockInfo = bleLockInfo;
     }
@@ -500,6 +501,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
                         byte[] tempPsw2 = Rsa.hex2byte(bleLockInfo.getServerLockInfo().getPassword2());
                         System.arraycopy(serverPsw1, 0, payload, 0, serverPsw1.length);
                         System.arraycopy(tempPsw2, 0, payload, serverPsw1.length, tempPsw2.length);
+                        LogUtils.e("serverPsw1      " + Rsa.bytesToHexString(serverPsw1));
+                        LogUtils.e("tempPsw2      " + Rsa.bytesToHexString(tempPsw2));
                         LogUtils.e("负载数据是      " + Rsa.bytesToHexString(bleDataBean.getPayload()));
                         byte[] password_3de = Rsa.decrypt(bleDataBean.getPayload(), payload);  //解密password3
                         LogUtils.e("收到鉴权数据   " + Rsa.bytesToHexString(password_3de));
@@ -990,6 +993,8 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
         byte[] openLockCommand;
+        Log.e("zdx", "realOpenLock: "  + isApp);
+        Log.e("zdx", "realOpenLock: "  + Rsa.bytesToHexString(bleLockInfo.getAuthKey()));
         if (isApp) {//如果是APP开锁
             openLockCommand = BleCommandFactory.controlLockCommand((byte) 0x00, (byte) 0x04, "", bleLockInfo.getAuthKey());
         } else {

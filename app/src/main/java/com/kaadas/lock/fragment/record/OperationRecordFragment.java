@@ -95,7 +95,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) mView.getParent()).removeView(mView);
+        //((ViewGroup) mView.getParent()).removeView(mView);
         unbinder.unbind();
 
     }

@@ -120,7 +120,7 @@ public class BleOpenRecordFragment extends BaseBleFragment<IOpenLockRecordView, 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+        //((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 

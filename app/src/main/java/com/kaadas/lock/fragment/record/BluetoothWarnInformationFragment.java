@@ -124,7 +124,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((ViewGroup) view.getParent()).removeView(view);
+//        ((ViewGroup) view.getParent()).removeView(view);
         unbinder.unbind();
     }
 
