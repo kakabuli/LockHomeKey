@@ -322,11 +322,11 @@ public class WifiVideoLockAddSuccessActivity extends BaseActivity<IWifiLockVideo
 
     @Override
     public void onSetNameFailedNet(Throwable throwable) {
-
+        hiddenLoading();
     }
 
     @Override
     public void onSetNameFailedServer(BaseResult baseResult) {
-
+        hiddenLoading();
     }
 }
