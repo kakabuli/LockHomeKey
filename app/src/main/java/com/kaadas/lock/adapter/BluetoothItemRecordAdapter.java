@@ -34,7 +34,6 @@ public class BluetoothItemRecordAdapter extends BaseQuickAdapter<BluetoothItemRe
     @Override
     protected void convert(BaseViewHolder helper, BluetoothItemRecordBean bean) {
         TextView tvTime = helper.getView(R.id.tv_time);
-        Log.d("zdx", "convert: " + bean.getOpen_time());
         tvTime.setText(bean.getOpen_time());
         helper.getView(R.id.view_top).setVisibility(bean.isFirstData() == true ? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.view_bottom).setVisibility(bean.isLastData() == true ? View.INVISIBLE : View.VISIBLE);

@@ -993,8 +993,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             return;
         }
         byte[] openLockCommand;
-        Log.e("zdx", "realOpenLock: "  + isApp);
-        Log.e("zdx", "realOpenLock: "  + Rsa.bytesToHexString(bleLockInfo.getAuthKey()));
         if (isApp) {//如果是APP开锁
             openLockCommand = BleCommandFactory.controlLockCommand((byte) 0x00, (byte) 0x04, "", bleLockInfo.getAuthKey());
         } else {
