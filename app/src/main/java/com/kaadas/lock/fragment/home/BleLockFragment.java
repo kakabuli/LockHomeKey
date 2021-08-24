@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1129,7 +1130,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             String hourSecond = "";
             try {
                   timeHead = record.getOpen_time().substring(0, 10);
-                  hourSecond = record.getOpen_time().substring(11, 16);
+                  hourSecond = record.getOpen_time().substring(11, 19);
             }catch (Exception e){
                 LogUtils.e("获取时间错误    " +  record.getOpen_time());
             }
@@ -1370,7 +1371,7 @@ public class BleLockFragment extends BaseBleFragment<IBleLockView, BleLockPresen
             OperationLockRecord record = lockRecords.get(i);
             //获取开锁时间的毫秒数
             String timeHead = record.getEventTime().substring(0, 10);
-            String hourSecond = record.getEventTime().substring(11, 16);
+            String hourSecond = record.getEventTime().substring(11, 19);
 
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             //获取昵称

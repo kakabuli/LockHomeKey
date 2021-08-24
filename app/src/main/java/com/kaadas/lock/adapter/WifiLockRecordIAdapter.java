@@ -29,7 +29,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
         TextView tvTime = helper.getView(R.id.tv_time);
         TextView tvDayTime = helper.getView(R.id.tv_day_time);
         long time = record.getTime();
-        String s = DateUtils.currentLong2HourMin(time * 1000);
+        String s = DateUtils.currentLong2HourMinSecond(time * 1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         tvDayTime.setVisibility( first? View.VISIBLE : View.GONE);
         //设置天时间

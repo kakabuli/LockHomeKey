@@ -301,7 +301,7 @@ public class OperationRecordFragment extends BaseBleFragment<IOperationRecordVie
             OperationLockRecord record = lockRecords.get(i);
             //获取开锁时间的毫秒数
             String timeHead = record.getEventTime().substring(0, 10);
-            String hourSecond = record.getEventTime().substring(11, 16);
+            String hourSecond = record.getEventTime().substring(11, 19);
 
             GetPasswordResult passwordResult = MyApplication.getInstance().getPasswordResults(bleLockInfo.getServerLockInfo().getLockName());
             //获取昵称

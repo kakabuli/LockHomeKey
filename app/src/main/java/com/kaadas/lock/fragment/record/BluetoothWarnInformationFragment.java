@@ -221,7 +221,7 @@ public class BluetoothWarnInformationFragment extends BaseBleFragment<IWarringRe
             long openTime = record.getWarningTime();
             String sOpenTime = DateUtils.getDateTimeFromMillisecond(openTime);
             String timeHead = sOpenTime.substring(0, 10);
-            String hourSecond = sOpenTime.substring(11, 16);
+            String hourSecond = sOpenTime.substring(11, 19);
 
             List<BluetoothItemRecordBean> itemList = new ArrayList<>();
 

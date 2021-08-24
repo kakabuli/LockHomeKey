@@ -51,7 +51,7 @@ public class WifiVideoLockAlarmIAdapter extends BaseQuickAdapter<WifiVideoLockAl
         TextView tvRight = helper.getView(R.id.tv_right);
 
         long time = Long.parseLong(record.getTime());
-        String s = DateUtils.currentLong2HourMin(time * 1000);
+        String s = DateUtils.currentLong2HourMinSecond(time * 1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         tvDayTime.setVisibility( first? View.VISIBLE : View.GONE);
         //设置天时间

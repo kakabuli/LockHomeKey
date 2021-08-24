@@ -115,6 +115,12 @@ public class DateUtils {
         return simpleDateFormat.format(time);
     }
 
+    //当前时间时间戳转换成时分
+    public static String currentLong2HourMinSecond(long time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+        return simpleDateFormat.format(time);
+    }
+
     //标准时间转换成时间戳
     public static long hourMinToLong(String time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");

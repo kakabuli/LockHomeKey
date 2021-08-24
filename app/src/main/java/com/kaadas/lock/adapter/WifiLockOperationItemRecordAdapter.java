@@ -37,7 +37,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
         int position = helper.getPosition();
         TextView tvTime = helper.getView(R.id.tv_time);
         long time = record.getTime();
-        String s = DateUtils.currentLong2HourMin(time * 1000);
+        String s = DateUtils.currentLong2HourMinSecond(time * 1000);
         tvTime.setText(TextUtils.isEmpty(s) ? "" : s);
         helper.getView(R.id.view_top).setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         helper.getView(R.id.view_bottom).setVisibility(position == size - 1 ? View.INVISIBLE : View.VISIBLE);

@@ -228,7 +228,7 @@ public class BleOpenRecordFragment extends BaseBleFragment<IOpenLockRecordView, 
             String hourSecond = "";
             try {
                 timeHead = record.getOpen_time().substring(0, 10);
-                hourSecond = record.getOpen_time().substring(11, 16);
+                hourSecond = record.getOpen_time().substring(11, 19);
             }catch (Exception e){
                 LogUtils.e("获取时间错误    " +  record.getOpen_time());
             }
