@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -153,6 +154,7 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
     private WifiLockInfo wifiLockInfo;
     private List<ProductInfo> productList = new ArrayList<>();
     private RequestOptions options;
+    AlertDialog dialog;
 
 
     private Runnable lockRunnable = new Runnable() {
@@ -605,18 +607,25 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
 
     @Override
     public void inputPwd() {
-        View mView = LayoutInflater.from(this).inflate(R.layout.have_edit_dialog, null);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        View mView = View.inflate(this, R.layout.have_edit_dialog, null);
         TextView tvTitle = mView.findViewById(R.id.tv_title);
         EditText editText = mView.findViewById(R.id.et_name);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
-        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(this, mView);
+        if(dialog == null){
+            dialog = alertDialog.setView(mView).create();
+        }
+        if(!dialog.isShowing()){
+            dialog.show();
+        }
         tvTitle.setText(getString(R.string.input_open_lock_password));
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
+                dialog.dismiss();
+                dialog = null;
             }
         });
         tv_query.setOnClickListener(new View.OnClickListener() {
@@ -628,7 +637,8 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
                     return;
                 }
                 mPresenter.realOpenLock(name, false);
-                alertDialog.dismiss();
+                dialog.dismiss();
+                dialog = null;
             }
         });
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -77,13 +78,16 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                 screenLightSwitch = wifiLockInfo.getScreenLightSwitch();
             }catch (Exception e){
                 screenLightSwitch = 0;
+                Log.d("zdx", "onCreate1: " + e.getMessage());
             }
             try {
                 screenLightTime = wifiLockInfo.getScreenLightTime();
             }catch (Exception e){
                 screenLightTime = 5;
+                Log.d("zdx", "onCreate2: " + e.getMessage());
             }
-
+            Log.d("zdx", "screenLightSwitch: " + screenLightSwitch);
+            Log.d("zdx", "screenLightTime: " + screenLightTime);
             setScreenLightTimeShow(screenLightSwitch);
             setScreenLightTimeView(screenLightTime);
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
@@ -164,9 +168,7 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
         }
         screenLightSwitch = ivScreenLightDuration.isSelected() ? 1 : 0;
         screenLightTime = getScreenLightTime();
-        if(screenLightSwitch == wifiLockInfo.getScreenLightSwitch()){
-            finish();
-        } else if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){
+       if(wifiLockInfo.getScreenLightSwitch() == screenLightSwitch && wifiLockInfo.getScreenLightTime() == screenLightTime){
             finish();
         }else{
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
@@ -331,9 +333,9 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                 @Override
                 public void run() {
                     hiddenLoading();
+                    Intent intent;
                     if(flag){
                         ToastUtils.showLong(getString(R.string.modify_success));
-                        Intent intent;
                         if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
                             intent = new Intent(WifiVideoScreenDurationActivity.this, WifiVideoLockMoreActivity.class);
                         }else {
@@ -347,6 +349,17 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                         setResult(RESULT_OK,intent);
                     }else{
                         ToastUtils.showLong(getString(R.string.modify_failed));
+                        if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){
+                            intent = new Intent(WifiVideoScreenDurationActivity.this, WifiVideoLockMoreActivity.class);
+                        }else {
+                            intent = new Intent(WifiVideoScreenDurationActivity.this, WifiLockMoreActivity.class);
+                        }
+                        if(wifiLockInfo.getScreenLightSwitch() == 0){
+                            intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,0);
+                        }else {
+                            intent.putExtra(MqttConstant.SET_SREEN_LIGHT_TIME,wifiLockInfo.getScreenLightTime());
+                        }
+                        setResult(RESULT_OK,intent);
                     }
                     if(avi != null){
                         tvTips.setVisibility(View.GONE);

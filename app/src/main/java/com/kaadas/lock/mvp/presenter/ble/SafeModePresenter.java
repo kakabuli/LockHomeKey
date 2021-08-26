@@ -217,7 +217,7 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
                         int codeType = deValue[1] & 0xff;
                         int codeNumber = deValue[2] & 0xff;
                         LogUtils.e("秘钥的帧数是  " + index + " 秘钥类型是  " + codeType + "  秘钥总数是   " + codeNumber);
-                        int allpasswordNumber = getAllpasswordNumber(type, deValue);
+                        int allpasswordNumber = getAllpasswordNumber(/*type*/codeNumber, deValue);
                         LogUtils.e("秘钥总数是   " + allpasswordNumber);
                         if (allpasswordNumber > 0) {
                             typeNumber++;
@@ -261,14 +261,15 @@ public class SafeModePresenter<T> extends BlePresenter<ISafeModeView> {
 
     private int[] temp = new int[]{0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001};
 
-    private int getAllpasswordNumber(int type, byte[] deValue) {
+    private int getAllpasswordNumber(int count, byte[] deValue) {
         List<Integer> bleNumber = new ArrayList<>();
-        int codeNumber = 0;
-        if (type == 1) {
+        int codeNumber = count;
+//        int codeNumber = 0;
+        /*if (type == 1) {
             codeNumber = 10;
         } else if (type == 2 || type == 3) {
             codeNumber = 100;
-        }
+        }*/
         //获取所有有秘钥的密码编号
         for (int index = 0; index < deValue.length; index++) {
             for (int j = 0; j < 8 && index * 8 + j < codeNumber; j++) {
