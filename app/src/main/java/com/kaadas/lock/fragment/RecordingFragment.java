@@ -10,20 +10,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.MediaPlayerActivity;
-import com.kaadas.lock.activity.cateye.PreviewActivity;
 import com.kaadas.lock.activity.cateye.RecordingPreviewActivity;
-import com.kaadas.lock.adapter.PirHistoryAdapter;
 import com.kaadas.lock.adapter.RecordingAdapter;
 import com.kaadas.lock.mvp.presenter.RecordingPresenter;
-import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.IRecordingView;
-import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.utils.Constants;
-import com.kaadas.lock.utils.PirConst;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.db.MediaItem;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
@@ -115,7 +109,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
                 int mediaType = currentDateItem.get(position).getMediaType();
                 String name= currentDateItem.get(position).getName();
                 String path=currentDateItem.get(position).getPath();
-                SPUtils2.put(MyApplication.getInstance(),name+Constants.RECORDINGTAG,"looksuccess");
+                SPUtils.put(name+Constants.RECORDINGTAG,"looksuccess");
                 //LinearLayout itemFather=(LinearLayout) view.getParent();
                 if(mediaType==2){
                     Intent intent=new Intent(getActivity(), RecordingPreviewActivity.class);
@@ -289,7 +283,7 @@ public class RecordingFragment extends CallBackBaseFragment <IRecordingView, Rec
             file.delete();
 
             currentDateItem.remove(position);
-            SPUtils2.remove(getActivity(),name+Constants.RECORDINGTAG);
+            SPUtils.remove(name+Constants.RECORDINGTAG);
 
             recordingAdapter.notifyItemRemoved(position);
 

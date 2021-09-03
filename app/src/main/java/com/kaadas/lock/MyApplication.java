@@ -47,7 +47,6 @@ import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.db.ClothesHangerMachineAllBeanDao;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
@@ -418,7 +417,6 @@ public class MyApplication extends Application {
         LinphoneHelper.deleteUser();
         //退出meme网
         MemeManager.getInstance().videoActivityDisconnectMeme();
-        SPUtils2.remove(this,Constants.PUSHID);
         //清除数据库数据
         for (Activity activity : activities) {
             if (activity != null) {

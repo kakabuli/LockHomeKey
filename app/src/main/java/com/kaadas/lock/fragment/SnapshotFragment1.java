@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,23 +22,19 @@ import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.PreviewActivity;
 import com.kaadas.lock.adapter.PirHistoryAdapter;
-import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
 import com.kaadas.lock.bean.PirEventBus;
 import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.FtpEnable;
-import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayListResult;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.PirConst;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.FtpException;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.HistoryInfo;
 import com.kaadas.lock.utils.greenDao.db.HistoryInfoDao;
-import com.kaadas.lock.widget.GravityPopup;
-import com.kaadas.lock.widget.GravityPopup.HidePopup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -58,7 +53,6 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -68,9 +62,6 @@ import java.util.TimeZone;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import retrofit2.http.GET;
 
 //<ISnapShotView, SnapPresenter<ISnapShotView>>
 //implements ISnapShotView
@@ -223,12 +214,12 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         }
 
         key =deviceId+ GeTui.CATEYE_KEY;
-        catEyeCount= (int) SPUtils2.get(MyApplication.getInstance(),key,0);
+        catEyeCount= (int) SPUtils.get(key,0);
         if(catEyeCount!=0 && catEyeCount!=-1){
             String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
             pir_history_notic_tv.setText(format);
             pir_history_all_ll.setVisibility(View.VISIBLE);
-            SPUtils2.remove(getActivity(),key);
+            SPUtils.remove(key);
         }else{
             pir_history_all_ll.setVisibility(View.GONE);
         }
@@ -260,7 +251,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 }
                 String imgUrl= newimageList.get(position);
                 String newImgUrl= imageList.get(position);
-                SPUtils2.put(MyApplication.getInstance(),newImgUrl,"looksuccess");
+                SPUtils.put(newImgUrl,"looksuccess");
                 Intent intent=new Intent(getActivity(), PreviewActivity.class);
                 intent.putExtra("imgUrl",imgUrl);
                 intent.putExtra("deviceId",deviceId);
@@ -308,7 +299,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
 
                         String key= deviceId + currentDate.replace("-","");
                         String json=new Gson().toJson(newimageList);
-                        SPUtils2.put(MyApplication.getInstance(),key,json);
+                        SPUtils.put(key,json);
                         return;
                     }
                 }
@@ -411,7 +402,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 String format= String.format( getActivity().getResources().getString(R.string.pir_history_notic), catEyeCount);
                 pir_history_notic_tv.setText(format);
                 pir_history_all_ll.setVisibility(View.VISIBLE);
-                SPUtils2.remove(getActivity(),key);
+                SPUtils.remove(key);
             }
         }
         //	}
@@ -457,7 +448,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
         dialog.setCancelable(false);//点击返回键不消失
         String key= deviceId+currentDate+"";
       //  Log.e(GeTui.VideoLog,"key------->:"+key);
-        String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
+        String str0=(String) SPUtils.get(key,"");
         if(!TextUtils.isEmpty(str0)){
             if(newimageList!=null && newimageList.size()>0 && lastDate!=null  && lastDate.equals(currentDate)){
                 Toast.makeText(getActivity(),getActivity().getResources().getString(R.string.pull_refefresh_new_data),Toast.LENGTH_SHORT).show();
@@ -590,12 +581,12 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
                 File mp4file = new File(mp4Path);
                 String item = imageList.get(position);
                 String item_key=item+ PirConst.IMG_DOWNLOAD_SUC;
-                SPUtils2.remove(getActivity(),item_key);
-                SPUtils2.remove(getActivity(),item);
+                SPUtils.remove(item_key);
+                SPUtils.remove(item);
                 imageList.remove(position);
                 String key=deviceId+item.split(" ")[0].replace("-","");
                 String result= new Gson().toJson(newimageList);
-                SPUtils2.put(getActivity(),key,result);
+                SPUtils.put(key,result);
                 Log.e("denganzhi3","audiofile:"+imagefile.getAbsolutePath());
                 Log.e("denganzhi3","audiofile:"+audiofile.getAbsolutePath());
                 Log.e("denganzhi3","audiofile:"+h264file.getAbsolutePath());
@@ -714,7 +705,7 @@ public class SnapshotFragment1 extends CallBackBaseFragment<ISnapShotView, SnapP
             currentDate = year_tv.getText().toString()+ time_tv.getText().toString()+day;
         }
         String key= deviceId+currentDate+"";
-        String str0=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
+        String str0=(String) SPUtils.get(key,"");
         if(!TextUtils.isEmpty(str0)){
             if(newimageList!= null && newimageList.size()>0){
                 newimageList.clear();

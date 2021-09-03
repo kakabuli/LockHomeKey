@@ -17,7 +17,7 @@ import com.kaadas.lock.mvp.presenter.gatewaylockpresenter.GatewayLockSharePresen
 import com.kaadas.lock.mvp.view.gatewaylockview.GatewayLockShareView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.SharedUtil;
 import com.kaadas.lock.utils.StringUtil;
 import com.blankj.utilcode.util.ToastUtils;
@@ -87,7 +87,7 @@ public class GatewayLockStressShareActivity extends BaseActivity<GatewayLockShar
             case R.id.back:
                 if (!TextUtils.isEmpty(pwdId)){
                     Intent managerIntent=new Intent(GatewayLockStressShareActivity.this, GatewayLockStressDetailActivity.class);
-                    SPUtils2.put(this,KeyConstants.ADD_STRESS_PWD_ID,pwdId);
+                    SPUtils.put(KeyConstants.ADD_STRESS_PWD_ID,pwdId);
                     startActivity(managerIntent);
                 }
                 break;
@@ -149,7 +149,7 @@ public class GatewayLockStressShareActivity extends BaseActivity<GatewayLockShar
     private boolean isCosumenBackKey() {
         if (!TextUtils.isEmpty(pwdId)){
             Intent managerIntent=new Intent(GatewayLockStressShareActivity.this, GatewayLockStressDetailActivity.class);
-            SPUtils2.put(this,KeyConstants.ADD_STRESS_PWD_ID,pwdId);
+            SPUtils.put(KeyConstants.ADD_STRESS_PWD_ID,pwdId);
             startActivity(managerIntent);
         }
         return true;

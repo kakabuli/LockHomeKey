@@ -58,7 +58,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeServiceInfo;
@@ -189,7 +188,7 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                         GatewayInfo gatewayInfo = (GatewayInfo) obj;
                         String meUsername = gatewayInfo.getServerInfo().getMeUsername();
                         String mePwd = gatewayInfo.getServerInfo().getMePwd();
-                        SPUtils2.put(getActivity(), gwid, meUsername + "&" + mePwd);
+                        SPUtils.put(gwid, meUsername + "&" + mePwd);
                     }
                 }
             }

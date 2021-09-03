@@ -26,7 +26,6 @@ import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.NotificationUtils;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 import org.json.JSONException;
@@ -161,7 +160,7 @@ public class GeTuiIntentService extends GTIntentService {
         Log.e(TAG, "onReceiveClientId -> " + "clientid = " + clientid);
         LogUtils.e("shulan -- onReceiveClientId-->clientid=" + clientid);
         sendMessage(clientid, 1);
-        if(!Rom.isEmui() && !Rom.isMiui() && !clientid.equals(SPUtils.get(GeTui.JPUSH_ID,"").toString())){
+        if(!Rom.isEmui() && !Rom.isMiui() && !clientid.equals(MMKVUtils.getStringMultiMMKV(SPUtils.FILE_NAME,GeTui.JPUSH_ID,""))){
             refreshedTokenToServer(clientid);
         }
     }
@@ -372,7 +371,8 @@ public class GeTuiIntentService extends GTIntentService {
     private void refreshedTokenToServer(String jpush) {
         LogUtils.d(TAG, "sending token to server. token:" + jpush);
         uploadpushmethod(2,jpush);
-        SPUtils.put(GeTui.JPUSH_ID,jpush);
+//        SPUtils.put(GeTui.JPUSH_ID,jpush);
+        MMKVUtils.setMultiMMKV(SPUtils.FILE_NAME,GeTui.JPUSH_ID,jpush);
     }
 
     public void uploadpushmethod(int type , String JpushId) {

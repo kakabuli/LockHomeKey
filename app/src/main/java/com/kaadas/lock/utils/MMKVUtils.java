@@ -4,6 +4,70 @@ import com.tencent.mmkv.MMKV;
 
 public class MMKVUtils {
 
+    //========================多进程访问==================
+    public static void setMultiMMKV(String id , String key,int value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,String value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,boolean value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,long value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,float value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,byte[] value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static void setMultiMMKV(String id , String key,double value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        kv.encode(key, value);
+    }
+
+    public static String getStringMultiMMKV(String id ,String key,String value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        return kv.decodeString(key,value);
+    }
+
+    public static String getStringMultiMMKV(String id ,String key){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        return kv.decodeString(key);
+    }
+
+    public static boolean getBoolMultiMMKV(String id ,String key,boolean value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        return kv.decodeBool(key,value);
+    }
+
+    public static int getIntMultiMMKV(String id ,String key,int value){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        return kv.decodeInt(key,value);
+    }
+
+    public static int getIntMultiMMKV(String id ,String key){
+        MMKV kv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);
+        return kv.decodeInt(key);
+    }
+
+
+    //========================多进程访问==================
+
     public static void setMMKV(String id , String key,int value){
         MMKV kv = MMKV.mmkvWithID(id);
         kv.encode(key, value);

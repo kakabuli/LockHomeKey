@@ -2,16 +2,13 @@ package com.kaadas.lock.mvp.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
-import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.WifiLockActionBean;
@@ -38,14 +35,12 @@ import com.kaadas.lock.publiclibrary.linphone.linphone.callback.PhoneCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.callback.RegistrationCallback;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneManager;
-import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.CatEyeEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.DeleteDeviceLockBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockAlarmEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayLockInfoEventBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.GatewayResetBean;
 import com.kaadas.lock.publiclibrary.mqtt.eventbean.WifiLockAlarmBean;
-import com.kaadas.lock.publiclibrary.mqtt.publishbean.GatewayComfirmOtaResultBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GetBindGatewayStatusResult;
@@ -56,11 +51,8 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
-import com.kaadas.lock.utils.RecordTools;
-import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.BleLockServiceInfo;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
@@ -82,7 +74,6 @@ import com.kaadas.lock.utils.greenDao.manager.GatewayLockPasswordManager;
 
 import net.sdvn.cmapi.Device;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.linphone.core.LinphoneCall;
@@ -96,7 +87,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
-import retrofit2.http.GET;
 
 /**
  * Create By lxj  on 2019/3/18
