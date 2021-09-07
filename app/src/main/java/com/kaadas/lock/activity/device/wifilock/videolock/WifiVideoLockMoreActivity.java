@@ -435,7 +435,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         rlMessageFree.setOnClickListener(this);
         rlSafeMode.setOnClickListener(this);
         rlAm.setOnClickListener(this);
-        if(Integer.parseInt(wifiLockInfo.getFunctionSet() + "") == 0x79){
+        if(wifiLockInfo != null && Integer.parseInt(wifiLockInfo.getFunctionSet() + "") == 0x79){
             ivPowerSave.setCompoundDrawables(null,null,null,null);
         }else{
             rlPowerSave.setOnClickListener(this);

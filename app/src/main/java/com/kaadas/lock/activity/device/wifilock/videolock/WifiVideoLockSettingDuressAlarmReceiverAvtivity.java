@@ -53,8 +53,8 @@ public class WifiVideoLockSettingDuressAlarmReceiverAvtivity extends BaseActivit
     private void initData() {
         mDuressBean = (DuressBean) getIntent().getSerializableExtra(KeyConstants.DURESS_PASSWORD_INfO);
         position = getIntent().getIntExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO,-1);
-        if(mDuressBean != null && !TextUtils.isEmpty(mDuressBean.getDuressAlarmAccount())){
-            mEtReceiver.setText(mDuressBean.getDuressAlarmAccount());
+        if(mDuressBean != null && !TextUtils.isEmpty(mDuressBean.getDuressAlarmAccount()) && mDuressBean.getDuressAlarmAccount().length() > 2){
+            mEtReceiver.setText(mDuressBean.getDuressAlarmAccount().substring(2));
         }
     }
 
@@ -145,13 +145,14 @@ public class WifiVideoLockSettingDuressAlarmReceiverAvtivity extends BaseActivit
     public void onSettingDuressAccount(BaseResult baseResult) {
         if("200".equals(baseResult.getCode() + "")){
             mDuressBean.setDuressAlarmAccount(duressAccount);
+            mDuressBean.setPwdDuressSwitch(1);
             ToastUtils.showShort(R.string.set_success);
             Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
             intent.putExtra(KeyConstants.DURESS_PASSWORD_INfO, mDuressBean);
             intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());
             intent.putExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO, position);
             startActivity(intent);
-//            setResult(RESULT_OK, intent);
+            mPresenter.getPasswordList(mDuressBean.getWifiSN());
             finish();
         }else if("453".equals(baseResult.getCode() + "")){
             AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.user_not_registered));

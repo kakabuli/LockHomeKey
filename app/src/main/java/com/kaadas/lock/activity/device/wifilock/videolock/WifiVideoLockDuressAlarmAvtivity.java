@@ -3,6 +3,7 @@ package com.kaadas.lock.activity.device.wifilock.videolock;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,10 +60,8 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
             int position = getIntent().getIntExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO,-1);
             if(position < 0) return;
             DuressBean bean = (DuressBean) getIntent().getSerializableExtra(KeyConstants.DURESS_PASSWORD_INfO);
-            duressList.get(position).setPwdDuressSwitch(bean.getPwdDuressSwitch());
-            duressList.get(position).setDuressAlarmAccount(bean.getDuressAlarmAccount());
-            mDuressAlarmAdapter.setNewData(duressList);
-            mDuressAlarmAdapter.notifyDataSetChanged();
+            mDuressAlarmAdapter.setData(position,bean);
+            getIntent().removeExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO);
         }
     }
 
@@ -86,7 +85,6 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
         if (!TextUtils.isEmpty(localPasswordCache)) {
             wiFiLockPassword = new Gson().fromJson(localPasswordCache, WiFiLockPassword.class);
             duressList = mPresenter.setWifiLockPassword(wifiSn,wiFiLockPassword);
-//            mDuressAlarmAdapter.setList(duressList);
             mDuressAlarmAdapter.setNewData(duressList);
         }else{
             mPresenter.getPasswordList(wifiSn);
@@ -116,7 +114,6 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
             intent.putExtra(KeyConstants.WIFI_SN,data.getWifiSN());
             intent.putExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO,position);
             intent.putExtra(KeyConstants.DURESS_PASSWORD_INfO,data);
-//            startActivityForResult(intent,1012);
             startActivity(intent);
         });
     }
@@ -154,22 +151,6 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            if(requestCode == 1012){
-                int position = data.getIntExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO,-1);
-                if(position < 0) return;
-                duressList.get(position).setPwdDuressSwitch(data.getIntExtra("duress_alarm_toggle",0));
-                duressList.get(position).setDuressAlarmAccount(data.getStringExtra("duress_alarm_phone"));
-//                mDuressAlarmAdapter.setList();
-                mDuressAlarmAdapter.setNewData(duressList);
-                mDuressAlarmAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
     private void initView() {
         mIvDuressSelect = findViewById(R.id.iv_duress_select);
         mBack = findViewById(R.id.back);
@@ -188,8 +169,8 @@ public class WifiVideoLockDuressAlarmAvtivity extends BaseActivity<IWifiVideoLoc
 
     @Override
     public void onGetPasswordSuccess(WiFiLockPassword wiFiLockPassword) {
+        duressList.clear();
         duressList = mPresenter.setWifiLockPassword(wifiSn,wiFiLockPassword);
-//        mDuressAlarmAdapter.setList(duressList);
         mDuressAlarmAdapter.setNewData(duressList);
     }
 
