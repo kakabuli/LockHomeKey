@@ -1,34 +1,23 @@
 package com.kaadas.lock.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
+
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.PirConst;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-
-import javax.microedition.khronos.opengles.GL;
 
 
 public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
@@ -55,9 +44,9 @@ public class PirHistoryAdapter extends BaseQuickAdapter<String, BaseViewHolder> 
 
 		// helper.addOnClickListener(R.id.pir_img_rl);
 
-		String result=(String) SPUtils2.get(MyApplication.getInstance(),item,"");
+		String result=(String) SPUtils.get(item,"");
 
-		String imgPath=(String) SPUtils2.get(MyApplication.getInstance(),item+ PirConst.IMG_DOWNLOAD_SUC,"");
+		String imgPath=(String) SPUtils.get(item+ PirConst.IMG_DOWNLOAD_SUC,"");
 		//Log.e(PirConst.VideoLog,"item:"+item+ PirConst.IMG_DOWNLOAD_SUC+"  PirHistoryAdapter:"+imgPath);
 
 

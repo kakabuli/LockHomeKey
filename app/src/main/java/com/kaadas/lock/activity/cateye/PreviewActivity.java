@@ -25,7 +25,7 @@ import com.kaadas.lock.mvp.presenter.SnapPresenter;
 import com.kaadas.lock.mvp.view.ISnapShotView;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.FtpEnable;
 import com.kaadas.lock.utils.Constants;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.FtpException;
 import com.kaadas.lock.utils.ftp.FtpUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
@@ -118,7 +118,7 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
         File imgPathFile=new File(imgPath);
         Log.e(GeTui.VideoLog,"imagePath:"+imgPath+"文件是否存在:"+imgPathFile.exists()+"大小:"+imgPathFile.length());
 
-        String filepath= (String) SPUtils2.get(this,newImgUrl+GeTui.IMG_DOWNLOAD_SUC,"");
+        String filepath= (String) SPUtils.get(newImgUrl+GeTui.IMG_DOWNLOAD_SUC,"");
         if(TextUtils.isEmpty(filepath)){
             imgPathFile.delete();
         }
@@ -203,7 +203,7 @@ public class PreviewActivity extends BaseActivity<ISnapShotView, SnapPresenter<I
             if(imgPathFile.exists() && imgPathFile.length()>10){
                 Glide.with(this).load(imgPathFile).into(preview_img);
                 preview_look_video.setVisibility(View.VISIBLE);
-                SPUtils2.put(MyApplication.getInstance(),newImgUrl+GeTui.IMG_DOWNLOAD_SUC,imgPath);
+                SPUtils.put(newImgUrl+GeTui.IMG_DOWNLOAD_SUC,imgPath);
             }else{
                 if(imgPathFile.length()<=10){
                     imgPathFile.delete();

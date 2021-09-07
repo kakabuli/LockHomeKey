@@ -3,7 +3,6 @@ package com.kaadas.lock.adapter;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,14 +11,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.utils.Constants;
-import com.kaadas.lock.utils.PirConst;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.utils.SPUtils2;
 import com.kaadas.lock.utils.db.MediaItem;
-import com.kaadas.lock.widget.image.CircleTransform;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,7 +43,7 @@ public class RecordingAdapter extends BaseQuickAdapter<MediaItem, BaseViewHolder
         String imgPath = item.getPath();
 
         String key=item.getName()+ Constants.RECORDINGTAG;
-        String name= (String) SPUtils2.get(mContext,key,"");
+        String name= (String) SPUtils.get(key,"");
 		helper.setText(R.id.pir_img_time, showFormater.format(new Date(currentTime)));
 
 

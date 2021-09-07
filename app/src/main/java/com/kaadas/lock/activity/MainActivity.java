@@ -56,6 +56,7 @@ import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
 import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
+import com.kaadas.lock.shulan.utils.MMKVUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
@@ -430,9 +431,10 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //            } else {
 //                Log.e(GeTui.VideoLog, "getui upload to success");
 //            }
-                String JpushId = (String) SPUtils.get(GeTui.JPUSH_ID, "");
+//            String JpushId = (String) SPUtils.get(GeTui.JPUSH_ID, "");
+            String JpushId = MMKVUtils.getStringMultiMMKV(SPUtils.FILE_NAME,GeTui.JPUSH_ID,"");
             LogUtils.e("shulan---JpushId-->---" + JpushId );
-                uploadToken(2,JpushId);
+            uploadToken(2,JpushId);
         }
 
         boolean isUploadPhoneMsg = (boolean) SPUtils.get(Constants.PHONE_MSG_UPLOAD_STATUS, false);

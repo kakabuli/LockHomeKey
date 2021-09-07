@@ -6,7 +6,6 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,10 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.TimeAdapter;
 import com.kaadas.lock.bean.MyDate;
@@ -29,7 +26,7 @@ import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.mvpbase.IBaseView;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LoadingDialog;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.widget.GravityPopup;
 
@@ -203,7 +200,7 @@ public abstract class CallBackBaseFragment<T extends IBaseView, V
             defaultCurrentDate=defaultCurrentDate+day;
         }
         String key= deviceId+defaultCurrentDate;
-        String str_d=(String) SPUtils2.get(MyApplication.getInstance(),key,"");
+        String str_d=(String) SPUtils.get(key,"");
         Log.e(GeTui.VideoLog,"isSnapShotFragment------>:"+snapShotFragment+" key:"+key+"  str0:"+str_d);
         if(day<7){  //当日日期小于7天涉及上到一个月
             MyDate myDate=new MyDate(day, weeks[week]);

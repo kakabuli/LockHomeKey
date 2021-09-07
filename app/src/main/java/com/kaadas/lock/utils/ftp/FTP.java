@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -485,7 +485,7 @@ public class FTP {
 					Collections.reverse(imageList);
 					MyApplication.getInstance().setPirListImg(imageList);
 					String json = new Gson().toJson(imageList);
-					SPUtils2.put(MyApplication.getInstance(),key,json);
+					SPUtils.put(key,json);
 				}
 
 				Log.e(GeTui.VideoLog,"FTP===>imageList大小是:"+imageList);
@@ -534,7 +534,7 @@ public class FTP {
 					if(imageList!=null && imageList.size() > 0){
 						String json = new Gson().toJson(imageList);
 					//	String key= deviceId+selectTime;
-						SPUtils2.put(MyApplication.getInstance(),key,json);
+						SPUtils.put(key,json);
 
 						Log.e("denganzhi5","Sp保存key:"+key+"json:"+json);
 					}
@@ -580,7 +580,7 @@ public class FTP {
 					if(imageList!=null && imageList.size() > 0){
 						String json = new Gson().toJson(imageList);
 					//	String key= deviceId+selectTime;
-						SPUtils2.put(MyApplication.getInstance(),key,json);
+						SPUtils.put(key,json);
 
 						Log.e("denganzhi5","Sp保存key:"+key+"json:"+json);
 					}

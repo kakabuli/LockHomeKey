@@ -8,8 +8,6 @@ import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,7 +32,7 @@ import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
-import com.kaadas.lock.utils.SPUtils2;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
 
@@ -117,7 +115,7 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     }
 
     public void tvCommentCount(){
-        catEyeCount= (int) SPUtils2.get(this,key,0);
+        catEyeCount= (int) SPUtils.get(key,0);
         if(catEyeCount>=99){
             tv_comment_count.setVisibility(View.VISIBLE);
             tv_comment_count.setText("   ");
