@@ -798,6 +798,19 @@ public class BleLockUtils {
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(95);
     }
+
+    public static boolean isSupportFrontPanelShowAndOTA(String functionSet){
+        if(TextUtils.isEmpty(functionSet)){
+            return false;
+        }
+        int funcSet = Integer.parseInt(functionSet);
+        Integer[] funcs = FUNCTION_SET.get(funcSet);
+        if (funcs == null) {
+            return false;
+        }
+        List<Integer> integers = Arrays.asList(funcs);
+        return integers.contains(96);
+    }
     /**
      * 根据功能集判断显示蓝牙锁的界面
      *
