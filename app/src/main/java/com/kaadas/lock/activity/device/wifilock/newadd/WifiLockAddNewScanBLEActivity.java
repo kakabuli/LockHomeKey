@@ -143,7 +143,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
@@ -151,7 +150,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         super.onStop();
         if (!goToHelpActivity){
             LogUtils.e("--kaadas--onStop--detachView");
-            mPresenter.detachView();
         }
     }
 

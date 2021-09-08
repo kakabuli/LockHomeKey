@@ -162,7 +162,6 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         if(avi != null){
             avi.hide();
         }
@@ -172,7 +171,6 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override

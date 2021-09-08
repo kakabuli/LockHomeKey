@@ -84,7 +84,6 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
@@ -105,7 +104,6 @@ public class WifiVideoLockSafeModeActivity extends BaseActivity<IWifiVideoLockSa
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override

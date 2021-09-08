@@ -278,13 +278,11 @@ public class BluetoothMoreActivity extends BaseBleCheckInfoActivity<IDeviceMoreV
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override

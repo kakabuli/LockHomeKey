@@ -215,13 +215,11 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
 }

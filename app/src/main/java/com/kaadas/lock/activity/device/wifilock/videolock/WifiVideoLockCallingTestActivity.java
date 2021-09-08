@@ -382,7 +382,6 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
 
         xunhaunDisposable = Observable
                 .interval(0, 1, TimeUnit.SECONDS)
@@ -422,7 +421,6 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
 
     }
 

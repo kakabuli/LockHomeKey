@@ -91,7 +91,6 @@ public class WifiVideoLockLanguageSettingActivity extends BaseActivity<IWifiVide
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         /*if(wifiLockInfo.getPowerSave() == 0){
             new Thread(new Runnable() {
                 @Override
@@ -112,7 +111,6 @@ public class WifiVideoLockLanguageSettingActivity extends BaseActivity<IWifiVide
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override
