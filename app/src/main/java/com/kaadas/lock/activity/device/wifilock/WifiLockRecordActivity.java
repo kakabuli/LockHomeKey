@@ -213,7 +213,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         if(MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
             tvVistorRecord.setVisibility(View.VISIBLE);
@@ -240,8 +239,6 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
-
     }
 
     @Override

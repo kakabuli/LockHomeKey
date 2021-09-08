@@ -120,7 +120,6 @@ public class WifiVideoLockDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -139,7 +138,6 @@ public class WifiVideoLockDeviceRecordActivity extends BaseActivity<IMyAlbumPlay
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override

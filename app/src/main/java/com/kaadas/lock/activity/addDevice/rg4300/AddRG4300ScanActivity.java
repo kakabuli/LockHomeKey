@@ -123,13 +123,11 @@ public class AddRG4300ScanActivity extends BaseActivity<ISearchDeviceView, Searc
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     private void initView() {

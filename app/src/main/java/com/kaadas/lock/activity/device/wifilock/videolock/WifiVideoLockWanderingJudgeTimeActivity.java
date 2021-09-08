@@ -405,12 +405,10 @@ public class WifiVideoLockWanderingJudgeTimeActivity extends BaseActivity<IWifiL
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 }

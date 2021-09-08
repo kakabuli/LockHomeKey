@@ -296,12 +296,10 @@ public class WifiVideoLockRealTimePeriodActivity extends BaseActivity<IWifiLockM
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 }

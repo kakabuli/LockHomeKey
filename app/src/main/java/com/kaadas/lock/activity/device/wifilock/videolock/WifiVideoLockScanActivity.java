@@ -390,14 +390,12 @@ public class WifiVideoLockScanActivity extends BaseActivity<IWifiLockVideoFifthV
     @Override
     protected void onResume() {
         super.onResume();
-//        mPresenter.attachView(this);
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        mPresenter.detachView();
     }
 
     /**

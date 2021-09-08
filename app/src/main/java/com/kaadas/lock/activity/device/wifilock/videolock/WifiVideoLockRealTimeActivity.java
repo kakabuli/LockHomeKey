@@ -328,7 +328,6 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         if(avi != null){
             tvTips.setVisibility(View.GONE);
             avi.hide();
@@ -341,7 +340,6 @@ public class WifiVideoLockRealTimeActivity extends BaseActivity<IWifiVideoLockRe
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override

@@ -222,7 +222,6 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
     @Override
     protected void onResume() {
         super.onResume();
-        mPresenter.attachView(this);
         if(avi != null){
             avi.hide();
             tvTips.setVisibility(View.GONE);
@@ -236,7 +235,6 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
     @Override
     protected void onStop() {
         super.onStop();
-        mPresenter.detachView();
     }
 
     @Override
