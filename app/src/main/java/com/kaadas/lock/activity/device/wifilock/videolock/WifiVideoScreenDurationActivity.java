@@ -78,16 +78,12 @@ public class WifiVideoScreenDurationActivity extends BaseActivity<IWifiVideoLock
                 screenLightSwitch = wifiLockInfo.getScreenLightSwitch();
             }catch (Exception e){
                 screenLightSwitch = 0;
-                Log.d("zdx", "onCreate1: " + e.getMessage());
             }
             try {
                 screenLightTime = wifiLockInfo.getScreenLightTime();
             }catch (Exception e){
                 screenLightTime = 5;
-                Log.d("zdx", "onCreate2: " + e.getMessage());
             }
-            Log.d("zdx", "screenLightSwitch: " + screenLightSwitch);
-            Log.d("zdx", "screenLightTime: " + screenLightTime);
             setScreenLightTimeShow(screenLightSwitch);
             setScreenLightTimeView(screenLightTime);
             if(BleLockUtils.isSupportXMConnect(wifiLockInfo.getFunctionSet())){

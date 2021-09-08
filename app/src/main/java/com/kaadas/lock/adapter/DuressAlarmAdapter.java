@@ -1,5 +1,6 @@
 package com.kaadas.lock.adapter;
 
+import android.util.Log;
 import android.view.View;
 
 
@@ -21,7 +22,6 @@ public class DuressAlarmAdapter extends BaseQuickAdapter<DuressBean, BaseViewHol
     @Override
     protected void convert(@NotNull BaseViewHolder holder, DuressBean bean) {
         if(bean == null) return;
-
         if(bean.isHead()){
             if(bean.getPwdType() == 1){
                 holder.setText(R.id.tv_password,R.string.password);

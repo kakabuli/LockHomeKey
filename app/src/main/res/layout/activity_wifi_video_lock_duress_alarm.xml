@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
-    >
+    android:orientation="vertical">
 
 
     <RelativeLayout
@@ -42,8 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
         android:layout_marginTop="@dimen/dp_1"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tv_rl_duress_1"
@@ -76,10 +75,9 @@
 
     </RelativeLayout>
 
-   <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/recycler"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       app:layout_constraintTop_toBottomOf="@id/relativelayout"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
