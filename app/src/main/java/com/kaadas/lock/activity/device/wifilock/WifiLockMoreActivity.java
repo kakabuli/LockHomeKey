@@ -372,8 +372,8 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
                     case R.id.iv_am:   //手动自动模式
 
-                        if (BleLockUtils.isSupportFaceStatusShow(func)) {
-                            //支持面容识别
+                        if (BleLockUtils.isSupportFaceStatusShow(func)||BleLockUtils.isSupportAMIntroduce(func)) {
+                            //支持面容识别或功能集94（系统操作菜单提示用户锁端操作流程）
                             intent = new Intent(this, WifiLockFaceModelAMActivity.class);
                             intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
                             startActivity(intent);
