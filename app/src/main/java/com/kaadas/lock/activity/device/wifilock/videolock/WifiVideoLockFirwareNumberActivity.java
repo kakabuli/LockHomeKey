@@ -29,6 +29,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
+import com.kaadas.lock.publiclibrary.xm.XMP2PConnectError;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
@@ -64,6 +65,8 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
     RelativeLayout rlHardVersion;
     @BindView(R.id.avi)
     AVLoadingIndicatorView avi;
+    @BindView(R.id.tv_tips)
+    TextView tvTips;
 
     private InnerRecevier mInnerRecevier = null;
 
@@ -91,6 +94,7 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
         if(avi != null){
             avi.hide();
         }
+        tvTips.setVisibility(View.GONE);
         registerBroadcast();
     }
 
@@ -492,6 +496,11 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                     mPresenter.connectNotifyGateWayNewVersion();
                 }
             }).start();
+            if(avi != null){
+                avi.show();
+                tvTips.setVisibility(View.VISIBLE);
+            }
+//            showLoading(getString(R.string.wifi_video_lock_p2p_connect));
             return;
         }
         if (type == 1) {
@@ -517,8 +526,10 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+//                    hiddenLoading();
                     if(avi != null)
                         avi.hide();
+                    tvTips.setVisibility(View.GONE);
                 }
             });
 
@@ -531,6 +542,7 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
             mPresenter.handler.post(new Runnable() {
                 @Override
                 public void run() {
+//                    hiddenLoading();
                     if (flag) {
 
                     } else {
@@ -539,10 +551,57 @@ public class WifiVideoLockFirwareNumberActivity  extends BaseActivity<IWifiVideo
                     if (avi != null) {
                         avi.hide();
                     }
+                    tvTips.setVisibility(View.GONE);
 //                    finish();
                 }
             });
         }
+    }
+
+    @Override
+    public void onConnectFailed(int paramInt) {
+        if (!WifiVideoLockFirwareNumberActivity.this.isFinishing()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+//                    hiddenLoading();
+                    if (avi != null) {
+                        avi.hide();
+                    }
+                    tvTips.setVisibility(View.GONE);
+                    if(paramInt == -3){
+                        createDialog(getString(R.string.xm_connection_timed_out));
+                    }else{
+                        createDialog(XMP2PConnectError.checkP2PErrorStringWithCode(WifiVideoLockFirwareNumberActivity.this,paramInt));
+                    }
+                }
+            });
+        }
+    }
+
+    public void createDialog(String content){
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, "", "\n" + content + "\n",
+                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 
     public void powerStatusDialog(){

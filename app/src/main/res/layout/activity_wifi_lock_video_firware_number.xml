@@ -253,4 +253,14 @@
         app:indicatorColor="#333333"
         android:layout_marginTop="@dimen/dp_150" />
 
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/wifi_video_lock_waiting"
+        android:layout_marginTop="@dimen/dp_10"
+        android:textSize="@dimen/sp_14"
+        android:layout_below="@id/avi"/>
+
 </RelativeLayout>

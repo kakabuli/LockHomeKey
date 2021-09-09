@@ -799,6 +799,7 @@ public class XMP2PManager extends StreamListener  {
     }
 
     public void notifyGateWayNewVersion(){
+        LogUtils.e("shulan notifyGateWayNewVersion--> wake xm 871");
         getInstanceP2P().notifyGateWayNewVersion();
 
     }

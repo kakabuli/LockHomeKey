@@ -235,7 +235,9 @@ public class WifiVideoLockMoreOTAPresenter<T> extends BasePresenter<IWifiVideoLo
         XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
             @Override
             public void onConnectFailed(int paramInt) {
-
+                if(isSafe()){
+                    mViewRef.get().onConnectFailed(paramInt);
+                }
             }
 
             @Override
