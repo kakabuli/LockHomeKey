@@ -33,9 +33,11 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
+import com.igexin.sdk.PushManager;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -434,6 +436,9 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //            String JpushId = (String) SPUtils.get(GeTui.JPUSH_ID, "");
             String JpushId = MMKVUtils.getStringMultiMMKV(SPUtils.FILE_NAME,GeTui.JPUSH_ID,"");
             LogUtils.e("shulan---JpushId-->---" + JpushId );
+            if(TextUtils.isEmpty(JpushId)){
+                JpushId = PushManager.getInstance().getClientid(MyApplication.getInstance());
+            }
             uploadToken(2,JpushId);
         }
 
