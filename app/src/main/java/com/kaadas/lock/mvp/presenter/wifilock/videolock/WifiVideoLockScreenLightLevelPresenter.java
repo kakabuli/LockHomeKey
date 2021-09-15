@@ -52,12 +52,12 @@ public class WifiVideoLockScreenLightLevelPresenter<T> extends BasePresenter<IWi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingScreenBrightnessResult mSettingScreenBrightnessResult = new Gson().fromJson(mqttData.getPayload(), SettingScreenBrightnessResult.class);
                             LogUtils.e("shulan mSettingScreenBrightnessResult-->" + mSettingScreenBrightnessResult.toString());
                             if(mSettingScreenBrightnessResult != null && isSafe()){
                                 if("200".equals(mSettingScreenBrightnessResult.getCode() + "")){
-                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    WifiLockInfo wifilockinfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+                                    wifilockinfo.setScreenLightLevel(mSettingScreenBrightnessResult.getParams().getscreenLightLevel());
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingScreenBrightnessResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);

@@ -52,12 +52,15 @@ public class WifiVideoLockScreenLightTimePresenter<T> extends BasePresenter<IWif
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingScreenTimeResult mSettingScreenTimeResult = new Gson().fromJson(mqttData.getPayload(), SettingScreenTimeResult.class);
                             LogUtils.e("shulan mSettingScreenTimeResult-->" + mSettingScreenTimeResult.toString());
                             if(mSettingScreenTimeResult != null && isSafe()){
                                 if("200".equals(mSettingScreenTimeResult.getCode() + "")){
-                                    MyApplication.getInstance().getAllDevicesByMqtt(true);
+                                    WifiLockInfo wifilockinfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+                                    wifilockinfo.setScreenLightSwitch(mSettingScreenTimeResult.getParams().getScreenLightSwitch());
+                                    if(mSettingScreenTimeResult.getParams().getScreenLightSwitch() == 1){
+                                        wifilockinfo.setScreenLightTime(mSettingScreenTimeResult.getParams().getScreenLightTime());
+                                    }
                                     mViewRef.get().onSettingCallBack(true);
                                 }else if("201".equals(mSettingScreenTimeResult.getCode() + "")){
                                     mViewRef.get().onSettingCallBack(false);
