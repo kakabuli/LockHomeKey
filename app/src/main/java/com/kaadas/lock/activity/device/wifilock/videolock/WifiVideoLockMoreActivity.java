@@ -9,10 +9,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,8 +47,6 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
-
-import java.text.BreakIterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -622,7 +618,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                             public void right() {
                                 showLoading(getString(R.string.is_deleting));
                                 if (isWifiVideoLockType) {
-                                    mPresenter.deleteVideDevice(wifiLockInfo.getWifiSN());
+                                    mPresenter.deleteVideoDevice(wifiLockInfo.getWifiSN());
                                 } else {
                                     mPresenter.deleteDevice(wifiLockInfo.getWifiSN());
                                 }

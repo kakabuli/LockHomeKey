@@ -43,7 +43,8 @@ public class ClothesHangerMachineNicknamePresenter<T> extends BasePresenter<IClo
                     @Override
                     public void onSuccess(BaseResult baseResult) {
                         if("200".equals(baseResult.getCode() + "")){
-                            MyApplication.getInstance().getAllDevicesByMqtt(true);
+                            MyApplication.getInstance().getClothesHangerMachineBySn(wifiSN)
+                                    .setHangerNickName(trim);
                             if(isSafe()){
                                 mViewRef.get().onSettingNicknameSuccess();
                             }

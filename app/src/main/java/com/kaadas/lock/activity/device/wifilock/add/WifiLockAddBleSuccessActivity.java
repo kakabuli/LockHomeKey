@@ -211,7 +211,6 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
     @Override
     public void onSetNameSuccess() {
         hiddenLoading();
-        MyApplication.getInstance().getAllDevicesByMqtt(true);
 
         if(!BleLockUtils.isSupportPanelMultiOTA(func + "")){
             handler.postDelayed(runnable, 400);

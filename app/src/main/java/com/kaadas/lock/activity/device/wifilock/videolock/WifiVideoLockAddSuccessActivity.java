@@ -312,7 +312,6 @@ public class WifiVideoLockAddSuccessActivity extends BaseActivity<IWifiLockVideo
             @Override
             public void run() {
                 hiddenLoading();
-                MyApplication.getInstance().getAllDevicesByMqtt(true);
                 Intent backIntent = new Intent(WifiVideoLockAddSuccessActivity.this, MainActivity.class);
                 startActivity(backIntent);
                 finish();

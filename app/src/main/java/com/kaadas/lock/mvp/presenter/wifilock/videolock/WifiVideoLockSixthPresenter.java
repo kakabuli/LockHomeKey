@@ -147,6 +147,7 @@ public class WifiVideoLockSixthPresenter<T> extends BasePresenter<IWifiLockVideo
                     @Override
                     public void onSuccess(BaseResult baseResult) {
                         if (isSafe()){
+                            MyApplication.getInstance().getWifiLockInfoBySn(wifiSN).setLockNickname(lockNickname);
                             mViewRef.get().onSetNameSuccess();
                         }
                     }

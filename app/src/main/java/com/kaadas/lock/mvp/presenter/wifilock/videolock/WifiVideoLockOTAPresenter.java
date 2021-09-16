@@ -68,7 +68,7 @@ public class WifiVideoLockOTAPresenter<T> extends BasePresenter<IWifiVideoLockOT
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
-                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        MyApplication.getInstance().getWifiLockInfoBySn(wifiSN).setLockNickname(lockNickname);
                         if (isSafe()) {
                             mViewRef.get().modifyDeviceNicknameSuccess();
                         }

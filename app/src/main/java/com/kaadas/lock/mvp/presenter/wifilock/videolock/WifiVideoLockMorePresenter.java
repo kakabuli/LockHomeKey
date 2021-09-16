@@ -71,7 +71,7 @@ public class WifiVideoLockMorePresenter<T> extends BasePresenter<IWifiVideoLockM
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
-                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        MyApplication.getInstance().getWifiLockInfoBySn(wifiSN).setLockNickname(lockNickname);
                         if (isSafe()) {
                             mViewRef.get().modifyDeviceNicknameSuccess();
                         }
@@ -99,7 +99,7 @@ public class WifiVideoLockMorePresenter<T> extends BasePresenter<IWifiVideoLockM
         ;
     }
 
-    public void deleteVideDevice(String wifiSn){
+    public void deleteVideoDevice(String wifiSn){
         XiaokaiNewServiceImp.wifiVideoLockUnbind(wifiSn, MyApplication.getInstance().getUid())
                 .subscribe(new BaseObserver<WifiLockVideoBindResult>() {
             @Override

@@ -71,8 +71,9 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                 .subscribe(new BaseObserver<BaseResult>() {
                     @Override
                     public void onSuccess(BaseResult baseResult) {
-                        MyApplication.getInstance().getAllDevicesByMqtt(true);
                         if (isSafe()) {
+                            MyApplication.getInstance().getWifiLockInfoBySn(wifiSN)
+                                    .setLockNickname(lockNickname);
                             mViewRef.get().modifyDeviceNicknameSuccess();
                         }
                     }
@@ -585,12 +586,13 @@ public class WifiVideoLockWanderingAlarmPresenter<T> extends BasePresenter<IWifi
                     .subscribe(new Consumer<MqttData>() {
                         @Override
                         public void accept(MqttData mqttData) throws Exception {
-                            MyApplication.getInstance().getAllDevicesByMqtt(true);
                             SettingFaceWanderingAlarmResult settingFaceWanderingAlarmResult = new Gson().fromJson(mqttData.getPayload(), SettingFaceWanderingAlarmResult.class);
                             if(settingFaceWanderingAlarmResult != null){
-                                MyApplication.getInstance().getAllDevicesByMqtt(true);
                                 if("200".equals(settingFaceWanderingAlarmResult.getCode() + "")){
                                     if(isSafe()){
+                                        WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+                                        wifiLockInfo.setHoverAlarmLevel(hoverAlarmLevel);
+                                        wifiLockInfo.setHoverAlarm(hoverAlarm);
                                         mViewRef.get().onSettingCallBack(true);
                                     }
                                 }else{

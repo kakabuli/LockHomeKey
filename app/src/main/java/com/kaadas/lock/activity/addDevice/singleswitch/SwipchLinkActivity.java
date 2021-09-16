@@ -592,7 +592,6 @@ public class SwipchLinkActivity extends BaseActivity<SingleFireSwitchView, Singl
 //
 //        }
 //
-//        MyApplication.getInstance().getAllDevicesByMqtt(true);
     }
 
     @Override
