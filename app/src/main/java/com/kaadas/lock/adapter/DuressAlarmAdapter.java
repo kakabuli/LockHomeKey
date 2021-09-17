@@ -35,6 +35,8 @@ public class DuressAlarmAdapter extends BaseQuickAdapter<DuressBean, BaseViewHol
             return;
         }else{
             holder.getView(R.id.tv_password).setVisibility(View.GONE);
+            holder.getView(R.id.tv_password_num).setVisibility(View.VISIBLE);
+            holder.getView(R.id.rl_duress_alarm_toggle).setVisibility(View.VISIBLE);
         }
 
         if(bean.getPwdDuressSwitch() == 0){
