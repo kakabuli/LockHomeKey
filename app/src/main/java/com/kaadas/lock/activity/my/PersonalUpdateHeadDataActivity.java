@@ -307,7 +307,18 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
 
     @Override
     public void photoUploadSuccess() {
-        mPresenter.downloadPicture(MyApplication.getInstance().getUid());
+        //        mPresenter.downloadPicture(MyApplication.getInstance().getUid());
+        Bitmap temp;
+        int degree = BitmapUtil.readPictureDegree(photoPath);
+        temp = BitmapUtil.ratio(photoPath, 720, 720);
+        /**
+         * 把图片旋转为正的方向
+         */
+        if (temp!=null){
+            Bitmap newbitmap = BitmapUtil.rotaingImageView(degree, temp);
+            downloadPhoto(newbitmap);
+            temp = null;
+        }
     }
 
     @Override
