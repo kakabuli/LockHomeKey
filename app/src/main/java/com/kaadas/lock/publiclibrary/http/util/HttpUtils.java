@@ -160,6 +160,9 @@ public class HttpUtils<T> {
             case 302:
                 errorMsg = activity.getString(R.string.liu_yan_fail);
                 break;
+            case 303:
+                errorMsg = activity.getString(R.string.kaadas_code_security_key_full);
+                break;
             case 704:
                 errorMsg = activity.getString(R.string.verification_send_too_many);
                 break;
