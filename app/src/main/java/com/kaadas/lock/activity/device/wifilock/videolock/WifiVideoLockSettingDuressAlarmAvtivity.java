@@ -80,7 +80,6 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            setDuressAlarm();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -89,7 +88,13 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
     private void initListener() {
 
         mBack.setOnClickListener(v -> {
-            setDuressAlarm();
+            Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
+            intent.putExtra(KeyConstants.DURESS_PASSWORD_INfO, mDuressBean);
+            intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());
+            intent.putExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO, position);
+            startActivity(intent);
+            mPresenter.getPasswordList(wifiSn);
+            finish();
         });
 
         mRlDuressAlarmAppReceiver.setOnClickListener(v -> {
@@ -102,42 +107,17 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
         });
 
         mIvDuressSelect.setOnClickListener(v -> {
-            if(mIvDuressSelect.isSelected()){
-                mIvDuressSelect.setSelected(false);
-                rlDuressAlarmShow.setVisibility(View.GONE);
-                duressSwitch = 0;
-            }else{
-                mIvDuressSelect.setSelected(true);
-                rlDuressAlarmShow.setVisibility(View.VISIBLE);
-                duressSwitch = 1;
-            }
+            setDuressAlarm();
         });
     }
 
     private void setDuressAlarm() {
-        if(mDuressBean == null) {
-//            ToastUtils.showShort(R.string.set_failed);
-            finish();
-            return;
+        if(mIvDuressSelect.isSelected()){
+            duressSwitch = 0;
+        }else{
+            duressSwitch = 1;
         }
-
-        if(duressSwitch == 1 && TextUtils.isEmpty(mDuressBean.getDuressAlarmAccount())){
-            ToastUtils.showShort(R.string.set_duress_account);
-            return;
-        }
-
-        if(duressSwitch == 0 && duressSwitch != mDuressBean.getPwdDuressSwitch()){
-            mPresenter.setDuressPwdAlarm(mDuressBean.getWifiSN(),mDuressBean.getPwdType(),mDuressBean.getNum(),duressSwitch);
-            return;
-        }
-        finish();
-        /*if(mDuressBean.getPwdDuressSwitch() == duressSwitch && mDuressBean.getDuressAlarmAccount() == duressAccount){
-            ToastUtils.showShort(R.string.set_failed);
-            finish();
-            return;
-        }*/
-
-//        mPresenter.setDuressPwdAlarm(mDuressBean.getWifiSN(),mDuressBean.getPwdType(),mDuressBean.getNum(),duressSwitch);
+        mPresenter.setDuressPwdAlarm(mDuressBean.getWifiSN(),mDuressBean.getPwdType(),mDuressBean.getNum(),duressSwitch);
 
     }
 
@@ -169,18 +149,38 @@ public class WifiVideoLockSettingDuressAlarmAvtivity extends BaseActivity<ISetti
     @Override
     public void onSettingDuress(BaseResult baseResult) {
         if("200".equals(baseResult.getCode() + "")){
+            if(mIvDuressSelect.isSelected()){
+                mIvDuressSelect.setSelected(false);
+                rlDuressAlarmShow.setVisibility(View.GONE);
+            }else{
+                mIvDuressSelect.setSelected(true);
+                rlDuressAlarmShow.setVisibility(View.VISIBLE);
+            }
             mDuressBean.setPwdDuressSwitch(duressSwitch);
-            ToastUtils.showShort(R.string.set_success);
-            Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
-            intent.putExtra(KeyConstants.DURESS_PASSWORD_INfO, mDuressBean);
-            intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());
-            intent.putExtra(KeyConstants.DURESS_PASSWORD_POSITION_INfO, position);
-            startActivity(intent);
-            mPresenter.getPasswordList(wifiSn);
-            finish();
-        }else if("453".equals(baseResult.getCode() + "")){
-            AlertDialogUtil.getInstance().noButtonSingleLineDialog(this, getString(R.string.user_not_registered));
-        }else{
+        }else if("303".equals(baseResult.getCode())){
+            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, "", getString(R.string.kaadas_code_security_key_full),getString(R.string.dialog_confirm), new AlertDialogUtil.ClickListener(){
+                @Override
+                public void left() {
+
+                }
+
+                @Override
+                public void right() {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(String toString) {
+
+                }
+            });
+        }
+        else{
             ToastUtils.showShort(R.string.set_failed);
             Intent intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
             intent.putExtra(KeyConstants.WIFI_SN, mDuressBean.getWifiSN());

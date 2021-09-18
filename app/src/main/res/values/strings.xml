@@ -133,6 +133,7 @@
     <string name="modify_nickname_fail">修改昵称失败</string>
     <string name="user_exit">用户已经存在</string>
     <string name="user_not_registered">该用户未注册</string>
+    <string name="kaadas_code_security_key_full">当前胁迫密钥已满5组，请关闭其他胁迫密钥后，再添加</string>
     <string name="server_back_exception">服务器返回异常</string>
     <string name="tiem_out">超时</string>
     <string name="connect_exception">连接异常</string>
