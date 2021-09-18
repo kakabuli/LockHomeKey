@@ -52,7 +52,9 @@ public class WifiVideoLockMoreOTAPresenter<T> extends BasePresenter<IWifiVideoLo
 
     private static  String p2pPassword ="";//ut4D0mvz
 
-    private static  String serviceString=XMP2PManager.serviceString;;
+    private static  String serviceString=XMP2PManager.serviceString;
+
+    private boolean mqttCtrl = false;
 
     public void init(String wifiSn) {
         wifiSN = wifiSn;
@@ -233,10 +235,11 @@ public class WifiVideoLockMoreOTAPresenter<T> extends BasePresenter<IWifiVideoLo
         deviceInfo.setP2pPassword(p2pPassword);
         deviceInfo.setDeviceSn(sn);
         deviceInfo.setServiceString(serviceString);
+        mqttCtrl = false;
         XMP2PManager.getInstance().setOnConnectStatusListener(new XMP2PManager.ConnectStatusListener() {
             @Override
             public void onConnectFailed(int paramInt) {
-                if(isSafe()){
+                if(isSafe() && !mqttCtrl){
                     mViewRef.get().onConnectFailed(paramInt);
                 }
             }
@@ -249,7 +252,7 @@ public class WifiVideoLockMoreOTAPresenter<T> extends BasePresenter<IWifiVideoLo
                         if(isSafe()){
                             try {
                                 if (jsonObject.getString("result").equals("ok")){
-
+                                    mqttCtrl = true;
                                     notifyGateWayNewVersion();
                                 }else{
                                     if(isSafe()){
