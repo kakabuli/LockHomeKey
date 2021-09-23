@@ -1,7 +1,7 @@
 ext {
 
     //日志打印 true打印 false禁止
-    isDeBug = true
+    isDeBug = false
     //Net环境 true正式 false测试
     env = true
     //是否事release版本
@@ -24,7 +24,7 @@ ext {
             minSdkVersion           :22,
             targetSdkVersion        :27,
             versionCode             :202109181,
-            versionName             :"4.5.10",
+            versionName             :"4.6.0",
             buildToolsVersion       :"30.0.2",
 
             coreVersionCode         :201909250,
