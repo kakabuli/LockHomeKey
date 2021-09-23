@@ -272,12 +272,6 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         } else {
             startService(bleServiceIntent);
         }*/
-//        //启动linphoneService
-        boolean isService = ServiceAliveUtils.isServiceRunning(WelcomeActivity.this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
-        if (!isService) {
-            Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-            startService(linphoneServiceIntent);
-        }
     }
 
     final int timeout = 20;

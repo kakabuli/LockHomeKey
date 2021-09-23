@@ -32,6 +32,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NotificationUtil;
 import com.kaadas.lock.utils.NotificationUtils;
+import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ServiceAliveUtils;
 
 import java.util.List;
@@ -273,6 +274,8 @@ public class DoorbellingService extends Service {
      *  开启蓝牙和Mqtt服务
      */
     private void initBleOrMqttService() {
+        boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
+        if(showStatementAndTerms)return;
         LogUtils.e("shulan initBleOrMqttService");
         if(!ServiceAliveUtils.isServiceRunning(this,BleService.class.getName())){
             //        //启动bleService

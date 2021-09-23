@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.MainActivity;
 import com.kaadas.lock.R;
 
@@ -29,6 +30,7 @@ import com.kaadas.lock.activity.choosecountry.CountryActivity;
 import com.kaadas.lock.mvp.presenter.LoginPresenter;
 import com.kaadas.lock.publiclibrary.http.result.LoginResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DetectionEmailPhone;
@@ -38,6 +40,7 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.PhoneUtil;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ServiceAliveUtils;
 import com.kaadas.lock.utils.StatusBarUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.blankj.utilcode.util.ToastUtils;
@@ -117,6 +120,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     @Override
                     public void right() {
                         SPUtils.putProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, false);
+                        MyApplication.getInstance().initSDK();
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {

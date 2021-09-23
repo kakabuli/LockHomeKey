@@ -32,6 +32,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.RetrofitServiceManager;
 import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
 import com.kaadas.lock.publiclibrary.linphone.linphone.util.LinphoneHelper;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.MqttCommandFactory;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.AllBindDevices;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
@@ -47,6 +48,7 @@ import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
+import com.kaadas.lock.utils.ServiceAliveUtils;
 import com.kaadas.lock.utils.greenDao.bean.ClothesHangerMachineAllBean;
 import com.kaadas.lock.utils.greenDao.db.ClothesHangerMachineAllBeanDao;
 import com.kaadas.lock.utils.greenDao.db.DaoManager;
@@ -138,16 +140,16 @@ public class MyApplication extends Application {
         MyLog.getInstance().init(this);
         LogUtils.e("attachView  App启动 ");
         instance = this;
-        CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
-        initBleService();
-        initMqttService();//启动MqttService
         initMMKV(this);
+        boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
+        if(!showStatementAndTerms){
+            initSDK();
+        }
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
         initMeme();
         initXMP2PManager();
-        regToWx();
         //配置数据库
         setUpWriteDataBase(DB_KEY);
         // HuaWei phone
@@ -219,6 +221,19 @@ public class MyApplication extends Application {
     }
 
 
+    public void initSDK(){
+        CrashReport.initCrashReport(getApplicationContext(), "3ac95f5a71", true);
+        initBleService();
+        initMqttService();
+        regToWx();
+        //启动linphoneService
+        boolean isService = ServiceAliveUtils.isServiceRunning(this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
+        if (!isService) {
+            Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
+            startService(linphoneServiceIntent);
+        }
+    }
+
     /**
      * 启动蓝牙服务
      */
@@ -249,7 +264,7 @@ public class MyApplication extends Application {
     }
 
     public BleService getBleService() {
-
+        if(bleService == null)return null;
         return bleService;
     }
 
@@ -340,6 +355,7 @@ public class MyApplication extends Application {
 
 
     public MqttService getMqttService() {
+        if(mqttService == null)return null;
         return mqttService;
     }
 

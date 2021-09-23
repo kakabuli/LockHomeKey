@@ -54,6 +54,7 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
@@ -69,11 +70,13 @@ import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.kaadas.lock.utils.ServiceAliveUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
+import com.kaidishi.lock.WelcomeActivity;
 import com.kaidishi.lock.xiaomi.MISPUtils;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 
@@ -197,8 +200,8 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             return;
         }
         // app update info
-        initPackages(this);
-        upgradePresenter = new UpgradePresenter();
+        //initPackages(this);
+        /*upgradePresenter = new UpgradePresenter();
         upgradePresenter.getUpgreadJson(new UpgradePresenter.IUpgradePresenter() {
             @Override
             public void ShowUpgradePresenterSuccess(String jsonPresenterResult) {
@@ -235,7 +238,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
             public void ShowUpgradePresenterFail() {
                 Log.e(GeTui.VideoLog, "update.....fail.......失败");
             }
-        });
+        });*/
         registerWifiReceiver();
 
 //        RadioButton rb_shop = findViewById(R.id.rb_shop);
