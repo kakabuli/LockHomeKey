@@ -21,6 +21,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
@@ -349,7 +350,27 @@ public class WifiVideoLockCameraVersionActivity extends BaseActivity<IWifiVideoL
 
     @Override
     public void noNeedUpdate() {
+        hiddenLoading();
+        String content = getString(R.string.already_newest_version) + "";
+        //当前已是最新版本
+        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.hint)
+                , content, getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
 
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                    @Override
+                    public void afterTextChanged(String toString) {
+                    }
+                });
 
     }
 
