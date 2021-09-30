@@ -318,7 +318,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                     }else{
                         if(isFirstAudio){
 
-                            if(mPresenter.isTalkback()){
+                            if(ivCalling.isSelected()){
                                 ivCalling.setSelected(false);
                                 mPresenter.talkback(false);
                                 mPresenter.stopTalkback();

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoSixthView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.XiaokaiNewServiceImp;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockVideoBindBean;
 import com.kaadas.lock.publiclibrary.http.postbean.WiFiLockVideoUpdateBindBean;
@@ -115,6 +116,16 @@ public class WifiVideoLockSixthPresenter<T> extends BasePresenter<IWifiLockVideo
             @Override
             public void onSuccess(WifiLockVideoBindResult wifiLockVideoBindResult) {
                 if(isSafe()){
+                    WifiLockInfo wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
+
+                    if(wifiLockInfo != null){
+                        wifiLockInfo.setRandomCode(randomCode);
+                        wifiLockInfo.setWifiName(wifiName);
+                        wifiLockInfo.setDevice_did(device_did);
+                        wifiLockInfo.setP2p_password(p2p_password);
+                    }else {
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                    }
                     mViewRef.get().onUpdateSuccess(wifiSN);
                 }
             }
