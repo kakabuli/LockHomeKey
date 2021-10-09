@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.clotheshangermachine.ClothesHangerMachineAddFirstActivity;
 import com.kaadas.lock.activity.device.wifilock.WifiLockMoreActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockScreenLightLevelPresenter;
@@ -203,18 +204,18 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
         if(wifiLockInfo != null && wifiLockInfo.getPower() < 30){
             content = getString(R.string.dialog_wifi_video_low_power_status);
         }
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n"+ content +"\n",
-                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleOneButtonDialog(
+                this,
+                content,
+                getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
                     }
 
                     @Override
                     public void right() {
 
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -225,6 +226,7 @@ public class WifiVideoScreenBrightnessActivity extends BaseActivity<IWifiVideoLo
 
                     }
                 });
+
     }
 
     private void registerBroadcast(){

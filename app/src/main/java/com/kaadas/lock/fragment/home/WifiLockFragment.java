@@ -737,18 +737,18 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
         if(wifiLockInfo != null && wifiLockInfo.getPower() < 30){
             content = getString(R.string.dialog_wifi_video_low_power_status);
         }
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(getContext(), getString(R.string.set_failed), "\n"+ content +"\n",
-                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleOneButtonDialog(
+                getActivity(),
+                content,
+                getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
                     }
 
                     @Override
                     public void right() {
 
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -759,6 +759,7 @@ public class WifiLockFragment extends BaseFragment<IWifiLockView, WifiLockPresen
 
                     }
                 });
+
     }
 
     @Override

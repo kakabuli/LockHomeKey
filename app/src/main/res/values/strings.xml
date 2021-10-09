@@ -2078,7 +2078,7 @@
     <string name="wifi_video_lock_delete_show_toast">没有要删除的哦~</string>
     <string name="wifi_video_lock_find_file_show_toast">找不到文件</string>
     <string name="wifi_video_lock_p2p_connect">正在建立安全连接，请稍后...</string>
-    <string name="dialog_wifi_video_power_status">已开启省电模式，需唤醒门锁后再试</string>
+    <string name="dialog_wifi_video_power_status">当前处于节能模式状态，\n需唤醒门锁，才能进行修改</string>
     <string name="dialog_wifi_video_low_power_status">电量过低，请及时更换电池\n(低电量下无法查看视频)</string>
     <string name="dialog_wifi_video_delete_video">确定删除视频吗？</string>
     <string name="dialog_wifi_video_keep_alive_close">视频长连接已关闭</string>

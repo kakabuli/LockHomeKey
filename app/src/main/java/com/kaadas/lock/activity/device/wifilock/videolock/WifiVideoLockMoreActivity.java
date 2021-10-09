@@ -520,27 +520,15 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         break;
                     case R.id.rl_safe_mode:
                         if (avi.isShow()) {
-
-                            intent = new Intent(this, WifiVideoLockSafeModeActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                            startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_SAFE_MODE_CODE);
-                            mPresenter.release();
+                            energy_saving_mode_constraintsWithTile(R.id.rl_safe_mode);
                         }
                         break;
 
                     case R.id.rl_am:   //手动自动模式
                         if (avi.isShow()) {
-                            if(BleLockUtils.isSupportLockType(func)){
-                                intent = new Intent(this, WifiLockLockingMethodActivity.class);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                                startActivityForResult(intent, KeyConstants.WIFI_LOCK_LOCKING_METHOD);
-                                mPresenter.release();
-                            }else{
-                                intent = new Intent(this, WifiVideoLockAMModeActivity.class);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
-                                startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_AM_MODE_CODE);
-                                mPresenter.release();
-                            }
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_am);
+
                         }
 
                         break;
@@ -553,13 +541,9 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                             mPresenter.release();
                         }
                         break;
-                    case R.id.rl_door_lock_language_switch:
+                    case R.id.rl_door_lock_language_switch: //门锁语言
                         if (avi.isShow()) {
-
-                            intent = new Intent(this, WifiVideoLockLanguageSettingActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE_CODE);
-                            mPresenter.release();
+                            energy_saving_mode_constraintsWithTile(R.id.rl_door_lock_language_switch);
                         }
                         break;
                     case R.id.iv_silent_mode:  //静音模式
@@ -671,76 +655,57 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                         }
                         break;
 
-                    case R.id.rl_real_time_video:
+                    case R.id.rl_real_time_video: //实时视频设置
                         if(true/*BleLockUtils.isSupportVideoModeSwitch(wifiLockInfo.getFunctionSet())*/) return;
                         if (avi.isShow()) {
+                            energy_saving_mode_constraintsWithTile(R.id.rl_real_time_video);
+                        }
+                        break;
+                    case R.id.rl_wandering_alarm: //徘徊报警
+                        if (avi.isShow()) {
+                            energy_saving_mode_constraintsWithTile(R.id.rl_wandering_alarm);
+                        }
+                        break;
+                    case R.id.rl_door_direction: //开门方向
+                        if (avi.isShow()) {
 
-                            intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivity(intent);
-                            mPresenter.release();
+                            energy_saving_mode_constraintsWithTile(R.id.rl_door_direction);
+
                         }
                         break;
-                    case R.id.rl_wandering_alarm:
+                    case R.id.rl_open_force:  //开门力量
                         if (avi.isShow()) {
-                            if(BleLockUtils.isSupportPirSetting(func)){
-                                intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE);
-                            }else if(BleLockUtils.isSupportFaceStatusShow(func)){
-                                intent = new Intent(this, WifiVideoLockFaceWanderingAlarmActivity.class);
-                                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                                startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE);
-                            }
-                            mPresenter.release();
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_open_force);
+
                         }
                         break;
-                    case R.id.rl_door_direction:
+                    case R.id.rl_screen_brightness: //屏幕亮度
                         if (avi.isShow()) {
-                            intent = new Intent(this, WifiLockOpenDirectionActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
-                            mPresenter.release();
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_screen_brightness);
+
                         }
                         break;
-                    case R.id.rl_open_force:
+                    case R.id.rl_screen_duration: //显示屏时间
                         if (avi.isShow()) {
-                            intent = new Intent(this, WifiLockOpenForceActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_FORCE);
-                            mPresenter.release();
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_screen_duration);
+
                         }
                         break;
-                    case R.id.rl_screen_brightness:
+                    case R.id.rl_duress_alarm: //胁迫报警
                         if (avi.isShow()) {
-                            intent = new Intent(this, WifiVideoScreenBrightnessActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent,KeyConstants.WIFI_VIDEO_LOCK_SCREEN_BRIGHTNESS);
-                            mPresenter.release();
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_duress_alarm);
+
                         }
                         break;
-                    case R.id.rl_screen_duration:
+                    case R.id.rl_voice_quality_setting: //语音设置
                         if (avi.isShow()) {
-                            intent = new Intent(this, WifiVideoScreenDurationActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent,KeyConstants.WIFI_VIDEO_LOCK_SCREEN_DURATION);
-                            mPresenter.release();
-                        }
-                        break;
-                    case R.id.rl_duress_alarm:
-                        if (avi.isShow()) {
-                            intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivity(intent);
-                            mPresenter.release();
-                        }
-                        break;
-                    case R.id.rl_voice_quality_setting:
-                        if (avi.isShow()) {
-                            intent = new Intent(this, WifiVideoLockVoiceQualitySettingActivity.class);
-                            intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                            startActivityForResult(intent,KeyConstants.WIFI_VICEO_LOCK_VOICE_QUALITY);
-                            mPresenter.release();
+
+                            energy_saving_mode_constraintsWithTile(R.id.rl_voice_quality_setting);
+
                         }
                         break;
                     case R.id.rl_ams_sensing:
@@ -791,6 +756,116 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
                 });
     }
 
+    private void energy_saving_mode_constraintsWithTile(int id){
+        Intent intent;
+        String functionSet = wifiLockInfo.getFunctionSet();
+        int func = Integer.parseInt(functionSet);
+        if (wifiLockInfo.getPowerSave() == 1) {
+            powerStatusDialog();
+        }
+        else {
+            switch (id) {
+                case R.id.rl_safe_mode:
+
+                    intent = new Intent(this, WifiVideoLockSafeModeActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                    startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_SAFE_MODE_CODE);
+                    mPresenter.release();
+                    break;
+                case R.id.rl_am:
+
+                    if (BleLockUtils.isSupportLockType(func)) {
+                        intent = new Intent(this, WifiLockLockingMethodActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                        startActivityForResult(intent, KeyConstants.WIFI_LOCK_LOCKING_METHOD);
+                        mPresenter.release();
+                    } else {
+                        intent = new Intent(this, WifiVideoLockAMModeActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiLockInfo.getWifiSN());
+                        startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_AM_MODE_CODE);
+                        mPresenter.release();
+                    }
+                    break;
+                case R.id.rl_door_lock_language_switch:
+
+                    intent = new Intent(this, WifiVideoLockLanguageSettingActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_LANGUAGE_CODE);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_real_time_video:
+
+                    intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivity(intent);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_wandering_alarm:
+
+                    if (BleLockUtils.isSupportPirSetting(func)) {
+                        intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE);
+                    } else if (BleLockUtils.isSupportFaceStatusShow(func)) {
+                        intent = new Intent(this, WifiVideoLockFaceWanderingAlarmActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_WANDERING_ALARM_CODE);
+                    }
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_door_direction:
+
+                    intent = new Intent(this, WifiLockOpenDirectionActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_open_force:
+
+                    intent = new Intent(this, WifiLockOpenForceActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_LOCK_SET_OPEN_FORCE);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_screen_brightness:
+
+                    intent = new Intent(this, WifiVideoScreenBrightnessActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_SCREEN_BRIGHTNESS);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_screen_duration:
+
+                    intent = new Intent(this, WifiVideoScreenDurationActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_VIDEO_LOCK_SCREEN_DURATION);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_duress_alarm:
+
+                    intent = new Intent(this, WifiVideoLockDuressAlarmAvtivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivity(intent);
+                    mPresenter.release();
+                    break;
+
+                case R.id.rl_voice_quality_setting:
+
+                    intent = new Intent(this, WifiVideoLockVoiceQualitySettingActivity.class);
+                    intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                    startActivityForResult(intent, KeyConstants.WIFI_VICEO_LOCK_VOICE_QUALITY);
+                    mPresenter.release();
+                    break;
+            }
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -873,18 +948,18 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
         if(wifiLockInfo != null && wifiLockInfo.getPower() < 30){
             content = getString(R.string.dialog_wifi_video_low_power_status);
         }
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n" + content + "\n",
-                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleOneButtonDialog(
+                this,
+                content,
+                getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
                     }
 
                     @Override
                     public void right() {
 
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -895,6 +970,7 @@ public class WifiVideoLockMoreActivity extends BaseActivity<IWifiVideoLockMoreVi
 
                     }
                 });
+
     }
 
 

@@ -320,18 +320,18 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
         if(wifiLockInfo != null && wifiLockInfo.getPower() < 30){
             content = getString(R.string.dialog_wifi_video_low_power_status);
         }
-        AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, getString(R.string.set_failed), "\n" + content + "\n",
-                getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+        AlertDialogUtil.getInstance().noEditTitleOneButtonDialog(
+                this,
+                content,
+                getString(R.string.confirm), "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-
                     }
 
                     @Override
                     public void right() {
 
                     }
-
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -342,6 +342,7 @@ public class WifiVideoLockFaceWanderingAlarmActivity extends BaseActivity<IWifiV
 
                     }
                 });
+
     }
 
     @Override
