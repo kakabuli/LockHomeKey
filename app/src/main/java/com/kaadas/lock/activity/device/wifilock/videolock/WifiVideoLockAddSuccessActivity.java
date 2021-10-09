@@ -28,6 +28,7 @@ import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.WifiLockVideoBindBean;
 import com.kaadas.lock.utils.EditTextWatcher;
 import com.kaadas.lock.utils.KeyConstants;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.blankj.utilcode.util.ToastUtils;
 
@@ -312,6 +313,7 @@ public class WifiVideoLockAddSuccessActivity extends BaseActivity<IWifiLockVideo
             @Override
             public void run() {
                 hiddenLoading();
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
                 Intent backIntent = new Intent(WifiVideoLockAddSuccessActivity.this, MainActivity.class);
                 startActivity(backIntent);
                 finish();
