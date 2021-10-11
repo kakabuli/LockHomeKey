@@ -731,6 +731,7 @@ public class AlertDialogUtil {
         TextView tv_cancel = mView.findViewById(R.id.tv_left);
         TextView tv_query = mView.findViewById(R.id.tv_right);
         AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        alertDialog.setCancelable(false);//窗口外不隐藏
         tvTitle.setText(title);
         tvContent.setText(content);
         tv_cancel.setText(left);
