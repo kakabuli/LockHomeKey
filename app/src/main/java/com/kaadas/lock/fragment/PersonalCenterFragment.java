@@ -126,6 +126,12 @@ public class PersonalCenterFragment extends BaseFragment<IMyFragmentView, MyFrag
         } else {
             showImage(photoPath);
         }
+
+        boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
+        if(showStatementAndTerms) {
+            //更新版本后，未同意隐私政策，强制用户退出登录
+            MyApplication.getInstance().tokenInvalid(true);
+        }
     }
 
     @Override
