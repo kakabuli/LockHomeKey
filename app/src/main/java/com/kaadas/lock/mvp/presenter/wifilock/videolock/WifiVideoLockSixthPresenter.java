@@ -44,8 +44,11 @@ public class WifiVideoLockSixthPresenter<T> extends BasePresenter<IWifiLockVideo
         XiaokaiNewServiceImp.wifiVideoLockBind(bean).subscribe(new BaseObserver<BaseResult>() {
             @Override
             public void onSuccess(BaseResult baseResult) {
-                //因设备上报信息没那么快，不在这里获取wifi信息
-//                MyApplication.getInstance().getAllDevicesByMqtt(true);
+                //TODO 首次添加设备时，WifiVideoLockSixthActivity和WifiVideoLockAddSuccessActivity不应该用一个P层
+                /*
+                * 因设备上报信息没那么快，不应这里获取wifi信息列表
+                * */
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
 //                        SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_OPERATION_RECORD + wifiSN, "");
 //                        SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSN, "");
                 SPUtils.put(KeyConstants.WIFI_VIDEO_LOCK_ALARM_RECORD + wifiSN, "");
