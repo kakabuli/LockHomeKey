@@ -489,11 +489,11 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         mSufaceView.setVisibility(View.VISIBLE);
         int keepAliveStatus = 0;
         try{
-            keepAliveStatus = wifiLockInfo.getKeep_alive_status();
+            keepAliveStatus = wifiLockInfo.getPowerSave();
         }catch (Exception e){
 
         }
-        if(keepAliveStatus == 1){
+        if(keepAliveStatus == 0){
             switchBackConnectP2P();
         }else{
             if(isCalling == 1){

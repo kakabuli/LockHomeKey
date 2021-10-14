@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -39,6 +40,7 @@ import com.kaadas.lock.publiclibrary.mqtt.util.MqttConstant;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttData;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.xm.XMP2PManager;
+import com.kaadas.lock.shulan.service.SLLocalService;
 import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.DateUtils;
@@ -226,12 +228,6 @@ public class MyApplication extends Application {
         initBleService();
         initMqttService();
         regToWx();
-        //启动linphoneService
-        boolean isService = ServiceAliveUtils.isServiceRunning(this, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
-        if (!isService) {
-            Intent linphoneServiceIntent = new Intent(this, LinphoneService.class);
-            startService(linphoneServiceIntent);
-        }
     }
 
     /**

@@ -106,7 +106,9 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
 
     private void initStatement(){
         boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
-        if(!showStatementAndTerms)return;
+        if(!showStatementAndTerms){
+            return;
+        }
         AlertDialogUtil.getInstance().statementAndTermsDialog(
                 this
                 , getString(R.string.statements_and_terms),
@@ -121,6 +123,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter<ILogi
                     public void right() {
                         SPUtils.putProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, false);
                         MyApplication.getInstance().initSDK();
+                        startLinphoneService(LoginActivity.this);
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {

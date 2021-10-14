@@ -3,6 +3,7 @@ package com.kaidishi.lock;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -272,6 +273,11 @@ public class WelcomeActivity extends BaseActivity<ISplashView, SplashPresenter<I
         } else {
             startService(bleServiceIntent);
         }*/
+        boolean showStatementAndTerms = (boolean) SPUtils.getProtect(KeyConstants.SHOW_STATEMENT_AND_TERMS, true);
+        if(!showStatementAndTerms){
+            startLinphoneService(this);
+            return;
+        }
     }
 
     final int timeout = 20;

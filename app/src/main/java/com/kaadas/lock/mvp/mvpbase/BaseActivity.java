@@ -1,9 +1,11 @@
 package com.kaadas.lock.mvp.mvpbase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -15,7 +17,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.utils.LoadingDialog;
+import com.kaadas.lock.utils.ServiceAliveUtils;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 
 
@@ -42,6 +46,15 @@ public abstract class BaseActivity<T extends IBaseView, V
         mPresenter.attachView((T) this);
 //        MyApplication.getInstance().addActivity(this);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    protected void startLinphoneService(Context context){
+        //启动linphoneService
+        boolean isService = ServiceAliveUtils.isServiceRunning(context, "com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService");
+        if (!isService) {
+            Intent linphoneServiceIntent = new Intent(context, LinphoneService.class);
+            startService(linphoneServiceIntent);
+        }
     }
 
     @Override

@@ -196,7 +196,7 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             llyBootomBar.setVisibility(View.GONE);
             mPresenter.settingDevice(wifiLockInfo);
 
-            if(wifiLockInfo.getKeep_alive_status() ==1){
+            if(wifiLockInfo.getPowerSave() == 0){
 
                 new Thread(new Runnable() {
                     @Override
