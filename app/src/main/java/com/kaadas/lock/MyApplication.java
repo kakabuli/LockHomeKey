@@ -61,6 +61,7 @@ import com.kaadas.lock.utils.greenDao.db.WifiLockInfoDao;
 import com.kaadas.lock.utils.greenDao.manager.WifiLockInfoManager;
 import com.kaidishi.lock.activity.GeTuiPushAvtivity;
 import com.kaidishi.lock.service.GeTuiPushService;
+import com.mob.MobSDK;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -150,17 +151,8 @@ public class MyApplication extends Application {
         SPUtils.remove(Constants.LINPHONE_REGESTER_STATE);
         initTokenAndUid();  //获取本地UUID
         listenerAppBackOrForge();
-        initMeme();
-        initXMP2PManager();
         //配置数据库
         setUpWriteDataBase(DB_KEY);
-        // HuaWei phone
-        if (Rom.isEmui()) {
-            HmsMessaging.getInstance(this).setAutoInitEnabled(true);
-        }else if(Rom.isMiui()){
-                MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
-        }
-        GeTuiPushInit();
         LogUtils.e("attachView  App启动完成 ");
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
@@ -228,6 +220,16 @@ public class MyApplication extends Application {
         initBleService();
         initMqttService();
         regToWx();
+        initMeme();
+        initXMP2PManager();
+        // HuaWei phone
+        if (Rom.isEmui()) {
+            HmsMessaging.getInstance(this).setAutoInitEnabled(true);
+        }else if(Rom.isMiui()){
+            MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
+        }
+        GeTuiPushInit();
+        MobSDK.submitPolicyGrantResult(true,null);
     }
 
     /**

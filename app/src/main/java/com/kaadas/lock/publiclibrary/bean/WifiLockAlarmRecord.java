@@ -9,11 +9,13 @@ public class WifiLockAlarmRecord {
      * createTime : 1576054908866
      */
 
-    private String _id;
+    public String _id;
     private long time;
     private int type;
     private String wifiSN;
     private long createTime;
+
+    public WifiLockAlarmRecord(){}
 
     public String get_id() {
         return _id;
