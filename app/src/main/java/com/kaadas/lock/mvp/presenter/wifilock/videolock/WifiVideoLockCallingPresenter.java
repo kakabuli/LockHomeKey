@@ -294,7 +294,6 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
         did = wifiLockInfo.getDevice_did();
         sn = wifiLockInfo.getDevice_sn();
         p2pPassword = wifiLockInfo.getP2p_password();
-
     }
 
     public void snapImage(){

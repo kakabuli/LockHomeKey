@@ -24,6 +24,7 @@ import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.blankj.utilcode.util.ToastUtils;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
 
 import butterknife.BindView;
@@ -70,7 +71,6 @@ public class WifiVideoLockWanderingAlarmActivity extends BaseActivity<IWifiVideo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_wandering_alarm);
         ButterKnife.bind(this);
-
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
 

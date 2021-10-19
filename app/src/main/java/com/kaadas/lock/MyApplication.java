@@ -673,7 +673,7 @@ public class MyApplication extends Application {
     }
 
     public ClothesHangerMachineAllBean getClothesHangerMachineBySn(String sn){
-        if(sn.isEmpty()){
+        if(TextUtils.isEmpty(sn)){
             return null;
         }
         if(homeShowDevices != null){
@@ -706,7 +706,7 @@ public class MyApplication extends Application {
     }
 
     public WifiLockInfo getWifiLockInfoBySn(String sn) {
-        if(sn.isEmpty()){
+        if(TextUtils.isEmpty(sn)){
             return null;
         }
         if (homeShowDevices != null) {

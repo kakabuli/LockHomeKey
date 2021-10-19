@@ -448,15 +448,19 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         break;
                     case R.id.rl_message_push:
                         intent = new Intent(this,WifiLockMessagePushActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivity(intent);
                         break;
 
                     case R.id.rl_real_time_video:
                         intent = new Intent(this, WifiVideoLockRealTimeActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                         startActivity(intent);
                         break;
                     case R.id.rl_wandering_alarm:
                         intent = new Intent(this, WifiVideoLockWanderingAlarmActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                        LogUtils.e("shulan wifiSn more-->" + wifiSn);
                         startActivity(intent);
                         break;
                     /*case R.id.rl_door_direction:
