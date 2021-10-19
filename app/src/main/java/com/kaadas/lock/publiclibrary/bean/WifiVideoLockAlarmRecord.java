@@ -24,7 +24,7 @@ public class WifiVideoLockAlarmRecord implements Serializable {
      }
      */
 
-    private String _id;
+    public String _id;
     private String time;
     private int type;
     private String wifiSN;
@@ -44,6 +44,8 @@ public class WifiVideoLockAlarmRecord implements Serializable {
 
     private boolean first = false; // 是否是第一个
     private boolean last = false; //是否是最后一个
+
+    public WifiVideoLockAlarmRecord(){}
 
     private String dayTime;
 
