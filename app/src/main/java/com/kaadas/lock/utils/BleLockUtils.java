@@ -188,6 +188,7 @@ public class BleLockUtils {
         FUNCTION_SET.put(0xA8, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 19, 20, 21, 22, 23, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 88, 90, 93/*, 96*/});
 
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
+        FUNCTION_SET.put(0xB2, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 21, 22, 23, 38, 39});
     }
 
     /**

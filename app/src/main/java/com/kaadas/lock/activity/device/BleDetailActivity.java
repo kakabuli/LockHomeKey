@@ -256,13 +256,15 @@ public class BleDetailActivity extends BaseBleActivity<IDeviceDetailView, BleDev
 
             for (ProductInfo productInfo:productList) {
 //                if (productInfo.getDevelopmentModel().contentEquals(model)){
-                if (productInfo.getSnHead().equals(deviceSN.substring(0,3))) {
+                if(deviceSN.length() > 3){
+                    if (productInfo.getSnHead().equals(deviceSN.substring(0,3))) {
 
-                    //LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
-                    //LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
-                    //匹配型号获取下载地址
-                    Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
-                    return;
+                        //LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
+                        //LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getAdminUrl());
+                        //匹配型号获取下载地址
+                        Glide.with(this).load(productInfo.getAdminUrl()).apply(options).into(ivLockIcon);
+                        return;
+                    }
                 }
             }
         }

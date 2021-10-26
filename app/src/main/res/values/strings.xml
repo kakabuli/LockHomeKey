@@ -460,6 +460,7 @@
     <string name="a_m_auto_lock">A-M 自动上锁</string>
     <string name="door_lock_language_switch">门锁语言切换</string>
     <string name="silent_mode">静音模式</string>
+    <string name="voice_mode">语音模式</string>
     <string name="check_firmware_update">检查固件升级</string>
     <string name="delete_device">删除设备</string>
     <string name="settting">设置</string>
