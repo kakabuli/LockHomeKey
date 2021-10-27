@@ -43,7 +43,7 @@ public class WiFiLockUtils {
         ,"P9-W","p9-W","p9-w","P9-w","P9W","p9W","p9w","P9w","P9_W","p9_W","p9_w","P9_w"});
         // -----------------------------------------
         PAIRING_MODE.put("WiFi&BLE",new String[]{"S110M", "S110-D1", "S110-D2", "S110-D3", "S110-D4"
-        ,"S110-D","S110D","S110 D","S110_D","X9","X9-F","X90","X9F"});
+        ,"S110-D","S110D","S110 D","S110_D","X9","X9-F","X90","X9F","K60","k60"});
         // -----------------------------------------
         PAIRING_MODE.put("WiFi&VIDEO",new String[]{"K10V","K20V","K20-V","X9-V","X9V","兰博基尼传奇可视猫眼智能锁","K13V","K10FV"
                 ,"K20 Max 3D人脸可视猫眼智能锁","X9 Pro 猫眼视屏智能锁","X9 Pro Max 3D人脸猫眼视屏智能锁","K60 FVP 3D人脸猫眼视屏智能锁"
