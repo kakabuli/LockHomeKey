@@ -22,8 +22,10 @@ import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.AudioFrame;
 import com.xmitech.sdk.H264Frame;
 import com.xmitech.sdk.MP4Info;
+import com.xmitech.sdk.VideoBasic;
 import com.xmitech.sdk.interfaces.AVFilterListener;
 import com.xmitech.sdk.interfaces.VideoPackagedListener;
+import com.xmitech.sdk.utlis.CodecConstant;
 
 
 import io.reactivex.disposables.Disposable;
@@ -232,15 +234,6 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
             XMP2PManager.getInstance().setAECM(true);
             XMP2PManager.getInstance().startVideoStream();
 
-
-            XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
-                @Override
-                public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
-                    if(isSafe()){
-                        mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
-                    }
-                }
-            });
             XMP2PManager.getInstance().setAVFilterListener(new AVFilterListener() {
                 @Override
                 public void onAudioRecordData(AudioFrame audioFrame) {
@@ -283,11 +276,28 @@ public class WifiVideoLockCallingPresenter<T> extends BasePresenter<IWifiLockVid
                 @Override
                 public void onCodecNotify(int i, Object o) {
 
+//                    LogUtils.e("xmtest--"+"i = " +  i);
+                    if (i == CodecConstant.NOTIFY_RESOLUTION_CHANGE){
+                        VideoBasic info=(VideoBasic)o;
+                        if (info.getHeight()!=0&&info.getWidth()!=0){
+//                            LogUtils.e("xmtest--"+"info.getHeight() = " + info.getHeight());
+//                            LogUtils.e("xmtest--"+"info.getWidth() = " + info.getWidth());
+                            XMP2PManager.getInstance().setOnAudioVideoStatusLinstener(new XMP2PManager.AudioVideoStatusListener() {
+                                @Override
+                                public void onVideoDataAVStreamHeader(AVStreamHeader paramAVStreamHeader) {
+                                    if(isSafe()){
+                                        mViewRef.get().onVideoDataAVStreamHeader(paramAVStreamHeader);
+                                    }
+                                }
+                            });
+                        }
+
+                    }
+
                 }
 
-
             });
-//        }
+
     }
 
     public void settingDevice(WifiLockInfo wifiLockInfo) {
