@@ -241,9 +241,9 @@ dependencies {
     implementation project(':push:pushsdk_xiaomi')
     implementation project(':Core')
     implementation project(':keep_alive')
-    if(rootProject.ext.isDeBug){
+    /*if(rootProject.ext.isDeBug){
         implementation project(':internalTestModule')
-    }
+    }*/
 
 
     //文件下载的SDK
