@@ -2,24 +2,36 @@ package com.kaadas.lock.activity.addDevice.cateye;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.DeviceAddCateyeHelpActivity;
 import com.kaadas.lock.activity.addDevice.DeviceBindGatewayListActivity;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +51,7 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
     private String pwd;
     private String ssid;
     private String gwId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +71,7 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
                startActivity(intent);
                 break;
             case R.id.scan_catEye:
-//                Intent scanIntent = new Intent(this, AddDeviceCatEyeScanActivity.class);
-//                startActivityForResult(scanIntent,KeyConstants.SCANCATEYE_REQUEST_CODE);
-                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
-                if (strings.length>0){
-                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
-                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
-                }else {
-                    Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
-                    scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
-                    startActivityForResult(scanIntent, KeyConstants.SCANCATEYE_REQUEST_CODE);
-                }
-
+                checkPermissions();
                 break;
             case  R.id.phone_add_txt:
                 Intent phoneIntent = new Intent(this, CatEyeAddPhoneActivity.class);
@@ -120,5 +122,31 @@ public class AddDeviceCatEyeFirstActivity extends BaseAddToApplicationActivity {
 
         }
 
+    }
+
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                Intent scanIntent = new Intent(AddDeviceCatEyeFirstActivity.this, QrCodeScanActivity.class);
+                                scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                                startActivityForResult(scanIntent, KeyConstants.SCANCATEYE_REQUEST_CODE);
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
     }
 }

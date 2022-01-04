@@ -17,6 +17,7 @@ import com.kaadas.lock.activity.device.wifilock.newadd.WifiLockOldUserFirstActiv
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -86,10 +87,9 @@ public class WifiLockWifiDetailActivity extends BaseAddToApplicationActivity {
                     wifiIntent.putExtra("wifiModelType", wifiModelType);
                     startActivity(wifiIntent);
                 } else if (wifiLockInfo.getDistributionNetwork() == 2) {
-                    Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
-                    String wifiModelType = "WiFi&BLE";
-                    wifiIntent.putExtra("wifiModelType", wifiModelType);
-                    startActivity(wifiIntent);
+                    if(!isNeedShowAlertDialog()){
+                        startFirstActivity();
+                    }
                 } else if(wifiLockInfo.getDistributionNetwork() == 3){
                     showWifiDialog();
                 }else {
@@ -99,6 +99,50 @@ public class WifiLockWifiDetailActivity extends BaseAddToApplicationActivity {
                 break;
 
         }
+    }
+
+    private void startFirstActivity() {
+        Intent wifiIntent = new Intent(this, WifiLockAddNewFirstActivity.class);
+        String wifiModelType = "WiFi&BLE";
+        wifiIntent.putExtra("wifiModelType", wifiModelType);
+        wifiIntent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+        startActivity(wifiIntent);
+    }
+
+    private boolean isNeedShowAlertDialog(){
+        int funcSet = 0;
+        try {
+            funcSet = Integer.parseInt(wifiLockInfo.getFunctionSet());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(!BleLockUtils.isFuncSetB9(funcSet)){
+            return false;
+        }
+        String alertTitle = getString(R.string.hint);
+        String alertStr = getString(R.string.dialog_wifi_video_change_wifi);
+
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, alertTitle, alertStr, getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+
+            }
+
+            @Override
+            public void right() {
+                startFirstActivity();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+            }
+        });
+        return true;
     }
 
     @Override

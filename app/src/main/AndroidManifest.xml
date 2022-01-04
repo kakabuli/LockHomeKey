@@ -35,25 +35,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" /> <!-- 使用网络 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 如果是安卓10.0，需要后台获取连接的wifi名称则添加进程获取位置信息权限 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- android 10.0使用wifi api新添加的权限 -->
-    <!-- 魅族辅助 SDK -->
-    <permission
-        android:name="${applicationId}.push.permission.MESSAGE"
-        android:protectionLevel="signature" />
-    <permission
-        android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.meizu.flyme.push.permission.RECEIVE" />
-    <uses-permission android:name="com.meizu.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="${applicationId}.push.permission.MESSAGE" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
-    <!--
-<queries>
-        <intent>
-            <action android:name="com.huawei.hms.core.aidlservice" />
-        </intent>
-    </queries>
-    -->
     <meta-data
         android:name="push_kit_auto_init_enabled"
         android:value="true" />
@@ -67,7 +49,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        android:extractNativeLibs = "true"
         tools:replace="android:name,android:allowBackup">
+
+        <meta-data android:name="ScopedStorage" android:value="true" />
         <activity android:name=".activity.device.wifilock.videolock.WifiVideoLockSettingAMSSensingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -1392,84 +1377,10 @@
         <service
             android:name="com.kaidishi.lock.service.GeTuiIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 魅族辅助 SDK start -->
-        <meta-data
-            android:name="MEIZUPUSH_APPID"
-            android:value="MZ_${MEIZU_APP_ID}" />
-        <meta-data
-            android:name="MEIZUPUSH_APPKEY"
-            android:value="MZ_${MEIZU_APP_KEY}" />
 
-        <service
-            android:name="com.meizu.cloud.pushsdk.NotificationService"
-            android:exported="true"
-            android:process=":pushservice" />
+        <!--个推SDK的appid 重要！必须补充-->
+        <meta-data android:name="GETUI_APPID" android:value="${GETUI_APPID}"/>
 
-        <receiver
-            android:name="com.meizu.cloud.pushsdk.SystemReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.meizu.cloud.pushservice.action.PUSH_SERVICE_START" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.igexin.sdk.FlymePushReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.meizu.flyme.push.intent.MESSAGE" />
-                <action android:name="com.meizu.flyme.push.intent.REGISTER.FEEDBACK" />
-                <action android:name="com.meizu.flyme.push.intent.UNREGISTER.FEEDBACK" />
-                <action android:name="com.meizu.c2dm.intent.REGISTRATION" />
-                <action android:name="com.meizu.c2dm.intent.RECEIVE" />
-
-                <category android:name="${applicationId}" />
-            </intent-filter>
-        </receiver> <!-- 魅族辅助 SDK end -->
-        <!-- VIVO辅助 SDK start -->
-        <meta-data
-            android:name="com.vivo.push.app_id"
-            android:value="${VIVO_APP_ID}" />
-        <meta-data
-            android:name="com.vivo.push.api_key"
-            android:value="${VIVO_APP_KEY}" />
-
-        <service
-            android:name="com.vivo.push.sdk.service.CommandClientService"
-            android:exported="true"
-            android:process=":pushservice" />
-
-        <activity
-            android:name="com.vivo.push.sdk.LinkProxyClientActivity"
-            android:exported="true"
-            android:process=":pushservice"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <receiver
-            android:name="com.igexin.sdk.VivoPushMessageReceiver"
-            android:process=":pushservice">
-            <intent-filter>
-
-                <!-- 接收 push 消息 -->
-                <action android:name="com.vivo.pushclient.action.RECEIVE" />
-            </intent-filter>
-        </receiver> <!-- VIVO辅助 SDK end -->
-        <!-- OPPO辅助 SDK start -->
-        <meta-data
-            android:name="OPPOPUSH_APPKEY"
-            android:value="OP_${OPPO_APP_KEY}" />
-        <meta-data
-            android:name="OPPOPUSH_APPSECRET"
-            android:value="OP_${OPPO_APP_SECRET}" />
-
-        <service
-            android:name="com.igexin.sdk.OppoPushService"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
-        </service> <!-- OPPO辅助 SDK end -->
         <!-- 华为core辅助 -->
         <meta-data
             android:name="com.huawei.hms.client.channel.androidMarket"

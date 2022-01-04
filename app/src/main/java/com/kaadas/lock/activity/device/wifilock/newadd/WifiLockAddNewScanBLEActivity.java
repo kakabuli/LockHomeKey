@@ -16,13 +16,19 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSecondActivity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.adapter.DeviceBleWiFiSearchAdapter;
 import com.kaadas.lock.adapter.DeviceSearchAdapter;
@@ -521,7 +527,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
                     @Override
                     public void right() {
-                        call("tel:"+"4008005919");
+                        checkPermissions();
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -559,44 +565,36 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         hiddenLoading();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CALL_PERMISSION: //拨打电话
-                if (permissions.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {//失败
-                    Toast.makeText(this,"请允许拨号权限后再试",Toast.LENGTH_SHORT).show();
-                } else {//成功
-                    call("tel:"+"4008005919");
-                }
-                break;
-        }
-    }
-
     /**
      * 拨打电话（直接拨打）
      * @param telPhone 电话
      */
     public void call(String telPhone){
-        if(checkReadPermission(Manifest.permission.CALL_PHONE,REQUEST_CALL_PERMISSION)){
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(telPhone));
-            startActivity(intent);
-        }
+        Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse(telPhone));
+        startActivity(intent);
     }
 
-    /**
-     * 判断是否有某项权限
-     * @param string_permission 权限
-     * @param request_code 请求码
-     * @return
-     */
-    public boolean checkReadPermission(String string_permission,int request_code) {
-        boolean flag = false;
-        if (ContextCompat.checkSelfPermission(this, string_permission) == PackageManager.PERMISSION_GRANTED) {//已有权限
-            flag = true;
-        } else {//申请权限
-            ActivityCompat.requestPermissions(this, new String[]{string_permission}, request_code);
-        }
-        return flag;
-    }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CALL_PHONE)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                call("tel:"+"4008005919");
+                            }
+                        }
 
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
 }

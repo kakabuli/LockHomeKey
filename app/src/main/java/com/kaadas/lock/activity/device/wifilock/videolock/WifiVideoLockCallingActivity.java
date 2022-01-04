@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,9 +37,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockCallingPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoCallingView;
@@ -258,7 +264,7 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
 
         llyTemporaryPassword.setVisibility(View.GONE);
         tvTemporaryPassword.setText("");
-
+        resetStatus();
         initLinstener();
         //动态设置状态栏高度
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(titleBar.getLayoutParams());
@@ -312,27 +318,41 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    if (ContextCompat.checkSelfPermission(WifiVideoLockCallingActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions( WifiVideoLockCallingActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        ToastUtils.showShort(getString(R.string.wifi_video_lock_microphone_permission) + "");
-                    }else{
-                        if(isFirstAudio){
+                    try {
+                        XXPermissions.with(WifiVideoLockCallingActivity.this)
+                                .permission(Permission.RECORD_AUDIO)
+                                .request(new OnPermissionCallback() {
+                                    @Override
+                                    public void onGranted(List<String> permissions, boolean all) {
+                                        if (all) {
+                                            if(isFirstAudio){
+                                                if(ivCalling.isSelected()){
+                                                    ivCalling.setSelected(false);
+                                                    mPresenter.talkback(false);
+                                                    mPresenter.stopTalkback();
+                                                    tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
+                                                    tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                                                }else{
+                                                    ivCalling.setSelected(true);
+                                                    mPresenter.talkback(true);
+                                                    mPresenter.startTalkback();
+                                                    showShort(getString(R.string.wifi_video_lock_open_talk_back));
+                                                    tvCallingTips.setText(getString(R.string.wifi_video_lock_talking_back));
+                                                    tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
+                                                }
+                                            }
+                                        }
+                                    }
 
-                            if(ivCalling.isSelected()){
-                                ivCalling.setSelected(false);
-                                mPresenter.talkback(false);
-                                mPresenter.stopTalkback();
-                                tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
-                                tvCallingTips.setTextColor(Color.parseColor("#333333"));
-                            }else{
-                                ivCalling.setSelected(true);
-                                mPresenter.talkback(true);
-                                mPresenter.startTalkback();
-                                showShort(getString(R.string.wifi_video_lock_open_talk_back));
-                                tvCallingTips.setText(getString(R.string.wifi_video_lock_talking_back));
-                                tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
-                            }
-                        }
+                                    @Override
+                                    public void onDenied(List<String> permissions, boolean never) {
+
+                                    }
+                                });
+
+
+                    }catch (Exception e){
+                        Log.d("", "checkPermissions: "  + e.getMessage());
                     }
                 }
                 return false;
@@ -429,39 +449,92 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 mPresenter.release();
                 break;
             case R.id.iv_album:
-                isLastPirture = true;
-                Intent intent = new Intent(WifiVideoLockCallingActivity.this, WifiVideoLockAlbumActivity.class);
-                intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
-                startActivity(intent);
-                mPresenter.release();
+                try {
+                    XXPermissions.with(this)
+                            .permission(Permission.Group.STORAGE)
+                            .request(new OnPermissionCallback() {
+                                @Override
+                                public void onGranted(List<String> permissions, boolean all) {
+                                    if (all) {
+                                        isLastPirture = true;
+                                        Intent intent = new Intent(WifiVideoLockCallingActivity.this, WifiVideoLockAlbumActivity.class);
+                                        intent.putExtra(KeyConstants.WIFI_SN,wifiSn);
+                                        startActivity(intent);
+                                        mPresenter.release();
+                                    }
+                                }
+
+                                @Override
+                                public void onDenied(List<String> permissions, boolean never) {
+
+                                }
+                            });
+
+
+                }catch (Exception e){
+                    Log.d("", "checkPermissions: "  + e.getMessage());
+                }
                 break;
             case R.id.iv_recoring:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    ToastUtils.showShort(getString(R.string.wifi_video_lock_read_and_write_permission));
-                }else{
-                    if(!ivRecoring.isSelected()){
-                        ivRecoring.setSelected(true);
-                        llyRecord.setVisibility(View.VISIBLE);
-                        if(wifiLockInfo != null){
-                            String filePath = FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
-                            mPresenter.startRecordMP4(filePath);
-                            showShort(getString(R.string.wifi_video_lock_screen_recording_enable));
-                        }
+                try {
+                    XXPermissions.with(this)
+                            .permission(Permission.Group.STORAGE)
+                            .request(new OnPermissionCallback() {
+                                @Override
+                                public void onGranted(List<String> permissions, boolean all) {
+                                    if (all) {
+                                        if(!ivRecoring.isSelected()){
+                                            ivRecoring.setSelected(true);
+                                            llyRecord.setVisibility(View.VISIBLE);
+                                            if(wifiLockInfo != null){
+                                                String filePath = FileTool.getVideoLockPath(WifiVideoLockCallingActivity.this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
+                                                mPresenter.startRecordMP4(filePath);
+                                                showShort(getString(R.string.wifi_video_lock_screen_recording_enable));
+                                            }
 
-                    }else{
-                        ivRecoring.setSelected(false);
-                        llyRecord.setVisibility(View.GONE);
-                        mPresenter.stopRecordMP4();
-                        showShort(getString(R.string.wifi_video_lock_screen_recording_disable));
-                    }
-                    llyRecord.setVisibility(View.VISIBLE);
+                                        }else{
+                                            ivRecoring.setSelected(false);
+                                            llyRecord.setVisibility(View.GONE);
+                                            mPresenter.stopRecordMP4();
+                                            showShort(getString(R.string.wifi_video_lock_screen_recording_disable));
+                                        }
+                                        llyRecord.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onDenied(List<String> permissions, boolean never) {
+
+                                }
+                            });
 
 
+                }catch (Exception e){
+                    Log.d("", "checkPermissions: "  + e.getMessage());
                 }
                 break;
             case R.id.iv_screenshot:
-                mPresenter.snapImage();
+                try {
+                    XXPermissions.with(this)
+                            .permission(Permission.Group.STORAGE)
+                            .request(new OnPermissionCallback() {
+                                @Override
+                                public void onGranted(List<String> permissions, boolean all) {
+                                    if (all) {
+                                        mPresenter.snapImage();
+                                    }
+                                }
+
+                                @Override
+                                public void onDenied(List<String> permissions, boolean never) {
+
+                                }
+                            });
+
+
+                }catch (Exception e){
+                    Log.d("", "checkPermissions: "  + e.getMessage());
+                }
                 break;
             case R.id.iv_temporary_pwd:
                 if(!isPasswordShow){
@@ -485,7 +558,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     @Override
     protected void onResume() {
         super.onResume();
-        mSufaceView.setVisibility(View.GONE);
         mSufaceView.setVisibility(View.VISIBLE);
         int keepAliveStatus = 0;
         try{
@@ -512,7 +584,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
                 },500);
             }
         }
-        resetStatus();
         registerBroadcast();
         if(isLastPirture){
             if(myBitmap != null) {
@@ -1091,4 +1162,64 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
         }
         return result;
     }
+
+    private void checkPermissions(String permission) {
+        try {
+            XXPermissions.with(this)
+                    .permission(permission)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                if(TextUtils.equals(permission,Permission.RECORD_AUDIO)){
+                                    if(isFirstAudio){
+                                        if(ivCalling.isSelected()){
+                                            ivCalling.setSelected(false);
+                                            mPresenter.talkback(false);
+                                            mPresenter.stopTalkback();
+                                            tvCallingTips.setText(getString(R.string.wifi_video_lock_talk_back));
+                                            tvCallingTips.setTextColor(Color.parseColor("#333333"));
+                                        }else{
+                                            ivCalling.setSelected(true);
+                                            mPresenter.talkback(true);
+                                            mPresenter.startTalkback();
+                                            showShort(getString(R.string.wifi_video_lock_open_talk_back));
+                                            tvCallingTips.setText(getString(R.string.wifi_video_lock_talking_back));
+                                            tvCallingTips.setTextColor(Color.parseColor("#ffffff"));
+                                        }
+                                    }
+                                }
+                                else if(TextUtils.equals(permission,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                                    if(!ivRecoring.isSelected()){
+                                        ivRecoring.setSelected(true);
+                                        llyRecord.setVisibility(View.VISIBLE);
+                                        if(wifiLockInfo != null){
+                                            String filePath = FileTool.getVideoLockPath(WifiVideoLockCallingActivity.this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
+                                            mPresenter.startRecordMP4(filePath);
+                                            showShort(getString(R.string.wifi_video_lock_screen_recording_enable));
+                                        }
+
+                                    }else{
+                                        ivRecoring.setSelected(false);
+                                        llyRecord.setVisibility(View.GONE);
+                                        mPresenter.stopRecordMP4();
+                                        showShort(getString(R.string.wifi_video_lock_screen_recording_disable));
+                                    }
+                                    llyRecord.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+
 }

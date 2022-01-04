@@ -1134,6 +1134,22 @@ public class XiaokaiNewServiceImp {
     }
 
     /**
+     * 预绑定设备
+     *
+     * @param wifiSN
+     * @param uid
+     * @return
+     */
+    public static Observable<BaseResult> preBind(String wifiSN, String uid) {
+        WiFiLockWifiSNAndUid wiFiLockUnbind = new WiFiLockWifiSNAndUid(wifiSN, uid);
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .wifiLockPreBind(timestamp,new HttpUtils<WiFiLockWifiSNAndUid>().getBodyToken(wiFiLockUnbind,timestamp))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
+    /**
      * 修改WiFi锁昵称
      *
      * @param wifiSN

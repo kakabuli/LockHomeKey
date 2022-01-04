@@ -25,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
@@ -120,7 +123,7 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
         mutiProgress.setCurrNodeNO(0, false);
 
 
-        requestPermission();
+        checkPermissions();
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         PATH = getExternalFilesDir("").getAbsolutePath() + File.separator + "binFile";
         createFolder(PATH);
@@ -550,12 +553,29 @@ public class TiOtaUpgradeActivity extends BaseAddToApplicationActivity implement
         }
     }
 
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                },
-                1);
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .permission(Permission.Group.STORAGE)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
     }
 
 

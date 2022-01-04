@@ -33,7 +33,7 @@ public class MqttConstant {
     public static final int MQTT_CONNECTION_TIMEOUT = 10;
 
     //设置心跳时间，单位为秒
-    public static final int MQTT_KEEP_ALIVE_INTERVAL = 20;
+    public static final int MQTT_KEEP_ALIVE_INTERVAL = 60;
 
     //允许同时发送几条消息（未收到broker确认信息）
     public static final int MQTT_MAX_INFLIGHT = 10;

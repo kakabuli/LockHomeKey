@@ -88,13 +88,12 @@
                 app:bgArcColor="#D1D1D2"
                 app:bgArcWidth="@dimen/dp_4"
                 app:hintSize="@dimen/text_size_15"
-                app:maxValue="60"
+                app:maxValue="100"
                 app:startAngle="148"
                 app:sweepAngle="240"
                 app:unitColor="#CACACA"
                 app:unit="loading..."
                 app:unitSize="12sp"
-                app:value="60"
                 app:valueColor="#333333"
                 app:valueSize="26sp" />
 

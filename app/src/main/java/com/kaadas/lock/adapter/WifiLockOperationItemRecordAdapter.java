@@ -60,7 +60,7 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
                     left = sNum;
                 }
                 switch (pwdType) {
-                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式开锁 10室内多功能键开锁（open） 11室内感应把手开锁
+                    //	密码类型：0密码 3卡片 4指纹 7面容 8APP用户 9机械方式开锁 10室内多功能键开锁（open） 11室内感应把手开锁 16小度智能屏开锁 17天猫精灵开锁
                     case 0:
                         right = mContext.getString(R.string.password_open);
                         if (record.getPwdNum() == 252) {
@@ -111,6 +111,22 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
 //                            return;
 //                        }
                         left = mContext.getString(R.string.indoor_Induction);
+                        right = "";
+                        break;
+                    case 16:
+//                        right = mContext.getString(R.string.indoor_Induction);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.smart_xiaodu_open);
+                        right = "";
+                        break;
+                    case 17:
+//                        right = mContext.getString(R.string.indoor_Induction);
+//                        if(left.equals("编号00")){
+//                            return;
+//                        }
+                        left = mContext.getString(R.string.tmall_spirit_open);
                         right = "";
                         break;
                     default:

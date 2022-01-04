@@ -152,30 +152,30 @@
 
     <!-- 圆形进度条 -->
     <declare-styleable name="CircleProgressBar">
-        <attr name="antiAlias" />
-        <attr name="startAngle" />
-        <attr name="sweepAngle" />
-        <attr name="animTime" />
-        <attr name="maxValue" />
-        <attr name="value" />
-        <attr name="precision" />
-        <attr name="valueSize" />
-        <attr name="valueColor" />
-        <attr name="textOffsetPercentInRadius" />
+        <attr name="antiAlias" format="boolean" />
+        <attr name="startAngle" format="float" />
+        <attr name="sweepAngle" format="float" />
+        <attr name="animTime" format="integer" />
+        <attr name="maxValue" format="float" />
+        <attr name="value" format="float" />
+        <attr name="precision" format="integer" />
+        <attr name="valueSize" format="dimension" />
+        <attr name="valueColor" format="color" />
+        <attr name="textOffsetPercentInRadius" format="float" />
         <!-- 绘制内容相应的提示语 -->
-        <attr name="hint" />
-        <attr name="hintSize" />
-        <attr name="hintColor" />
-        <attr name="textsuffix" />
+        <attr name="hint" format="string" />
+        <attr name="hintSize" format="dimension" />
+        <attr name="hintColor" format="color" />
+        <attr name="textsuffix" format="string" />
         <!-- 绘制内容的单位 -->
-        <attr name="unit" />
-        <attr name="unitSize" />
-        <attr name="unitColor" />
+        <attr name="unit" format="string" />
+        <attr name="unitSize" format="dimension" />
+        <attr name="unitColor" format="color" />
         <!-- 圆弧宽度 -->
-        <attr name="arcWidth" />
-        <attr name="arcColors" />
+        <attr name="arcWidth" format="dimension" />
+        <attr name="arcColors" format="integer" />
         <!-- 背景圆弧颜色 -->
-        <attr name="bgArcColor" />
+        <attr name="bgArcColor" format="color" />
         <!-- 背景圆弧宽度 -->
         <attr name="bgArcWidth" format="dimension" />
     </declare-styleable>

@@ -7,12 +7,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAddGatewayHelpActivity;
 import com.kaadas.lock.activity.addDevice.DeviceAddHelpActivity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSearchActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StatusBarUtils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +53,46 @@ public class AddZigbeeLockFirstActivity extends BaseAddToApplicationActivity {
                 startActivity(intent);
                 break;
             case R.id.button_next:
-                Intent searchIntent=new Intent(this, AddZigbeeLockSecondActivity.class);
-                startActivity(searchIntent);
-
+                checkPermissions();
                 break;
         }
+    }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                LogUtils.e("获取权限成功");
+                                startActivity();
+
+                            } else {
+                                LogUtils.e("获取部分权限成功，但部分权限未正常授予");
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                            if (never) {
+                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                LogUtils.e("被永久拒绝授权，请手动授予权限");
+                            } else {
+                                LogUtils.e("获取权限失败");
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e(e.getMessage());
+        }
+    }
+    private void startActivity(){
+
+        Intent searchIntent=new Intent(this, AddZigbeeLockSecondActivity.class);
+        startActivity(searchIntent);
+
     }
 }

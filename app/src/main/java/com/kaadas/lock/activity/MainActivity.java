@@ -140,7 +140,6 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         }
         LogUtils.e("MainActivity启动 ");
         ButterKnife.bind(this);
-        PermissionUtil.getInstance().requestPermission(PermissionUtil.getInstance().permission, this);
         isRunning = true;
         rg.setOnCheckedChangeListener(this);
         MqttService mqttService = MyApplication.getInstance().getMqttService();
@@ -245,13 +244,14 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 //        rb_shop.setVisibility(View.GONE);
         LogUtils.e("MainActivity启动完成 ");
 
-        checkNotificatoinEnabled();
+//        checkNotificatoinEnabled();
     }
 
     private void checkNotificatoinEnabled() {
         if(!NotificationUtil.isNotifyEnabled(this)){
-            AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(this, "检测到您没有打开通知权限，是否去打开",
-                    getString(R.string.cancel), getString(R.string.confirm), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+            AlertDialogUtil.getInstance().permissionTipsDialog(this, (getString(R.string.kaadas_permission_title,getString(R.string.kaadas_common_permission_notification)))
+                    , (getString(R.string.kaadas_permission_content,getString(R.string.kaadas_common_permission_notification),getString(R.string.receive_device_messages))),
+                    (getString(R.string.kaadas_permission_content_tisp,getString(R.string.kaadas_common_permission_notification))), new AlertDialogUtil.ClickListener() {
                         @Override
                         public void left() {
 
@@ -259,7 +259,7 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
 
                         @Override
                         public void right() {
-                            NotificationUtil.settingActivity(MainActivity.this);
+
                         }
 
                         @Override

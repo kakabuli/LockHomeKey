@@ -1,6 +1,7 @@
 package com.kaadas.lock.activity.device.wifilock.newadd;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -9,16 +10,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAddSecondActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAddThirdActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockHelpActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.fragment.home.BleLockFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.WifiUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +50,14 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
     TextView tvReconnect;
     @BindView(R.id.iv_img_lock)
     ImageView ivImgLock;
+
+    /**
+     *  事件点击类型枚举
+     */
+    public enum OperationType {
+        addLock,//去配网
+        reAddLock,//重新配网
+    }
 
     private String wifiModelType = "";
 
@@ -79,61 +96,24 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
 
                 break;
             case R.id.button_next:
-                //检查权限，检查是否连接wifi
-                permissionDisposable = rxPermissions
-                        .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                        .subscribe(granted -> {
-                            if (granted) {
-                                // All requested permissions are granted
-                            } else {
-                                // At least one permission is denied
-                                Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                if (wifiModelType != null) {
-                    if (!(wifiModelType.equals("WiFi&BLE"))) {
-                        //打开wifi
-                        WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
-                        if (!wifiUtils.isWifiEnable()) {
-                            wifiUtils.openWifi();
-                            Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                }
-                else {
 
-                    return;
-
+                //检查WiFi开关是否开启
+                if (WifiUtils.getInstance(MyApplication.getInstance()).isWifiEnable()){
+                    //检查权限
+                    checkPermissions(OperationType.addLock);
+                } else {
+                    permissionTipsDialog(this,getString(R.string.kaadas_common_permission_wifi));
+                    //mPresenter.enableBle();
                 }
-                if (!WifiUtils.getInstance(MyApplication.getInstance()).isWifiEnable()) {
-                    showWifiDialog();
-                    WifiUtils.getInstance(MyApplication.getInstance()).openWifi();
-                    return;
-                }
-                if (!GpsUtil.isOPen(MyApplication.getInstance())) {
-                    GpsUtil.openGPS(MyApplication.getInstance());
-                    showLocationPermission();
-//                    Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                LogUtils.e("--Kaadas--wifiModelType=="+wifiModelType);
-//                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
-                Intent wifiIntent = new Intent(this, WifiLockAddNewSecondActivity.class);
-                wifiIntent.putExtra("wifiModelType", wifiModelType);
-                startActivity(wifiIntent);
                 break;
             case R.id.tv_reconnect:
-                if(wifiModelType.contains("VIDEO")){
-                    Intent thirdIntent = new Intent(this, WifiLockAddNewThirdActivity.class);
-                    thirdIntent.putExtra("wifiModelType", wifiModelType);
-                    thirdIntent.putExtra("distribution", true);
-                    startActivity(thirdIntent);
-                }else {
-                    //startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
-                    Intent reconnectWifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
-                    reconnectWifiIntent.putExtra("wifiModelType", wifiModelType);
-                    startActivity(reconnectWifiIntent);
+                //检查WiFi开关是否开启
+                if (WifiUtils.getInstance(MyApplication.getInstance()).isWifiEnable()){
+                    //检查权限
+                    checkPermissions(OperationType.reAddLock);
+                } else {
+                    permissionTipsDialog(this,getString(R.string.kaadas_common_permission_wifi));
+                    //mPresenter.enableBle();
                 }
                 break;
         }
@@ -182,6 +162,108 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
                     public void right() {
 
                     }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
+    private void checkPermissions(OperationType touch) {
+        try {
+
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                if (touch == OperationType.addLock){
+                                    startToAddLockActivity();
+                                }else if(touch == OperationType.reAddLock){
+                                    startToReAddLockActivity();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e( "checkPermissions: "  + e.getMessage());
+        }
+    }
+    private void startToAddLockActivity(){
+
+//        if (wifiModelType != null) {
+//            if (!(wifiModelType.equals("WiFi&BLE"))) {
+//                //打开wifi
+//                WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
+//                if (!wifiUtils.isWifiEnable()) {
+//                    wifiUtils.openWifi();
+//                    Toast.makeText(this, getString(R.string.wifi_no_open_please_open_wifi), Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//            }
+//        }
+//        else {
+//
+//            return;
+//
+//        }
+//        if (!WifiUtils.getInstance(MyApplication.getInstance()).isWifiEnable()) {
+//            showWifiDialog();
+//            WifiUtils.getInstance(MyApplication.getInstance()).openWifi();
+//            return;
+//        }
+        if (!GpsUtil.isOPen(MyApplication.getInstance())) {
+            GpsUtil.openGPS(MyApplication.getInstance());
+            showLocationPermission();
+//                    Toast.makeText(this, getString(R.string.locak_no_open_please_open_local), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        LogUtils.e("--Kaadas--wifiModelType=="+wifiModelType);
+//                startActivity(new Intent(this,WifiLockAddNewSecondActivity.class));
+        Intent wifiIntent = new Intent(this, WifiLockAddNewSecondActivity.class);
+        wifiIntent.putExtra("wifiModelType", wifiModelType);
+        startActivity(wifiIntent);
+
+    }
+    private void startToReAddLockActivity(){
+
+        if(wifiModelType.contains("VIDEO")){
+            Intent thirdIntent = new Intent(this, WifiLockAddNewThirdActivity.class);
+            thirdIntent.putExtra("wifiModelType", wifiModelType);
+            thirdIntent.putExtra("distribution", true);
+            startActivity(thirdIntent);
+        }else {
+            //startActivity(new Intent(this,WifiLockOldUserFirstActivity.class));
+            Intent reconnectWifiIntent = new Intent(this, WifiLockOldUserFirstActivity.class);
+            reconnectWifiIntent.putExtra("wifiModelType", wifiModelType);
+            startActivity(reconnectWifiIntent);
+        }
+    }
+    public void permissionTipsDialog(Activity activity, String str){
+        AlertDialogUtil.getInstance().permissionTipsDialog(activity, (activity.getString(R.string.kaadas_permission_title,str))
+                , (activity.getString(R.string.kaadas_permission_content,str,activity.getString(R.string.device_conn))),
+                (activity.getString(R.string.kaadas_permission_content_tisp,str)), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
 

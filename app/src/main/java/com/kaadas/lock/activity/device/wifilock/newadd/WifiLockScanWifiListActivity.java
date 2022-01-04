@@ -81,6 +81,11 @@ public class WifiLockScanWifiListActivity extends BaseAddToApplicationActivity {
             Toast.makeText(this, "当前周围无WiFi", Toast.LENGTH_LONG).show();
         }else {
             for(int i=0;i<list.size();i++) {
+                int frequency = list.get(i).frequency;
+                if(!(frequency >= 2400 && frequency <= 2500)){
+                    //排除掉非2.4g的
+                    continue;
+                }
                 wifiName = list.get(i).SSID;
                 rssi = list.get(i).level;
                 macAddress = info.getMacAddress();

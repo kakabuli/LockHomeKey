@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
@@ -27,6 +31,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.StringUtil;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.dialog.MessageDialog;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 
@@ -103,9 +109,7 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
                 startActivity(helpIntent);
                 break;
             case R.id.wifi_lock_choose_to_scan:
-                Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
-                scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
-                startActivityForResult(scanIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                checkPermissions();
                 break;
             case R.id.wifi_lock_choose_to_input:
                 break;
@@ -217,5 +221,30 @@ public class WifiLockAddNewToChooseActivity extends BaseActivity<WiFiLockChooseT
 
         }
     }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                startActivity();
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
 
+                        }
+                    });
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+    private void startActivity(){
+        Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
+        scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+        startActivityForResult(scanIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+    }
 }

@@ -382,35 +382,35 @@ public class DeviceFragment extends BaseFragment<IDeviceView, DevicePresenter<ID
                 if (HomeShowBean.TYPE_CAT_EYE == homeShowBean.getDeviceType()) { //有网关
                     boolean isFlag = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
                     if ((!isFlag && Rom.isOppo()) || (!isFlag && Rom.isVivo())) {
-                        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
-                                getActivity(),
-                                getString(R.string.mainactivity_permission_alert_title),
-                                getString(R.string.mainactivity_permission_alert_msg),
-                                getString(R.string.cancel),
-                                getString(R.string.confirm),
-                                new ClickListener() {
-
-                                    @Override
-                                    public void left() {
-
-                                    }
-
-                                    @Override
-                                    public void right() {
-                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            Intent intent = new Intent();
-                                            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                                            intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
-                                            startActivity(intent);
-                                        }
-                                    }
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    }
-                                    @Override
-                                    public void afterTextChanged(String toString) {
-                                    }
-                                });
+//                        AlertDialogUtil.getInstance().noEditTwoButtonDialogWidthDialog_color_padding(
+//                                getActivity(),
+//                                getString(R.string.mainactivity_permission_alert_title),
+//                                getString(R.string.mainactivity_permission_alert_msg),
+//                                getString(R.string.cancel),
+//                                getString(R.string.confirm),
+//                                new ClickListener() {
+//
+//                                    @Override
+//                                    public void left() {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void right() {
+//                                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                            Intent intent = new Intent();
+//                                            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                                            intent.setData(Uri.fromParts("package", "com.kaidishi.lock", null));
+//                                            startActivity(intent);
+//                                        }
+//                                    }
+//                                    @Override
+//                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                                    }
+//                                    @Override
+//                                    public void afterTextChanged(String toString) {
+//                                    }
+//                                });
                     }
                 }
             }

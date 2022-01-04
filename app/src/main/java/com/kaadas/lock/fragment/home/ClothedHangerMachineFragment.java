@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,10 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     RelativeLayout rlHangerLock;
     @BindView(R.id.iv_external_big)
     ImageView ivExternalBig;
+    @BindView(R.id.img_placeholder)
+    ImageView imgPlaceHolder;
+    @BindView(R.id.v_hanger_voice)
+    View vHangerVoice;
 
     private String wifiSn = "";
     private ClothesHangerMachineAllBean hangerInfo;
@@ -95,11 +100,11 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
         ButterKnife.bind(this, view);
         isFirst = true;
         wifiSn = (String) getArguments().getSerializable(KeyConstants.WIFI_SN);
-        hangerInfo= MyApplication.getInstance().getClothesHangerMachineBySn(wifiSn);
-        if(hangerInfo != null){
+        hangerInfo = MyApplication.getInstance().getClothesHangerMachineBySn(wifiSn);
+        if (hangerInfo != null) {
             initData(view);
         }
-        if(hangerInfo != null){
+        if (hangerInfo != null) {
             mPresenter.getHangerAllStatus(wifiSn);
         }
         progressDisposable = Observable
@@ -108,73 +113,79 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
-                        if(aLong != 0 && aLong > 0){
-                            updateCountDownTime(imgHangerLighting,tvHangerLighting);
-                            updateCountDownTime(imgHangerAirdry,tvHangerAirDry);
-                            updateCountDownTime(imgHangerBaking,tvHangerBaking);
-                            updateCountDownTime(imgHangerDisinfect,tvHangerDisinfect);
+                        if (aLong != 0 && aLong > 0) {
+                            updateCountDownTime(imgHangerLighting, tvHangerLighting);
+                            updateCountDownTime(imgHangerAirdry, tvHangerAirDry);
+                            updateCountDownTime(imgHangerBaking, tvHangerBaking);
+                            updateCountDownTime(imgHangerDisinfect, tvHangerDisinfect);
                         }
                     }
                 });
         return view;
     }
 
-    private void updateCountDownTime(ImageView imageView,TextView textView) {
-        if(imageView.isSelected()){
+    private void updateCountDownTime(ImageView imageView, TextView textView) {
+        if (imageView.isSelected()) {
             int time = DateUtils.getTimeToInt(textView.getText().toString().trim());
-            if(time < 0) return;
+            if (time < 0) return;
             textView.setText(DateUtils.getStringTime3(--time));
         }
     }
 
     private void initData(View view) {
-        if(hangerInfo.getLoudspeaker() == 1){
+        if (hangerInfo.getLoudspeaker() == 1) {
             imgHangerVoice.setSelected(true);
-        }else{
+        } else {
             imgHangerVoice.setSelected(false);
         }
 
-        if(hangerInfo.getChildLock() == 1){
+        if (hangerInfo.getChildLock() == 1) {
             imgHangerLock.setSelected(true);
-        }else{
+        } else {
             imgHangerLock.setSelected(false);
+        }
+
+        if (wifiSn.startsWith("KLH")) {
+            rlHangerVoice.setVisibility(View.GONE);
+            vHangerVoice.setVisibility(View.GONE);
+            imgPlaceHolder.setVisibility(View.INVISIBLE);
         }
 
         view.getViewTreeObserver().addOnWindowFocusChangeListener(new ViewTreeObserver.OnWindowFocusChangeListener() {
             @Override
             public void onWindowFocusChanged(boolean hasFocus) {
-                if(isFirst){
-                    if(hangerInfo.getMotor() != null){
+                if (isFirst) {
+                    if (hangerInfo.getMotor() != null) {
                         motorStatus = hangerInfo.getMotor().getStatus();
-                        setHangerMotorAction(hangerInfo.getMotor().getAction(),hangerInfo.getMotor().getStatus());
+                        setHangerMotorAction(hangerInfo.getMotor().getAction(), hangerInfo.getMotor().getStatus());
                     }
                     isFirst = false;
                 }
             }
         });
 
-        if(hangerInfo.getOverload() == 1){
+        if (hangerInfo.getOverload() == 1) {
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_overload) + "");
         }
     }
 
-    private void setHangerMotorAction(int action,int status) {
-        if(action == 0){
+    private void setHangerMotorAction(int action, int status) {
+        if (action == 0) {
             setHangerMotorStatus(KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE);
             setHangerMotorStatus(status);
-        }else if(action == 2){//上升
-            if(status != 2){
-                if(status == 1){
+        } else if (action == 2) {//上升
+            if (status != 2) {
+                if (status == 1) {
                     setHangerMotorStatus(status);
-                }else{
+                } else {
                     setHangerMotorStatus(KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP);
                 }
             }
-        }else if(action == 1){//下降
-            if(status != 1){
-                if(status == 2){
+        } else if (action == 1) {//下降
+            if (status != 1) {
+                if (status == 2) {
                     setHangerMotorStatus(status);
-                }else{
+                } else {
                     setHangerMotorStatus(KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN);
                 }
             }
@@ -183,28 +194,28 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
 
 
     private void setHangerMotorStatus(int status) {
-        if(status == 0){
+        if (status == 0) {
             motorStatus = status;
             ivExternalBig.setBackgroundResource(R.drawable.clothes_hanger_machine_home_big_img_3);
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_normal) + "");
-        }else if(status == 1){
+        } else if (status == 1) {
             motorStatus = status;
             ivExternalBig.setBackgroundResource(R.drawable.clothes_hanger_machine_home_big_img_1);
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_top) + "");
-        }else if(status == 2){
+        } else if (status == 2) {
             motorStatus = status;
             ivExternalBig.setBackgroundResource(R.drawable.clothes_hanger_machine_home_big_img_5);
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_bottom) + "");
-        }else if(status == 3){
+        } else if (status == 3) {
             ivExternalBig.setBackgroundResource(R.drawable.clothes_hanger_machine_home_big_img_3);
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_blocked) + "");
-        }else if(status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP){
+        } else if (status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_UP) {
             startMotorUpAnimation();
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_up) + "");
-        }else if(status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN){
+        } else if (status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_DOWN) {
             startMotorDownAnimation();
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_down) + "");
-        }else if(status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE){
+        } else if (status == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE) {
             stopMotorDownAnimation();
             stopMotorUpAnimation();
             ivExternalBig.setBackgroundResource(R.drawable.clothes_hanger_machine_home_big_img_3);
@@ -214,34 +225,34 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
 
     private void startMotorUpAnimation() {
         LogUtils.e("shulan 2 motorStatus -----> " + motorStatus);
-        if(motorStatus == 2){
+        if (motorStatus == 2) {
             ivExternalBig.setBackgroundResource(R.drawable.hanger_motor_bottom_up);
-        }else{
+        } else {
             ivExternalBig.setBackgroundResource(R.drawable.hanger_motor_up);
         }
         motorUpAnimation = (AnimationDrawable) ivExternalBig.getBackground();
         motorUpAnimation.start();
     }
 
-    private void stopMotorUpAnimation(){
-        if(motorUpAnimation != null){
+    private void stopMotorUpAnimation() {
+        if (motorUpAnimation != null) {
             motorUpAnimation.stop();
         }
     }
 
     private void startMotorDownAnimation() {
         LogUtils.e("shulan 1 motorStatus -----> " + motorStatus);
-        if(motorStatus == 1){
+        if (motorStatus == 1) {
             ivExternalBig.setBackgroundResource(R.drawable.hanger_motor_top_down);
-        }else{
+        } else {
             ivExternalBig.setBackgroundResource(R.drawable.hanger_motor_down);
         }
         motorDownAnimation = (AnimationDrawable) ivExternalBig.getBackground();
         motorDownAnimation.start();
     }
 
-    private void stopMotorDownAnimation(){
-        if(motorDownAnimation != null){
+    private void stopMotorDownAnimation() {
+        if (motorDownAnimation != null) {
             motorDownAnimation.stop();
         }
     }
@@ -268,76 +279,76 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     private long time = 0;
     private final int TIME_INTERVAL = 0;
 
-    @OnClick({R.id.img_hanger_up,R.id.img_hanger_down,R.id.img_hanger_pause,R.id.rl_hanger_lighting,R.id.rl_hanger_disinfect,
-                R.id.rl_hanger_airdry,R.id.rl_hanger_baking,R.id.rl_hanger_voice,R.id.rl_hanger_lock})
+    @OnClick({R.id.img_hanger_up, R.id.img_hanger_down, R.id.img_hanger_pause, R.id.rl_hanger_lighting, R.id.rl_hanger_disinfect,
+            R.id.rl_hanger_airdry, R.id.rl_hanger_baking, R.id.rl_hanger_voice, R.id.rl_hanger_lock})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.img_hanger_up://2
-                if(System.currentTimeMillis() - time > TIME_INTERVAL){
-                    mPresenter.setHangerMotor(wifiSn,2);
+                if (System.currentTimeMillis() - time > TIME_INTERVAL) {
+                    mPresenter.setHangerMotor(wifiSn, 2);
                     time = System.currentTimeMillis();
                 }
                 break;
             case R.id.img_hanger_down://1
-                if(System.currentTimeMillis() - time > TIME_INTERVAL){
-                    mPresenter.setHangerMotor(wifiSn,1);
+                if (System.currentTimeMillis() - time > TIME_INTERVAL) {
+                    mPresenter.setHangerMotor(wifiSn, 1);
                     time = System.currentTimeMillis();
                 }
                 break;
             case R.id.img_hanger_pause://0
-                if(System.currentTimeMillis() - time > TIME_INTERVAL){
-                    mPresenter.setHangerMotor(wifiSn,0);
+                if (System.currentTimeMillis() - time > TIME_INTERVAL) {
+                    mPresenter.setHangerMotor(wifiSn, 0);
                     time = System.currentTimeMillis();
                 }
                 break;
             case R.id.rl_hanger_lighting:
-                if(imgHangerLighting.isSelected()){
-                    mPresenter.setHangerLighting(wifiSn,0);
-                }else{
-                    mPresenter.setHangerLighting(wifiSn,1);
+                if (imgHangerLighting.isSelected()) {
+                    mPresenter.setHangerLighting(wifiSn, 0);
+                } else {
+                    mPresenter.setHangerLighting(wifiSn, 1);
                 }
                 break;
             case R.id.rl_hanger_disinfect:
-                if(imgHangerDisinfect.isSelected()){
-                    mPresenter.setHangerUV(wifiSn,0);
-                }else{
-                    mPresenter.setHangerUV(wifiSn,1);
+                if (imgHangerDisinfect.isSelected()) {
+                    mPresenter.setHangerUV(wifiSn, 0);
+                } else {
+                    mPresenter.setHangerUV(wifiSn, 1);
                 }
                 break;
             case R.id.rl_hanger_airdry:
-                if(imgHangerAirdry.isSelected()){
-                    mPresenter.setAirDryTime(wifiSn,0);
-                }else{
-                    showFunctionTimeDialog("请选择风干时间",KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY);
+                if (imgHangerAirdry.isSelected()) {
+                    mPresenter.setAirDryTime(wifiSn, 0);
+                } else {
+                    showFunctionTimeDialog("请选择风干时间", KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY);
                 }
                 break;
             case R.id.rl_hanger_baking:
-                if(imgHangerBaking.isSelected()){
-                    mPresenter.setBakingTime(wifiSn,0);
-                }else{
-                    showFunctionTimeDialog("请选择烘干时间",KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_BAKING);
+                if (imgHangerBaking.isSelected()) {
+                    mPresenter.setBakingTime(wifiSn, 0);
+                } else {
+                    showFunctionTimeDialog("请选择烘干时间", KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_BAKING);
                 }
                 break;
             case R.id.rl_hanger_voice:
-                if(imgHangerVoice.isSelected()){
-                    mPresenter.setHangerVoice(wifiSn,0);
-                }else {
-                    mPresenter.setHangerVoice(wifiSn,1);
+                if (imgHangerVoice.isSelected()) {
+                    mPresenter.setHangerVoice(wifiSn, 0);
+                } else {
+                    mPresenter.setHangerVoice(wifiSn, 1);
                 }
 
                 break;
             case R.id.rl_hanger_lock:
-                if(imgHangerLock.isSelected()){
-                    mPresenter.setHangerChildLock(wifiSn,0);
-                }else {
-                    mPresenter.setHangerChildLock(wifiSn,1);
+                if (imgHangerLock.isSelected()) {
+                    mPresenter.setHangerChildLock(wifiSn, 0);
+                } else {
+                    mPresenter.setHangerChildLock(wifiSn, 1);
                 }
 
                 break;
         }
     }
 
-    private void showFunctionTimeDialog(String content,int function){
+    private void showFunctionTimeDialog(String content, int function) {
         AlertDialogUtil.getInstance().clothesHangerMachineDialog(getActivity(), content, getString(R.string.cancel), getString(R.string.confirm),
                 "#A3A3A3", "#1F96F7", new AlertDialogUtil.ClothesHangerMachineClickListener() {
                     @Override
@@ -348,33 +359,33 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
                     @Override
                     public void right(int time) {
                         LogUtils.e("shulan  clotheshangermachine time--->" + time);
-                        if(function == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_BAKING){
-                            mPresenter.setBakingTime(wifiSn,time);
-                        }else if(function == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY){
-                            mPresenter.setAirDryTime(wifiSn,time);
+                        if (function == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_BAKING) {
+                            mPresenter.setBakingTime(wifiSn, time);
+                        } else if (function == KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_AIR_DRY) {
+                            mPresenter.setAirDryTime(wifiSn, time);
                         }
                     }
                 });
     }
 
     @Override
-    public void setAirDryTimeSuccess(int action,int countdown) {
+    public void setAirDryTimeSuccess(int action, int countdown) {
         LogUtils.e("shulan --------setAirDryTimeSuccess");
-        if(action == 0){
+        if (action == 0) {
             imgHangerAirdry.setSelected(false);
             tvHangerAirDry.setVisibility(View.GONE);
-        }else{
+        } else {
             imgHangerAirdry.setSelected(true);
             tvHangerAirDry.setVisibility(View.VISIBLE);
-            if(countdown == 120){
+            if (countdown == 120) {
                 tvHangerAirDry.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 240){
+            } else if (countdown == 240) {
                 tvHangerAirDry.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 0){
+            } else if (countdown == 0) {
                 imgHangerAirdry.setSelected(false);
                 tvHangerAirDry.setVisibility(View.GONE);
                 tvHangerAirDry.setText(DateUtils.getStringTime3(countdown));
-            }else{
+            } else {
                 tvHangerAirDry.setText(DateUtils.getStringTime3(countdown));
             }
         }
@@ -391,23 +402,23 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     }
 
     @Override
-    public void setBakingTimeSuccess(int action,int countdown) {
+    public void setBakingTimeSuccess(int action, int countdown) {
         LogUtils.e("shulan --------setBakingTimeSuccess");
-        if(action == 0){
+        if (action == 0) {
             imgHangerBaking.setSelected(false);
             tvHangerBaking.setVisibility(View.GONE);
-        }else{
+        } else {
             imgHangerBaking.setSelected(true);
             tvHangerBaking.setVisibility(View.VISIBLE);
-            if(countdown == 120){
+            if (countdown == 120) {
                 tvHangerBaking.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 240){
+            } else if (countdown == 240) {
                 tvHangerBaking.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 0){
+            } else if (countdown == 0) {
                 imgHangerBaking.setSelected(false);
                 tvHangerBaking.setVisibility(View.GONE);
                 tvHangerBaking.setText(DateUtils.getStringTime3(countdown));
-            }else{
+            } else {
                 tvHangerBaking.setText(DateUtils.getStringTime3(countdown));
             }
         }
@@ -426,9 +437,9 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     @Override
     public void setChildLockSuccess(int action) {
         LogUtils.e("shulan --------setChildLockSuccess");
-        if(action == 1){
+        if (action == 1) {
             imgHangerLock.setSelected(true);
-        }else{
+        } else {
             imgHangerLock.setSelected(false);
         }
     }
@@ -446,9 +457,9 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     @Override
     public void setVoiceSuccess(int action) {
         LogUtils.e("shulan --------setVoiceSuccess");
-        if(action == 1){
+        if (action == 1) {
             imgHangerVoice.setSelected(true);
-        }else{
+        } else {
             imgHangerVoice.setSelected(false);
         }
     }
@@ -464,23 +475,23 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     }
 
     @Override
-    public void setUVSuccess(int action,int countdown) {
+    public void setUVSuccess(int action, int countdown) {
         LogUtils.e("shulan --------setUVSuccess");
-        if(action == 1){
+        if (action == 1) {
             imgHangerDisinfect.setSelected(true);
             tvHangerDisinfect.setVisibility(View.VISIBLE);
-            if(countdown == 120){
+            if (countdown == 120) {
                 tvHangerDisinfect.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 240){
+            } else if (countdown == 240) {
                 tvHangerDisinfect.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 0){
+            } else if (countdown == 0) {
                 imgHangerDisinfect.setSelected(false);
                 tvHangerDisinfect.setVisibility(View.GONE);
                 tvHangerDisinfect.setText(DateUtils.getStringTime3(countdown));
-            }else{
+            } else {
                 tvHangerDisinfect.setText(DateUtils.getStringTime3(countdown));
             }
-        }else{
+        } else {
             imgHangerDisinfect.setSelected(false);
             tvHangerDisinfect.setVisibility(View.GONE);
         }
@@ -497,23 +508,23 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     }
 
     @Override
-    public void setLightingSuccess(int action,int countdown) {
+    public void setLightingSuccess(int action, int countdown) {
         LogUtils.e("shulan --------setLightingSuccess");
-        if(action == 1){
+        if (action == 1) {
             imgHangerLighting.setSelected(true);
             tvHangerLighting.setVisibility(View.VISIBLE);
-            if(countdown == 120){
+            if (countdown == 120) {
                 tvHangerLighting.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 240){
+            } else if (countdown == 240) {
                 tvHangerLighting.setText(DateUtils.getStringTime3(countdown));
-            }else if(countdown == 0){
+            } else if (countdown == 0) {
                 imgHangerLighting.setSelected(false);
                 tvHangerLighting.setVisibility(View.GONE);
                 tvHangerLighting.setText(DateUtils.getStringTime3(countdown));
-            }else{
+            } else {
                 tvHangerLighting.setText(DateUtils.getStringTime3(countdown));
             }
-        }else{
+        } else {
             imgHangerLighting.setSelected(false);
             tvHangerLighting.setVisibility(View.GONE);
         }
@@ -530,13 +541,13 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
     }
 
     @Override
-    public void setMotorSuccess(int action,int status) {
-        setHangerMotorAction(action,status);
+    public void setMotorSuccess(int action, int status) {
+        setHangerMotorAction(action, status);
     }
 
     @Override
     public void setMotorFailed(int action) {
-        setHangerMotorAction(action,KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE);
+        setHangerMotorAction(action, KeyConstants.CLOTHES_HANGER_MACHINE_FUNCTION_MOTOR_PAUSE);
     }
 
     @Override
@@ -546,7 +557,7 @@ public class ClothedHangerMachineFragment extends BaseFragment<IClothesHangerMac
 
     @Override
     public void setOverload(int overload) {
-        if(overload == 1){
+        if (overload == 1) {
             tvClothesHangerStatus.setText(getActivity().getText(R.string.clothes_machine_hanger_status_overload) + "");
         }
     }

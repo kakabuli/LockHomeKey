@@ -1,16 +1,25 @@
 package com.kaadas.lock.activity.addDevice;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
@@ -108,15 +117,7 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
                 finish();
                 break;
             case R.id.scan:
-                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
-                if (strings.length>0){
-                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
-                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
-                }else {
-                    Intent scanIntent = new Intent(this, QrCodeScanActivity.class);
-                    scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
-                    startActivityForResult(scanIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
-                }
+                checkPermissions();
                 break;
             case R.id.ble_lock:
                 Intent bluetoothIntent = new Intent(DeviceAdd2Activity.this, AddBluetoothFirstActivity.class);
@@ -355,4 +356,31 @@ public class DeviceAdd2Activity extends BaseActivity<DeviceZigBeeDetailView, Dev
             }
         }
     }
+
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                Intent scanIntent = new Intent(DeviceAdd2Activity.this, QrCodeScanActivity.class);
+                                scanIntent.putExtra(KeyConstants.SCAN_TYPE, 1);
+                                startActivityForResult(scanIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+
 }

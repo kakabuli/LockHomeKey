@@ -3,6 +3,8 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -15,25 +17,29 @@ import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.choosewifi.WifiBean;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLcokSupportWifiActivity;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+import com.kaadas.lock.activity.device.wifilock.wifilist.WifiListDialogFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleWiFiSwitchPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.SPUtils;
-import com.kaadas.lock.widget.DropEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<IBindBleView, BindBleWiFiSwitchPresenter<IBindBleView>> implements IBindBleView  {
+public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<IBindBleView, BindBleWiFiSwitchPresenter<IBindBleView>> implements IBindBleView , BindBleWiFiSwitchPresenter.WifiScanResultListener {
 
     @BindView(R.id.back)
     ImageView back;
@@ -53,8 +59,6 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
     TextView confirmBtn;
     @BindView(R.id.tv_support_list)
     TextView tvSupportList;
-    @BindView(R.id.tv_to_change_wifi)
-    TextView tv_to_change_wifi;
 
 
     private boolean passwordHide = true;
@@ -66,6 +70,8 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
     private int times = 1;
     private static final int TO_CHECK_WIFI_PASSWORD = 10105;
     private static final int TO_CHOOSE_WIFI_PASSWORD = 10106;
+    private WifiListDialogFragment wifiListDialog;
+    private boolean isConnected = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +84,43 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
         func = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_FUNC,0);
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_WIFI_TIMES, 1);
 
-        if (func == 0){
-            //BLE&WIFI模组 读取功能集
+        mPresenter.listenerWifiListNotify();
+        mPresenter.listenConnectState();
+        mPresenter.setWifiScanResultListener(this);
+
+        if(func <= 0){
             mPresenter.readFeatureSet();
         }
 
+        showDialog();
+
+
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
         apSsidText.setText(wifiName.trim());
+        apSsidText.setSelection(wifiName.trim().length());
+    }
+
+    private void showDialog(){
+
+        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.hint), getString(R.string.dialog_wifi_video_change_wifi2), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+            @Override
+            public void left() {
+
+            }
+
+            @Override
+            public void right() {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(String toString) {
+            }
+        });
     }
 
     @Override
@@ -92,7 +128,7 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
         return new BindBleWiFiSwitchPresenter<>();
     }
 
-    @OnClick({R.id.back, R.id.help, R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye,R.id.tv_to_change_wifi})
+    @OnClick({R.id.back, R.id.help, R.id.confirm_btn, R.id.tv_support_list,R.id.iv_eye,R.id.iv_change_wifi})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -143,22 +179,63 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
                 if (passwordHide) {
                     apPasswordEdit.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
-                    ivEye.setImageResource(R.mipmap.eye_close_has_color);
+                    ivEye.setImageResource(R.mipmap.ic_eye_hide);
                 } else {
                     apPasswordEdit.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     apPasswordEdit.setSelection(apPasswordEdit.getText().toString().length());//将光标移至文字末尾
-                    ivEye.setImageResource(R.mipmap.eye_open_has_color);
+                    ivEye.setImageResource(R.mipmap.ic_eye_show);
                 }
                 break;
             case R.id.tv_support_list:
                 startActivity(new Intent(this,WifiLcokSupportWifiActivity.class));
                 break;
-            case R.id.tv_to_change_wifi:
-                Intent scanIntent = new Intent(this,WifiLockScanWifiListActivity.class);
-                startActivityForResult(scanIntent,TO_CHOOSE_WIFI_PASSWORD);
+            case R.id.iv_change_wifi:
+                if(BleLockUtils.isSupportGetDeviceWifiList(func)){
+                    getWifiList();
+                }else {
+                    Intent scanIntent = new Intent(this,WifiLockScanWifiListActivity.class);
+                    startActivityForResult(scanIntent,TO_CHOOSE_WIFI_PASSWORD);
+                }
 
                 break;
         }
+    }
+
+    private void getWifiList() {
+        if(!isConnected){
+            return;
+        }
+        if(BleLockUtils.isSupportGetDeviceWifiList(func)){
+            showLoading(getString(R.string.loading));
+            mPresenter.getWifiListFromDevice(); //获取设备wifi列表 显示对话框
+        }
+    }
+
+    private void showWifiListDialog(List<WifiBean> wifiInfo){
+        if(wifiListDialog != null && wifiListDialog.isVisible()){
+            wifiListDialog.updateList(wifiInfo);
+            return;
+        }
+
+        if(wifiListDialog == null){
+            wifiListDialog = new WifiListDialogFragment();
+            wifiListDialog.setOnItemClick(new WifiListDialogFragment.OnItemClickListener() {
+
+                @Override
+                public void OnItemClick(WifiBean data, int position) {
+                    apSsidText.setText(data.name.trim());
+                    apSsidText.setSelection(data.name.length());
+                }
+            });
+            wifiListDialog.setOnRefreshClick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getWifiList();
+                }
+            });
+        }
+        wifiListDialog.updateList(wifiInfo);
+        wifiListDialog.show(this);
     }
 
     private void showWarring(){
@@ -277,6 +354,21 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
     @Override
     public void onDeviceStateChange(boolean isConnected) {
 
+        this.isConnected = isConnected;
+        if(!isConnected){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hiddenLoading();
+                    if(wifiListDialog != null){
+                        wifiListDialog.dismiss();
+                    }
+                    if(getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+                        Toast.makeText(MyApplication.getInstance(),getString(R.string.ble_disconnected),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -307,5 +399,20 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
     @Override
     public void onDecodeResult(int index, OfflinePasswordFactorManager.OfflinePasswordFactorResult result) {
 
+    }
+
+    @Override
+    public void onWifiScanResult(final List<WifiBean> data) {
+        LogUtils.d("--kaadas-- onWifiScanResult " + (data != null && data.size() > 0));
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hiddenLoading();
+                if(data != null && data.size() > 0){
+                    showWifiListDialog(data);
+                }
+            }
+        });
     }
 }

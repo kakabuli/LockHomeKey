@@ -1,15 +1,17 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
+import android.os.Handler;
 import android.text.TextUtils;
-
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 import com.kaadas.lock.MyApplication;
+import com.kaadas.lock.activity.choosewifi.WifiBean;
+import com.kaadas.lock.activity.device.wifilock.wifilist.BleWifiListDataParser;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BasePresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
 import com.kaadas.lock.publiclibrary.bean.BleLockInfo;
 import com.kaadas.lock.publiclibrary.ble.BleCommandFactory;
-import com.kaadas.lock.publiclibrary.ble.BleProtocolFailedException;
-import com.kaadas.lock.publiclibrary.ble.OldBleCommandFactory;
 import com.kaadas.lock.publiclibrary.ble.RetryWithTime;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.ble.responsebean.BleStateBean;
@@ -25,10 +27,10 @@ import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.CRC32;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -39,7 +41,7 @@ import io.reactivex.functions.Predicate;
  * Describe 蓝牙wifi单火开关绑定流程
  *
  */
-public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
+public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> implements BleWifiListDataParser.WifiListDataCallback{
 
     protected BleLockInfo bleLockInfo;
     private int bleVersion;
@@ -49,13 +51,20 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
     private Disposable characterNotifyDisposable;
     private Disposable listenConnectStateDisposable;
     private Disposable featureSetDisposable;
+    private Disposable wifiDataDisposable;
     private OfflinePasswordFactorManager offlinePasswordFactorManager = OfflinePasswordFactorManager.getInstance();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
     private int index;//命令包序号
+    private WifiScanResultListener scanWifiResultListener;
+    private BleWifiListDataParser bleWifiListDataParser;
+    private static final String TAG = "BindBleWiFiSwitchPresenter";
+    Handler handler = new Handler();
+
+    public interface WifiScanResultListener{
+        void onWifiScanResult(List<WifiBean> data);
+    }
 
     public void listenerCharacterNotify() {
-        LogUtils.e("--kaadas--listenerCharacterNotify");
-
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -64,14 +73,10 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
             }
         }
         toDisposable(characterNotifyDisposable);
+
+        LogUtils.i(TAG,"--kaadas--subscribe listenerCharacterNotify");
         characterNotifyDisposable = bleService.listeneDataChange()
-//                .filter(new Predicate<BleDataBean>() {
-//            @Override
-//            public boolean test(BleDataBean bleDataBean) throws Exception {
-//
-//            }
-//        })
-//                .delay(100, TimeUnit.MILLISECONDS)
+
                 .subscribe(new Consumer<BleDataBean>() {
                     @Override
                     public void accept(BleDataBean bleDataBean) throws Exception {
@@ -81,53 +86,148 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                         if ((originalData[3] & 0xff) == 0x95) {//接到剩余校验次数
                             mViewRef.get().onlistenerLastNum(originalData[4] & 0xFF);
                         }
-                        if ((originalData[3] & 0xff) == 0x92){//离线密码因子
-
-                            int pswLen = originalData[4];
-                            index = originalData[5];
-                            //新数组
-                            byte[] passwordFactor = new byte[originalData.length-6];
-                            //从原始数组4位置开始截取后面所有
-                            System.arraycopy(originalData, 6, passwordFactor, 0, originalData.length-6);
-//                            LogUtils.e("--kaadas--密码因子分包数据==    " + Rsa.bytesToHexString(passwordFactor));
-                            mViewRef.get().onlistenerPasswordFactor(passwordFactor, pswLen, index);
-
+                        if ((originalData[3] & 0xff) == 0x92) {//离线密码因子
+                            //0x92有可能在订阅前就已经发出，导致接收到不完整数据包
+                            handlePassWordFactor(bleDataBean);
                         }
-                        if ((originalData[3] & 0xff) == 0x94){//收到解密结果
-//                            LogUtils.e("--kaadas--收到解密结果");
+                        if ((originalData[3] & 0xff) == 0x94) {//收到解密结果
                             checkAdminPassWordResult();
-
                         }
-                        //toDisposable(characterNotifyDisposable);
+                        if ((originalData[3] & 0xff) == 0x98) {//收到wifi列表结果
+                            //handleWifiListData(bleDataBean);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        LogUtils.e(TAG,"--kaadas-- accept notification exception: " + throwable.getMessage());
                     }
                 });
         compositeDisposable.add(characterNotifyDisposable);
     }
 
+
+    public void listenerWifiListNotify() {
+        if (bleService == null) { //判断
+            if (MyApplication.getInstance().getBleService() == null) {
+                return;
+            } else {
+                bleService = MyApplication.getInstance().getBleService(); //判断
+            }
+        }
+        toDisposable(wifiDataDisposable);
+
+        LogUtils.i(TAG,"--kaadas--subscribe listenerCharacterNotify");
+        wifiDataDisposable = bleService.listenerWifiData()
+
+                .subscribe(new Consumer<BleDataBean>() {
+                    @Override
+                    public void accept(BleDataBean bleDataBean) throws Exception {
+                        //收到入网数据
+                        byte[] originalData = bleDataBean.getOriginalData();
+                        if ((originalData[3] & 0xff) == 0x98) {//收到wifi列表结果
+                            handleWifiListData(bleDataBean);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        LogUtils.e(TAG,"--kaadas-- accept notification exception: " + throwable.getMessage());
+                    }
+                });
+        compositeDisposable.add(wifiDataDisposable);
+    }
+
+    private synchronized void handleWifiListData(BleDataBean bleDataBean){
+        if(((FragmentActivity)mViewRef.get()).getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            if(bleWifiListDataParser == null){
+                bleWifiListDataParser = new BleWifiListDataParser();
+                bleWifiListDataParser.setWifiListDataCallback(this);
+            }
+
+            try {
+                bleWifiListDataParser.parseWifiListFromBle(bleDataBean.getPayload());
+            }catch (Exception e){
+                LogUtils.e(TAG,"--kaadas-- parseWifiList exception: " + e.toString());
+                if(bleWifiListDataParser != null){
+                    bleWifiListDataParser.resetData();
+                }
+                if(scanWifiResultListener != null){
+                    scanWifiResultListener.onWifiScanResult(Collections.emptyList());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onWifiData(ArrayList<WifiBean> data) {
+
+        LogUtils.d(TAG,"--kaadas-- onWifiData, listener " + (scanWifiResultListener != null));
+        if(scanWifiResultListener != null){
+            scanWifiResultListener.onWifiScanResult(data);
+        }
+    }
+
+    private void handlePassWordFactor(BleDataBean bleDataBean){
+        byte[] originalData = bleDataBean.getOriginalData();
+        int pswLen = originalData[4];
+        index = originalData[5];
+        //新数组
+        byte[] passwordFactor = new byte[originalData.length - 6];
+        //从原始数组4位置开始截取后面所有
+        System.arraycopy(originalData, 6, passwordFactor, 0, originalData.length - 6);
+//                            LogUtils.e("--kaadas--密码因子分包数据==    " + Rsa.bytesToHexString(passwordFactor));
+        mViewRef.get().onlistenerPasswordFactor(passwordFactor, pswLen, index);
+    }
+
     public void parsePasswordFactorData(String adminPassword, byte[] data) {
         wifiResult = OfflinePasswordFactorManager.parseOfflinePasswordFactorData(adminPassword, data);
-        LogUtils.e("--Kaadas--wifiResult："+wifiResult.result);
+        LogUtils.e(TAG,"--Kaadas--wifiResult："+wifiResult.result);
 
         //发送0x94下发密码因子校验结果 通知锁端
         if (wifiResult.result == 0){
             //校验成功
             mViewRef.get().onDecodeResult(2,wifiResult);
-            byte[] authKey = null;//不加密
-            byte[] command = BleCommandFactory.onDecodeResult(authKey,Rsa.int2BytesArray(wifiResult.result)[0]);
-            bleService.sendCommand(command);
+
+            if(functionSet <= 0){
+                functionSet = bleService.getReadFuncSet();
+            }
+
+            String wifiSN = getWifiSN(wifiResult);
+            if(BleLockUtils.isFuncSetB9(functionSet) && !TextUtils.isEmpty(wifiSN)){
+                //k30系列 0xB9 配网流程变更 解绑后再发送0x94
+                LogUtils.i(TAG,"--Kaadas--, do preBind");
+                unbindLock(wifiSN);
+                return;
+            }
+
+            replayPasswordFactorCmd(0);
         }
         else {
             //校验失败
             mViewRef.get().onDecodeResult(-1,wifiResult);
-            wifiResult = null;
-            byte[] authKey = null;//不加密
-            byte[] command = BleCommandFactory.onDecodeResult(authKey,Rsa.int2BytesArray(1)[0]);
-            bleService.sendCommand(command);
+            replayPasswordFactorCmd(1);
         }
     }
 
-    public void readFeatureSet(){
+    private void replayPasswordFactorCmd(int result){
+        //result 0成功，1失败
+        if(result != 0){
+            wifiResult = null;
+        }
+        byte[] authKey = null;//不加密
+        byte[] command = BleCommandFactory.onDecodeResult(authKey,Rsa.int2BytesArray(result)[0]);
+        bleService.sendCommand(command);
+        LogUtils.i(TAG,"--Kaadas--replay factor, decodeResult=" + result);
+    }
 
+    public void readFeatureSet(){
+        readFeatureSet(0);
+    }
+
+    public void readFeatureSet(long delay){
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -136,7 +236,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
             }
         }
         toDisposable(featureSetDisposable);
-        featureSetDisposable = bleService.readFunctionSet(1000)
+        featureSetDisposable = bleService.readFunctionSet(delay)
                 .filter(new Predicate<ReadInfoBean>() {
                     @Override
                     public boolean test(ReadInfoBean readInfoBean) throws Exception {
@@ -150,7 +250,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                     public void accept(ReadInfoBean readInfoBean) throws Exception {
                         toDisposable(featureSetDisposable);
 
-                        int functionSet = (int) readInfoBean.data;
+                        functionSet = (int) readInfoBean.data;
                         LogUtils.e("--kaadas--BLE&wifi锁功能集==" + functionSet);
                         if (isSafe()) {
                             mViewRef.get().readFunctionSetSuccess(functionSet);
@@ -164,6 +264,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                 });
         compositeDisposable.add(featureSetDisposable);
     }
+
     public void checkAdminPassWordResult() {
 
             if (wifiResult != null){
@@ -204,5 +305,72 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> {
                     }
                 });
         compositeDisposable.add(listenConnectStateDisposable);
+    }
+
+    private String getWifiSN(OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult){
+        if(wifiResult.wifiSn == null || wifiResult.wifiSn.length == 0){
+            return "";
+        }
+        return new String(wifiResult.wifiSn);
+    }
+
+    private void unbindLock(String wifiSn){
+        //调用预绑定设备接口（解绑设备）
+        XiaokaiNewServiceImp.preBind(wifiSn, MyApplication.getInstance().getUid())
+                .retry(3)
+                .subscribe(new BaseObserver<BaseResult>() {
+                    @Override
+                    public void onSuccess(BaseResult baseResult) {
+                        LogUtils.i("--Kaadas--preBind device success");
+                        //解绑成功回复0x94
+                        replayPasswordFactorCmd(0);
+
+                        //需要解绑后清除本地数据？
+                        MyApplication.getInstance().getAllDevicesByMqtt(true);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_ALARM_RECORD + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_OPERATION_RECORD + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_OPEN_COUNT + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_SHARE_USER_LIST + wifiSn);
+                        SPUtils.remove(KeyConstants.WIFI_LOCK_PASSWORD_LIST + wifiSn);
+
+                        int lockType = MyApplication.getInstance().getWifiVideoLockTypeBySn(wifiSn);
+                        if(lockType == HomeShowBean.TYPE_WIFI_VIDEO_LOCK){
+                            SPUtils.remove(KeyConstants.WIFI_VIDEO_LOCK_VISITOR_RECORD + wifiSn);
+                        }
+                    }
+
+                    @Override
+                    public void onAckErrorCode(BaseResult baseResult) {
+                        LogUtils.e("--Kaadas-- preBind device error："+ baseResult.getCode());
+                        if (isSafe()) {
+                            //解绑设备失败返回状态-2
+                            mViewRef.get().onDecodeResult(-2,wifiResult);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable throwable) {
+                        LogUtils.e("--Kaadas-- preBind device error："+ throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe1(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+                });
+    }
+
+    public void getWifiListFromDevice(){
+
+        byte[] authKey = null;//不加密
+        byte[] command = BleCommandFactory.getDeviceWifiList(authKey);
+        bleService.sendCommand(command);
+        if(bleWifiListDataParser != null){
+            bleWifiListDataParser.resetData();
+        }
+    }
+
+    public void setWifiScanResultListener(WifiScanResultListener listener){
+        scanWifiResultListener = listener;
     }
 }

@@ -12,12 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -82,6 +86,7 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
     private Bitmap changeBitmap;
     public static final int REQUEST_PERMISSION_REQUEST_CODE = 1;
     private ImagePicker imagePicker;
+//    boolean permission = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,7 +145,9 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
                 break;
 
             case R.id.rl_head:
-                showHeadDialog();
+//                showHeadDialog();
+                checkPermissions();
+
                 break;
         }
     }
@@ -152,12 +159,11 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
         dialogBuilder.addMenu(R.string.zi_pai, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(PersonalUpdateHeadDataActivity.this, ImageGridActivity.class);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                startActivityForResult(intent, PHOTO_REQUEST_CODE);
+
                 //  自拍
-                requestPermission(new String[]{
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                });
                 if (bottomMenuDialog != null) {
                     bottomMenuDialog.dismiss();
                 }
@@ -183,36 +189,6 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
         });
         bottomMenuDialog = dialogBuilder.create();
         bottomMenuDialog.show();
-    }
-
-    //请求权限
-    public void requestPermission(String[] permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {  //版本号大鱼23
-            //判断是否已经赋予权限   没有权限  赋值权限
-            permissions = checkPermission(permissions);
-            if (permissions.length == 0) {
-                Intent intent = new Intent(this, ImageGridActivity.class);
-                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                startActivityForResult(intent, PHOTO_REQUEST_CODE);
-            } else {
-                //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true。
-                //申请权限，字符串数组内是一个或多个要申请的权限，1是申请权限结果的返回参数，在onRequestPermissionsResult可以得知申请结果
-                ActivityCompat.requestPermissions(this, checkPermission(permissions), REQUEST_PERMISSION_REQUEST_CODE);
-            }
-        }
-    }
-
-    //检查权限
-    public String[] checkPermission(String[] permissions) {
-        List<String> noGrantedPermission = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                noGrantedPermission.add(permission);
-            }
-        }
-        String[] permission = new String[noGrantedPermission.size()];
-
-        return noGrantedPermission.toArray(permission);
     }
 
     //展示图片
@@ -250,6 +226,15 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == XXPermissions.REQUEST_CODE) {
+            if (XXPermissions.isGranted(this, Permission.RECORD_AUDIO) &&
+                    XXPermissions.isGranted(this, Permission.Group.CALENDAR)) {
+                com.blankj.utilcode.util.LogUtils.d("用户已经在权限设置页授予了录音和日历权限");
+            } else {
+                com.blankj.utilcode.util.LogUtils.d("用户没有在权限设置页授予权限");
+
+            }
+        }
     }
 
     //上传到服务器
@@ -351,4 +336,28 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
                 break;
         }
     }
+
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .permission(Permission.Group.STORAGE)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                showHeadDialog();
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e( "checkPermissions: "  + e.getMessage());
+        }
+    }
+
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/kaadas_retangle_ffffff_3">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23pt"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_333333"
+        android:textSize="17pt" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_below="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18pt"
+        android:layout_marginRight="16pt"
+        android:layout_marginLeft="16pt"
+        android:gravity="left"
+        android:text=""
+        android:textColor="#666666"
+        android:textSize="14pt" />
+
+
+    <Button
+        android:id="@+id/tv_right"
+        android:layout_width="100pt"
+        android:layout_height="40pt"
+        android:layout_below="@id/tv_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="35pt"
+        android:layout_marginRight="12pt"
+        android:layout_marginBottom="12pt"
+        android:background="@drawable/kaadas_retangle_0066a1_3"
+        android:gravity="center"
+        android:text="@string/delete"
+        android:textColor="@color/white"
+        android:textSize="16pt" />
+
+    <Button
+        android:id="@+id/tv_left"
+        android:layout_width="100pt"
+        android:layout_height="40pt"
+        android:layout_below="@id/tv_content"
+        android:layout_marginTop="35pt"
+        android:layout_marginRight="8pt"
+        android:layout_marginBottom="12pt"
+        android:layout_toLeftOf="@id/tv_right"
+        android:background="@drawable/kaadas_retangle_ffffff_3"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/c0066A1"
+        android:textSize="16pt" />
+
+
+</RelativeLayout>

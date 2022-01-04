@@ -107,17 +107,15 @@
                 android:textColorHint="#959595"
                 android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tv_to_change_wifi"
+            <ImageView
+                android:id="@+id/iv_change_wifi"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:layout_marginRight="@dimen/dp_12"
-                android:text="@string/to_change_wifi"
-                android:textColor="#606060"
-                android:textSize="13sp" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="@dimen/dp_4"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:src="@mipmap/ic_decline" />
 
         </RelativeLayout>
 
@@ -157,7 +155,7 @@
                 android:layout_marginRight="@dimen/dp_4"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                android:src="@mipmap/eye_close_has_color" />
+                android:src="@mipmap/ic_eye_hide" />
 
         </RelativeLayout>
         <TextView

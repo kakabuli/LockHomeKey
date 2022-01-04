@@ -71,6 +71,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private Handler handler = new Handler();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
     private AlertDialog systemLockAlertDialog;
+    private int funcSetFromPwd;//从密码因子中获取的功能集，FFC7特征没实现功能集，只有默认值0xff
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +87,11 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         circleProgressBar.setValue(0);
         changeState(1); //初始状态
         LogUtils.e("--Kaadas--"+getLocalClassName()+"次数是   " + times + "  passwordFactor 是否为空 " + (passwordFactor == null));
-        mPresenter.listenConnectState();
-        mPresenter.listenerCharacterNotify();
         //BLE&WIFI模组 读取功能集
         mPresenter.readFeatureSet();
+        mPresenter.listenConnectState();
+        mPresenter.listenerCharacterNotify();
+
 
         firstThread.start();
     }
@@ -109,6 +111,9 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
             @Override
             public void run() {
                 switch (status) {
+                    case -2:
+                        //k30新增解绑后再配网，解绑设备失败返回状态-2
+                        break;
                     case -1:
 //                        finish();
                         onAdminPasswordError();
@@ -216,7 +221,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                 Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewBLEWIFISwitchInputWifiActivity.class);
                 intent.putExtra(KeyConstants.WIFI_SN, new String(wifiResult.wifiSn));
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, Rsa.bytesToHexString(wifiResult.password));
-                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, func);
+                intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, funcSetFromPwd);
+
                 startActivity(intent);
                 finish();
             }
@@ -514,6 +520,8 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         LogUtils.e("--kaadas--onDecodeResult    " +index);
         if (result.result == 0) {
             wifiResult = result;
+            funcSetFromPwd = result.func;
+            LogUtils.d("--kaadas--onDecodeResult  func  " +funcSetFromPwd);
         }
         changeState(index);
     }

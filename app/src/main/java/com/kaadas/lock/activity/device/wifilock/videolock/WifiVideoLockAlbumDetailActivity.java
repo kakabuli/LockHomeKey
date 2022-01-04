@@ -227,11 +227,15 @@ public class WifiVideoLockAlbumDetailActivity extends BaseActivity<IMyAlbumPlaye
             Toast.makeText(this, getResources().getString(R.string.no_video), Toast.LENGTH_SHORT).show();
             return;
         }
-        mediaPlayer.setMediaPlayerFromUri(filepath);
-        statusHelper.setMediaStatus(MediaStatus.START);
-        mediaPlayer.prepare();
-        initEvent();
-        autoPlayVideo();
+        try {
+            mediaPlayer.setMediaPlayerFromUri(filepath);
+            statusHelper.setMediaStatus(MediaStatus.START);
+            mediaPlayer.prepare();
+            initEvent();
+            autoPlayVideo();
+        }catch (Exception e){
+            e.getMessage();
+        }
     }
 
     private void initEvent() {

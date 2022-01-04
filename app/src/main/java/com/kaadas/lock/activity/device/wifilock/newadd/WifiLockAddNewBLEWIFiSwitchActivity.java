@@ -65,15 +65,19 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     private String deviceName;
     private byte[] passwordFactor;
     int lastTimes = 5;//剩余校验次数
+    public static final String TAG = "WifiLockAddNewBLEWIFiSwitchActivity";
+    private int funcSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.d("WifiLockAddNewBLEWIFiSwitchActivity onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_add_new_connect_device);
         ButterKnife.bind(this);
+        mPresenter.readFeatureSet(500);
         //开启数据监听
         mPresenter.listenerCharacterNotify();
-
         Intent intent = getIntent();
 
         bleVersion = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
@@ -106,6 +110,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
         registerReceiver(mReceiver, filter);
         handler.postDelayed(timeoutRunnable, 5 * 1000);
+        circleProgressBar2.setMaxValue(100);
         circleProgressBar2.setValue(0);
 //        progressDisposable = Observable
 //                .interval(0, 1, TimeUnit.SECONDS)
@@ -197,6 +202,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     private Runnable timeoutRunnable = new Runnable() {
         @Override
         public void run() {
+            LogUtils.d(TAG,"--kaadas-- receive data timeout");
             onScanFailed();
         }
     };
@@ -303,7 +309,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
      * 离线密码因子（配网通道）
      */
     public void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index){
-
+        LogUtils.d(TAG,"--kaadas-- pFactor" + index);
         if (originalData == null){
             return;
         }
@@ -344,7 +350,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
                     System.arraycopy(originalData, 0, passwordFactor, copyLocation, copyLength);
 //                    fifthThread.start();
                     changeState(5);
-                    handler.postDelayed(runnable, 2000);
+                    handler.postDelayed(runnable, 1000);
 //                    MyLog.getInstance().save("--kaadas调试--蓝牙0x92命令交互完成后的合并的密码因子数据==" + Rsa.bytesToHexString(passwordFactor));
 //                    LogUtils.e("--kaadas--合并密码因子数据==    " + Rsa.bytesToHexString(passwordFactor));
                     break;
@@ -431,7 +437,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
     @Override
     public void readFunctionSetSuccess(int functionSet) {
-
+        funcSet = functionSet;
     }
 
     @Override

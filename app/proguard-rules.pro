@@ -321,10 +321,6 @@
 -keep class com.xm.sdk.** { *; }
 -keep interface com.xm.sdk.** { *; }
 -libraryjars libs/commons-net-3.3.jar
--libraryjars libs/GetuiSDK-support-MZP-1.1.1.jar
--libraryjars libs/GetuiSDK-support-OPPO-1.0.7.jar
--libraryjars libs/GetuiSDK-support-STP-1.0.1.jar
--libraryjars libs/GetuiSDK-support-VIVO-1.0.5.jar
 -libraryjars libs/Native_Libs2.jar
 # -----------------------------------xm---------------------------------
 

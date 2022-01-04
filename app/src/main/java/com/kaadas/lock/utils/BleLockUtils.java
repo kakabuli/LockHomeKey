@@ -189,6 +189,10 @@ public class BleLockUtils {
 
         FUNCTION_SET.put(0xFF, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 16, 17, 19, 20, 21, 22}); //默认为FF
         FUNCTION_SET.put(0xB2, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 38, 39});
+
+        FUNCTION_SET.put(0xCF, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 21, 22, 23, 38, 39, 50, 94});
+        //新增功能100，获取SSID列表
+        FUNCTION_SET.put(0xB9, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 19, 20, 21, 22, 23, 26, 27, 29, 30, 34, 38, 39, 47, 49, 97, 100});
     }
 
     /**
@@ -1340,4 +1344,33 @@ public class BleLockUtils {
         return integers.contains(28);
     }
 
+    public static boolean isHasFunc(int functionSet, int funcValue){
+        Integer[] funcs = FUNCTION_SET.get(functionSet);
+        if (funcs == null) {
+            return false;
+        }
+
+        for (Integer func : funcs) {
+            if (funcValue == func) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否支持从设备获取wifi列表
+     */
+    public static boolean isSupportGetDeviceWifiList(int functionSet) {
+        LogUtils.d("isSupportGetDeviceWifiList ," +functionSet);
+        return isHasFunc(functionSet, 100);
+    }
+
+    /**
+     * k30系列配网流程变更, 根据0xB9功能集判断适配
+     */
+    public static boolean isFuncSetB9(int func){
+        LogUtils.d("isB9FuncSet ," +func+ " " + (func & 0xff));
+        return (func & 0xff) == 0xB9;
+    }
 }

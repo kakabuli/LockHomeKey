@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoVActivity;
@@ -37,6 +41,8 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
+
+import net.sdvn.cmapi.ConnectionService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +91,8 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
     private String deviceId;
     private HomeBeanRecordAdapter bluetoothRecordAdapter;
     private HomePageFragment homePageFragment;
+    private static final int REQUEST_CODE_VPN_SERVICE = 11;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -285,10 +293,9 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
                 if(VideoVActivity.isRunning){
                     Toast.makeText(getActivity(),getString(R.string.video_destory_time),Toast.LENGTH_SHORT).show();
                 }else {
-                    intent = new Intent(getActivity(), VideoVActivity.class);
-                    intent.putExtra(KeyConstants.IS_CALL_IN, false);
-                    intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
-                    startActivity(intent);
+                    if (checkVpnService()) {
+                        checkPermissions();
+                    }
                 }
 
                 break;
@@ -521,6 +528,47 @@ public class CatEyeFragment extends BaseFragment<ICatEyeView, CatEyePresenter<IC
             }
         }
     }
+    //检查vpn授权
+    public boolean checkVpnService() {
+        Intent prepare = ConnectionService.prepare(getActivity());
+        boolean resultvpn = prepare == null ? true : false;
+        net.sdvn.cmapi.util.LogUtils.d(resultvpn + " 已授权 " + " 未授权 ");
+        if (prepare != null) {
+            startActivityForResult(prepare, REQUEST_CODE_VPN_SERVICE);
+        } else {
+            onActivityResult(REQUEST_CODE_VPN_SERVICE, getActivity().RESULT_OK, null);
+        }
+        return resultvpn;
+    }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.RECORD_AUDIO)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                startActivity();
+                            }
+                        }
 
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+    private void startActivity(){
+        Intent intent;
+        intent = new Intent(getActivity(), VideoVActivity.class);
+        intent.putExtra(KeyConstants.IS_CALL_IN, false);
+        intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+        startActivity(intent);
+    }
 
 }

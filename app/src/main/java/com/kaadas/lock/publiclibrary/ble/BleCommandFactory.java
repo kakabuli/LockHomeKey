@@ -641,4 +641,10 @@ public class BleCommandFactory {
         System.arraycopy(subPWD,0,payload,2,subPWD.length);
         return groupPackage(cmd, payload, key);
     }
+
+    public static byte[] getDeviceWifiList(byte[] key) {
+        byte cmd = (byte) 0x98;
+        byte[] payload = new byte[16];
+        return groupPackage(cmd, payload, key);
+    }
 }

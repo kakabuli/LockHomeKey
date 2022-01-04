@@ -19,14 +19,20 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.publiclibrary.ota.ble.OtaConstants;
 import com.kaadas.lock.publiclibrary.ota.ble.OtaUtils;
@@ -38,6 +44,7 @@ import com.kaadas.lock.publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAFUHandlerCa
 import com.kaadas.lock.publiclibrary.ota.ble.p6.OTAFirmwareUpdate.OTAFUHandler_v1;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
+import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.widget.CircleProgress;
@@ -231,7 +238,7 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ota_upgrade);
-        requestPermission();
+        checkPermissions();
         gattServiceIntent = new Intent(getApplicationContext(), BluetoothLeService.class);
         startService(gattServiceIntent);
         BluetoothLeService.registerBroadcastReceiver(this, mGattOTAStatusReceiver, Utils.makeGattUpdateIntentFilter());
@@ -652,12 +659,29 @@ public class P6OtaUpgradeActivity extends BaseAddToApplicationActivity implement
         }
     };
 
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        }, 1);
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .permission(Permission.Group.STORAGE)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
     }
 
 

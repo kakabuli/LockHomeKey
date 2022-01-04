@@ -158,7 +158,6 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
             mViewRef.get().onBleOpenStateChange(isEnable);
         }
         if (!isEnable) {
-            bleService.enableBle();
             compositeDisposable.add(bleService.listenerBleOpenState()  //监听蓝牙状态  蓝牙打开即自动连接设备
                     .compose(RxjavaHelper.observeOnMainThread())
                     .subscribe(new Consumer<Boolean>() {
@@ -177,7 +176,17 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         }
         return isEnable;
     }
+    public boolean checkBleEnable(){
 
+        boolean isEnable = bleService.isBleIsEnable();
+
+        return isEnable;
+    }
+    public void enableBle(){
+
+        bleService.enableBle();
+
+    }
     /**
      * 搜索设备  连接设备  读取SystemId  鉴权
      */
@@ -199,9 +208,9 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         //开始连接蓝牙
         handler.removeCallbacks(releaseRunnable);
         if (ContextCompat.checkSelfPermission(MyApplication.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            //没有定位权限
+//            //没有定位权限
             if (isSafe()) {
-                mViewRef.get().noPermissions();
+//                mViewRef.get().noPermissions();
                 mViewRef.get().onEndConnectDevice(false);
             }
             return;
@@ -210,7 +219,7 @@ public abstract class BlePresenter<T extends IBleView> extends BasePresenter<T> 
         if (!GpsUtil.isOPen(MyApplication.getInstance())) {
             //没打开GPS
             if (isSafe()) {
-                mViewRef.get().noOpenGps();
+//                mViewRef.get().noOpenGps();
                 mViewRef.get().onEndConnectDevice(false);
             }
             return;

@@ -99,7 +99,7 @@ public class ClothesHangerMachineQrCodeScanActivity extends BaseAddToApplication
             if (i == -1) {
                 if (!shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     //禁止该权限
-                    ToastUtils.showShort(getString(R.string.ban_camera_permission));
+//                    ToastUtils.showShort(getString(R.string.ban_camera_permission));
                     finish();
                     return;
                 } else {

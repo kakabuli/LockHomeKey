@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.home.OldBluetoothOpenLockRecordActivity;
@@ -43,6 +46,7 @@ import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.AnimationsContainer;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
@@ -99,6 +103,14 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
     boolean hasData;
     private boolean isLoadingBleRecord;  //正在加载锁上数据
     private boolean isDestroy = false;
+    /**
+     *  事件点击类型枚举
+     */
+    public enum ClickType {
+        connectLock,//单次点击
+        openLock,//长按
+        synchronizationRecord;//同步记录
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -281,14 +293,16 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         rlIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isConnectingDevice && !bleLockInfo.isAuth() && !isDestroy) {  //如果没有正在连接设备
-                    //连接设备
-                    mPresenter.attachView(OldBleLockFragment.this);
-                    LogUtils.e("setBleLockInfo    23   "+bleLockInfo.getServerLockInfo().getLockNickName());
-                    mPresenter.setBleLockInfo(bleLockInfo);
-                    mPresenter.isAuth(bleLockInfo, true);
-                    mPresenter.getAllPassword(bleLockInfo, true);
-
+                //检查蓝牙开关是否开启
+                if (mPresenter.checkBleEnable()){
+                    //检查权限
+                    checkPermissions(BleLockFragment.ClickType.connectLock);
+                }else if (!GpsUtil.isOPen(MyApplication.getInstance())){
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_service_location));
+                }
+                else {
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_permission_ble));
+                    //mPresenter.enableBle();
                 }
             }
         });
@@ -296,22 +310,18 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         rlIcon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (isOpening) {
-                    LogUtils.e("长按  但是当前正在开锁状态   ");
-                    return false;
+                //检查蓝牙开关是否开启
+                if (mPresenter.checkBleEnable()){
+                    //检查权限
+                    checkPermissions(BleLockFragment.ClickType.openLock);
+                }else if (!GpsUtil.isOPen(MyApplication.getInstance())){
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_service_location));
                 }
-                if (mPresenter.isAuth(bleLockInfo, true)) {
-                    if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
-                        if (bleLockInfo.getSafeMode() == 1) {
-                            ToastUtils.showLong(R.string.safe_mode_can_not_open);
-                        } else if (bleLockInfo.getBackLock() == 0) {
-                            ToastUtils.showLong(R.string.back_lock_can_not_open);
-                        }
-                        return false;
-                    }
-                    mPresenter.openLock();
+                else {
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_permission_ble));
+                    //mPresenter.enableBle();
                 }
-                vibrate(getActivity(), 150);
+
                 return false;
             }
         });
@@ -585,17 +595,16 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
                 startActivity(intent);
                 break;
             case R.id.tv_synchronized_record:
-                if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                    ToastUtils.showShort(R.string.is_loading_lock_record);
-                    return;
-                }
-                if (mPresenter.isAuth(bleLockInfo, true)) {
-                    LogUtils.e("同步开锁记录");
-                    mPresenter.syncRecord();
-                    list.clear();
-                    if (bluetoothRecordAdapter != null) {
-                        bluetoothRecordAdapter.notifyDataSetChanged();
-                    }
+
+                //检查蓝牙开关是否开启
+                if (mPresenter.checkBleEnable()){
+                    //检查权限
+                    checkPermissions(BleLockFragment.ClickType.synchronizationRecord);
+                }else if (!GpsUtil.isOPen(MyApplication.getInstance())){
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_service_location));
+                } else {
+                    permissionTipsDialog(getActivity(),getString(R.string.kaadas_common_permission_ble));
+                    //mPresenter.enableBle();
                 }
                 break;
         }
@@ -1196,5 +1205,110 @@ public class OldBleLockFragment extends BaseBleFragment<IOldBleLockView, OldBleL
         }
     }
 
+    private void checkPermissions(BleLockFragment.ClickType touch) {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                LogUtils.e("获取权限成功");
+//                                permission = true;
+                                if (touch == BleLockFragment.ClickType.openLock){
+                                    lockAuthWithLongTouch();
+                                }else if(touch == BleLockFragment.ClickType.connectLock){
+                                    lockAuthWithOneTouch();
+                                }else if(touch == BleLockFragment.ClickType.synchronizationRecord) {
+                                    synchronizationRecord();
+                                }
 
+                            } else {
+                                LogUtils.e("获取部分权限成功，但部分权限未正常授予");
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                            if (never) {
+                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                LogUtils.e("被永久拒绝授权，请手动授予权限");
+                            } else {
+                                LogUtils.e("获取权限失败");
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e(e.getMessage());
+        }
+    }
+
+    private void lockAuthWithLongTouch(){
+        if (isOpening) {
+            LogUtils.e("长按  但是当前正在开锁状态   ");
+        }
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            if (bleLockInfo.getBackLock() == 0 || bleLockInfo.getSafeMode() == 1) {  //反锁状态下或者安全模式下  长按不操作
+                if (bleLockInfo.getSafeMode() == 1) {
+                    ToastUtils.showLong(R.string.safe_mode_can_not_open);
+                } else if (bleLockInfo.getBackLock() == 0) {
+                    ToastUtils.showLong(R.string.back_lock_can_not_open);
+                }
+            }
+            mPresenter.openLock();
+        }
+        vibrate(getActivity(), 150);
+    }
+    private void lockAuthWithOneTouch(){
+        if (!isConnectingDevice && !bleLockInfo.isAuth() && !isDestroy) {  //如果没有正在连接设备
+            //连接设备
+            mPresenter.attachView(OldBleLockFragment.this);
+            LogUtils.e("setBleLockInfo    23   "+bleLockInfo.getServerLockInfo().getLockNickName());
+            mPresenter.setBleLockInfo(bleLockInfo);
+            mPresenter.isAuth(bleLockInfo, true);
+            mPresenter.getAllPassword(bleLockInfo, true);
+
+        }
+    }
+    private void synchronizationRecord(){
+        if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
+            ToastUtils.showShort(R.string.is_loading_lock_record);
+            return;
+        }
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            LogUtils.e("同步开锁记录");
+            mPresenter.syncRecord();
+            list.clear();
+            if (bluetoothRecordAdapter != null) {
+                bluetoothRecordAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+    public void permissionTipsDialog(Activity activity,String str){
+        AlertDialogUtil.getInstance().permissionTipsDialog(activity, (activity.getString(R.string.kaadas_permission_title,str))
+                , (activity.getString(R.string.kaadas_permission_content,str,activity.getString(R.string.device_conn))),
+                (activity.getString(R.string.kaadas_permission_content_tisp,str)), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 }

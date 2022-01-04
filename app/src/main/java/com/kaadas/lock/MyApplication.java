@@ -12,9 +12,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.hjq.permissions.XXPermissions;
 import com.huawei.hms.push.HmsMessaging;
+import com.igexin.sdk.IUserLoggerInterface;
 import com.igexin.sdk.PushManager;
 import com.kaadas.lock.activity.login.LoginActivity;
 import com.kaadas.lock.bean.HomeShowBean;
@@ -48,6 +51,7 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MMKVUtils;
 import com.kaadas.lock.utils.MyLog;
+import com.kaadas.lock.utils.PermissionInterceptor;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ServiceAliveUtils;
@@ -157,6 +161,9 @@ public class MyApplication extends Application {
         //去掉在Android 9以上调用反射警告提醒弹窗 （Detected problems with API compatibility(visit g.co/dev/appcompat for more info)
         closeAndroidPDialog();
         setRxJavaErrorHandler();
+
+        // 设置权限申请拦截器（全局设置）
+        XXPermissions.setInterceptor(new PermissionInterceptor());
     }
 
     private void GeTuiPushInit() {
@@ -228,8 +235,13 @@ public class MyApplication extends Application {
         }else if(Rom.isMiui()){
             MiPushClient.registerPush(this, M_APP_ID, M_APP_KEY);
         }
-        GeTuiPushInit();
         MobSDK.submitPolicyGrantResult(true,null);
+        initGeTui();
+    }
+
+    public void initGeTui(){
+        // TODO: 2021/11/30 oppo手机第一次启动个推时会调系统通知栏权限，暂时将个推启动时间放在登录成功之后
+        GeTuiPushInit();
     }
 
     /**

@@ -152,7 +152,7 @@ public class MainActivityPresenter<T> extends BlePresenter<IMainActivityView> {
             public void accept(AllBindDevices allBindDevices) throws Exception {
                 List<CateEyeInfo> cateEyes = allBindDevices.getCateEyes();
                 if (cateEyes!=null && cateEyes.size()>0 && isSafe()){
-                    mViewRef.get().needCheckVpnService();
+//                    mViewRef.get().needCheckVpnService();
                 }
             }
         });

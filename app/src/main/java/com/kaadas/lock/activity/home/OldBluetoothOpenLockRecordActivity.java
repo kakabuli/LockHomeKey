@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,11 +9,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.adapter.BluetoothRecordAdapter;
 import com.kaadas.lock.bean.BluetoothItemRecordBean;
 import com.kaadas.lock.bean.BluetoothRecordBean;
+import com.kaadas.lock.fragment.home.BleLockFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseBleActivity;
 import com.kaadas.lock.mvp.presenter.ble.OpenLockRecordPresenter;
 import com.kaadas.lock.mvp.view.IOpenLockRecordView;
@@ -23,6 +28,8 @@ import com.kaadas.lock.publiclibrary.ble.bean.OpenLockRecord;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.GetPasswordResult;
 import com.kaadas.lock.publiclibrary.http.util.HttpUtils;
+import com.kaadas.lock.utils.AlertDialogUtil;
+import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -344,22 +351,95 @@ public class OldBluetoothOpenLockRecordActivity extends BaseBleActivity<IOpenLoc
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_synchronized_record:
-                if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
-                    ToastUtils.showShort(R.string.is_loading_lock_record);
-                    return;
+
+                //检查蓝牙开关是否开启
+                if (mPresenter.checkBleEnable()){
+                    //检查权限
+                    checkPermissions(BleLockFragment.ClickType.synchronizationRecord);
+                }else if (!GpsUtil.isOPen(MyApplication.getInstance())){
+                    permissionTipsDialog(this,getString(R.string.kaadas_common_service_location));
                 }
-                if (mPresenter.isAuth(bleLockInfo, true)) {
-                    LogUtils.e("同步开锁记录");
-                    mPresenter.allSyncRecord();
-                    list.clear();
-                    if (bluetoothRecordAdapter != null) {
-                        bluetoothRecordAdapter.notifyDataSetChanged();
-                    }
+                else {
+                    permissionTipsDialog(this,getString(R.string.kaadas_common_permission_ble));
+                    //mPresenter.enableBle();
                 }
                 break;
             case R.id.iv_back:
                 finish();
                 break;
         }
+    }
+    private void checkPermissions(BleLockFragment.ClickType touch) {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                LogUtils.e("获取权限成功");
+                                if(touch == BleLockFragment.ClickType.synchronizationRecord) {
+                                    synchronizationRecord();
+                                }
+
+                            } else {
+                                LogUtils.e("获取部分权限成功，但部分权限未正常授予");
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                            if (never) {
+                                // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                                LogUtils.e("被永久拒绝授权，请手动授予权限");
+                            } else {
+                                LogUtils.e("获取权限失败");
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e(e.getMessage());
+        }
+    }
+    private void synchronizationRecord(){
+        if (isLoadingBleRecord) { //如果正在加载锁上数据  不让用户再次点击
+            ToastUtils.showShort(R.string.is_loading_lock_record);
+            return;
+        }
+        if (mPresenter.isAuth(bleLockInfo, true)) {
+            LogUtils.e("同步开锁记录");
+            mPresenter.allSyncRecord();
+            list.clear();
+            if (bluetoothRecordAdapter != null) {
+                bluetoothRecordAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+    public void permissionTipsDialog(Activity activity, String str){
+        AlertDialogUtil.getInstance().permissionTipsDialog(activity, (activity.getString(R.string.kaadas_permission_title,str))
+                , (activity.getString(R.string.kaadas_permission_content,str,activity.getString(R.string.device_conn))),
+                (activity.getString(R.string.kaadas_permission_content_tisp,str)), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
     }
 }

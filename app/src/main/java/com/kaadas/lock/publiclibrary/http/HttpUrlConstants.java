@@ -321,6 +321,11 @@ public class HttpUrlConstants {
      */
     public static final String WIFI_LOCK_UNBIND = BASE_URL + "wifi/device/unbind";
 
+    /**
+     * 预绑定设备
+     */
+    public static final String WIFI_LOCK_PRE_BINDING = BASE_URL + "device/prebinding";
+
 
     /**
      * 修改WiFi昵称

@@ -1,5 +1,6 @@
 package com.kaadas.lock.activity.addDevice;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -11,11 +12,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.cateye.AddDeviceCatEyeCheckWifiActivity;
 import com.kaadas.lock.activity.addDevice.cateye.TurnOnCatEyeFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
 import com.kaadas.lock.activity.addDevice.zigbee.AddZigbeeLockFirstActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAddSecondActivity;
+import com.kaadas.lock.activity.device.wifilock.add.WifiLockApAddThirdActivity;
 import com.kaadas.lock.adapter.AddZigbeeBindGatewayAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -23,12 +30,14 @@ import com.kaadas.lock.bean.deviceAdd.AddZigbeeBindGatewayBean;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.DeviceGatewayBindListPresenter;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GwWiFiBaseInfo;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.mvp.view.deviceaddview.DeviceGatewayBindListView;
+import com.kaadas.lock.utils.WifiUtils;
 import com.kaadas.lock.utils.handPwdUtil.Constants;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
@@ -134,14 +143,16 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
                     ToastUtils.showShort(getString(R.string.select_bindgateway));
                 } else {
                         if (type == 2) {
-                            //跳转猫眼流程,需要网络
-                            if (NetUtil.isNetworkAvailable()){
 
-                                showLoading(getString(R.string.getting_wifi_info));
-                                mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
-                            }else{
-                                ToastUtils.showShort(R.string.network_exception);
+                            //检查WiFi开关是否开启
+                            if (WifiUtils.getInstance(MyApplication.getInstance()).isWifiEnable()){
+                                //检查权限
+                                checkPermissions();
+                            } else {
+                                permissionTipsDialog(this,getString(R.string.kaadas_common_permission_wifi));
+                                //mPresenter.enableBle();
                             }
+
                         } else if (type == 3) {
                             //跳转zigbee锁流程
                             String gatewayId=zigbeeBindGatewayBeanSelect.getGatewayId();
@@ -286,6 +297,64 @@ public class DeviceBindGatewayListActivity extends BaseActivity<DeviceGatewayBin
         hiddenLoading();
         ToastUtils.showLong(R.string.get_wifi_info_failed);
     }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.ACCESS_FINE_LOCATION)
+                    .permission(Permission.ACCESS_COARSE_LOCATION)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                startActivity();
+                            }
+                        }
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
 
+                        }
+                    });
+
+        }catch (Exception e){
+            LogUtils.e( "checkPermissions: "  + e.getMessage());
+        }
+    }
+    private void startActivity(){
+
+        //跳转猫眼流程,需要网络
+        if (NetUtil.isNetworkAvailable()){
+
+            showLoading(getString(R.string.getting_wifi_info));
+            mPresenter.getGatewayWifiPwd(zigbeeBindGatewayBeanSelect.getGatewayId());
+        }else{
+            ToastUtils.showShort(R.string.network_exception);
+        }
+
+    }
+    public void permissionTipsDialog(Activity activity, String str){
+        AlertDialogUtil.getInstance().permissionTipsDialog(activity, (activity.getString(R.string.kaadas_permission_title,str))
+                , (activity.getString(R.string.kaadas_permission_content,str,activity.getString(R.string.device_conn))),
+                (activity.getString(R.string.kaadas_permission_content_tisp,str)), new AlertDialogUtil.ClickListener() {
+                    @Override
+                    public void left() {
+
+                    }
+
+                    @Override
+                    public void right() {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(String toString) {
+
+                    }
+                });
+    }
 
 }

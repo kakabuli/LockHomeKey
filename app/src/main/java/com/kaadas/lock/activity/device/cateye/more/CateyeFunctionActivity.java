@@ -14,6 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.cateye.VideoCallBackActivity;
@@ -35,6 +38,8 @@ import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 
+
+import net.sdvn.cmapi.ConnectionService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -92,6 +97,8 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
     private String devId;
     String key=null;
     int catEyeCount=0;
+    private static final int REQUEST_CODE_VPN_SERVICE = 11;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,10 +249,9 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
                     Toast.makeText(CateyeFunctionActivity.this, getString(R.string.video_destory_time), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    intent = new Intent(this, VideoVActivity.class);
-                    intent.putExtra(KeyConstants.IS_CALL_IN, false);
-                    intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
-                    startActivity(intent);
+                    if (checkVpnService()) {
+                        checkPermissions();
+                    }
                 }
                 break;
         }
@@ -475,5 +481,47 @@ public class CateyeFunctionActivity extends BaseActivity<ICatEyeFunctionView, Ca
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+    //检查vpn授权
+    public boolean checkVpnService() {
+        Intent prepare = ConnectionService.prepare(this);
+        boolean resultvpn = prepare == null ? true : false;
+        net.sdvn.cmapi.util.LogUtils.d(resultvpn + " 已授权 " + " 未授权 ");
+        if (prepare != null) {
+            startActivityForResult(prepare, REQUEST_CODE_VPN_SERVICE);
+        } else {
+            onActivityResult(REQUEST_CODE_VPN_SERVICE, RESULT_OK, null);
+        }
+        return resultvpn;
+    }
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.RECORD_AUDIO)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                startActivity();
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+    private void startActivity(){
+        Intent intent;
+        intent = new Intent(this, VideoVActivity.class);
+        intent.putExtra(KeyConstants.IS_CALL_IN, false);
+        intent.putExtra(KeyConstants.CATE_INFO, cateEyeInfo);
+        startActivity(intent);
     }
 }

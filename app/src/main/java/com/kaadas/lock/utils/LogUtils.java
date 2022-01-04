@@ -205,4 +205,29 @@ public class LogUtils {
 
     public static void e(FragmentActivity activity) {
     }
+
+    public static void printStack(String tag){
+		if(tag == null){
+			tag = mTag;
+		}
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		printStack(tag, stackTraceElements);
+	}
+
+	public static void printStack(String tag, Throwable throwable){
+		if(tag == null){
+			tag = mTag;
+		}
+		StackTraceElement[] stackTraceElements = throwable.getStackTrace();
+		printStack(tag, stackTraceElements);
+	}
+
+	private static void printStack(String tag, StackTraceElement[] traceElements){
+		if(traceElements == null){
+			return;
+		}
+		for (StackTraceElement traceElement : traceElements) {
+			LogUtils.e(tag, traceElement.toString());
+		}
+	}
 }

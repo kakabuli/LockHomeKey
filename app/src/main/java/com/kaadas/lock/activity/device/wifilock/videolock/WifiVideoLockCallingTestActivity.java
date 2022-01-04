@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,6 +34,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.MainActivity;
@@ -224,33 +228,70 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    if (ContextCompat.checkSelfPermission(WifiVideoLockCallingTestActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions( WifiVideoLockCallingTestActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-                        ToastUtils.showShort("请先获取麦克风权限");
-                    }else{
-                        // 勾选了不再提示
-                        if (! ActivityCompat.shouldShowRequestPermissionRationale
-                                (WifiVideoLockCallingTestActivity.this,Manifest.permission.RECORD_AUDIO )) {
-                            // ...
-                            ToastUtils.showShort("请先获取麦克风权限");
-                        }else{
-                            if(mPresenter.isTalkback()){
-                                ivCalling.setSelected(false);
-                                mPresenter.talkback(false);
-                                mPresenter.stopTalkback();
-                            }else{
-                                ivCalling.setSelected(true);
-                                mPresenter.talkback(true);
-                                mPresenter.startTalkback();
-                            }
-                        }
-
-                    }
+                    checkPermissions(Permission.RECORD_AUDIO);
                 }
                 return false;
             }
         });
     }
+
+    private void checkPermissions(String permission) {
+        try {
+            XXPermissions.with(this)
+                    .permission(permission)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                if(TextUtils.equals(permission, Permission.RECORD_AUDIO)){
+                                    // 勾选了不再提示
+                                    if (! ActivityCompat.shouldShowRequestPermissionRationale
+                                            (WifiVideoLockCallingTestActivity.this,Manifest.permission.RECORD_AUDIO )) {
+                                        // ...
+                                        ToastUtils.showShort("请先获取麦克风权限");
+                                    }else{
+                                        if(mPresenter.isTalkback()){
+                                            ivCalling.setSelected(false);
+                                            mPresenter.talkback(false);
+                                            mPresenter.stopTalkback();
+                                        }else{
+                                            ivCalling.setSelected(true);
+                                            mPresenter.talkback(true);
+                                            mPresenter.startTalkback();
+                                        }
+                                    }
+                                }
+                                else if(TextUtils.equals(permission,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                                    if(!ivRecoring.isSelected()){
+                                        ivRecoring.setSelected(true);
+                                        llyRecord.setVisibility(View.VISIBLE);
+                                        if(wifiLockInfo != null){
+                                            String filePath = FileTool.getVideoLockPath(WifiVideoLockCallingTestActivity.this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
+                                            mPresenter.startRecordMP4(filePath);
+                                        }
+
+                                    }else{
+                                        ivRecoring.setSelected(false);
+                                        llyRecord.setVisibility(View.GONE);
+                                        mPresenter.stopRecordMP4();
+                                    }
+                                    llyRecord.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+
 
     @Override
     protected WifiVideoLockCallingPresenter<IWifiLockVideoCallingView> createPresent() {
@@ -331,35 +372,7 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
                 mPresenter.release();
                 break;
             case R.id.iv_recoring:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions( this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    ToastUtils.showShort("请先获取读写权限");
-                }else{
-                   /* // 勾选了不再提示
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale
-                            (this,Manifest.permission.WRITE_EXTERNAL_STORAGE ) &&
-                            !ActivityCompat.shouldShowRequestPermissionRationale
-                            (this,Manifest.permission.READ_EXTERNAL_STORAGE )) {
-                        // ...
-                        ToastUtil.showShort("请先获取读写权限");
-                    }else{*/
-                        if(!ivRecoring.isSelected()){
-                            ivRecoring.setSelected(true);
-                            llyRecord.setVisibility(View.VISIBLE);
-                            if(wifiLockInfo != null){
-                                String filePath = FileTool.getVideoLockPath(this,wifiLockInfo.getWifiSN()).getPath() + File.separator +System.currentTimeMillis()+".mp4"  ;
-                                mPresenter.startRecordMP4(filePath);
-                            }
-
-                        }else{
-                            ivRecoring.setSelected(false);
-                            llyRecord.setVisibility(View.GONE);
-                            mPresenter.stopRecordMP4();
-                        }
-                        llyRecord.setVisibility(View.VISIBLE);
-//                    }
-
-                }
+                checkPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 break;
             case R.id.iv_screenshot:
 

@@ -165,6 +165,65 @@ public class AlertDialogUtil {
         });
     }
 
+    public void permissionTipsDialog(Context context, String title, String content, String content1, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.permission_tips_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tvContentTisp = mView.findViewById(R.id.tv_content_tisp);
+        TextView tv_query = mView.findViewById(R.id.tv_button);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setText(title);
+            tvTitle.setVisibility(View.VISIBLE);
+        }
+
+        tvContent.setText(content);
+        tvContentTisp.setText(content1);
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    public void KaadasSingleButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.kaadas_singlebutton_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_query = mView.findViewById(R.id.tv_button);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        if ("".equals(title)) {
+            tvTitle.setVisibility(View.GONE);
+        } else {
+            tvTitle.setText(title);
+            tvTitle.setVisibility(View.VISIBLE);
+        }
+
+        if("".equals(content)){
+            tvContent.setVisibility(View.GONE);
+        }else{
+            tvContent.setVisibility(View.VISIBLE);
+            tvContent.setText(content);
+        }
+        tv_query.setText(query);
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
     //2  不能隐藏的
     public void noEditSingleCanNotDismissButtonDialog(Context context, String title, String content, String query, ClickListener clickListener) {
         View mView = LayoutInflater.from(context).inflate(R.layout.no_edit_singlebutton_dialog, null);
@@ -511,6 +570,41 @@ public class AlertDialogUtil {
         tvContent.setText(content);
         tv_query.setText(right);
         tv_query.setTextColor(Color.parseColor(rightColor));
+        //确定
+        tv_query.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.right();
+                }
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    public void titleTwoButtonKaadasDialog(Context context, String title,String content,String left, String right, String leftColor, String rightColor, ClickListener clickListener) {
+        View mView = LayoutInflater.from(context).inflate(R.layout.kaadas_title_two_button_dialog, null);
+        TextView tvTitle = mView.findViewById(R.id.tv_title);
+        TextView tvContent = mView.findViewById(R.id.tv_content);
+        TextView tv_cancel = mView.findViewById(R.id.tv_left);
+        TextView tv_query = mView.findViewById(R.id.tv_right);
+        AlertDialog alertDialog = AlertDialogUtil.getInstance().common(context, mView);
+        tvTitle.setText(title);
+        tvContent.setText(content);
+        tv_cancel.setText(left);
+        tv_cancel.setTextColor(Color.parseColor(leftColor));
+        tv_query.setText(right);
+        tv_query.setTextColor(Color.parseColor(rightColor));
+        //取消
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.left();
+                }
+                alertDialog.dismiss();
+            }
+        });
         //确定
         tv_query.setOnClickListener(new View.OnClickListener() {
             @Override

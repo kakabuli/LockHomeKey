@@ -476,8 +476,10 @@
     <string name="input_device_name">请输入设备名称</string>
     <string name="device_nick_name_no_update">设备名称未修改</string>
     <string name="device_delete_dialog_head">确认删除设备？</string>
+    <string name="device_delete_dialog_head2">是否删除设备？</string>
     <string name="device_delete_dialog_content">删除设备后,\n设备将与用户解除绑定</string>
     <string name="device_delete_lock_dialog_content">删除设备后,\n设备将与用户解除绑定</string>
+    <string name="device_delete_lock_dialog_content2">设备删除后,将清除门锁的所有记录</string>
     <string name="device_delete_gateway_dialog_content">删除设备后,\n设备将与用户解除绑定</string>
     <string name="pwd_manager_syn">密码同步</string>
     <string name="synchroniztion">同步</string>
@@ -1177,6 +1179,7 @@
     <string name="warrning_machine_key_open">机械方式开锁报警</string>
     <string name="get_version_code_fail">获取版本号失败</string>
     <string name="ble_disconnected_please_retry">设备蓝牙已断开，无法绑定，重新搜索</string>
+    <string name="ble_disconnected">设备蓝牙已断开，无法绑定</string>
     <string name="please_refresh_page_get_newdata">请刷新页面,获取最新数据！</string>
     <string name="is_login_out">正在退出...</string>
     <string name="gateway_ota_upgrade">OTA升级</string>
@@ -1487,6 +1490,8 @@
     <string name="indoor_open">室内open键开锁</string>
     <string name="indoor_open_new_express">室内多功能键开锁</string>
     <string name="indoor_Induction">室内感应把手开锁</string>
+    <string name="smart_xiaodu_open">小度智能屏开锁</string>
+    <string name="tmall_spirit_open">天猫精灵开锁</string>
     <string name="connect_device_wifi">连接设备\nWi-Fi</string>
     <string name="connect_home_wifi">连接家庭\nWi-Fi</string>
     <string name="wifi_lock_set_up_ap_notice">请将手机和设备尽量靠近路由器，能够更\n好的连接设备</string>
@@ -2092,7 +2097,10 @@
     <string name="dialog_wifi_video_ota_update">是否升级</string>
     <string name="dialog_wifi_wifi_firmware_version">WIFI固件版本</string>
     <string name="dialog_wifi_video_moudle_version">视频模组版本</string>
+    <string name="dialog_wifi_video_change_wifi">更换WIFI时，不可中断配网流程，\n否则需要重新添加设备</string>
     <string name="dialog_wifi_video_mcu_moudle_version">视频模组微控制器版本</string>
+    <string name="dialog_wifi_video_change_wifi2">连接WIFI时请勿退出，否则需要\n重新添加设备</string>
+
 
     <string name="activity_wifi_video_fifth_third">第三步：门锁扫描二维码</string>
     <string name="activity_wifi_video_fifth_thour">第四步：门锁扫描二维码</string>
@@ -2199,4 +2207,53 @@
 
     <string name="duress_number">编号%1$s</string>
     <string name="set_duress_account">请设置胁迫报警账号</string>
+
+
+    <!-- 权限提示语 -->
+    <string name="kaadas_common_permission_hint">授权提示</string>
+    <string name="kaadas_common_permission_message">使用此功能需要先授予权限</string>
+    <string name="kaadas_common_permission_granted">授予</string>
+
+    <string name="kaadas_common_permission_alert">授权提醒</string>
+    <string name="kaadas_common_permission_fail_1">授权失败，请正确授予权限</string>
+    <string name="kaadas_common_permission_fail_2">获取权限失败，请手动授予权限</string>
+    <string name="kaadas_common_permission_fail_3">获取权限失败，请手动授予%s</string>
+    <string name="kaadas_common_permission_fail_4">没有授予后台定位权限，请您选择"始终允许"</string>
+    <string name="kaadas_common_permission_goto">前往授权</string>
+
+    <string name="kaadas_common_permission_wifi">WiFi权限</string>
+    <string name="kaadas_common_permission_ble">蓝牙权限</string>
+    <string name="kaadas_common_permission_calendar">日历权限</string>
+    <string name="kaadas_common_permission_camera">相机权限</string>
+    <string name="kaadas_common_permission_contacts">通讯录权限</string>
+    <string name="kaadas_common_permission_location">定位权限</string>
+    <string name="kaadas_common_service_location">定位服务</string>
+    <string name="kaadas_common_permission_location_background">后台定位权限</string>
+    <string name="kaadas_common_permission_bluetooth">附近的设备权限</string>
+    <string name="kaadas_common_permission_microphone">麦克风权限</string>
+    <string name="kaadas_common_permission_record_audio">录音权限</string>
+    <string name="kaadas_common_permission_phone">电话权限</string>
+    <string name="kaadas_common_permission_call_log">通话记录权限</string>
+    <string name="kaadas_common_permission_sensors">身体传感器权限</string>
+    <string name="kaadas_common_permission_activity_recognition">健身运动权限</string>
+    <string name="kaadas_common_permission_sms">短信权限</string>
+    <string name="kaadas_common_permission_storage">存储权限</string>
+
+    <string name="kaadas_common_permission_install">安装应用权限</string>
+    <string name="kaadas_common_permission_notification">通知栏权限</string>
+    <string name="kaadas_common_permission_window">悬浮窗权限</string>
+    <string name="kaadas_common_permission_setting">系统设置权限</string>
+    <string name="kaadas_common_permission_task">查看使用情况权限</string>
+
+    <string name="kaadas_permission_title">未开启%1$s</string>
+    <string name="kaadas_permission_content">开启%1$s后，用于%2$s</string>
+    <string name="kaadas_permission_content_tisp">您可以在手机设置中，找到【凯迪仕智能】， 打开【%1$s】开关</string>
+
+    <string name="receive_device_messages">接收设备消息</string>
+    <string name="device_conn">连接设备</string>
+    <string name="use_intercom_function">使用对讲功能</string>
+    <string name="add_device_and_up_head_portrait">扫码添加设备/上传头像</string>
+    <string name="store_pictures_and_videos">存储图片和视频</string>
+    <string name="call_the_service_hotline">拨打服务热线电话</string>
+
 </resources>

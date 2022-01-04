@@ -1,6 +1,5 @@
 package com.kaadas.lock.activity.cateye;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,8 +12,6 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -34,8 +31,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
+import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
+import com.kaadas.lock.activity.addDevice.zigbeelocknew.QrCodeScanActivity;
 import com.kaadas.lock.adapter.ForecastAdapter;
 import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
@@ -157,7 +159,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
         findViewByOrientation();
         initData();
         initView();
-        requestPermissions();
         mPresenter.init(this);
         mPresenter.listenerDeviceOnline();
         mPresenter.listenerNetworkChange();
@@ -283,28 +284,6 @@ public class VideoVActivity extends BaseActivity<IVideoView, VideoPresenter<IVid
 
         video_cateye_noinfo = findViewById(R.id.video_cateye_noinfo);
     }
-
-
-    private void requestPermissions() {
-        //Manifest.permission.RECORD_AUDIO
-        String[] strings = checkPermission(new String[]{Manifest.permission.RECORD_AUDIO});
-        if (strings.length > 0) {
-            ActivityCompat.requestPermissions(this, strings, REQUEST_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    //检查权限
-    public String[] checkPermission(String[] permissions) {
-        List<String> noGrantedPermission = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                noGrantedPermission.add(permission);
-            }
-        }
-        String[] permission = new String[noGrantedPermission.size()];
-        return noGrantedPermission.toArray(permission);
-    }
-
 
     @Override
     protected void onResume() {

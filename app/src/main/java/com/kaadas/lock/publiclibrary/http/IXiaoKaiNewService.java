@@ -600,6 +600,13 @@ public interface IXiaoKaiNewService {
     @Headers({KeyConstants.VERSION})
     Observable<BaseResult> wifiLockUnbind(@Header("timestamp") String timestamp,@Body RequestBody info);
 
+    /**
+     * 预绑定设备
+     */
+    @POST(HttpUrlConstants.WIFI_LOCK_PRE_BINDING)
+    @Headers({KeyConstants.VERSION})
+    Observable<BaseResult> wifiLockPreBind(@Header("timestamp") String timestamp,@Body RequestBody info);
+
 
     /**
      * 修改WiFi锁昵称

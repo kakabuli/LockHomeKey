@@ -102,6 +102,8 @@ public class BleService extends Service {
      */
     private PublishSubject<BleDataBean> dataChangeSubject = PublishSubject.create();
 
+    private PublishSubject<BleDataBean> wifiDataSubject = PublishSubject.create();
+
     /**
      * 搜索到设备的Observable
      */
@@ -158,7 +160,7 @@ public class BleService extends Service {
     private BluetoothGattService p6otaService;
     private BluetoothGattCharacteristic notifyChar;// BLE -> App 数据通道特征
     private BluetoothGattCharacteristic lockFunctionSetChar;// BLE -> App 数据通道特征
-
+    private volatile int readFuncSet = -1;
 
     public int getBleVersion() {
         return bleVersion;
@@ -170,6 +172,10 @@ public class BleService extends Service {
 
     public PublishSubject<Boolean> listenerAuthFailed() {
         return authFailedSubject;
+    }
+
+    public PublishSubject<BleDataBean> listenerWifiData() {
+        return wifiDataSubject;
     }
 
 
@@ -558,7 +564,7 @@ public class BleService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
             byte[] value = characteristic.getValue();
-            LogUtils.e("--kaadas--收到蓝牙特征=="+characteristic.getUuid().toString()+"，数据==    " + Rsa.bytesToHexString(value));
+            LogUtils.i("--kaadas--收到蓝牙特征=="+characteristic.getUuid().toString()+"，数据==    " + Rsa.bytesToHexString(value));
 
             lastReceiveDataTime = System.currentTimeMillis();
 
@@ -587,7 +593,7 @@ public class BleService extends Service {
                         ||(((value[3] & 0xff) == 0x92))
                         ||(((value[3] & 0xff) == 0x93))
                         )) {  //  回确认帧
-                    LogUtils.e("--kaadas--回复蓝牙特征=="+characteristic.getUuid().toString()+"，数据==    " + Rsa.bytesToHexString(BleCommandFactory.confirmCommand(value)));
+                    LogUtils.i("--kaadas--回复蓝牙特征=="+characteristic.getUuid().toString()+"，数据==    " + Rsa.bytesToHexString(BleCommandFactory.confirmCommand(value)));
 
                     sendCommand(BleCommandFactory.confirmCommand(value));
 
@@ -606,16 +612,23 @@ public class BleService extends Service {
                 * 0x90 : APP下发SSID
                 * 0x91 : APP下发PSW
                 * 0x94 : APP下发秘钥因子校验结果
+                * 0x98 : APP下发指令 获取wifi列表 响应结果
                 */
                 if ((value[0] == 0 && value.length == 20)
                         && (((value[3] & 0xff) == 0x94)
                         ||(((value[3] & 0xff) == 0x90))
                         ||(((value[3] & 0xff) == 0x91))
+                        ||(((value[3] & 0xff) == 0x98))
                 )) {
 
                     BleDataBean bleDataBean = new BleDataBean(value[3], value[1], value);
                     bleDataBean.setDevice(gatt.getDevice());
-                    dataChangeSubject.onNext(bleDataBean);
+                    if((value[3] & 0xff) == 0x98){
+                        //wifi列表单独处理
+                        wifiDataSubject.onNext(bleDataBean);
+                    }else {
+                        dataChangeSubject.onNext(bleDataBean);
+                    }
                 }
                 }
             else {
@@ -758,14 +771,16 @@ public class BleService extends Service {
                     if (value == null || value.length <= 0) {
                         return;
                     }
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, characteristic.getValue()[0] & 0xff));
+                    readFuncSet = characteristic.getValue()[0] & 0xff;
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, readFuncSet));
                     break;
                 case BLeConstants.DISTRIBUTION_NETWORK__UUID_FUNCTION_SET:
                     LogUtils.e("--kaadas--BLE&wifi锁功能集  字节1  " + Rsa.bytesToHexString(value));
                     if (value == null || value.length <= 0) {
                         return;
                     }
-                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, characteristic.getValue()[0] & 0xff));
+                    readFuncSet = characteristic.getValue()[0] & 0xff;
+                    readSystemIDSubject.onNext(new ReadInfoBean(ReadInfoBean.TYPE_LOCK_FUNCTION_SET, readFuncSet));
                     break;
             }
         }
@@ -1009,16 +1024,9 @@ public class BleService extends Service {
                     mWritableCharacter = characteristic;
                 }
                 if (BLeConstants.UUID_NOTIFY_CHAR.equalsIgnoreCase(characteristic.getUuid().toString())) {
-                    boolean isNotify = gatt.setCharacteristicNotification(characteristic, true);
-                    Log.e("开启通知", "读特征值 uuidChar = " + serviceUUID);
+
                     notifyChar = characteristic;
-                    if (isNotify) {
-                        for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
-                            //开启设备的写功能，开启之后才能接收到设备发送过来的数据
-                            dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                            gatt.writeDescriptor(dp);
-                        }
-                    }
+
                 }
 
                 if (BLeConstants.UUID_BATTERY_CHAR.equalsIgnoreCase(uuidChar)) { //电量
@@ -1069,16 +1077,9 @@ public class BleService extends Service {
                 }
 
                 if (BLeConstants.DISTRIBUTION_NETWORK_NOTIFY_CHAR.equalsIgnoreCase(characteristic.getUuid().toString())) {
-                    boolean isNotify = gatt.setCharacteristicNotification(characteristic, true);
-                    Log.e("--kaadas--开启通知", "读特 征值 uuidChar = " + serviceUUID);
+
                     distribution_network_notify_Character = characteristic;
-                    if (isNotify) {
-                        for (BluetoothGattDescriptor dp : characteristic.getDescriptors()) {
-                            //开启设备的写功能，开启之后才能接收到设备发送过来的数据
-                            dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                            gatt.writeDescriptor(dp);
-                        }
-                    }
+
                 }
 
                 if (uuidChar.equalsIgnoreCase(BLeConstants.DISTRIBUTION_NETWORK__UUID_FUNCTION_SET)) {
@@ -1144,6 +1145,14 @@ public class BleService extends Service {
                 LogUtils.e("发送心跳  " + "  版本号为  " + this.bleVersion);
                 handler.post(sendHeart);
             }
+            //延迟开启通知通道：蓝牙上报事件时，UI层没来得及初始化订阅，存在事件丢失，订阅后接收不到
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    enableBleNotify(gatt);
+                }
+            },200);
+
         }
         else {
             //如果写入数据的特征值和通知的特征值为空  那么断开连接
@@ -1152,6 +1161,30 @@ public class BleService extends Service {
             return;
         }
 
+    }
+
+    private void enableBleNotify(BluetoothGatt gatt){
+        if (notifyChar != null && gatt.setCharacteristicNotification(notifyChar, true)) {
+            LogUtils.i("--kaadas--开启通知", "notifyChar true");
+            for (BluetoothGattDescriptor dp : notifyChar.getDescriptors()) {
+                //开启设备的写功能，开启之后才能接收到设备发送过来的数据
+                dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                gatt.writeDescriptor(dp);
+            }
+        }else{
+            LogUtils.e("--kaadas--开启通知", "notifyChar no enable, " + (notifyChar!=null));
+        }
+
+        if (distribution_network_notify_Character != null && gatt.setCharacteristicNotification(distribution_network_notify_Character, true)) {
+            LogUtils.i("--kaadas--开启通知", "distribution_network_notify_Character true");
+            for (BluetoothGattDescriptor dp : distribution_network_notify_Character.getDescriptors()) {
+                //开启设备的写功能，开启之后才能接收到设备发送过来的数据
+                dp.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                gatt.writeDescriptor(dp);
+            }
+        }else{
+            LogUtils.e("--kaadas--开启通知", "distribution_network_notify_Character no enable, " + (distribution_network_notify_Character!=null));
+        }
     }
 
     private int getTypeByServices(List<BluetoothGattService> gattServices) {
@@ -1437,7 +1470,8 @@ public class BleService extends Service {
         @Override
         public synchronized void run() {
             if (commands.size() > 0) { //如果指令集合中有数据，那么直接发送数据 且移除此次发送的数据
-                if (((commands.get(0)[3] & 0xff) == 0x95)
+                if (((commands.get(0)[3] & 0xff) == 0x98)
+                        ||(((commands.get(0)[3] & 0xff) == 0x95))
                         ||(((commands.get(0)[3] & 0xff) == 0x94))
                         ||(((commands.get(0)[3] & 0xff) == 0x93))
                         ||(((commands.get(0)[3] & 0xff) == 0x92))
@@ -1649,5 +1683,8 @@ public class BleService extends Service {
         this.isOta = isOta;
     }
 
+    public int getReadFuncSet(){
+        return readFuncSet;
+    }
 
 }

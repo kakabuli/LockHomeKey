@@ -2,22 +2,32 @@ package com.kaadas.lock.activity.addDevice.zigbeelocknew;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.PermissionUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,16 +57,7 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
                 startActivity(new Intent(this, DeviceAdd2Activity.class));
                 break;
             case R.id.button_again:
-
-
-                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
-                if (strings.length>0){
-                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
-                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
-                }else {
-                    Intent intent = new Intent(this, QrCodeScanActivity.class);
-                    startActivityForResult(intent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
-                }
+                checkPermissions();
                 //再来一次
                 break;
             case R.id.hand_bind:
@@ -100,6 +101,31 @@ public class AddDeviceZigbeeLockNewFailActivity extends BaseAddToApplicationActi
                     break;
             }
 
+        }
+    }
+
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                Intent intent = new Intent(AddDeviceZigbeeLockNewFailActivity.this, QrCodeScanActivity.class);
+                                startActivityForResult(intent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
         }
     }
 

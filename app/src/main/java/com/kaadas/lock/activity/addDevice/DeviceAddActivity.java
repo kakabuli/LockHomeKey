@@ -3,8 +3,13 @@ package com.kaadas.lock.activity.addDevice;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothFirstActivity;
 import com.kaadas.lock.activity.addDevice.gateway.AddGatewayFirstActivity;
@@ -52,6 +60,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
 
     private boolean flag=false; //判断是否有绑定的网列表
     private int isAdmin=1; //管理员，非1不是管理员
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +119,6 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
         }
     }
 
-
     @OnClick({R.id.back, R.id.scan, R.id.add_device, R.id.catEye_layout, R.id.gateway_layout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -118,15 +126,7 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
                 finish();
                 break;
             case R.id.scan:
-
-                String[] strings = PermissionUtil.getInstance().checkPermission(new String[]{  Manifest.permission.CAMERA});
-                if (strings.length>0){
-                    Toast.makeText(this, "请允许拍照或录像权限", Toast.LENGTH_SHORT).show();
-                    PermissionUtil.getInstance().requestPermission(new String[]{  Manifest.permission.CAMERA}, this);
-                }else {
-                    Intent zigbeeLockIntent=new Intent(this, QrCodeScanActivity.class);
-                    startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
-                }
+                checkPermissions();
                 break;
             case R.id.add_device:
                 //添加锁
@@ -257,6 +257,31 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
 
     }
 
+    private void checkPermissions() {
+        try {
+            XXPermissions.with(this)
+                    .permission(Permission.CAMERA)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(List<String> permissions, boolean all) {
+                            if (all) {
+                                Intent zigbeeLockIntent=new Intent(DeviceAddActivity.this, QrCodeScanActivity.class);
+                                startActivityForResult(zigbeeLockIntent, KeyConstants.SCANGATEWAYNEW_REQUEST_CODE);
+                            }
+                        }
+
+                        @Override
+                        public void onDenied(List<String> permissions, boolean never) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            Log.d("", "checkPermissions: "  + e.getMessage());
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -285,5 +310,4 @@ public class DeviceAddActivity extends BaseActivity<DeviceZigBeeDetailView, Devi
         }
 
     }
-
 }

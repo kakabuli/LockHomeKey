@@ -415,7 +415,14 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
 
                         break;
                     case R.id.btn_delete:  //删除设备
-                        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, getString(R.string.device_delete_dialog_head), getString(R.string.device_delete_lock_dialog_content), getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        String alertTitle = getString(R.string.device_delete_dialog_head);
+                        String alertStr = getString(R.string.device_delete_lock_dialog_content);
+                        if(BleLockUtils.isFuncSetB9(func)){
+                            alertTitle = getString(R.string.device_delete_dialog_head2);
+                            alertStr = getString(R.string.device_delete_lock_dialog_content2);
+                        }
+
+                        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, alertTitle, alertStr, getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
                             @Override
                             public void left() {
 

@@ -118,19 +118,22 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
                         LogUtils.e("shulan broadcastBean.getDeviceSN()-->" + broadcastBean.getDeviceSN());
                         LogUtils.e("shulan --kaadas--搜索到设备   " + device.getName());
                         LogUtils.e("shulan --kaadas--搜索到设备   " + device.getAddress());
-                        devices.add(device);
-                        broadcastItemList.add(broadcastBean);
-                        broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));
-                        //搜索到设备
-                        if (mViewRef != null) {
-                            mViewRef.get().loadBLEWiFiModelDevices(devices,broadcastItemList);
+                        //过滤KLH / M08开头设备信息
+                        if (!device.getName().startsWith("KLH") && !device.getName().startsWith("M08")) {
+                            devices.add(device);
+                            broadcastItemList.add(broadcastBean);
+                            broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, devices));
+                            //搜索到设备
+                            if (mViewRef != null) {
+                                mViewRef.get().loadBLEWiFiModelDevices(devices, broadcastItemList);
 
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        LogUtils.e("--kaadas--throwable==" +throwable);
+                        LogUtils.e("--kaadas--throwable==" + throwable);
                         if (mViewRef != null) {
                             mViewRef.get().onScanDevicesFailed(throwable);
                         }
@@ -147,7 +150,7 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
                 if (mViewRef != null) {
                     if (isAttach) {
                         LogUtils.e("--kaadas--设备停止扫描");
-                        LogUtils.e("--kaadas--mViewRef=="+mViewRef);
+                        LogUtils.e("--kaadas--mViewRef==" + mViewRef);
                         mViewRef.get().onStopScan();
                     }
                 }
@@ -155,7 +158,7 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
         }
     };
 
-    public void checkBind(String wifiModelType,BluetoothLockBroadcastBean device) {
+    public void checkBind(String wifiModelType, BluetoothLockBroadcastBean device) {
         if (bleService == null) { //判断
             if (MyApplication.getInstance().getBleService() == null) {
                 return;
@@ -176,13 +179,13 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
 
         String name = "";
 
-        List<BluetoothDevice> mItemList ;
+        List<BluetoothDevice> mItemList;
         int[] list = new int[2];
-        for(int i = 0;i<broadcastList.size();i++){
+        for (int i = 0; i < broadcastList.size(); i++) {
             mItemList = broadcastList.get(i).getDevices();
-            for(int j = 0;j<mItemList.size();j++){
-                if(device.getDeviceName().equals(mItemList.get(j).getName())){
-                    if(device.getDeviceModel() != null && device.getDeviceSN() != null){
+            for (int j = 0; j < mItemList.size(); j++) {
+                if (device.getDeviceName().equals(mItemList.get(j).getName())) {
+                    if (device.getDeviceModel() != null && device.getDeviceSN() != null) {
                         list[0] = i;
                         list[1] = j;
                         name = device.getDeviceSN();
@@ -194,22 +197,22 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
         XiaokaiNewServiceImp.clothesHangerMachineCheckBinding(name).subscribe(new BaseObserver<ClothesHangerMachineCheckBindingResult>() {
             @Override
             public void onSuccess(ClothesHangerMachineCheckBindingResult clothesHangerMachineCheckBindingResult) {
-                if(clothesHangerMachineCheckBindingResult.getCode().equals("201")){
+                if (clothesHangerMachineCheckBindingResult.getCode().equals("201")) {
                     if (isSafe()) {
                         mViewRef.get().onNoBind(broadcastList.get(list[0]).getDevices().get(list[1]));
                     }
-                }else if(clothesHangerMachineCheckBindingResult.getCode().equals("202")){
+                } else if (clothesHangerMachineCheckBindingResult.getCode().equals("202")) {
                     if (isSafe()) {
-                        mViewRef.get().onAlreadyBind(broadcastList.get(list[0]).getDevices().get(list[1]),clothesHangerMachineCheckBindingResult.getData().getUname() + "");
+                        mViewRef.get().onAlreadyBind(broadcastList.get(list[0]).getDevices().get(list[1]), clothesHangerMachineCheckBindingResult.getData().getUname() + "");
                     }
-                }else if ("444".equals(clothesHangerMachineCheckBindingResult.getCode())) {
+                } else if ("444".equals(clothesHangerMachineCheckBindingResult.getCode())) {
                     if (mqttService != null) {
                         mqttService.httpMqttDisconnect();
                     }
                     MyApplication.getInstance().tokenInvalid(true);
                     return;
                 } else {
-                    if(isSafe()){
+                    if (isSafe()) {
                         mViewRef.get().checkBindFailed();
                     }
                 }
@@ -222,7 +225,7 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
 
             @Override
             public void onFailed(Throwable throwable) {
-                if(isSafe()){
+                if (isSafe()) {
                     mViewRef.get().onCheckBindFailed(throwable);
                 }
             }
@@ -291,15 +294,15 @@ public class ClothesHangerMachineAddThirdPresenter<T> extends BasePresenter<IClo
                                 if (bleStateBean.getBleVersion() == 4) {
 
                                     if (isSafe()) {
-                                        for (BluetoothLockBroadcastBean broadcastBean : broadcastItemList){
-                                            if (broadcastBean.getDevice().equals(device)){
-                                                mViewRef.get().onConnectBLEWIFISuccess(broadcastBean,bleStateBean.getBleVersion());
+                                        for (BluetoothLockBroadcastBean broadcastBean : broadcastItemList) {
+                                            if (broadcastBean.getDevice().equals(device)) {
+                                                mViewRef.get().onConnectBLEWIFISuccess(broadcastBean, bleStateBean.getBleVersion());
                                             }
                                         }
                                     }
                                 }
 
-                            }else {
+                            } else {
                                 connectTimes++;
                                 LogUtils.e(ClothesHangerMachineAddThirdPresenter.class.getName() + "--kaadas--绑定界面连接失败");
                                 bindDevice(device, isBind);

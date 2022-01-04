@@ -34,9 +34,7 @@ android {
             abiFilters "armeabi-v7a", "arm64-v8a"
         }
         manifestPlaceholders = [
-                GETUI_APP_ID    : "5zODhkZOQd66zCoOgxX152",
-                GETUI_APP_KEY   : "2MYvnQfX4k7JHqC7KNaCuA",
-                GETUI_APP_SECRET: "dePIsxVaor6Dibp8YMs8TA",
+                GETUI_APPID       : "5zODhkZOQd66zCoOgxX152",
 
 //                HUAWEI_APP_ID   : "100038281",
 
@@ -184,12 +182,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.espresso_core_version}"
 
     implementation files('libs/Native_Libs2.jar')
-    implementation files('libs/GetuiSDK-support-MZP-1.1.1.jar')
-    implementation files('libs/GetuiSDK-support-STP-1.0.1.jar')
-    implementation files('libs/GetuiSDK-support-OPPO-1.0.7.jar')
-    implementation files('libs/GetuiSDK-support-VIVO-1.0.5.jar')
-    implementation files('libs/xm-codec.jar')
-    implementation files('libs/xm-support.jar')
 
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
@@ -233,7 +225,13 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.3.0'
     implementation 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
     implementation "androidx.sqlite:sqlite:2.0.1"
-    implementation 'com.getui:sdk:2.14.1.0'
+
+    implementation 'com.getui:gtsdk:3.2.6.0'  //个推SDK
+    implementation 'com.getui:gtc:3.1.6.0'  //个推核心组件
+    implementation 'com.getui.opt:mzp:3.1.0'
+    implementation 'com.assist-v3:vivo:3.0.5'
+    implementation 'com.assist-v3:oppo:3.0.3'
+
     implementation project(':imagepicker')
     implementation project(':linphoneLibrary')
     implementation project(':library:WheelPicker')
@@ -252,11 +250,13 @@ dependencies {
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 
-    implementation 'com.huawei.hms:push:5.1.1.301'
+    implementation 'com.huawei.hms:push:6.1.0.300'
 
     implementation(name: 'esptouch', ext: 'aar')
-
+    //TODO 2021.11.26,rxpermissions 框架2020年7月12日停更，先引入XXPermissions（已经兼容到android12的权限），有空XXPermissions完全替换掉 rxpermissions。
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:13.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

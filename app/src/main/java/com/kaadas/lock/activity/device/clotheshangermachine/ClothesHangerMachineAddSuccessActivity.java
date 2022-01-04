@@ -63,13 +63,13 @@ public class ClothesHangerMachineAddSuccessActivity extends BaseAddToApplication
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                MyApplication.getInstance().getAllDevicesByMqtt(true);
                 Intent data = new Intent(ClothesHangerMachineAddSuccessActivity.this, MainActivity.class);
                 data.putExtra(KeyConstants.WIFI_LOCK_SHOW_HOME_PAGE,1);
                 startActivity(data);
                 finish();
             }
         },3000);
-        MyApplication.getInstance().getAllDevicesByMqtt(true);
     }
 
     @Override
