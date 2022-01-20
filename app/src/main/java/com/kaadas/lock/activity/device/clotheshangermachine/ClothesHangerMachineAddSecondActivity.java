@@ -21,7 +21,6 @@ import com.kaadas.lock.mvp.view.deviceaddview.DeviceZigBeeDetailView;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

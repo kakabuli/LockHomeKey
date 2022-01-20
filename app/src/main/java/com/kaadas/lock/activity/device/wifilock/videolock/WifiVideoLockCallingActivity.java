@@ -61,7 +61,6 @@ import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
 import la.xiong.androidquick.tool.FileTool;
@@ -192,8 +191,6 @@ public class WifiVideoLockCallingActivity extends BaseActivity<IWifiLockVideoCal
     private boolean isDoorbelling = false;
 
     private RequestOptions options;
-
-    final RxPermissions rxPermissions = new RxPermissions(this);
 
     private List<ProductInfo> productList = new ArrayList<>();
 

@@ -208,13 +208,13 @@ public class WifiLockOpenRecordFragment extends BaseFragment<IWifiLockOpenRecord
         //服务器没有开锁记录
         refreshLayout.finishRefresh();
         refreshLayout.setEnableLoadMore(false);  //服务器没有数据时，不让上拉加载更多
-        ToastUtils.showShort(R.string.server_no_data_2);
+        //ToastUtils.showShort(R.string.server_no_data_2);
         tvNoMore.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void noMoreData() {
-        ToastUtils.showShort(R.string.no_more_data);
+        //ToastUtils.showShort(R.string.no_more_data);
         refreshLayout.finishLoadMore();
         refreshLayout.setEnableLoadMore(false);
     }

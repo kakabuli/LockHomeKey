@@ -36,7 +36,10 @@ public class MyFragmentPresenter<T> extends BasePresenter<IMyFragmentView> {
                 try {
                     bys = value.bytes(); //注意：把byte[]转换为bitmap时，也是耗时操作，也必须在子线程
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bys, 0, bys.length);
-                    LogUtils.d(" 图片解析 bitmap " + bitmap.toString());
+                    if(bitmap == null){
+                        LogUtils.d(" 图片解析 bitmap is null");
+                        throw new NullPointerException("bitmap is null");
+                    }
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

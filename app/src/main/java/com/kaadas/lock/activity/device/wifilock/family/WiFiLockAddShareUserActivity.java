@@ -126,7 +126,13 @@ public class WiFiLockAddShareUserActivity extends BaseActivity<IWiFiLockShareAdd
     @Override
     public void onAddUserFailed(BaseResult result) {
         hiddenLoading();
-        ToastUtils.showLong( HttpUtils.httpErrorCode(this, result.getCode()));
+        if("409".equals(result.getCode())){
+            ToastUtils.showShort(getString(R.string.user_exit));
+        }else if("402".equals(result.getCode())){
+            ToastUtils.showShort(getString(R.string.user_not_exist));
+        }else {
+            ToastUtils.showShort(HttpUtils.httpErrorCode(this, result.getCode()));
+        }
     }
 
     @Override

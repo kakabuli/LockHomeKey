@@ -304,6 +304,7 @@ public class PersonalUpdateHeadDataActivity extends BaseActivity<IPersonalDataVi
             downloadPhoto(newbitmap);
             temp = null;
         }
+        SPUtils.put(KeyConstants.HEAD_PATH, photoPath);
     }
 
     @Override

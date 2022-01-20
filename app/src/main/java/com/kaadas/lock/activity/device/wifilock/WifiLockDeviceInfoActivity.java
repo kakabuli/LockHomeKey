@@ -143,9 +143,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
             }
 
             if(BleLockUtils.isSupportPanelMultiOTA(wifiLockInfo.getFunctionSet())){
-                lockFirmwareVersion = wifiLockInfo.getFrontPanelVersion() + "";
+                lockFirmwareVersion = wifiLockInfo.getFrontPanelVersion();
             }else{
-                lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion() + "";
+                lockFirmwareVersion = wifiLockInfo.getLockFirmwareVersion();
+            }
+            if(TextUtils.isEmpty(lockFirmwareVersion)){
+                lockFirmwareVersion = "";
             }
             tvLockFirmwareVersion.setText(lockFirmwareVersion);
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion() + "") ? "" : wifiLockInfo.getWifiVersion());
@@ -196,7 +199,12 @@ public class WifiLockDeviceInfoActivity extends BaseActivity<IWifiLockMoreView, 
                         mPresenter.checkOtaInfo(wifiSN, lockFirmwareVersion, 2);
                     }
                 } else {
-                    Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
+                    if(BleLockUtils.isSupportSinglePanelOTA_QK(wifiLockInfo.getFunctionSet())){
+                        Intent intent = new Intent(this, WifiVideoLockFirwareNumberActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_SN, wifiSN);
+                        startActivity(intent);
+                     }
+                    //Toast.makeText(this, getString(R.string.info_error), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.rl_wifi_model_firmware_version:

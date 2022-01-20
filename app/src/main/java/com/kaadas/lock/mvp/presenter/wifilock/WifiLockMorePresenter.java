@@ -258,7 +258,7 @@ public class WifiLockMorePresenter<T> extends BasePresenter<IWifiLockMoreView> {
     /**
      * @param SN
      * @param version
-     * @param type    1模块  2锁
+     * @param type    1为WIFI模块，2为WIFI锁，3为人脸模组，4为视频模组，5为视频模组微控制器，6为前面板，7为后面板。
      */
     public void checkOtaInfo(String SN, String version, int type) {
         //请求成功

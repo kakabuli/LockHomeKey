@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+    <include layout="@layout/head"></include>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:layout_marginVertical="@dimen/dp_26"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/textcolor_content"
+        android:text="@string/account_logout_condition" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:background="#F8F8F8"
+        android:paddingVertical="@dimen/dp_16"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/account_logout_condition_1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/textcolor_content"
+            android:text="@string/account_logout_condition_1_1" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/account_logout_condition_2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/textcolor_content"
+            android:text="@string/account_logout_condition_2_1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/account_logout_condition_3" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/textcolor_content"
+            android:text="@string/account_logout_condition_3_1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_24"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/account_logout_condition_4" />
+
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/btn_closeAccount"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginLeft="@dimen/dp_88"
+            android:layout_marginRight="@dimen/dp_88"
+            android:layout_marginBottom="@dimen/dp_48"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_btn_close_account_selector"
+            android:text="@string/account_logout_continue"
+            android:textColor="#FE3B32"
+            android:enabled="false"
+            android:textSize="@dimen/sp_15" />
+    </FrameLayout>
+
+</LinearLayout>
+

@@ -33,6 +33,7 @@ public class SPUtils {
     public static final String PHONEN="phone";
     //username
     public static final String USERNAME="username";
+    public static final String REAL_USERNAME="real_username";
     //pwd
     public static final String PASSWORD="password";
     //update

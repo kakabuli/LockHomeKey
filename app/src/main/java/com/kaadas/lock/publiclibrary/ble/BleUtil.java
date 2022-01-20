@@ -707,6 +707,9 @@ public class BleUtil {
             case PIR_ALARM:
                 content = context.getString(R.string.wandering_alarm) + "~";
                 break;
+            case DOOR_BELL:
+                content = context.getString(R.string.wifi_video_lock_alarm_doorbell);
+                break;
             default:
                 content = context.getString(R.string.warring_unkonw);
                 break;

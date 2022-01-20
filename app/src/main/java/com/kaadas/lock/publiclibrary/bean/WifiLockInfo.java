@@ -10,6 +10,7 @@ import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.List;
@@ -65,6 +66,7 @@ public class WifiLockInfo implements Serializable {
      * productInfoList	清单	产品型号信息列表
      * wifi列表	清单	wifi锁列表
      * switch  单火开关数据
+     * volLevel 0 静音 1 中音量 2 高音量
      */
     @Id(autoincrement = true)
     private Long id;
@@ -101,6 +103,13 @@ public class WifiLockInfo implements Serializable {
     private String lockFirmwareVersion;
     private String randomCode;
     private int distributionNetwork;
+    //统一字段名？？？
+    @Transient
+    private String lockName;
+    @Transient
+    private String lockNickName;
+    @Transient
+    private String macLock;
 
     /**
      * _id : 5de4c32a33cc1949441265ca
@@ -129,7 +138,7 @@ public class WifiLockInfo implements Serializable {
      * openStatusTime : 1541468973
      */
 
-    private int openStatus;
+    private int openStatus; //1为关锁，2为开锁，3为主锁舌伸出
     private long openStatusTime;
 
     /**
@@ -323,6 +332,7 @@ public class WifiLockInfo implements Serializable {
 
     public void setLockMac(String lockMac) {
         this.lockMac = lockMac;
+        this.macLock = lockMac;
     }
 
     public int getKeep_alive_status() {
@@ -467,6 +477,7 @@ public class WifiLockInfo implements Serializable {
 
     public void setLockNickname(String lockNickname) {
         this.lockNickname = lockNickname;
+        this.lockNickName = lockNickname;
     }
 
     public String getLockSoftwareVersion() {
@@ -873,5 +884,31 @@ public class WifiLockInfo implements Serializable {
 
     public void setScreenLightSwitch(int screenLightSwitch) {
         this.screenLightSwitch = screenLightSwitch;
+    }
+
+    public String getLockName() {
+        return lockName;
+    }
+
+    public void setLockName(String lockName) {
+        this.lockName = lockName;
+    }
+
+    public String getLockNickName() {
+        return lockNickName;
+    }
+
+    public void setLockNickName(String lockNickName) {
+        this.lockNickName = lockNickName;
+        this.lockNickname = lockNickName;
+    }
+
+    public String getMacLock() {
+        return macLock;
+    }
+
+    public void setMacLock(String macLock) {
+        this.macLock = macLock;
+        this.lockMac = macLock;
     }
 }

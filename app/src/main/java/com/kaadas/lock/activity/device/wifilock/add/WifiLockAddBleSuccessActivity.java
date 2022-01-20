@@ -212,7 +212,7 @@ public class WifiLockAddBleSuccessActivity extends BaseActivity<IWifiLockAddSucc
     public void onSetNameSuccess() {
         hiddenLoading();
 
-        if(!BleLockUtils.isSupportPanelMultiOTA(func + "")){
+        if(BleLockUtils.isSmartSwitch(func)){
             handler.postDelayed(runnable, 400);
         }else{
             Intent backIntent=new Intent(this, MainActivity.class);

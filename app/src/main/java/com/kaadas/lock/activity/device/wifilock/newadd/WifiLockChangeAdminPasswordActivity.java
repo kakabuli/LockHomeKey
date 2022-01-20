@@ -33,6 +33,7 @@ public class WifiLockChangeAdminPasswordActivity extends BaseAddToApplicationAct
 
     int times;
     private boolean video;
+    private boolean isInitialPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class WifiLockChangeAdminPasswordActivity extends BaseAddToApplicationAct
         Intent intent = getIntent();
         times = getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, 1);
         video = intent.getBooleanExtra("video",false);
+        isInitialPwd = intent.getBooleanExtra(KeyConstants.ADMIN_PASSWORD_IS_INITIAL,false);
+        if(isInitialPwd){
+            notice.setText(getString(R.string.initial_pwd_modify_setup));
+            alreadyModify.setText(R.string.continue_check);
+        }
         //通过设置android:background时，得到AnimationDrawable 用如下方法
         final AnimationDrawable animationDrawable = (AnimationDrawable) ivAnim.getBackground();
         animationDrawable.start();
@@ -61,7 +67,7 @@ public class WifiLockChangeAdminPasswordActivity extends BaseAddToApplicationAct
                     finish();
                 }else{
                     Intent wifiIntent = new Intent(this, WifiLockHasModifyPasswordAndDisconnectActivity.class);
-//                wifiIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, times);
+                    wifiIntent.putExtra(KeyConstants.ADMIN_PASSWORD_IS_INITIAL, isInitialPwd);
                     startActivity(wifiIntent);
                 }
                 break;

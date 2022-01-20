@@ -301,22 +301,14 @@ public class HomePageFragment extends BaseFragment<IHomeView, HomePreseneter<IHo
                     gatewayLockFragment.setArguments(gwBundle);
                     fragments.add(gatewayLockFragment);
                     break;
+                    //wifi锁跟视频锁统一界面
                 case HomeShowBean.TYPE_WIFI_LOCK:
-                    rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
-                    WifiLockFragment wifiLockFragment = new WifiLockFragment();
-                    Bundle wifiBundle = new Bundle();
-                    WifiLockInfo wifiLockInfo = (WifiLockInfo) devices.get(i).getObject();
-//                    wifiBundle.putSerializable(KeyConstants.WIFI_LOCK_INFO, wifiLockInfo);
-                    wifiBundle.putString(KeyConstants.WIFI_SN,wifiLockInfo.getWifiSN());
-                    wifiLockFragment.setArguments(wifiBundle);
-                    fragments.add(wifiLockFragment);
-                    break;
                 case HomeShowBean.TYPE_WIFI_VIDEO_LOCK:
                     rb.setCompoundDrawablesRelativeWithIntrinsicBounds(null, getContext().getDrawable(R.drawable.home_rb_lock_drawable), null, null);
                     WifiVideoLockFragment wifiVideoLockFragment = new WifiVideoLockFragment();
                     Bundle wifiVideoBundle = new Bundle();
                     WifiLockInfo wifiVideoLockInfo = (WifiLockInfo) devices.get(i).getObject();
-//                    wifiVideoBundle.putSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO, wifiVideoLockInfo);
+                    wifiVideoBundle.putInt(KeyConstants.WIFI_LOCK_TYPE, homeShowBean.getDeviceType());
                     wifiVideoBundle.putString(KeyConstants.WIFI_SN,wifiVideoLockInfo.getWifiSN());
                     wifiVideoLockFragment.setArguments(wifiVideoBundle);
                     fragments.add(wifiVideoLockFragment);

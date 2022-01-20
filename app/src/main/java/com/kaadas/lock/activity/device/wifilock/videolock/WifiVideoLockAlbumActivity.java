@@ -338,13 +338,18 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
     }
 
     private void showDeleteItem(boolean b) {
-        for(FileBean item :items){
-            item.setFirst(false);
-            for(FileItemBean list : item.getItem()){
-                list.setShowDelete(b);
+        if(adapter == null) return;
+        try {
+            for(FileBean item :items){
+                item.setFirst(false);
+                for(FileItemBean list : item.getItem()){
+                    list.setShowDelete(b);
+                }
             }
+            adapter.notifyDataSetChanged();
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        adapter.notifyDataSetChanged();
     }
 
     private void searchFiles(String path) {
@@ -420,6 +425,7 @@ public class WifiVideoLockAlbumActivity extends BaseAddToApplicationActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                //异步初始化 可能会存在空指针问题
                 initRecycleView();
             }
         });

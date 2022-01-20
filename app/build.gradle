@@ -7,8 +7,9 @@ apply plugin: 'com.mob.sdk'
 greendao {
     schemaVersion rootProject.ext.greendao_schemaVersion// 数据库版本号
     daoPackage 'com.kaadas.lock.utils.greenDao.db'//自动生成的dao的包名，包名默认是entity所在的包；
-    targetGenDir 'src/main/java'//生成数据库文件的目录
+    targetGenDir 'src/main/java'//生成数据库文件的目录"
 }
+
 
 bugly {
     appId = "3ac95f5a71"
@@ -16,7 +17,7 @@ bugly {
     debug = true
     execute = rootProject.ext.isRelease
 }
-
+def apkFilePath
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -25,7 +26,7 @@ android {
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        versionName getAppVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         flavorDimensions "versionCode"
         multiDexEnabled true
@@ -84,6 +85,8 @@ android {
                                     appname            : "@string/app_name"
                                     , app_icon         : "@drawable/logo",
                                     amapkey            : "18230744482cbb9f608cc3d1c1ef2e6d"]
+
+            buildConfigField('String', 'BUILD_INFO', "\"${getBuildInfo()}\"")
         }
     }
     signingConfigs {
@@ -102,18 +105,13 @@ android {
         }
     }
 
-    //自定义输出包名的设置
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            // 输出apk名称为kaadas-1.0.apk
-            def fileName = "kaadas-${defaultConfig.versionName}.apk"
-            outputFileName = fileName
-        }
-    }
-
     buildTypes {
         release {
-            debuggable rootProject.ext.isDeBug
+            //为了避免release包忘记关闭调试模式，debuggable不引用变量控制
+            debuggable false
+            //BuildConfig.DEBUG 这个属性release包默认关闭日志打印，目前DEBUG=true会打印没有脱敏的http请求数据
+            buildConfigField "boolean", "DEBUG", "false"
+
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -133,6 +131,22 @@ android {
         //如果是正式包,将其输入到指定文件夹
         if (buildType == "release") {
             it.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/app/kaadas/release")
+        }
+    }
+
+    //自定义输出包名的设置
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def type = "debug";//区分是不是release包
+            if(rootProject.ext.env && "release".equals(variant.buildType.name)){
+                //只有正式服 且buildType为release，才算正式的release包
+                type = "release";
+            }
+            // 输出apk名称为kaadas-1.0-debug|release.apk
+            def fileName = "kaadas-${variant.versionName}-${type}.apk"
+            outputFileName = fileName
+
+            apkFilePath = output.outputFile.path
         }
     }
 
@@ -163,7 +177,6 @@ android {
         abortOnError false
     }
 }
-
 
 repositories {
     flatDir {
@@ -223,7 +236,7 @@ dependencies {
     implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
 
     implementation 'org.greenrobot:greendao:3.3.0'
-    implementation 'net.zetetic:android-database-sqlcipher:4.4.0@aar'
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.0@aar'
     implementation "androidx.sqlite:sqlite:2.0.1"
 
     implementation 'com.getui:gtsdk:3.2.6.0'  //个推SDK
@@ -253,10 +266,48 @@ dependencies {
     implementation 'com.huawei.hms:push:6.1.0.300'
 
     implementation(name: 'esptouch', ext: 'aar')
-    //TODO 2021.11.26,rxpermissions 框架2020年7月12日停更，先引入XXPermissions（已经兼容到android12的权限），有空XXPermissions完全替换掉 rxpermissions。
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:13.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+def getAppVersionName() {
+    return rootProject.ext.env ? rootProject.ext.android.versionName : (rootProject.ext.android.versionName+"Beta")
+}
+
+def getCommitLog() {
+    //git提交记录
+    def branch = 'git rev-parse --abbrev-ref HEAD'.execute().text.trim();
+    def commitId = 'git rev-parse --short HEAD'.execute().text.trim()
+    return branch+"_"+commitId
+}
+
+def getBuildInfo(){
+    def buildTime = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("GMT+08:00"))
+    def buildInfo = new StringBuilder();
+    buildInfo.append("version:").append(getAppVersionName()).append(", ")
+    buildInfo.append("code:").append(rootProject.ext.android.versionCode).append(", ")
+    buildInfo.append("env:").append((rootProject.ext.env ? "release" : "dev")).append(", ")
+    buildInfo.append("commit:").append(getCommitLog()).append(", ")
+    buildInfo.append("buildTime:").append(buildTime)
+    return buildInfo.toString();
+}
+
+this.gradle.buildFinished {
+    //构建完输出版本信息
+    def md5Result = "unknown"
+    if(new File(apkFilePath).exists()){
+        //window下的md5命令
+        def md5cmd = 'certutil -hashfile "'+ apkFilePath +'" MD5'
+        md5Result = md5cmd.execute().text.trim().split("\n")[1]
+    }
+
+    def apkMD5 = "\nMD5:" + md5Result
+    logger.error("\n==========[版本构建信息]=========\n"
+            + getBuildInfo()
+            + apkMD5
+            + "\napkFilePath:"+apkFilePath +
+            "\n=============================")
+}
+

@@ -380,7 +380,7 @@
     <string name="wandering_pir_sensitivity">探测距离选择</string>
     <string name="wandering_judge_time">判定时间选择</string>
     <string name="wandering_alarm_close">已关闭</string>
-    <string name="wandering_alarm_text">开启后，可摄像头会侦测门外徘徊人员，比较耗电</string>
+    <string name="wandering_alarm_text">开启后，摄像头会侦测门外徘徊人员，比较耗电</string>
     <string name="face_wandering_alarm_text">对逗留人员进行人脸识别，识别失败后抓拍视频并发送报警信息</string>
     <string name="wandering_pir_sensitivity_text">远距离会增加频繁检测距离，导致耗电</string>
     <string name="wandering_judge_time_text">判定时间不宜太短，防止误报</string>
@@ -507,7 +507,7 @@
     <string name="add_password">添加密码</string>
     <string name="no_password">暂无密码</string>
     <string name="no_face_password">门锁还没有面容识别，请到门锁添加同步</string>
-    <string name="how_to_add_face_password">如何添加面容识别？</string>
+    <string name="how_to_add_face_password">门锁如何添加面容识别？</string>
 
     <string name="pwd_header_add_tv">添加密码</string>
     <string-array name="home_top">
@@ -1659,10 +1659,10 @@
     <string name="add_pir_second_notice2">取下电池绝缘片通电</string>
     <string name="add_pir_first_notice1">1. PIR配网准备</string>
     <string name="add_pir_first_notice2">设备通电后，逆时针打开电池后盖</string>
-    <string name="admin_error_reinput">门锁管理员密码验证失败,请重新输入</string>
-    <string name="admin_error_reinput_3">门锁管理密码验证已失败3次，超过5次门锁将锁定</string>
-    <string name="admin_error_reinput_4">门锁管理密码验证已失败4次，超过5次门锁将锁定</string>
-    <string name="admin_error_reinput_5">门锁管理密码验证已失败5次，门锁将锁定100 S</string>
+    <string name="admin_error_reinput">门锁管理员密码验证失败,\n请重新输入</string>
+    <string name="admin_error_reinput_3">门锁管理密码验证已失败3次，\n超过5次门锁将锁定</string>
+    <string name="admin_error_reinput_4">门锁管理密码验证已失败4次，\n超过5次门锁将锁定</string>
+    <string name="admin_error_reinput_5">门锁管理密码验证已失败5次，\n门锁将锁定100 S</string>
     <string name="ble_break_authenticate">门锁断开连接，无法验证</string>
 
     <string name="wifi_view1">Wi-Fi模块固件版本</string>
@@ -2131,7 +2131,7 @@
     <string name="activity_wifi_video_sixth_fail_2">次，\n超过5次，配网失败</string>
     <string name="activity_wifi_video_sixth_fail_3">\n门锁管理密码验证已失败5次\n</string>
     <string name="activity_wifi_video_sixth_fail_4">请修改管理密码，重新配网\n</string>
-    <string name="activity_wifi_video_wamdering_open">开启后，可视摄像头会侦测门外徘徊人员，比较耗电</string>
+    <string name="activity_wifi_video_wamdering_open">开启后，摄像头会侦测门外徘徊人员，比较耗电</string>
     <string name="activity_wifi_video_wamdering_low">近</string>
     <string name="activity_wifi_video_wamdering_midd">中</string>
     <string name="activity_wifi_video_wamdering_high">远</string>
@@ -2256,4 +2256,50 @@
     <string name="store_pictures_and_videos">存储图片和视频</string>
     <string name="call_the_service_hotline">拨打服务热线电话</string>
 
+    <string name="ble_no_enable">手机未连接蓝牙，无法添加设备</string>
+    <string name="ble_no_enable_to_open">去连接</string>
+
+    <string name="wifi_input_error_5_times">Wi-Fi账号或密码输错已超过5次</string>
+    <string name="add_device_admin_already_modify">已修改管理密码</string>
+    <string name="initial_pwd_alert_dialog">门锁初始密码不能验证，\n请修改门锁管理密码或重新输入</string>
+    <string name="initial_pwd_modify_setup">① 按键区输入“*”两次\n② 输入管理密码：“12345678”\n③ 按“#”确认，“已进入管理模式”\n④ 语音播报：“请修改管理密码”\n⑤输入新设定的管理密码，按“＃”确认\n⑥再输入新设定的管理密码，按“＃”完成修改</string>
+
+    <string name="msg_push_switch_hint">开启后，开关门锁、门铃、徘徊报警将不再接收消息</string>
+    <string name="msg_push_switch_hint2">开启后，开关门锁将不再接收消息</string>
+
+    <string name="account_logout_code_input_error">验证码错误，请重新输入</string>
+    <string name="account_logout_cancel">放弃</string>
+    <string name="account_logout">注销账号</string>
+    <string name="account_logout_apply">申请注销账号</string>
+    <string name="account_logout_continue">继续注销</string>
+    <string name="account_logout_tip">注销后无法恢复</string>
+    <string name="account_logout_sms_title">输入验证码</string>
+    <string name="account_logout_sms_send_to">短信验证码将发送至</string>
+    <string name="account_logout_code_send_to">验证码将发送至</string>
+    <string name="account_logout_sms_already_send">已发送至</string>
+    <string name="account_logout_sms_request_frequently">验证码发送过于频繁，请60秒后重试</string>
+    <string name="account_logout_condition">为保证您的账号安全，在您提交的注销申请生效前，需同时满足以下条件：</string>
+    <string name="account_logout_condition_1">1. 账号处于安全状态</string>
+    <string name="account_logout_condition_1_1">账号处于正常使用状态，无被盗风险</string>
+    <string name="account_logout_condition_2">2. 账号关联设备已删除</string>
+    <string name="account_logout_condition_2_1">本账号没有绑定设备，没有存在争议的服务</string>
+    <string name="account_logout_condition_3">3. 账号权限解除</string>
+    <string name="account_logout_condition_3_1">账号已解除与其他产品的授权登录及绑定关系</string>
+    <string name="account_logout_condition_4">4. 账号无任何纠纷，包括投诉举报</string>
+    <string name="account_logout_protocol_1">该账号可直接注销，注销前请认真阅读以下提醒\n\n为防止误操作，请再次确认是否注销帐号并确认注销后的影响。 在此善意提醒，如果您确定提交“注销账号”申请，账号将于7天后注销，此时我们将删除您的账号及相关数据,此为不可恢复的操作。</string>
+    <string name="account_logout_protocol_2">\n如撤销“注销账号”申请，请在%1d年%2d月%3d日前登录 凯迪仕智能应用程序即可撤销。\n</string>
+    <string name="account_logout_protocol_3">注销成功后将无法再使用本帐号或找回本帐号添加、绑定的任何设备或信息（即使你使用相同的手机号码再次注册并使用凯迪 仕智能），包括但不限于：\n\n注销成功后，您将放弃以下资产或权益，且无法恢复：\nA.个人身份信息、账户信息、绑定设备将被清空。\nB.绑定设备的报警消息、操作记录等数据将被清空。\n\n您申请注销的凯迪仕账户应当处于正常状态，账户信息或用户信 息过时、缺失、不正确的账户或被冻结的账户不能被申请注销。\n\n您申请注销的账户无任何未处理完毕的纠纷等情况，不存在任 何由于该账户被注销而导致的未了结合同关系与其他基于该账户的存在而产生或维持的权利义务，及本公司认为注销该账户会由此产生未了结的权利义务而产生纠纷的情况。\n\n您确认并同意，您申请注销凯迪仕智能账户的行为不违反任何法律法规、不侵犯任何公司及/或个人的合法权益，若因此产生的任何纠纷、诉讼、赔偿等由您承担，并赔偿因此给我公司造成的全部损失。</string>
+    <string name="account_logout_stop_dialog">由于您在申请“账号注销”后的7天内重新\n登录，该账号在%1s\n提交的“账号注销”申请已被撤销</string>
+    <string name="account_logout_stop_dialog_title">账号注销已终止</string>
+    <string name="account_logout_confirm_dialog_centent">凯迪仕将在7天内处理你的申请并删除\n账号信息。手机号、第三方授权将于\n%1d年%2d月%3d日被释放，再次登录\n将会创建一个新的账号</string>
+    <string name="account_logout_confirm_dialog_confirm">确认注销</string>
+    <string name="regain_verification_code">点击重新获取</string>
+    <string name="get_verification_code_limit">获取手机验证码次数过多，请24小时之后重试</string>
+    <string name="network_exception_please_check">网络异常，请检查网络连接</string>
+    <string name="face_recognition_switch_title_open">门锁如何开启人脸识别</string>
+    <string name="face_recognition_switch_title_close">门锁如何关闭人脸识别</string>
+    <string name="face_recognition_switch_hint_open">① 按键区输入【*】两次\n② 输入已修改的管理员密码【********】，并按【#】确认\n③ 语音播报：“已进入管理模式”\n④ 根据语音提示：按【2】进入系统设置，再按【3】开启人脸识别功能，即可开启人脸识别功能</string>
+    <string name="face_recognition_switch_hint_close">① 按键区输入【*】两次\n② 输入已修改的管理员密码【********】，并按【#】确认\n③ 语音播报：“已进入管理模式”\n④ 根据语音提示：按【2】进入系统设置，再按【3】关闭人脸识别功能，即可关闭人脸识别功能</string>
+    <string name="add_face_operation_hint">① 根据语音提示，按“1”选择“用户设置”\n② 再按“3”选择“添加人脸用户”\n③ 开始录入，用户距离门锁60-80cm(约一臂距离)的位置站立，并请正视门锁，稍等片刻语音提示“添加成功”\n④ 若添加失败，请再次添加录入，并根据语音提示，调整站立位置，稍等片刻语音提示“添加成功”</string>
+    <string name="how_add_face">第二步：门锁如何添加面容识别</string>
 </resources>

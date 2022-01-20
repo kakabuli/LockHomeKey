@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.lifecycle.Lifecycle;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -21,28 +21,22 @@ import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleWiFiSwitchPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
-import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.http.util.RxjavaHelper;
+import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
-import com.kaadas.lock.utils.MyLog;
-import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
-import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.WifiUtil;
 import com.kaadas.lock.utils.WifiUtils;
+import com.kaadas.lock.utils.XXPermissionsFacade;
 import com.kaadas.lock.widget.WifiCircleProgress;
-import com.tbruyelle.rxpermissions2.RxPermissions;
-import java.util.concurrent.TimeUnit;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleView, BindBleWiFiSwitchPresenter<IBindBleView>> implements IBindBleView {
 
@@ -56,8 +50,6 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     private Handler handler = new Handler();
 
     private Disposable permissionDisposable;
-    final RxPermissions rxPermissions = new RxPermissions(this);
-    private Disposable progressDisposable;
 
     private int bleVersion;
     private String sn;
@@ -67,6 +59,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     int lastTimes = 5;//剩余校验次数
     public static final String TAG = "WifiLockAddNewBLEWIFiSwitchActivity";
     private int funcSet;
+    private boolean isScanFailed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +71,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         mPresenter.readFeatureSet(500);
         //开启数据监听
         mPresenter.listenerCharacterNotify();
+        mPresenter.listenConnectState();
         Intent intent = getIntent();
 
         bleVersion = intent.getIntExtra(KeyConstants.BLE_VERSION, 0);
@@ -86,15 +80,12 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         deviceName = intent.getStringExtra( KeyConstants.DEVICE_NAME);
 
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-
-                    } else {
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {
@@ -112,15 +103,6 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         handler.postDelayed(timeoutRunnable, 5 * 1000);
         circleProgressBar2.setMaxValue(100);
         circleProgressBar2.setValue(0);
-//        progressDisposable = Observable
-//                .interval(0, 1, TimeUnit.SECONDS)
-//                .compose(RxjavaHelper.observeOnMainThread())
-//                .subscribe(new Consumer<Long>() {
-//                    @Override
-//                    public void accept(Long aLong) throws Exception {
-//                        circleProgressBar2.setValue(aLong * 50);
-//                    }
-//                });
 
     }
     private Thread firstThread = new Thread() {
@@ -130,41 +112,6 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
             changeState(1);
         }
     };
-//    private Thread secondThread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            changeState(2);
-//        }
-//    };
-//    private Thread thirtyThread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            changeState(3);
-//        }
-//    };
-//    private Thread fourthThread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            changeState(4);
-//        }
-//    };
-//    private Thread fifthThread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            changeState(5);
-//        }
-//    };
-//    private Thread sixthThread = new Thread() {
-//        @Override
-//        public void run() {
-//            super.run();
-//            changeState(6);
-//        }
-//    };
 
     /**
      * @param status 1 收到剩余校验次数   2 收到第一包离线密码因子 3 收到第二包离线密码因子 4 收到第三包离线密码因子 5 收到第四包离线密码因子
@@ -229,13 +176,7 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
             handler.removeCallbacks(runnable);
             onScanSuccess();
             handler.removeCallbacks(timeoutRunnable);
-//            finish();
             firstThread.interrupt();
-//            secondThread.interrupt();
-//            thirtyThread.interrupt();
-//            fourthThread.interrupt();
-//            fifthThread.interrupt();
-//            sixthThread.interrupt();
         }
     };
 
@@ -247,18 +188,10 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
         if (permissionDisposable != null) {
             permissionDisposable.dispose();
         }
-        if (progressDisposable != null) {
-            progressDisposable.dispose();
-        }
 
         handler.removeCallbacks(runnable);
         handler.removeCallbacks(timeoutRunnable);
         firstThread.interrupt();
-//        secondThread.interrupt();
-//        thirtyThread.interrupt();
-//        fourthThread.interrupt();
-//        fifthThread.interrupt();
-//        sixthThread.interrupt();
     }
 
     @Override
@@ -282,16 +215,18 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
     }
 
     public void onScanSuccess() {
-//        finish();
-        LogUtils.e("--Kaadas--onScanSuccess  from WifiLockAddNewScanActivity");
-        Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.class);
-        nextIntent.putExtra(KeyConstants.BLE_VERSION, bleVersion);
-        nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, sn);
-        nextIntent.putExtra(KeyConstants.BLE_MAC, mac);
-        nextIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
-        nextIntent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
-        nextIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, lastTimes);
-        startActivity(nextIntent);
+        //这个可能被多次调用，离线密码因子校验失败会重新发0x92，导致在其他页面触发跳转
+        if(getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            LogUtils.e("--Kaadas--onScanSuccess  from WifiLockAddNewScanActivity");
+            Intent nextIntent = new Intent(this, WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.class);
+            nextIntent.putExtra(KeyConstants.BLE_VERSION, bleVersion);
+            nextIntent.putExtra(KeyConstants.BLE_DEVICE_SN, sn);
+            nextIntent.putExtra(KeyConstants.BLE_MAC, mac);
+            nextIntent.putExtra(KeyConstants.DEVICE_NAME, deviceName);
+            nextIntent.putExtra(KeyConstants.PASSWORD_FACTOR, passwordFactor);
+            nextIntent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, lastTimes);
+            startActivity(nextIntent);
+        }
 
     }
 
@@ -371,8 +306,8 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
 
     public void onScanFailed() {
-//        finish();
-        startActivity(new Intent(this, WifiLockAddNewWiFiScanBLEFailedActivity.class));
+        isScanFailed = true;
+        startActivity(new Intent(this, WifiLockAddNewWiFiBLEConnectFailedActivity.class));
     }
 
     @Override
@@ -427,7 +362,27 @@ public class WifiLockAddNewBLEWIFiSwitchActivity extends BaseActivity<IBindBleVi
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {
+        if (!isConnected && !isScanFailed) {
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                @Override
+                public void left() {
+                }
 
+                @Override
+                public void right() {
+                    startActivity(new Intent(WifiLockAddNewBLEWIFiSwitchActivity.this, WifiLockAddNewBindFailedActivity.class));
+                    finish();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(String toString) {
+                }
+            });
+        }
     }
 
     @Override

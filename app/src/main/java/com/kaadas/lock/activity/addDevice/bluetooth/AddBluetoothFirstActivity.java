@@ -53,9 +53,9 @@ public class AddBluetoothFirstActivity extends BaseAddToApplicationActivity {
                 break;
             case R.id.button_next:
 
-                //¼ì²éÀ¶ÑÀ¿ª¹ØÊÇ·ñ¿ªÆô
+                //æ£€æŸ¥è“ç‰™å¼€å…³æ˜¯å¦å¼€å¯
                 if (MyApplication.getInstance().getBleService().isBleIsEnable()){
-                    //¼ì²éÈ¨ÏŞ
+                    //æ£€æŸ¥æƒé™
                     checkPermissions();
                 }else if (!GpsUtil.isOPen(MyApplication.getInstance())){
                     permissionTipsDialog(this,getString(R.string.kaadas_common_service_location));
@@ -76,21 +76,21 @@ public class AddBluetoothFirstActivity extends BaseAddToApplicationActivity {
                         @Override
                         public void onGranted(List<String> permissions, boolean all) {
                             if (all) {
-                                LogUtils.e("»ñÈ¡È¨ÏŞ³É¹¦");
+                                LogUtils.e("è·å–æƒé™æˆåŠŸ");
                                 startActivity();
 
                             } else {
-                                LogUtils.e("»ñÈ¡²¿·ÖÈ¨ÏŞ³É¹¦£¬µ«²¿·ÖÈ¨ÏŞÎ´Õı³£ÊÚÓè");
+                                LogUtils.e("è·å–éƒ¨åˆ†æƒé™æˆåŠŸï¼Œä½†éƒ¨åˆ†æƒé™æœªæ­£å¸¸æˆäºˆ");
                             }
                         }
                         @Override
                         public void onDenied(List<String> permissions, boolean never) {
 
                             if (never) {
-                                // Èç¹ûÊÇ±»ÓÀ¾Ã¾Ü¾ø¾ÍÌø×ªµ½Ó¦ÓÃÈ¨ÏŞÏµÍ³ÉèÖÃÒ³Ãæ
-                                LogUtils.e("±»ÓÀ¾Ã¾Ü¾øÊÚÈ¨£¬ÇëÊÖ¶¯ÊÚÓèÈ¨ÏŞ");
+                                // å¦‚æœæ˜¯è¢«æ°¸ä¹…æ‹’ç»å°±è·³è½¬åˆ°åº”ç”¨æƒé™ç³»ç»Ÿè®¾ç½®é¡µé¢
+                                LogUtils.e("è¢«æ°¸ä¹…æ‹’ç»æˆæƒï¼Œè¯·æ‰‹åŠ¨æˆäºˆæƒé™");
                             } else {
-                                LogUtils.e("»ñÈ¡È¨ÏŞÊ§°Ü");
+                                LogUtils.e("è·å–æƒé™å¤±è´¥");
                             }
                         }
                     });

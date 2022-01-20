@@ -9,6 +9,7 @@ public class OfflinePasswordFactorManager {
 
     private String TAG = "OfflinePasswordFactorManager";
     private static OfflinePasswordFactorManager instance;
+    private byte[] passwordFactor;
 
     public static OfflinePasswordFactorManager getInstance() {
         if (instance == null) {
@@ -90,6 +91,35 @@ public class OfflinePasswordFactorManager {
                     ", func=" + func +
                     '}';
         }
+    }
+
+    /**
+     * 处理接收到的密码因子
+     * @param originalData
+     * @return index 数据包下标
+     */
+    public int handlePasswordFactor(byte[] originalData){
+        int pswLen = originalData[4];
+        int index = originalData[5];
+        byte[] data = new byte[originalData.length - 6];
+        //从原始数组4位置开始截取后面所有
+        System.arraycopy(originalData, 6, data, 0, originalData.length - 6);
+
+        int fenmu = pswLen - index * data.length;
+        int fenzi = data.length;
+        int copyLength = fenmu / fenzi > 0 ? fenzi : fenmu;
+        int copyLocation = index * fenzi;
+
+        if(index == 0){
+            passwordFactor = new byte[pswLen];
+        }
+        System.arraycopy(data, 0, passwordFactor, copyLocation, copyLength);
+
+        return index;
+    }
+
+    public byte[] getPasswordFactor(){
+        return passwordFactor;
     }
 
 }

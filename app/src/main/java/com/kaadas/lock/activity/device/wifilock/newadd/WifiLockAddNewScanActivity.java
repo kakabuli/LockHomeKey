@@ -27,9 +27,11 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.WifiUtil;
 import com.kaadas.lock.utils.WifiUtils;
+import com.kaadas.lock.utils.XXPermissionsFacade;
 import com.kaadas.lock.widget.WifiCircleProgress;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -50,8 +52,6 @@ public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
 
     private Handler handler = new Handler();
 
-    private Disposable permissionDisposable;
-    final RxPermissions rxPermissions = new RxPermissions(this);
     private Disposable progressDisposable;
 
     @Override
@@ -60,15 +60,12 @@ public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
         setContentView(R.layout.activity_wifi_lock_add_new_connect_device);
         ButterKnife.bind(this);
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-
-                    } else {
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {
@@ -179,9 +176,7 @@ public class WifiLockAddNewScanActivity extends BaseAddToApplicationActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
-        if (permissionDisposable != null) {
-            permissionDisposable.dispose();
-        }
+
         if (progressDisposable != null) {
             progressDisposable.dispose();
         }

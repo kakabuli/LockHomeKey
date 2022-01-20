@@ -57,6 +57,7 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
         String shareUserNickname;
         int pwdType = record.getPwdType();
         String sNum = mContext.getString(R.string.number)+(record.getPwdNum() > 9 ? ""+ record.getPwdNum() : "0"+ record.getPwdNum());
+        //记录类型：1开锁 2关锁 3添加密钥 4删除密钥 5修改管理员密码 6自动模式 7手动模式 8常用模式切换 9安全模式切换 10反锁模式 11布防模式 12修改密码昵称 13添加分享用户 14删除分享用户 15修改管理指纹 16添加管理员指纹 17开启节能模式 18关闭节能模式 19恢复出厂设置
         switch (type) {
             case 1: //开锁
                 left = record.getUserNickname();
@@ -117,6 +118,13 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                         left = mContext.getString(R.string.indoor_Induction);
                         right = "";
                         break;
+                    case 16:
+                        left = mContext.getString(R.string.smart_xiaodu_open);
+                        right = "";
+                        break;
+                    case 17:
+                        left = mContext.getString(R.string.tmall_spirit_open);
+                        right = "";
                     default:
                         right = mContext.getString(R.string.unknown_open);
                         break;
@@ -236,6 +244,9 @@ public class WifiLockRecordIAdapter extends BaseQuickAdapter<WifiLockOperationRe
                 break;
             case 18: //   18关闭节能模式
                 left = mContext.getString(R.string.face_lock_power_Save_close);
+                break;
+            case 19: // 恢复出厂设置
+                left = mContext.getString(R.string.warring_reset);
                 break;
             default:
                 left = mContext.getString(R.string.unknow_operation);

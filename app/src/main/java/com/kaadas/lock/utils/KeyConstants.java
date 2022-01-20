@@ -715,5 +715,8 @@ public class KeyConstants {
      */
     public static final String WIFI_VIDEO_LOCK_REAL_TIME_PERIOD = "wifi_video_lock_real_time_period";
 
+    public static final String ADMIN_PASSWORD_IS_INITIAL = "admin_password_is_initial";
+
+    public static final String WIFI_LOCK_TYPE = "wifi_lock_type";
 }
 

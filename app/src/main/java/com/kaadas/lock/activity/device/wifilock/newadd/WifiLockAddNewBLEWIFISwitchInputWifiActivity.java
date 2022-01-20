@@ -88,12 +88,9 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
         mPresenter.listenConnectState();
         mPresenter.setWifiScanResultListener(this);
 
-        if(func <= 0){
-            mPresenter.readFeatureSet();
-        }
-
         showDialog();
 
+        LogUtils.i("InputWifi， funcSet =" + func);
 
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
         apSsidText.setText(wifiName.trim());
@@ -139,8 +136,8 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
                 break;
             case R.id.confirm_btn:
 
-                sSsid = apSsidText.getText().toString();
-                String sPassword = apPasswordEdit.getText().toString();
+                sSsid = apSsidText.getText().toString().trim();
+                String sPassword = apPasswordEdit.getText().toString().trim();
                 if (TextUtils.isEmpty(sSsid)) { //WiFi名为空
                     Toast.makeText(this, R.string.wifi_name_disable_empty, Toast.LENGTH_SHORT).show();
                     return;
@@ -190,24 +187,22 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
                 startActivity(new Intent(this,WifiLcokSupportWifiActivity.class));
                 break;
             case R.id.iv_change_wifi:
-                if(BleLockUtils.isSupportGetDeviceWifiList(func)){
-                    getWifiList();
-                }else {
-                    Intent scanIntent = new Intent(this,WifiLockScanWifiListActivity.class);
-                    startActivityForResult(scanIntent,TO_CHOOSE_WIFI_PASSWORD);
-                }
-
+                getWifiList();
                 break;
         }
     }
 
     private void getWifiList() {
-        if(!isConnected){
-            return;
-        }
         if(BleLockUtils.isSupportGetDeviceWifiList(func)){
+            if(!isConnected){
+                //蓝牙断开了
+                return;
+            }
             showLoading(getString(R.string.loading));
             mPresenter.getWifiListFromDevice(); //获取设备wifi列表 显示对话框
+        }else {
+            showLoading(getString(R.string.loading));
+            mPresenter.getWifiListFromApp();
         }
     }
 
@@ -363,9 +358,25 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
                     if(wifiListDialog != null){
                         wifiListDialog.dismiss();
                     }
-                    if(getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-                        Toast.makeText(MyApplication.getInstance(),getString(R.string.ble_disconnected),Toast.LENGTH_SHORT).show();
-                    }
+                    AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(WifiLockAddNewBLEWIFISwitchInputWifiActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
+
+                        @Override
+                        public void right() {
+                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchInputWifiActivity.this, WifiLockAddNewBindFailedActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
+                    });
                 }
             });
         }
@@ -378,7 +389,7 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
 
     @Override
     public void readFunctionSetSuccess(int functionSet) {
-        func = functionSet;
+
     }
 
     @Override
@@ -405,14 +416,17 @@ public class WifiLockAddNewBLEWIFISwitchInputWifiActivity extends BaseActivity<I
     public void onWifiScanResult(final List<WifiBean> data) {
         LogUtils.d("--kaadas-- onWifiScanResult " + (data != null && data.size() > 0));
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                hiddenLoading();
-                if(data != null && data.size() > 0){
-                    showWifiListDialog(data);
+        if(getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hiddenLoading();
+                    if(data != null && data.size() > 0){
+                        showWifiListDialog(data);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 }

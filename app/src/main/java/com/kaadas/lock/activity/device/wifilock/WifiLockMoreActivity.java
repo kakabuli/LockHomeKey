@@ -112,6 +112,21 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
     @BindView(R.id.tv_lock_type)
     TextView tvLockType;
 
+    @BindView(R.id.rl_voice_model)
+    RelativeLayout rlVoiceModel;
+    @BindView(R.id.tv_voice_model_switch)
+    TextView tvVoiceModelSwitch;
+
+    @BindView(R.id.rl_face_recognition)
+    RelativeLayout rlFaceRecognition;
+    @BindView(R.id.tv_face_recognition_switch)
+    TextView tvFaceRecognitionSwitch;
+
+    @BindView(R.id.rl_ams_sensitivity)
+    RelativeLayout rlAmsSensitivity;
+    @BindView(R.id.tv_ams_sensitivity_switch)
+    TextView tvAmsSensitivitySwitch;
+
     private WifiLockInfo wifiLockInfo;
     private String wifiSn;
     String deviceNickname;//设备名称
@@ -224,12 +239,6 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                 rlLockType.setVisibility(View.GONE);
             }
 
-            //面容识别功能
-//        if (BleLockUtils.isSupportFaceStatusShow(func)) {
-//            rlFaceStatus.setVisibility(View.VISIBLE);
-//        } else {
-//            rlFaceStatus.setVisibility(View.GONE);
-//        }
             if(isWifiVideoLockType){
                 rlAm.setVisibility(View.GONE);
                 rlMessageFree.setVisibility(View.GONE);
@@ -241,6 +250,55 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
             }
             wifiName.setText(wifiLockInfo.getWifiName());
             deviceNickname = wifiLockInfo.getLockNickname();
+
+            if (BleLockUtils.isSupportShowFaceModel(functionSet)) {
+                rlFaceRecognition.setVisibility(View.VISIBLE);
+                setFaceRecognition(wifiLockInfo.getFaceStatus());
+            } else {
+                rlFaceRecognition.setVisibility(View.GONE);
+            }
+
+            if (BleLockUtils.isSupportShowVoiceModel(functionSet)) {
+                rlVoiceModel.setVisibility(View.VISIBLE);
+                setVoiceQuality(wifiLockInfo.getVolLevel());
+            } else {
+                rlVoiceModel.setVisibility(View.GONE);
+            }
+
+
+            rlAmsSensitivity.setVisibility(View.GONE);
+            if(BleLockUtils.isSupportShowAMSSensor(functionSet)){
+                rlAmsSensitivity.setVisibility(View.VISIBLE);
+                showAMSSensor(wifiLockInfo.getBodySensor());
+            }
+        }
+    }
+
+    private void showAMSSensor(int bodySensor){
+        if(bodySensor == 1){
+            tvAmsSensitivitySwitch.setText(getString(R.string.high_sensitivity));
+        }else if(bodySensor == 2){
+            tvAmsSensitivitySwitch.setText(getString(R.string.medium_sensitivity));
+        }else if(bodySensor == 3){
+            tvAmsSensitivitySwitch.setText(getString(R.string.low_sensitivity));
+        }else if(bodySensor == 4){
+            tvAmsSensitivitySwitch.setText(getString(R.string.close));
+        }
+    }
+
+    private void setFaceRecognition(int status) {
+        String open = getString(R.string.open);
+        String close = getString(R.string.wandering_alarm_close);
+        tvFaceRecognitionSwitch.setText(status==1 ? open : close);
+    }
+
+    private void setVoiceQuality(int voiceQuality) {
+        if(voiceQuality == 0){
+            tvVoiceModelSwitch.setText(R.string.mute_name);
+        }else if(voiceQuality == 1){
+            tvVoiceModelSwitch.setText(R.string.voice_quality_low);
+        }else if(voiceQuality == 2){
+            tvVoiceModelSwitch.setText(R.string.voice_quality_high);
         }
     }
 
@@ -301,6 +359,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
         rlDoorDirection.setOnClickListener(this);
         rlOpenForce.setOnClickListener(this);
         rlLockType.setOnClickListener(this);
+        rlFaceRecognition.setOnClickListener(this);
     }
 
     @Override
@@ -422,7 +481,7 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                             alertStr = getString(R.string.device_delete_lock_dialog_content2);
                         }
 
-                        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, alertTitle, alertStr, getString(R.string.cancel), getString(R.string.query), new AlertDialogUtil.ClickListener() {
+                        AlertDialogUtil.getInstance().noEditTwoButtonDialog(this, alertTitle, alertStr, getString(R.string.cancel), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                             @Override
                             public void left() {
 
@@ -470,21 +529,10 @@ public class WifiLockMoreActivity extends BaseActivity<IWifiLockMoreView, WifiLo
                         LogUtils.e("shulan wifiSn more-->" + wifiSn);
                         startActivity(intent);
                         break;
-                    /*case R.id.rl_door_direction:
-                        intent = new Intent(this, WifiLockOpenDirectionActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_DIRECTION);
+                    case R.id.rl_face_recognition:
+                        intent = new Intent(this, FaceSwitchHintActivity.class);
+                        startActivity(intent);
                         break;
-                    case R.id.rl_open_force:
-                        intent = new Intent(this, WifiLockOpenForceActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_SET_OPEN_FORCE);
-                        break;
-                    case R.id.rl_lock_type:
-                        intent = new Intent(this, WifiLockLockingMethodActivity.class);
-                        intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
-                        startActivityForResult(intent,KeyConstants.WIFI_LOCK_LOCKING_METHOD);
-                        break;*/
                 }
             } else {
                 LogUtils.e("--kaadas--取功能集为空");

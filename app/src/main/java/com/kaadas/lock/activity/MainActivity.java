@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.location.LocationManager;
@@ -32,8 +31,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.common.ApiException;
@@ -54,7 +51,6 @@ import com.kaadas.lock.publiclibrary.bean.CateEyeInfo;
 import com.kaadas.lock.publiclibrary.bean.GatewayInfo;
 import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
-import com.kaadas.lock.publiclibrary.linphone.linphonenew.LinphoneService;
 import com.kaadas.lock.publiclibrary.mqtt.publishresultbean.GatewayOtaNotifyBean;
 import com.kaadas.lock.publiclibrary.mqtt.util.MqttService;
 import com.kaadas.lock.publiclibrary.ota.ble.OTADialogActivity;
@@ -62,21 +58,19 @@ import com.kaadas.lock.publiclibrary.ota.gatewayota.GatewayOTADialogActivity;
 import com.kaadas.lock.shulan.utils.MMKVUtils;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.Constants;
+import com.kaadas.lock.utils.DateUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.MyLog;
 import com.kaadas.lock.utils.NotificationUtil;
-import com.kaadas.lock.utils.PermissionUtil;
 import com.kaadas.lock.utils.Rom;
 import com.kaadas.lock.utils.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.kaadas.lock.utils.ServiceAliveUtils;
 import com.kaadas.lock.utils.ftp.GeTui;
 import com.kaadas.lock.utils.greenDao.bean.CatEyeEvent;
 import com.kaadas.lock.utils.networkListenerutil.NetWorkChangReceiver;
 import com.kaadas.lock.widget.BottomMenuSelectMarketDialog;
 import com.kaadas.lock.widget.NoScrollViewPager;
-import com.kaidishi.lock.WelcomeActivity;
 import com.kaidishi.lock.xiaomi.MISPUtils;
 import com.kaidishi.lock.xiaomi.XiaoMiConstant;
 
@@ -245,6 +239,22 @@ public class MainActivity extends BaseBleActivity<IMainActivityView, MainActivit
         LogUtils.e("MainActivity启动完成 ");
 
 //        checkNotificatoinEnabled();
+
+        showAccountLogoutDialogIfNeed();
+    }
+
+    private void showAccountLogoutDialogIfNeed() {
+        //注销后再次登录 弹窗提示 注销终止
+        long accountLogoutTime = MyApplication.getInstance().getAccountLogoutTime();
+        LogUtils.i("showAccountLogoutDialogIfNeed, accountLogoutTime=" + accountLogoutTime);
+        if(accountLogoutTime > 0){
+            String dateStr = DateUtils.getDateTimeFromMillisecond(accountLogoutTime * 1000L);
+            String content = String.format(getString(R.string.account_logout_stop_dialog), dateStr);
+            String title = getString(R.string.account_logout_stop_dialog_title);
+            MyApplication.getInstance().setAccountLogoutTime(0L);
+            AlertDialogUtil.getInstance().noEditSingleButtonDialog(this, title, content, getString(R.string.query), null);
+            LogUtils.i("showAccountLogoutDialogIfNeed, dateStr=" + dateStr);
+        }
     }
 
     private void checkNotificatoinEnabled() {

@@ -89,6 +89,7 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
             public void onSuccess(UserNickResult userNickResult) {
                 if ("200".equals(userNickResult.getCode())) {
                     setUserName(userNickResult.getData().getNickName());
+                    SPUtils.put(SPUtils.REAL_USERNAME, userNickResult.getData().getUserName());
                 }
             }
 
@@ -127,6 +128,11 @@ public class LoginPresenter<T> extends BasePresenter<ILoginView> {
         SPUtils.put(SPUtils.PHONEN, phone);
         SPUtils.put(SPUtils.PASSWORD, MD5Utils.encode(pwd));
 
+        //如果有注销 获取注销时间
+        long accountLogoutTime = loginResult.getData().getAccountLogoutTime();
+        if(accountLogoutTime > 0){
+            MyApplication.getInstance().setAccountLogoutTime(accountLogoutTime);
+        }
 
         MyApplication.getInstance().setToken(loginResult.getData().getToken());
         MyApplication.getInstance().setUid(loginResult.getData().getUid());

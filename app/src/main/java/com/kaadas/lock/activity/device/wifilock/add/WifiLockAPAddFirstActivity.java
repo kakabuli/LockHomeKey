@@ -23,7 +23,6 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
@@ -39,8 +38,6 @@ public class WifiLockAPAddFirstActivity extends BaseAddToApplicationActivity {
     ImageView help;
     @BindView(R.id.button_next)
     Button buttonNext;
-    final RxPermissions rxPermissions = new RxPermissions(this);
-    private Disposable permissionDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,9 +89,6 @@ public class WifiLockAPAddFirstActivity extends BaseAddToApplicationActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (permissionDisposable != null) {
-            permissionDisposable.dispose();
-        }
     }
     private void checkPermissions() {
         try {

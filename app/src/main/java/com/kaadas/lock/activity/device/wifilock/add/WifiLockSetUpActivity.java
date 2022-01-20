@@ -43,7 +43,7 @@ import com.kaadas.lock.utils.LoadingDialog;
 import com.kaadas.lock.utils.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.kaadas.lock.utils.XXPermissionsFacade;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -105,8 +105,6 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
     private String wifiBssid;
     private boolean passwordHide = true;
     private WifiUtils wifiUtils;
-    final RxPermissions rxPermissions = new RxPermissions(this);
-    private Disposable permissionDisposable;
     private String ssid;
 
     @Override
@@ -120,17 +118,12 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
 
 
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-                        // All requested permissions are granted
-
-                    } else {
-                        // At least one permission is denied
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {
@@ -158,14 +151,12 @@ public class WifiLockSetUpActivity extends BaseActivity<IWifiSetUpView, WifiSetU
 
     public void check() {
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (!granted) {
-                        // All requested permissions are granted
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         if (!wifiUtils.isWifiEnable()) {
             wifiUtils.openWifi();

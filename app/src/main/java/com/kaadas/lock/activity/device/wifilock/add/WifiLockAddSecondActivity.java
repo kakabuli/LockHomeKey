@@ -17,7 +17,9 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.kaadas.lock.utils.XXPermissionsFacade;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +32,6 @@ public class WifiLockAddSecondActivity extends BaseAddToApplicationActivity {
     ImageView back;
     @BindView(R.id.help)
     ImageView help;
-    final RxPermissions rxPermissions = new RxPermissions(this);
     @BindView(R.id.head)
     TextView head;
     @BindView(R.id.bt_ap)
@@ -46,15 +47,12 @@ public class WifiLockAddSecondActivity extends BaseAddToApplicationActivity {
         ButterKnife.bind(this);
 
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-
-                    } else {
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {

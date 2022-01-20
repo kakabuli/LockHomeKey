@@ -1,7 +1,8 @@
 ext {
 
     //日志打印 true打印 false禁止
-    isDeBug = true
+    //isDeBug这个属性不太好，容易理解成控制Log打印，实际是控制debuggable属性，而release时必须是debuggable=false，容易理解错没关闭调试模式
+    isDeBug = false
     //Net环境 true正式 false测试
     env = true
     //是否事release版本
@@ -9,22 +10,23 @@ ext {
 
     HOST = [
             HTTPS                   :'"https://app.kaadas.com:34000/"',
-            MQTT                    :'"tcp://mqtt-kaadas.juziwulian.com:1883"',
-            LINPHONE_SIP            :'"sip-kaadas.juziwulian.com:5061"',
+            MQTT                    :'"tcp://mqtt.kaadas.com:1883"',
+            LINPHONE_SIP            :'"sip.kaadas.com:5061"',
 
-            HTTPS_DEV               :'"https://test.juziwulian.com:8090/"',
-            MQTT_DEV                :'"tcp://test.juziwulian.com:1883"',
-            LINPHONE_SIP_DEV        :'"test.juziwulian.com:5061"',
+            HTTPS_DEV               :'"https://app-test.kaadas.com:8090/"',
+            MQTT_DEV                :'"tcp://app-test.kaadas.com:1883"',
+            LINPHONE_SIP_DEV        :'"app-test.kaadas.com:5061"',
 
             VERSION                 :'"1"'//HTTPS加密版本
     ]
 
     android = [
-            compileSdkVersion       :30,
-            minSdkVersion           :22,
+            compileSdkVersion       :31,
+            minSdkVersion           :23,
             targetSdkVersion        :27,
-            versionCode             :202110281,
-            versionName             :"4.6.5",
+            versionCode             :202201133,
+            versionName             :"4.7.1",
+
             buildToolsVersion       :"30.0.2",
 
             coreVersionCode         :201909250,

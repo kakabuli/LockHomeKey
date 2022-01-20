@@ -180,6 +180,8 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
     }
 
 
+
+
     @Override
     protected WifiLockPasswordManagerPresenter<IWifiLockPasswordManagerView> createPresent() {
         return new WifiLockPasswordManagerPresenter<>();
@@ -278,6 +280,7 @@ public class WiFiLockPasswordManagerActivity extends BaseActivity<IWifiLockPassw
                 break;
             case R.id.tv_how_to_add:
                 Intent nextIntent = new Intent(this, WifiLockAddFaceFirstActivity.class);
+                nextIntent.putExtra(KeyConstants.WIFI_SN, wifiSn);
                 startActivity(nextIntent);
                 break;
         }

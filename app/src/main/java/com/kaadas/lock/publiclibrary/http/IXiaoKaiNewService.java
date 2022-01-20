@@ -842,4 +842,11 @@ public interface IXiaoKaiNewService {
     @Headers({KeyConstants.VERSION})
     Observable<BaseResult> wifiDeviceUploadMultiOta(@Header("timestamp") String timestamp,@Body RequestBody info);
 
+    /**
+     * 注销账号
+     */
+    @POST(HttpUrlConstants.ACCOUNT_LOGOUT)
+    @Headers({KeyConstants.VERSION})
+    Observable<BaseResult> accountLogout(@Header("timestamp") String timestamp,@Body RequestBody info);
+
 }

@@ -30,7 +30,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.SPUtils;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
@@ -48,7 +47,6 @@ public class ClothesHangerMachineAddFirstActivity extends BaseAddToApplicationAc
 
     private String wifiModelType = "";
     private Disposable permissionDisposable;
-    final RxPermissions rxPermissions = new RxPermissions(this);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -57,7 +57,7 @@ public class RetrofitServiceManager {
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
-                    if (hostname.equals("app-kaadas.juziwulian.com")) {
+                    if (hostname.equals("app-test.kaadas.com")) {
                         return true;
                     } else {
                         //在这里做断开连接
@@ -95,7 +95,7 @@ public class RetrofitServiceManager {
             noBuilder.hostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
-                    if (hostname.equals("app-kaadas.juziwulian.com")) {
+                    if (hostname.equals("app-test.kaadas.com")) {
                         return true;
                     } else {
                         //在这里做断开连接
@@ -196,7 +196,7 @@ public class RetrofitServiceManager {
         builder.hostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession session) {
-                if (hostname.equals("app-kaadas.juziwulian.com")) {
+                if (hostname.equals("app-test.kaadas.com")) {
                     return true;
                 } else {
                     //在这里做断开连接

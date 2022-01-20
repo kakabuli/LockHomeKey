@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/dp_16"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_47"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:layout_marginStart="-16dp"
+        android:src="@mipmap/iv_back" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="@string/account_logout_sms_title" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:text="@string/account_logout_sms_already_send" />
+
+        <TextView
+            android:id="@+id/tvSendTarget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:textSize="@dimen/sp_14"
+            android:textColor="#1F96F7"
+            android:text="+86 183 1977 0219" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_56"
+        android:layout_marginTop="@dimen/dp_30"
+        android:background="@drawable/bg_edit_sms"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editSmsCode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/black"
+            android:background="@null"
+            android:lines="1"
+            android:inputType="number"
+            android:paddingHorizontal="@dimen/dp_16"
+            android:layout_weight="1"
+            android:hint="@string/input_verification" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/dp_16"
+            android:background="#CCCCCC"/>
+
+        <TextView
+            android:id="@+id/tvGetCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:gravity="center"
+            android:textSize="@dimen/sp_14"
+            android:textColor="#1F96F7"
+            android:text="@string/get_verification_content" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tvFrequently"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:textSize="@dimen/sp_12"
+        android:textColor="#FE3B32"
+        android:visibility="gone"
+        android:text="@string/account_logout_sms_request_frequently" />
+
+</LinearLayout>
+

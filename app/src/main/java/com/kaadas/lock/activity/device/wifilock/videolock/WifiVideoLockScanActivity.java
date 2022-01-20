@@ -30,9 +30,10 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.NetUtil;
 import com.kaadas.lock.utils.SocketManager;
 import com.kaadas.lock.utils.WifiUtils;
+import com.kaadas.lock.utils.XXPermissionsFacade;
 import com.kaadas.lock.widget.WifiCircleProgress;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -54,7 +55,6 @@ public class WifiVideoLockScanActivity extends BaseActivity<IWifiLockVideoFifthV
     private Handler handler = new Handler();
 
     private Disposable permissionDisposable;
-    final RxPermissions rxPermissions = new RxPermissions(this);
     private Disposable progressDisposable;
 
     SocketManager socketManager = SocketManager.getInstance();
@@ -93,15 +93,12 @@ public class WifiVideoLockScanActivity extends BaseActivity<IWifiLockVideoFifthV
         }
 
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-
-                    } else {
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {

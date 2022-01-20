@@ -50,6 +50,7 @@ public class AllBindDevices {
     private String func;
     private String code;
     private String timestamp;
+    private long nowTime;
     private ReturnDataBean data;
 
     public int getMsgId() {
@@ -122,6 +123,14 @@ public class AllBindDevices {
 
     public void setData(ReturnDataBean data) {
         this.data = data;
+    }
+
+    public long getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(long nowTime) {
+        this.nowTime = nowTime;
     }
 
     public static class ReturnDataBean {

@@ -4,33 +4,25 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
-import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBlePresenter;
 import com.kaadas.lock.mvp.presenter.deviceaddpresenter.BindBleWiFiSwitchPresenter;
-import com.kaadas.lock.mvp.presenter.wifilock.WifiSetUpPresenter;
 import com.kaadas.lock.mvp.view.deviceaddview.IBindBleView;
-import com.kaadas.lock.mvp.view.wifilock.IWifiSetUpView;
-import com.kaadas.lock.publiclibrary.ble.responsebean.BleDataBean;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.OfflinePasswordFactorManager;
 import com.kaadas.lock.utils.Rsa;
-import com.kaadas.lock.utils.dialog.MessageDialog;
 import com.kaadas.lock.widget.WifiCircleProgress;
 
 import butterknife.BindView;
@@ -61,17 +53,13 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private String adminPassword;
     private int times = 1; //次数从1开始
     private byte[] data;
-
     public int func;
-    private int bleVersion;
-    private String sn;
-    private String mac;
-    private String deviceName;
     private byte[] passwordFactor;
     private Handler handler = new Handler();
     private OfflinePasswordFactorManager.OfflinePasswordFactorResult wifiResult;
     private AlertDialog systemLockAlertDialog;
     private int funcSetFromPwd;//从密码因子中获取的功能集，FFC7特征没实现功能集，只有默认值0xff
+    private volatile boolean systemLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +79,6 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         mPresenter.readFeatureSet();
         mPresenter.listenConnectState();
         mPresenter.listenerCharacterNotify();
-
 
         firstThread.start();
     }
@@ -115,7 +102,6 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         //k30新增解绑后再配网，解绑设备失败返回状态-2
                         break;
                     case -1:
-//                        finish();
                         onAdminPasswordError();
                         break;
                     case 1:
@@ -197,23 +183,6 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
         return super.onKeyDown(keyCode, event);
     }
 
-
-//    /**
-//     * @param socketManager
-//     * @param errorCode     -1 读取失败  -2 连接失败  -3 校验失败
-//     */
-//    public void onError(SocketManager socketManager, int errorCode) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                finish();
-//                Toast.makeText(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, R.string.bind_failed, Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewScanFailedActivity.class));
-//                socketManager.destroy();
-//            }
-//        });
-//    }
-//
     private void onSuccess() {
         runOnUiThread(new Runnable() {
             @Override
@@ -222,7 +191,6 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                 intent.putExtra(KeyConstants.WIFI_SN, new String(wifiResult.wifiSn));
                 intent.putExtra(KeyConstants.WIFI_LOCK_RANDOM_CODE, Rsa.bytesToHexString(wifiResult.password));
                 intent.putExtra(KeyConstants.WIFI_LOCK_FUNC, funcSetFromPwd);
-
                 startActivity(intent);
                 finish();
             }
@@ -308,63 +276,56 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
                         });
             }
         } else {
-            //都五次输入错误提示   退出
-//            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-//                    WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.admin_error_reinput_5), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-//                        @Override
-//                        public void left() {
-//                        }
-//                        @Override
-//                        public void right() {
-//                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddBLEFailedActivity.class));
-//                            finish();
-//                        }
-//                        @Override
-//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                        }
-//                        @Override
-//                        public void afterTextChanged(String toString) {
-//                        }
-//                    });
-            systemLockAlertDialog = AlertDialogUtil.getInstance().noButtonDialog(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, getString(R.string.admin_error_reinput_5));
-            systemLockAlertDialog.setCancelable(false);//不可取消
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            if (systemLockAlertDialog != null) {
-                                systemLockAlertDialog.dismiss();
-                                if (MyApplication.getInstance().getBleService() == null) {
-                                    return;
-                                } else {
-                                    MyApplication.getInstance().getBleService().release();
-                                }
-                                //退出当前界面
-                                Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                    }, 100*1000); //延迟100秒消失
-                }
-            });
+            if(!systemLock){
+                systemLock = true;
+                systemLockAlertDialog = AlertDialogUtil.getInstance().noButtonDialog(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, getString(R.string.admin_error_reinput_5));
+                systemLockAlertDialog.setCancelable(false);//不可取消
+                handler.postDelayed(delayDismiss, 100*1000); //延迟100秒消失
+            }
         }
     }
+
+    private Runnable delayDismiss = new Runnable() {
+        public void run() {
+            if (systemLockAlertDialog != null) {
+                dismissDialog();
+                if (MyApplication.getInstance().getBleService() == null) {
+                    return;
+                } else {
+                    MyApplication.getInstance().getBleService().release();
+                }
+                //退出当前界面
+                Intent intent = new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewFirstActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        }
+    };
+
+    private void dismissDialog(){
+        if(systemLockAlertDialog == null) return;
+        try {
+            systemLockAlertDialog.dismiss();
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
+    }
+
     private void showModifyPasswordDialog() {
         AlertDialogUtil.getInstance().noEditTitleTwoButtonDialog(
                 WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this
-                , "门锁初始密码不能验证，\n" + "请修改门锁管理密码或重新输入\n",
-                getString(R.string.re_input), "修改密码", "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
+                , getString(R.string.initial_pwd_alert_dialog),
+                "修改密码", getString(R.string.re_input), "#A4A4A4", "#1F96F7", new AlertDialogUtil.ClickListener() {
                     @Override
                     public void left() {
-                        //重新输入
-                        toInputPasswordActivity();
+                        //修改密码
+                        modifyInitialPwd();
                     }
                     @Override
                     public void right() {
-                        //修改密码
-                        toChangeAdminPasswordActivity();
+                        //重新输入
+                        toInputPasswordActivity();
                     }
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -386,17 +347,26 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     private void toChangeAdminPasswordActivity() {
         mPresenter.disconnectBLE();
         Intent intent = new Intent(this, WifiLockChangeAdminPasswordActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES, times + 1);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_DATA, data);
         startActivity(intent);
         finish();
     }
+
+    private void modifyInitialPwd(){
+        mPresenter.disconnectBLE();
+        Intent intent = new Intent(this, WifiLockChangeAdminPasswordActivity.class);
+        intent.putExtra(KeyConstants.ADMIN_PASSWORD_IS_INITIAL, true);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
+        if(systemLock){
+            //activity销毁时 关闭dialog以及移除延迟事务，避免dialog dismiss异常
+            dismissDialog();
+            handler.removeCallbacks(delayDismiss);
+        }
         super.onDestroy();
-//        firstThread.interrupt();
-//        secondThread.interrupt();
-//        thirdThread.interrupt();
     }
     @Override
     protected BindBleWiFiSwitchPresenter<IBindBleView> createPresent() {
@@ -473,6 +443,10 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     }
     @Override
     public void onDeviceStateChange(boolean isConnected) {
+        if(systemLock){
+            //系统锁定时不再处理蓝牙断开事件，100s后会重新进入配网流程
+            return;
+        }
         if (!isConnected) {
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                     WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
@@ -482,7 +456,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
 
                         @Override
                         public void right() {
-                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddBLEFailedActivity.class));
+                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
                         }
 
@@ -510,6 +484,7 @@ public class WifiLockAddNewBLEWIFISwitchCheckAdminPasswordActivity extends BaseA
     }
     @Override
     public void onlistenerLastNum(int lastNum) {
+        LogUtils.i("--onlistenerLastNum    lastNum=" +lastNum + " times=" +times);
     }
     @Override
     public void onlistenerPasswordFactor(byte[] originalData,int pswLen,int index) {

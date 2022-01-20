@@ -55,6 +55,8 @@ public class LoginResult extends BaseResult {
         private String storeToken;
         private int restrictCount;
         private int restrictTime;
+        private long accountLogoutTime; //注销时间，注销账号才有
+
 
         public int getRestrictCount() {
             return restrictCount;
@@ -110,6 +112,14 @@ public class LoginResult extends BaseResult {
 
         public void setStoreToken(String storeToken) {
             this.storeToken = storeToken;
+        }
+
+        public long getAccountLogoutTime() {
+            return accountLogoutTime;
+        }
+
+        public void setAccountLogoutTime(long accountLogoutTime) {
+            this.accountLogoutTime = accountLogoutTime;
         }
     }
 }

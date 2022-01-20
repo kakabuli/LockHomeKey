@@ -71,7 +71,7 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
         data =  getIntent().getByteArrayExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_DATA);
         times =  getIntent().getIntExtra(KeyConstants.WIFI_LOCK_ADMIN_PASSWORD_TIMES,1);
         LogUtils.e("--Kaadas--管理员密码输入次数==check=="+times);
-
+        mPresenter.listenConnectState();
     }
 
     @Override
@@ -222,7 +222,27 @@ public class WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity extends BaseA
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {
+        if (!isConnected) {
+            AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
+                        @Override
+                        public void left() {
+                        }
 
+                        @Override
+                        public void right() {
+                            startActivity(new Intent(WifiLockAddNewBLEWIFISwitchInputAdminPasswotdActivity.this, WifiLockAddNewBindFailedActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(String toString) {
+                        }
+                    });
+        }
     }
 
     @Override

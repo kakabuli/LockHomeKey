@@ -1311,10 +1311,7 @@
             android:name=".activity.device.wifilock.newadd.WifiLockHasModifyPasswordAndDisconnectActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.device.wifilock.newadd.WifiLockAddBLEFailedActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.device.wifilock.newadd.WifiLockOldUserFirstActivity"
             android:launchMode="singleTask"
@@ -1339,6 +1336,38 @@
             android:name=".activity.my.PrivacyActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.newadd.WifiLockAddNewWiFiBLEConnectFailedActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.my.AccountLogoutActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.my.AccountLogoutGetCodeActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.my.AccountLogoutInputCodeActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.my.AccountLogoutConfirmActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.device.wifilock.FaceSwitchHintActivity"
+            android:launchMode="singleTask"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
 
         <service android:name=".publiclibrary.xm.DoorbellingService" />
         <service android:name=".publiclibrary.ble.BleService" />

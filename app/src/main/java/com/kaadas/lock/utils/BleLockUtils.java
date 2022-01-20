@@ -178,11 +178,11 @@ public class BleLockUtils {
         FUNCTION_SET.put(0xC8, new Integer[]{1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 36});
         FUNCTION_SET.put(0xC9, new Integer[]{1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 16, 17, 19, 20, 21, 22, 23, 36});
 
-        FUNCTION_SET.put(0xA0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9,10, 13, 16, 19, 20, 21, 22, 23, 32,33,34, 38, 40, 49, 63,88,90});  //2021年1月27 X9功能集
-        FUNCTION_SET.put(0xA1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 60, 61, 63, 64, 86, 88, 89, 90, 93, 94});
+        FUNCTION_SET.put(0xA0, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9,10, 13, 16, 19, 20, 21, 22, 23, 32,33,34, 38, 40, 49, 63 ,90 ,98});  //2021年1月27 X9功能集
+        FUNCTION_SET.put(0xA1, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 16,  19, 20, 21, 22, 23, 32, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 60, 61, 86, 88, 90, 93});
         FUNCTION_SET.put(0xA2, new Integer[]{1, 2});
         FUNCTION_SET.put(0xA3, new Integer[]{1, 2});
-        FUNCTION_SET.put(0xA4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 60, 61, 63, 64, 68, 69, 70, 71, 72, 73, 74, 75, 76, 86, 88, 89, 90, 93, 94});
+        FUNCTION_SET.put(0xA4, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 16, 17, 19, 20, 21, 22, 23, 32, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 60, 61, 64, 68, 69, 70, 71, 72, 73, 74, 75, 76, 86, 88, 89, 90, 93});
         FUNCTION_SET.put(0xA5, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 16, 19, 20, 21, 22, 23, 26, 28, 29, 30, 32, 33, 34, 38, 47, 51, 52, 53, 55, 59, 60, 61, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 86, 88, 89, 90, 91, 92, 93});
 
         FUNCTION_SET.put(0xA8, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 19, 20, 21, 22, 23, 33, 34, 38, 44, 51, 52, 53, 55, 57, 58, 59, 88, 90, 93/*, 96*/});
@@ -191,8 +191,10 @@ public class BleLockUtils {
         FUNCTION_SET.put(0xB2, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 17, 19, 20, 21, 22, 23, 38, 39});
 
         FUNCTION_SET.put(0xCF, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 21, 22, 23, 38, 39, 50, 94});
-        //新增功能100，获取SSID列表
-        FUNCTION_SET.put(0xB9, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15, 19, 20, 21, 22, 23, 26, 27, 29, 30, 34, 38, 39, 47, 49, 97, 100});
+        //k30f,3190模块
+        FUNCTION_SET.put(0xB9, new Integer[]{2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 19, 20, 21, 22, 23, 26, 27, 28, 29, 30, 34, 38, 39, 47, 49, 78, 81, 89, 92, 97, 100, 101, 102, 103});
+        //K9-V
+        FUNCTION_SET.put(0xB5, new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9,10, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 33, 34, 38, 39, 47, 51, 52, 53, 55, 57, 58, 59, 86, 93});
     }
 
     /**
@@ -778,6 +780,9 @@ public class BleLockUtils {
         return integers.contains(20);
     }
 
+    /**
+     * 讯美Wi-Fi模组：支持门锁前和后面板版本分别单独显示与单固件升级接口
+     */
     public static boolean isSupportSinglePanelOTA(String functionSet){
         if(TextUtils.isEmpty(functionSet)){
             return false;
@@ -789,6 +794,13 @@ public class BleLockUtils {
         }
         List<Integer> integers = Arrays.asList(funcs);
         return integers.contains(86);
+    }
+
+    /**
+     * 庆科Wi-Fi模组：支持门锁前和后面板版本分别单独显示与单固件升级接口
+     */
+    public static boolean isSupportSinglePanelOTA_QK(String functionSet){
+        return isHasFunc(functionSet, 102);
     }
 
     public static boolean isSupportFrontPanelOnlyShow(String functionSet){
@@ -1344,6 +1356,19 @@ public class BleLockUtils {
         return integers.contains(28);
     }
 
+    public static boolean isHasFunc(String functionSetStr, int funcValue){
+        if(TextUtils.isEmpty(functionSetStr)){
+            return false;
+        }
+        try {
+            int functionSet = Integer.parseInt(functionSetStr);
+            return isHasFunc(functionSet, funcValue);
+        }catch (NumberFormatException e){
+            LogUtils.e("isHasFunc, parseInt error, " + functionSetStr);
+        }
+        return false;
+    }
+
     public static boolean isHasFunc(int functionSet, int funcValue){
         Integer[] funcs = FUNCTION_SET.get(functionSet);
         if (funcs == null) {
@@ -1372,5 +1397,70 @@ public class BleLockUtils {
     public static boolean isFuncSetB9(int func){
         LogUtils.d("isB9FuncSet ," +func+ " " + (func & 0xff));
         return (func & 0xff) == 0xB9;
+    }
+
+    /**
+     * 是不是智能开关
+     */
+    public static boolean isSmartSwitch(int func){
+        return isHasFunc(func, 45);
+    }
+
+    /**
+     * 是否支持临时密码访问
+     */
+    public static boolean isSupportVisitorPassword(String functionSet) {
+        return isHasFunc(functionSet, 38);
+    }
+
+    /**
+     * 显示语音模式
+     */
+    public static boolean isSupportShowVoiceModel(String functionSet){
+        return isHasFunc(functionSet, 97);
+    }
+
+    /**
+     * 人脸模组(人脸识别）
+     */
+    public static boolean isSupportShowFaceModel(String functionSet){
+        return isHasFunc(functionSet, 78);
+    }
+
+    /**
+     * 是否支持单个固件升级
+     */
+    public static boolean isSupportSingleUpgrade(String functionSet){
+        return isHasFunc(functionSet, 86) || isHasFunc(functionSet, 102);
+    }
+
+    /**
+     * 比较是不是同个功能集
+     */
+    public static boolean isFuncSet(String funcSetStr, int targetFuncSet){
+        if(TextUtils.isEmpty(funcSetStr)){
+            return false;
+        }
+        try {
+            int functionSet = Integer.parseInt(funcSetStr);
+            return (functionSet & 0xff) == targetFuncSet;
+        }catch (NumberFormatException e){
+            LogUtils.e("isHasFunc, parseInt error, " + funcSetStr);
+        }
+        return false;
+    }
+
+    /**
+     * 添加人脸功能的引导（适用于3190wifi模块）
+     */
+    public static boolean isSupportAddFaceHint3190(String functionSet){
+        return isHasFunc(functionSet, 103);
+    }
+
+    /**
+     * 是否支持显示ams
+     */
+    public static boolean isSupportShowAMSSensor(String functionSet){
+        return isHasFunc(functionSet, 81);
     }
 }

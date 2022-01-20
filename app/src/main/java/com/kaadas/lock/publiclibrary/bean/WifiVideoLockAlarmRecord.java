@@ -1,5 +1,7 @@
 package com.kaadas.lock.publiclibrary.bean;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 
 public class WifiVideoLockAlarmRecord implements Serializable {
@@ -24,6 +26,7 @@ public class WifiVideoLockAlarmRecord implements Serializable {
      }
      */
 
+    @JSONField(name = "_id") //用fastjson解析_id 必须加注解指定名字 否则默认解析成没前缀id
     public String _id;
     private String time;
     private int type;

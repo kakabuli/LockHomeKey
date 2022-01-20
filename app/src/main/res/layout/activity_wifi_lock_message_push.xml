@@ -51,13 +51,14 @@
             android:textSize="@dimen/sp_13" />
 
         <TextView
+            android:id="@+id/tvHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/message_push"
             android:layout_marginLeft="@dimen/dp_15"
-            android:textSize="@dimen/sp_10"
+            android:text="@string/msg_push_switch_hint"
             android:textColor="#999999"
-            android:text="开启后，开关门锁、门铃、徘徊报警将不再接收消息"/>
+            android:textSize="@dimen/sp_10" />
 
         <ImageView
             android:id="@+id/iv_message_free"

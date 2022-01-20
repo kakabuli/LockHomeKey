@@ -19,6 +19,7 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -42,6 +43,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -161,6 +167,15 @@ public class BleService extends Service {
     private BluetoothGattCharacteristic notifyChar;// BLE -> App 数据通道特征
     private BluetoothGattCharacteristic lockFunctionSetChar;// BLE -> App 数据通道特征
     private volatile int readFuncSet = -1;
+
+    private final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 10, 60,
+            TimeUnit.SECONDS, new LinkedBlockingDeque<>(), new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "BleService #" + mCount.getAndIncrement());
+        }
+    });
 
     public int getBleVersion() {
         return bleVersion;
@@ -1151,7 +1166,7 @@ public class BleService extends Service {
                 public void run() {
                     enableBleNotify(gatt);
                 }
-            },200);
+            },300);
 
         }
         else {
@@ -1558,49 +1573,69 @@ public class BleService extends Service {
 
     //扫描BLE设备
     public synchronized void scanLeDevice(final boolean enable) {
+        //在子线程打开蓝牙适配器和扫描
+        if(Thread.currentThread() == Looper.getMainLooper().getThread()){
+            threadPool.submit(new Runnable() {
+                @Override
+                public void run() {
+                    enableBluetoothWithScan(enable);
+                }
+            });
+        }else {
+            enableBluetoothWithScan(enable);
+        }
+    }
+
+    public boolean isBleOpen(){
+        if(bluetoothAdapter == null){
+            return false;
+        }
+        bleIsEnable = bluetoothAdapter.isEnabled();
+        return bleIsEnable;
+    }
+
+    private void enableBluetoothWithScan(boolean enable) {
         //判断是否支持蓝牙
         if (bluetoothAdapter == null) {
             //不支持
             //设备不支持蓝牙
             return;
+        }
+
+        //打开蓝牙
+        if (!bluetoothAdapter.isEnabled()) {//判断是否已经打开
+            //警告：bluetoothAdapter.enable 调蓝牙底层服务可能会阻塞
+            //不应该在主线程调用，没有用户授权开启蓝牙，不应该执行到这里，会一直阻塞
+            bluetoothAdapter.enable();  //静默打开蓝牙
+            LogUtils.e("--kaadas-打开蓝牙申请");
         } else {
-            //打开蓝牙
-            if (!bluetoothAdapter.isEnabled()) {//判断是否已经打开
-                bluetoothAdapter.enable();  //静默打开蓝牙
-                LogUtils.e("--kaadas-打开蓝牙申请");
-            } else {
-                if (enable) {
-                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-//                    startLeScan();
-                    LogUtils.e("--kaadas-开始扫描设备");
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            try {
-                                Thread.sleep(100);
-                                //扫描需要延时吗
-                                bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
-                } else {
-                    LogUtils.e("--kaadas--停止扫描设备");
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            if (bluetoothLeScanner != null) {
-                                bluetoothLeScanner.stopScan(newScanBleCallback);
-                                handler.removeCallbacks(getRemoteDeviceRunnable);
-                            }
-                        }
-                    }.start();
-//                    stopLeScan();
-                }
+            scanDevice(enable);
+        }
+    }
+
+    private void scanDevice(boolean enable) {
+        if (enable) {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter == null) {
+                LogUtils.e("--kaadas-开始扫描设备 bluetoothAdapter == null");
+                return;
+            }
+            bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            LogUtils.e("--kaadas-开始扫描设备");
+            try {
+                Thread.sleep(100);
+                //扫描需要延时吗
+                bluetoothLeScanner.startScan(null, scanSettings, newScanBleCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            LogUtils.e("--kaadas--停止扫描设备");
+            if (bluetoothLeScanner != null) {
+                bluetoothLeScanner.stopScan(newScanBleCallback);
+                handler.removeCallbacks(getRemoteDeviceRunnable);
+            }else {
+                LogUtils.e("--kaadas-停止扫描设备 bluetoothLeScanner == null");
             }
         }
     }

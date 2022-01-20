@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F8F8"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_47"
+        android:paddingHorizontal="@dimen/dp_16"
+        android:src="@mipmap/iv_back" />
+    <com.kaadas.lock.widget.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/dp_70"
+        android:layout_height="@dimen/dp_70"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_24"
+        app:srcCompat="@mipmap/close_account_avatar" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:text="@string/account_logout" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp_33"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/black"
+            android:text="@string/account_logout_sms_send_to" />
+
+        <TextView
+            android:id="@+id/tvSendTarget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:textSize="@dimen/sp_14"
+            android:textColor="#1F96F7" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnGetCode"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44"
+        android:layout_marginLeft="@dimen/dp_88"
+        android:layout_marginRight="@dimen/dp_88"
+        android:layout_marginBottom="@dimen/dp_48"
+        android:layout_marginTop="@dimen/dp_50"
+        android:layout_gravity="bottom"
+        android:background="@drawable/go_and_buy"
+        android:text="@string/get_verification"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15" />
+
+</LinearLayout>
+

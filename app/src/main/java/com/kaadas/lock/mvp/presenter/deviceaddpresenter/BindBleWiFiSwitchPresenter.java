@@ -1,9 +1,10 @@
 package com.kaadas.lock.mvp.presenter.deviceaddpresenter;
 
+import android.content.Context;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.text.TextUtils;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.activity.choosewifi.WifiBean;
 import com.kaadas.lock.activity.device.wifilock.wifilist.BleWifiListDataParser;
@@ -58,7 +59,6 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
     private WifiScanResultListener scanWifiResultListener;
     private BleWifiListDataParser bleWifiListDataParser;
     private static final String TAG = "BindBleWiFiSwitchPresenter";
-    Handler handler = new Handler();
 
     public interface WifiScanResultListener{
         void onWifiScanResult(List<WifiBean> data);
@@ -84,10 +84,12 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
                         byte[] originalData = bleDataBean.getOriginalData();
 //                        LogUtils.e("--kaadas--收到锁的配网数据" + Rsa.bytesToHexString(originalData));
                         if ((originalData[3] & 0xff) == 0x95) {//接到剩余校验次数
-                            mViewRef.get().onlistenerLastNum(originalData[4] & 0xFF);
+                            LogUtils.i(TAG,"verify num " + (originalData[4] & 0xFF));
+                            if(isSafe()) mViewRef.get().onlistenerLastNum(originalData[4] & 0xFF);
                         }
                         if ((originalData[3] & 0xff) == 0x92) {//离线密码因子
-                            //0x92有可能在订阅前就已经发出，导致接收到不完整数据包
+                            //1.0x92有可能在订阅前就已经发出，导致接收到不完整数据包
+                            //2.客户端解密因子验证失败0x94，设备会重新发一遍0x92密码因子
                             handlePassWordFactor(bleDataBean);
                         }
                         if ((originalData[3] & 0xff) == 0x94) {//收到解密结果
@@ -141,22 +143,20 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
     }
 
     private synchronized void handleWifiListData(BleDataBean bleDataBean){
-        if(((FragmentActivity)mViewRef.get()).getLifecycle().getCurrentState() == Lifecycle.State.RESUMED){
-            if(bleWifiListDataParser == null){
-                bleWifiListDataParser = new BleWifiListDataParser();
-                bleWifiListDataParser.setWifiListDataCallback(this);
-            }
+        if(bleWifiListDataParser == null){
+            bleWifiListDataParser = new BleWifiListDataParser();
+            bleWifiListDataParser.setWifiListDataCallback(this);
+        }
 
-            try {
-                bleWifiListDataParser.parseWifiListFromBle(bleDataBean.getPayload());
-            }catch (Exception e){
-                LogUtils.e(TAG,"--kaadas-- parseWifiList exception: " + e.toString());
-                if(bleWifiListDataParser != null){
-                    bleWifiListDataParser.resetData();
-                }
-                if(scanWifiResultListener != null){
-                    scanWifiResultListener.onWifiScanResult(Collections.emptyList());
-                }
+        try {
+            bleWifiListDataParser.parseWifiListFromBle(bleDataBean.getPayload());
+        }catch (Exception e){
+            LogUtils.e(TAG,"--kaadas-- parseWifiList exception: " + e.toString());
+            if(bleWifiListDataParser != null){
+                bleWifiListDataParser.resetData();
+            }
+            if(scanWifiResultListener != null){
+                scanWifiResultListener.onWifiScanResult(Collections.emptyList());
             }
         }
     }
@@ -179,7 +179,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
         //从原始数组4位置开始截取后面所有
         System.arraycopy(originalData, 6, passwordFactor, 0, originalData.length - 6);
 //                            LogUtils.e("--kaadas--密码因子分包数据==    " + Rsa.bytesToHexString(passwordFactor));
-        mViewRef.get().onlistenerPasswordFactor(passwordFactor, pswLen, index);
+        if(isSafe()) mViewRef.get().onlistenerPasswordFactor(passwordFactor, pswLen, index);
     }
 
     public void parsePasswordFactorData(String adminPassword, byte[] data) {
@@ -189,14 +189,10 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
         //发送0x94下发密码因子校验结果 通知锁端
         if (wifiResult.result == 0){
             //校验成功
-            mViewRef.get().onDecodeResult(2,wifiResult);
-
-            if(functionSet <= 0){
-                functionSet = bleService.getReadFuncSet();
-            }
+            if(isSafe()) mViewRef.get().onDecodeResult(2,wifiResult);
 
             String wifiSN = getWifiSN(wifiResult);
-            if(BleLockUtils.isFuncSetB9(functionSet) && !TextUtils.isEmpty(wifiSN)){
+            if(BleLockUtils.isFuncSetB9(wifiResult.func) && !TextUtils.isEmpty(wifiSN)){
                 //k30系列 0xB9 配网流程变更 解绑后再发送0x94
                 LogUtils.i(TAG,"--Kaadas--, do preBind");
                 unbindLock(wifiSN);
@@ -207,7 +203,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
         }
         else {
             //校验失败
-            mViewRef.get().onDecodeResult(-1,wifiResult);
+            if(isSafe()) mViewRef.get().onDecodeResult(-1,wifiResult);
             replayPasswordFactorCmd(1);
         }
     }
@@ -268,7 +264,7 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
     public void checkAdminPassWordResult() {
 
             if (wifiResult != null){
-                mViewRef.get().onDecodeResult(3, wifiResult);
+                if(isSafe()) mViewRef.get().onDecodeResult(3, wifiResult);
             }
 
     }
@@ -360,14 +356,43 @@ public class BindBleWiFiSwitchPresenter<T> extends BasePresenter<IBindBleView> i
                 });
     }
 
+    /**
+     * 从设备获取wifi列表
+     */
     public void getWifiListFromDevice(){
-
         byte[] authKey = null;//不加密
         byte[] command = BleCommandFactory.getDeviceWifiList(authKey);
         bleService.sendCommand(command);
         if(bleWifiListDataParser != null){
             bleWifiListDataParser.resetData();
         }
+    }
+
+    /**
+     * 从手机扫描获取wifi列表
+     */
+    public void getWifiListFromApp(){
+        WifiManager wifiManager = (WifiManager) MyApplication.getInstance().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager.startScan();
+        List<ScanResult> scanResults = wifiManager.getScanResults();
+        ArrayList<WifiBean> wifiBeanList = new ArrayList<>();
+        if(scanResults != null && scanResults.size() > 0){
+            for (ScanResult result : scanResults) {
+                int frequency = result.frequency;
+                if(!(frequency >= 2400 && frequency <= 2500)){
+                    //排除掉非2.4g的
+                    continue;
+                }
+                String ssid = result.SSID;
+                if(TextUtils.isEmpty(ssid)){
+                    //过滤ssid为空的
+                    continue;
+                }
+                int level = WifiManager.calculateSignalLevel(result.level, 5);
+                wifiBeanList.add(new WifiBean(level, ssid));
+            }
+        }
+        onWifiData(wifiBeanList);
     }
 
     public void setWifiScanResultListener(WifiScanResultListener listener){

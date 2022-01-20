@@ -249,6 +249,9 @@ public class WifiLockOperationItemRecordAdapter extends BaseQuickAdapter<WifiLoc
             case 18: //   18关闭节能模式
                 left = mContext.getString(R.string.face_lock_power_Save_close);
                 break;
+            case 19: // 恢复出厂设置
+                left = mContext.getString(R.string.warring_reset);
+                break;
             default:
                 left = mContext.getString(R.string.unknow_operation);
                 break;

@@ -490,4 +490,9 @@ public class HttpUrlConstants {
      *  晾衣机设备修改昵称
      */
     public static final String MODIFY_HANGER_NICK_NAME = BASE_URL + "/wifi/hanger/updateNickName";
+
+    /**
+     *  注销账号
+     */
+    public static final String ACCOUNT_LOGOUT = BASE_URL + "user/edit/accountLogout";
 }

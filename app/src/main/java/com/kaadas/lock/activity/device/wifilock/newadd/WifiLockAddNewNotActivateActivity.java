@@ -15,10 +15,12 @@ import android.widget.Toast;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.add.WifiLockHelpActivity;
 import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
+import com.kaadas.lock.utils.XXPermissionsFacade;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,12 +53,19 @@ public class WifiLockAddNewNotActivateActivity extends BaseAddToApplicationActiv
         ivWeiXinCode.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                boolean b = saveImageToGallery(WifiLockAddNewNotActivateActivity.this, ivWeiXinCode);
-                if (b) {
-                    Toast.makeText(WifiLockAddNewNotActivateActivity.this, getString(R.string.save_success), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(WifiLockAddNewNotActivateActivity.this, getString(R.string.save_failed), Toast.LENGTH_SHORT).show();
-                }
+                XXPermissionsFacade.get()
+                        .withStoragePermission()
+                        .request(v.getContext(), new XXPermissionsFacade.OnGrantedCallback() {
+                    @Override
+                    public void onGranted() {
+                        boolean b = saveImageToGallery(WifiLockAddNewNotActivateActivity.this, ivWeiXinCode);
+                        if (b) {
+                            Toast.makeText(WifiLockAddNewNotActivateActivity.this, getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(WifiLockAddNewNotActivateActivity.this, getString(R.string.save_failed), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 return false;
             }
         });

@@ -54,7 +54,6 @@ import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.Rsa;
 import com.kaadas.lock.utils.greenDao.db.DaoSession;
 import com.kaadas.lock.widget.AVLoadingIndicatorView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xm.sdk.struct.stream.AVStreamHeader;
 import com.xmitech.sdk.MP4Info;
 import la.xiong.androidquick.tool.FileTool;
@@ -167,8 +166,6 @@ public class WifiVideoLockCallingTestActivity extends BaseActivity<IWifiLockVide
 
     //门铃调用1次
     private boolean isDoorbelling = false;
-
-    final RxPermissions rxPermissions = new RxPermissions(this);
 
     private Disposable xunhaunDisposable;
 

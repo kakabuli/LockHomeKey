@@ -1,5 +1,6 @@
 package com.kaadas.lock.fragment.home;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.kaadas.lock.R;
 import com.kaadas.lock.activity.device.wifilock.WifiLockRecordActivity;
 import com.kaadas.lock.activity.device.wifilock.videolock.WifiVideoLockCallingActivity;
 import com.kaadas.lock.adapter.WifiLockOperationGroupRecordAdapter;
+import com.kaadas.lock.bean.HomeShowBean;
 import com.kaadas.lock.bean.WifiLockOperationRecordGroup;
 import com.kaadas.lock.mvp.mvpbase.BaseFragment;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockPresenter;
@@ -96,6 +99,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     private List<WifiLockOperationRecordGroup> showDatas = new ArrayList<>();
     private WifiLockOperationGroupRecordAdapter operationGroupRecordAdapter;
     private Handler handler = new Handler();
+    private boolean isVideoLock;
 
     @Nullable
     @Override
@@ -103,8 +107,10 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         View view = inflater.inflate(R.layout.fragment_wifi_video_lock_layout, null);
         ButterKnife.bind(this, view);
         initRecycleView();
-//        wifiLockInfo = (WifiLockInfo) getArguments().getSerializable(KeyConstants.WIFI_VIEDO_LOCK_INFO);
+
         wifiSN = (String) getArguments().getSerializable(KeyConstants.WIFI_SN);
+        isVideoLock = (getArguments().getInt(KeyConstants.WIFI_LOCK_TYPE) == HomeShowBean.TYPE_WIFI_VIDEO_LOCK);
+
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSN);
         if (wifiLockInfo!=null){
             mPresenter.getOpenCount(wifiSN);
@@ -137,7 +143,6 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
     protected WifiVideoLockPresenter<IWifiVideoLockView> createPresent() {
         return new WifiVideoLockPresenter<>();
     }
-
 
     private void initData() {
         //获取缓存数据并显示
@@ -173,6 +178,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         if (powerSave == 1) {//已启动节能模式
             changeLockStatus(8);
         }
+
         if(BleLockUtils.isSupportFacereCognitionSwitch(wifiLockInfo.getFunctionSet())){
             if (faceStatus == 0) {//面容识别已关闭
                 changeLockStatus(7);
@@ -262,139 +268,18 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
         super.onDestroyView();
     }
 
-    public void changeLockStatus(int status) {
-        LogUtils.e("--kaadas--状态改变   " + status);
-        LogUtils.e("--kaadas--研发型号   " + wifiLockInfo.getProductModel());
-
-        if (!isAdded()) {
-            return;
-        }
+    private void setUpdateTime(WifiLockInfo wifiLockInfo) {
         //设置时间
         long updateTime = wifiLockInfo.getUpdateTime();
         long openStatusTime = wifiLockInfo.getOpenStatusTime();
-        if (updateTime == 0) {
-            tvUpdateTime.setText("");
+
+        tvUpdateTime.setText("");
+        if (openStatusTime == 0) {
+            if(updateTime>0)
+            tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
         } else {
-            tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(updateTime));
+            tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
         }
-
-        tvCenterMode.setVisibility(View.VISIBLE);
-        tvTopStates.setText("已关锁");
-        ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
-        switch (status) {
-            case 2:
-                //已启动布防模式
-                ivBackGround.setImageResource(R.mipmap.video_bu_fang_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
-//                tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText("布防模式");
-                break;
-            case 3:
-                //“已反锁，请门内开锁”
-                ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
-//                tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                tvCenterMode.setText(tvCenterMode.getText() + "");
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText("反锁模式");
-                break;
-            case 4:
-                //“锁已打开”
-                //TODO:开锁动画
-//                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
-//                tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
-                tvCenterMode.setText(tvCenterMode.getText() + "");
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                tvTopStates.setText("已开锁");
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                break;
-            case 5:
-                //门已上锁  正常模式
-                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
-//                tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText("正常模式");
-                break;
-            case 6:
-                //已启动安全模式
-                ivBackGround.setImageResource(R.mipmap.video_an_quan_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
-//                tvTopStates.setText(getString(R.string.already_safe_model_open));
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText(getString(R.string.safe_mode));
-                break;
-            case 7:
-                //面容识别已关闭
-                ivBackGround.setImageResource(R.mipmap.wifi_lock_face_model_close);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
-//                tvTopStates.setText(getString(R.string.already_face_model_close));
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                break;
-            case 8:
-                //已启动节能模式
-                ivBackGround.setImageResource(R.mipmap.video_jie_neng_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
-//                tvTopStates.setText(getString(R.string.already_face_sensor_model_open));
-                tvCenterContent.setText(getString(R.string.power_Save_mode));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText("");
-                break;
-            case 9:
-                //已提拉上锁
-                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
-                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
-//                tvTopStates.setText(getString(R.string.already_up_lock));
-                tvCenterContent.setText(getString(R.string.click_door_info));
-                if (openStatusTime == 0) {
-                    tvUpdateTime.setText(""+ DateUtils.timestampToDateSecond(updateTime));
-                } else {
-                    tvUpdateTime.setText("" + DateUtils.timestampToDateSecond(openStatusTime));
-                }
-                tvCenterMode.setText(tvCenterMode.getText() + "");
-                break;
-        }
-        if(wifiLockInfo.getPowerSave() == 1){
-            tvCenterContent.setText(getString(R.string.power_Save_mode));
-        }else{
-            tvCenterContent.setText(getString(R.string.click_door_info));
-        }
-
     }
 
 
@@ -427,15 +312,25 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                 mPresenter.getOpenCount(wifiLockInfo.getWifiSN());
                 break;
             case R.id.iv_external_big:
-                if(wifiLockInfo.getPowerSave() == 0){
-                    intent = new Intent(getContext(), WifiVideoLockCallingActivity.class);
-//                    intent = new Intent(getContext(), WifiLockVideoCallingTestActivity.class);
-                    intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
-                    intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
-                    startActivity(intent);
+                if(isVideoLock){
+                    if(wifiLockInfo.getPowerSave() == 0){
+                        intent = new Intent(getContext(), WifiVideoLockCallingActivity.class);
+                        intent.putExtra(KeyConstants.WIFI_VIDEO_LOCK_CALLING,0);
+                        intent.putExtra(KeyConstants.WIFI_SN,  wifiLockInfo.getWifiSN());
+                        startActivity(intent);
 
+                    }else{
+                        powerStatusDialog();
+                    }
                 }else{
-                    powerStatusDialog();
+                    TextView msg = new TextView(getActivity());
+                    msg.setText("不可点击");
+                    msg.setPadding(100, 80, 100, 80);
+                    msg.setGravity(Gravity.CENTER);
+                    msg.setTextSize(15);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setView(msg);
+                    builder.show();
                 }
 
                 break;
@@ -505,11 +400,169 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
 
     }
 
+    public void changeLockStatus(int status) {
+        LogUtils.e("--kaadas--状态改变   " + status);
+        LogUtils.e("--kaadas--研发型号   " + wifiLockInfo.getProductModel());
+
+        if (!isAdded()) {
+            return;
+        }
+
+        setUpdateTime(wifiLockInfo);
+
+        if(isVideoLock){
+            tvCenterMode.setVisibility(View.VISIBLE);
+            tvCenterContent.setVisibility(View.VISIBLE);
+        }else {
+            tvCenterMode.setVisibility(View.GONE);
+            tvCenterContent.setVisibility(View.GONE);
+        }
+        tvTopStates.setText("");
+        ivTopIcon.setVisibility(View.VISIBLE); //上方图标显示
+
+        if(isVideoLock){
+            //保留原来视频锁代码逻辑
+            changeVideoLockStatus(status);
+        }else{
+            changeWifiLockStatus(status);
+        }
+    }
+
+    private void changeWifiLockStatus(int status) {
+        ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+        switch (status) {
+            case 2:
+                //已启动布防模式
+                ivBackGround.setImageResource(R.mipmap.video_bu_fang_big_middle_icon);  //背景大图标
+                tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
+                break;
+            case 3:
+                //“已反锁，请门内开锁”
+                ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
+                tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                break;
+            case 4:
+                //“锁已打开”
+                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_open_lock_success_niner_middle_icon);  //门锁关闭状态
+
+                break;
+            case 5:
+                //门已上锁  正常模式
+                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
+                ivCenterIcon.setImageResource(R.mipmap.bluetooth_lock_safe_inner_midder_icon);  //门锁关闭状态
+                break;
+            case 6:
+                //已启动安全模式
+                ivBackGround.setImageResource(R.mipmap.video_an_quan_big_middle_icon);  //背景大图标
+                tvTopStates.setText(getString(R.string.already_safe_model_open));
+                break;
+            case 7:
+                //面容识别已关闭
+                ivBackGround.setImageResource(R.mipmap.wifi_lock_face_model_close);  //背景大图标
+                tvTopStates.setText(getString(R.string.already_face_model_close));
+                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_model_close_middle_icon);
+                break;
+            case 8:
+                //已启动节能模式
+                ivBackGround.setImageResource(R.mipmap.video_jie_neng_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_lock_face_sensor_model_middle_icon);
+                tvTopStates.setText(getString(R.string.already_face_sensor_model_open));
+                break;
+            case 9:
+                //已提拉上锁
+                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                tvTopStates.setText(getString(R.string.already_up_lock));
+                break;
+        }
+    }
+
+    public void changeVideoLockStatus(int status) {
+        switch (status) {
+            case 2:
+                //已启动布防模式
+                ivBackGround.setImageResource(R.mipmap.video_bu_fang_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
+//                tvTopStates.setText(getString(R.string.already_open_alarm));  //设置设备状态   离线
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText("布防模式");
+                break;
+            case 3:
+                //“已反锁，请门内开锁”
+                ivBackGround.setImageResource(R.mipmap.bluetooth_double_lock_big_middle_icon);
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
+//                tvTopStates.setText(getString(R.string.already_back_lock));  //设置设备状态   离线
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText(tvCenterMode.getText() + "");
+                tvCenterMode.setText("反锁模式");
+                break;
+            case 4:
+                //“锁已打开”
+                //TODO:开锁动画
+//                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
+//                tvTopStates.setText(getString(R.string.open_lock_already));  //设置设备状态   离线
+                tvCenterMode.setText(tvCenterMode.getText() + "");
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvTopStates.setText("已开锁");
+                break;
+            case 5:
+                //门已上锁  正常模式
+                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
+//                tvTopStates.setText(getString(R.string.lock_lock_already));  //设置设备状态   离线
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText("正常模式");
+                break;
+            case 6:
+                //已启动安全模式
+                ivBackGround.setImageResource(R.mipmap.video_an_quan_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //门锁关闭状态
+//                tvTopStates.setText(getString(R.string.already_safe_model_open));
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText(getString(R.string.safe_mode));
+                break;
+            case 7:
+                //面容识别已关闭
+                ivBackGround.setImageResource(R.mipmap.wifi_lock_face_model_close);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
+//                tvTopStates.setText(getString(R.string.already_face_model_close));
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                break;
+            case 8:
+                //已启动节能模式
+                ivBackGround.setImageResource(R.mipmap.video_jie_neng_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
+//                tvTopStates.setText(getString(R.string.already_face_sensor_model_open));
+                tvCenterContent.setText(getString(R.string.power_Save_mode));
+                tvCenterMode.setText("");
+                break;
+            case 9:
+                //已提拉上锁
+                ivBackGround.setImageResource(R.mipmap.video_zheng_chang_big_middle_icon);  //背景大图标
+                ivCenterIcon.setImageResource(R.mipmap.wifi_video_lock_home_middle_icon);  //中间小图标
+//                tvTopStates.setText(getString(R.string.already_up_lock));
+                tvCenterContent.setText(getString(R.string.click_door_info));
+                tvCenterMode.setText(tvCenterMode.getText() + "");
+                break;
+        }
+        if(wifiLockInfo.getPowerSave() == 1){
+            tvCenterContent.setText(getString(R.string.power_Save_mode));
+        }else{
+            tvCenterContent.setText(getString(R.string.click_door_info));
+        }
+    }
+
     @Override
     public void onWifiLockOperationEvent(String wifiSn, WifiLockOperationBean.EventparamsBean eventparams) {
         if (!TextUtils.isEmpty(wifiSn) && wifiLockInfo != null && wifiSn.equals(wifiLockInfo.getWifiSN())) {
+            //EventType 0x01: 0x01 上锁 0x02 开锁 0x03 主锁舌关
+            //EventType 0x03: 0x01：自动模式 0x02：手动模式 0x03：通用模式    0x07: 节能模式
             if (eventparams.getEventType() == 0x01) { //操作类
-
+                handler.removeCallbacks(refreshAfterLock);
                 if (eventparams.getEventCode() == 0x01) {  //上锁
                     LogUtils.e("门锁状态上报  上锁" );
                     isOpening = false;
@@ -517,6 +570,7 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                     wifiLockInfo.setOpenStatus(1);
                     changeLockStatus(5);
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
+                    handler.postDelayed(refreshAfterLock,1000);
                 }
                 else if (eventparams.getEventCode() == 0x03) { //主锁舌伸出
                     LogUtils.e("门锁状态上报  主锁舌伸出" );
@@ -537,56 +591,33 @@ public class WifiVideoLockFragment extends BaseFragment<IWifiVideoLockView, Wifi
                     new WifiLockInfoManager().insertOrReplace(wifiLockInfo);
                 }
             }
+            //其他操作事件 经MyApplication绕了一圈 最终在onWifiLockActionUpdate处理
         }
     }
 
+    private Runnable refreshAfterLock = new Runnable(){
+
+        @Override
+        public void run() {
+            if(wifiLockInfo != null){
+                wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
+                initData();
+            }
+        }
+    };
+
     @Override
     public void onWifiLockActionUpdate() {
+        handler.removeCallbacks(refreshAfterLock);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiLockInfo.getWifiSN());
         LogUtils.e("门锁状态上报   " );
         initData();
     }
 
-   private Runnable initRunnable = new Runnable() {
-       @Override
-       public void run() {
-             isOpening = false;
-             initData();
-       }
-   };
-
-
-    public void getOpenRecordFromServer(int page, String wifiSn) {
-//        if (page == 1) {  //如果是获取第一页的数据，那么清楚所有的开锁记录
-//            wifiLockOperationRecords.clear();
-//        }
-        XiaokaiNewServiceImp.wifiLockGetOperationList(wifiSn, page)
-                .subscribe(new BaseObserver<GetWifiLockOperationRecordResult>() {
-                    @Override
-                    public void onSuccess(GetWifiLockOperationRecordResult operationRecordResult) {
-                        if (operationRecordResult.getData() != null && operationRecordResult.getData().size() > 0) {  //服务器没有数据  提示用户
-                            List<WifiLockOperationRecord> operationRecords = operationRecordResult.getData();
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onAckErrorCode(BaseResult baseResult) {
-
-                    }
-
-                    @Override
-                    public void onFailed(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onSubscribe1(Disposable d) {
-
-                    }
-                })
-        ;
+    @Override
+    public void onDestroy() {
+        handler.removeCallbacks(refreshAfterLock);
+        super.onDestroy();
     }
 
     public void powerStatusDialog(){

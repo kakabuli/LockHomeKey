@@ -199,7 +199,9 @@ public class DeviceDetailAdapter extends BaseQuickAdapter<HomeShowBean, BaseView
                     //本地图片有对应的产品则不获取缓存的产品型号图片，缓存没有则选择尝试下载
 //                    if (BleLockUtils.getSmallImageByModel(model) == R.mipmap.default_zigbee_lock_icon){
                         for (ProductInfo productInfo:productList) {
-                            if (productInfo.getDevelopmentModel().contentEquals(model)){
+                            String developmentModel = productInfo.getDevelopmentModel();
+                            //model maybe null
+                            if (TextUtils.equals(developmentModel, model)){
 //                                LogUtils.e("--kaadas--productList.DeviceListUrl==" + productInfo.getDeviceListUrl());
 //                                LogUtils.e("--kaadas--productList.getDevelopmentModel==" + productInfo.getDevelopmentModel());
                                 //匹配型号获取下载地址

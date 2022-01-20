@@ -4,21 +4,21 @@ buildscript {
     ext.kotlin_version = '1.3.72'
 
     repositories {
-        maven { url "http://mvn.mob.com/android"}
+        maven { url "https://mvn.mob.com/android"}
         google()
         mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/public/'}
         maven { url 'https://developer.huawei.com/repo/'}
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        //目前发现gradle升级未3.6.1有问题
-        classpath 'com.android.tools.build:gradle:3.5.3'
+
+        classpath 'com.android.tools.build:gradle:4.1.3'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.3.0'
         classpath 'com.tencent.bugly:symtabfileuploader:latest.release'
 
-//        classpath 'com.novoda:bintray-release:0.9'
         classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
-        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
+        classpath "com.mob.sdk:MobSDK:+"
 
         classpath 'com.jakewharton:butterknife-gradle-plugin:9.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -33,8 +33,8 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/" }
         maven { url "https://maven.aliyun.com/repository/public/" }
-        maven { url 'http://developer.huawei.com/repo/' }
-
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://jitpack.io' }
     }
 }
 

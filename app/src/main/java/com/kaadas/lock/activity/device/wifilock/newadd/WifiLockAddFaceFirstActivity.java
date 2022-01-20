@@ -37,7 +37,6 @@ public class WifiLockAddFaceFirstActivity extends BaseAddToApplicationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi_lock_how_to_add_face_pwd_first);
-
         ButterKnife.bind(this);
     }
 
@@ -48,7 +47,10 @@ public class WifiLockAddFaceFirstActivity extends BaseAddToApplicationActivity {
                 finish();
                 break;
             case R.id.button_next:
-                startActivity(new Intent(this,WifiLockAddFaceSecondActivity.class));
+                String wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
+                Intent intent = new Intent(this,WifiLockAddFaceSecondActivity.class);
+                intent.putExtra(KeyConstants.WIFI_SN, wifiSn);
+                startActivity(intent);
                 break;
         }
     }

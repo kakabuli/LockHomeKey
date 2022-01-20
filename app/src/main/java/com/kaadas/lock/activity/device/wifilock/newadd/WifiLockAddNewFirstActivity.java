@@ -25,7 +25,6 @@ import com.kaadas.lock.utils.AlertDialogUtil;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
@@ -61,8 +60,6 @@ public class WifiLockAddNewFirstActivity extends BaseAddToApplicationActivity {
 
     private String wifiModelType = "";
 
-    private Disposable permissionDisposable;
-    final RxPermissions rxPermissions = new RxPermissions(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

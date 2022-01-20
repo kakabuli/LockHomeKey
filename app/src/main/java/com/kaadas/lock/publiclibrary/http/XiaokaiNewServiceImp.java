@@ -7,6 +7,7 @@ import com.kaadas.lock.bean.PushSwitch;
 import com.kaadas.lock.bean.PushSwitchBean;
 import com.kaadas.lock.bean.VersionBean;
 import com.kaadas.lock.publiclibrary.ble.bean.WarringRecord;
+import com.kaadas.lock.publiclibrary.http.postbean.AccountLogoutBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddDeviceBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddPasswordBean;
 import com.kaadas.lock.publiclibrary.http.postbean.AddUserBean;
@@ -1532,7 +1533,7 @@ public class XiaokaiNewServiceImp {
     /**
      *  查询设备列表
      */
-    public static Observable<AllBindDevices> httpGetAllBindDevices(){
+    public static Observable<AllBindDevices> getAllBindDevices(){
         String timestamp = System.currentTimeMillis() /1000 + "";
         return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
                 .getAllBindDevices(timestamp,new HttpUtils<HttpAllBindDevicesBean>().getBodyToken(new HttpAllBindDevicesBean(MyApplication.getInstance().getUid(),2),timestamp))
@@ -1611,4 +1612,17 @@ public class XiaokaiNewServiceImp {
                 .subscribeOn(Schedulers.io())
                 .compose(RxjavaHelper.observeOnMainThread());
     }
+
+    /**
+     *  注销账号
+     */
+    public static Observable<BaseResult> accountLogout(String account, String uid, int accountType, String code) {
+        AccountLogoutBean params = new AccountLogoutBean(account, uid, accountType, code);
+        String timestamp = System.currentTimeMillis() /1000 + "";
+        return RetrofitServiceManager.getInstance().create(IXiaoKaiNewService.class)
+                .accountLogout(timestamp,new HttpUtils<AccountLogoutBean>().getBodyToken(params,timestamp))
+                .subscribeOn(Schedulers.io())
+                .compose(RxjavaHelper.observeOnMainThread());
+    }
+
 }

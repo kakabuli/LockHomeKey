@@ -25,7 +25,6 @@ import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
 
@@ -42,7 +41,6 @@ public class WifiLockApAddSecondActivity extends BaseAddToApplicationActivity {
     Button buttonNext;
     @BindView(R.id.help)
     ImageView help;
-    final RxPermissions rxPermissions = new RxPermissions(this);
     @BindView(R.id.head)
     TextView head;
     @BindView(R.id.notice)

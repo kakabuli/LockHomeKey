@@ -153,7 +153,7 @@ public class MyLog {
                 filerWriter.flush();
 //                bufWriter.close();
 //                filerWriter.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

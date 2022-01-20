@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
@@ -15,6 +16,7 @@ import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
 import com.kaadas.lock.publiclibrary.http.result.BaseResult;
 import com.kaadas.lock.publiclibrary.http.result.CheckOTAResult;
 import com.kaadas.lock.publiclibrary.http.result.MultiCheckOTAResult;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 
 import java.util.List;
@@ -43,6 +45,8 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
     RelativeLayout rlMessageFree;
     @BindView(R.id.iv_message_free)
     ImageView ivMessageFree;
+    @BindView(R.id.tvHint)
+    TextView tvHint;
 
     private String wifiSn;
     private WifiLockInfo wifiLockInfo;
@@ -57,6 +61,11 @@ public class WifiLockMessagePushActivity extends BaseActivity<IWifiLockMoreView,
 
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
         wifiLockInfo = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+
+        //k9-v 改文案？
+        if(BleLockUtils.isFuncSet(wifiLockInfo.getFunctionSet(), 0xB5)){
+            tvHint.setText(getString(R.string.msg_push_switch_hint2));
+        }
         initData();
     }
 

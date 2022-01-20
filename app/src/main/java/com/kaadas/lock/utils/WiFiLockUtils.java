@@ -49,7 +49,7 @@ public class WiFiLockUtils {
         PAIRING_MODE.put("WiFi&VIDEO",new String[]{"K10V","K20V","K20-V","X9-V","X9V","兰博基尼传奇可视猫眼智能锁","K13V","K10FV"
                 ,"K20 Max 3D人脸可视猫眼智能锁","X9 Pro 猫眼视屏智能锁","X9 Pro Max 3D人脸猫眼视屏智能锁","K60 FVP 3D人脸猫眼视屏智能锁"
                 ,"K60 VP 猫眼视屏智能锁","K3A1A","K3A0A","K60 FVP","K60 VP","S110-V","s110-V","s110-v","S110-v","S110_V","s110_V","s110_v","S110_v","S110V",
-                "s110V","s110v","S110v"});
+                "s110V","s110v","S110v","K9-V"});
     }
     /**
      * 根据型号判断对应的配网方式

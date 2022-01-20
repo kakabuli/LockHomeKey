@@ -46,8 +46,7 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
     TextView tvName;
     @BindView(R.id.iv_editor)
     ImageView ivEditor;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
+
     @BindView(R.id.btn_delete)
     Button btnDelete;
     private String nickname;
@@ -68,21 +67,11 @@ public class WiFiLockShareUserDetailActivity extends BaseActivity<IWiFiLockShare
         shareUser = (WifiLockShareResult.WifiLockShareUser) intent.getSerializableExtra(KeyConstants.SHARE_USER_INFO);
         tvNumber.setText(shareUser.getUname());
         tvName.setText(shareUser.getUserNickname());
-        long createTime = shareUser.getCreateTime();
-        if (createTime == 0) {
-            getAuthorizationTime();
-            createTime = System.currentTimeMillis() / 1000;
-        }
-        String time = DateUtils.secondToDate(createTime);
-        tvTime.setText(time);
 
         adminNickname = (String) SPUtils.get(SPUtils.USERNAME, "");
         if (TextUtils.isEmpty(adminNickname)) {
             adminNickname = (String) SPUtils.get(SPUtils.PHONEN, "");
         }
-    }
-
-    private void getAuthorizationTime() {
     }
 
     @Override

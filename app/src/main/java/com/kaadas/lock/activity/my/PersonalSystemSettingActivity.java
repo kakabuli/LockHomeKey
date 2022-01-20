@@ -99,7 +99,7 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
     }
 
 
-    @OnClick({R.id.version_layout, R.id.user_agreement_layout, R.id.clear_cache_layout, R.id.log_out,R.id.primary_layout})
+    @OnClick({R.id.version_layout, R.id.user_agreement_layout, R.id.clear_cache_layout, R.id.log_out,R.id.primary_layout, R.id.close_account_layout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
 
@@ -124,6 +124,10 @@ public class PersonalSystemSettingActivity extends BaseActivity<ISystemSettingVi
             case R.id.primary_layout:
                 Intent privacyIntent = new Intent(this, PrivacyActivity.class);
                 startActivity(privacyIntent);
+                break;
+            case R.id.close_account_layout:
+                Intent closeAccountIntent = new Intent(this, AccountLogoutActivity.class);
+                startActivity(closeAccountIntent);
                 break;
         }
     }

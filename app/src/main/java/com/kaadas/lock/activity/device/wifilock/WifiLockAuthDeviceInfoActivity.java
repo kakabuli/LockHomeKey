@@ -102,8 +102,11 @@ public class WifiLockAuthDeviceInfoActivity extends BaseActivity<IWifiLockMoreVi
             else {//不支持
                 rlFaceModelFirmwareVersion.setVisibility(View.GONE);
             }
-
-            tvLockFirmwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion());
+            String firmwareVersion = TextUtils.isEmpty(wifiLockInfo.getLockFirmwareVersion()) ? "" : wifiLockInfo.getLockFirmwareVersion();
+            if(TextUtils.isEmpty(firmwareVersion)){
+                firmwareVersion = wifiLockInfo.getFrontPanelVersion();
+            }
+            tvLockFirmwareVersion.setText(firmwareVersion);
 //            tvLockSoftwareVersion.setText(TextUtils.isEmpty(wifiLockInfo.getLockSoftwareVersion()) ? "" : wifiLockInfo.getLockSoftwareVersion());
             wifiVersion.setText(TextUtils.isEmpty(wifiLockInfo.getWifiVersion()) ? "" : wifiLockInfo.getWifiVersion());
             tvDeviceName.setText(TextUtils.isEmpty(lockNickname) ? "" : lockNickname);

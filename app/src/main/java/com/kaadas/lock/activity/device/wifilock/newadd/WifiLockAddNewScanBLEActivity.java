@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.kaadas.lock.MyApplication;
 import com.kaadas.lock.R;
 import com.kaadas.lock.activity.addDevice.DeviceAdd2Activity;
 import com.kaadas.lock.activity.addDevice.bluetooth.AddBluetoothSecondActivity;
@@ -71,12 +72,9 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     private DividerItemDecoration dividerItemDecoration;
     private List<BluetoothDevice> mDevices;
-    List<BluetoothLockBroadcastListBean> broadcastList = new ArrayList<>();
-    List<BluetoothLockBroadcastBean> broadcastItemList = new ArrayList<>();
 
     private DeviceSearchAdapter deviceSearchAdapter;
     private DeviceBleWiFiSearchAdapter deviceBleWiFiSearchAdapter;
-    private Thread radarViewThread; //声明一个子线程
     private boolean goToHelpActivity; //跳转到帮助页面
 
     private MessageDialog messageDialog;
@@ -88,18 +86,13 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         ButterKnife.bind(this);
         mRadarView = (ScanDeviceRadarView) findViewById(R.id.radar_view);
 
-        radarViewThread = new Thread(new Runnable() {
+        getWindow().getDecorView().post(new Runnable() {
             @Override
             public void run() {
-                //这里写入子线程需要做的工作
+                //界面显示完再执行
                 mRadarView.setSearching(true);
             }
         });
-
-        radarViewThread.start();
-//        mRadarView.setSearching(true);
-//        mRadarView.addPoint();
-//        mRadarView.addPoint();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int i=checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (i==-1){
@@ -112,19 +105,42 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         }
         showRecycler(false);
         initView();
-        initData();
+        searchDevices();
     }
     @Override
     protected SearchBleWiFiDevicePresenter<ISearchDeviceView> createPresent() {
         return new SearchBleWiFiDevicePresenter<>();
     }
 
-    private void initData() {
-        //获取数据
-        if (GpsUtil.isOPen(this)){
+    private void searchDevices() {
+        if (!GpsUtil.isOPen(this)){
+            ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
+            return;
+        }
+        if(MyApplication.getInstance().isBleOpen()){
             mPresenter.searchDevices();
         }else {
-            ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
+            AlertDialogUtil.getInstance().singleButtonNoTitleDialog(this, getString(R.string.ble_no_enable), getString(R.string.ble_no_enable_to_open), "#1F96F7", new AlertDialogUtil.ClickListener() {
+                @Override
+                public void left() {
+
+                }
+
+                @Override
+                public void right() {
+                    mPresenter.searchDevices();
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(String toString) {
+
+                }
+            });
         }
     }
 
@@ -161,8 +177,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     //当没有搜索到蓝牙设备时，显示对话框。
     private void showNotScanDeviceDialog() {
-//        Toast.makeText(this, "未搜索到门锁，请重新扫描\n" + "或返回添加设备扫码添加", Toast.LENGTH_LONG).show();
-
         didnotdiscoverlock();
 
         new Handler().postDelayed(new Runnable() {
@@ -171,17 +185,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 finish();
             }
         }, 2000); //延迟2秒跳转
-
-
-//        new Handler(new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                //实现页面跳转
-//                startActivity(new Intent(getApplicationContext(),WifiLockAddNewWiFiScanBLEFailedActivity.class));
-//                return false;
-//            }
-//        }).sendEmptyMessageDelayed(0,3000);//表示延迟3秒发送任务
-//            startActivity(new Intent(this,.class));
 
     }
     public void didnotdiscoverlock(){
@@ -200,26 +203,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
             }
         }, 2000); //延迟2秒消失
     }
-    private void initAnimation() {
-//        Path path = new Path();
-//        path.addOval(-38, -38, 38, 38, Path.Direction.CW);
-//        ivGreenObjectAnimator = ObjectAnimator.ofFloat(deviceAddSearch, View.TRANSLATION_X, View.TRANSLATION_Y, path);
-//        ivGreenObjectAnimator.setDuration(2000).setRepeatCount(ValueAnimator.INFINITE);
-//        ivGreenObjectAnimator.setRepeatMode(ValueAnimator.RESTART);
-//        ivGreenObjectAnimator.start();
-    }
-
-    /**
-     * 停止搜索图片
-     * @param
-     */
-    private void stopAnimation() {
-//        deviceAddSearch.clearAnimation();
-//        if (ivGreenObjectAnimator!=null){
-//            ivGreenObjectAnimator.cancel();
-//            ivGreenObjectAnimator.setupEndValues();
-//        }
-    }
 
     @OnClick({R.id.back, R.id.help, R.id.research})
     public void onViewClicked(View view) {
@@ -234,13 +217,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
                 break;
             case R.id.research:
                 //获取数据
-                if (GpsUtil.isOPen(this)){
-                    initAnimation();
-//                    tvIsSearching.setVisibility(View.VISIBLE);
-                    mPresenter.searchDevices();
-                }else {
-                    ToastUtils.showLong(R.string.check_phone_not_open_gps_please_open);
-                }
+                searchDevices();
                 break;
         }
     }
@@ -258,27 +235,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void loadDevices(List<BluetoothDevice> devices) {
-//        if (devices == null) {
-//            showRecycler(false);
-//            return;
-//        }
-//        if (devices.size()==0){
-//            showRecycler(false);
-//            return;
-//        }
-//
-//        showRecycler(true);
-//        mDevices = devices;
-////        broadcastList.clear();//清空数据
-//        if (deviceBleWiFiSearchAdapter == null) {
-//            deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
-//            deviceBleWiFiSearchAdapter.setBindClickListener(this);
-////            deviceBleWiFiSearchAdapter.setBluetoothLockBroadcast(broadcastList);
-//            searchRecycler.setAdapter(deviceBleWiFiSearchAdapter);
-//
-//        } else {
-//            deviceBleWiFiSearchAdapter.notifyDataSetChanged();
-//        }
     }
 
     @Override
@@ -295,8 +251,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         showRecycler(true);
 
         mDevices = devices;
-//        broadcastItemList.add(broadcastBean);
-//        broadcastList.add(new BluetoothLockBroadcastListBean(broadcastItemList, mDevices));
 
         if (deviceBleWiFiSearchAdapter == null) {
             deviceBleWiFiSearchAdapter = new DeviceBleWiFiSearchAdapter(mDevices);
@@ -307,15 +261,7 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
         } else {
             deviceBleWiFiSearchAdapter.notifyDataSetChanged();
         }
-//        if (deviceSearchAdapter == null) {
-//            deviceSearchAdapter = new DeviceSearchAdapter(mDevices);
-//            deviceSearchAdapter.setBindClickListener(this);
-//            deviceSearchAdapter.setBluetoothLockBroadcast(broadcastList);
-//
-//            searchRecycler.setAdapter(deviceSearchAdapter);
-//        } else {
-//            deviceSearchAdapter.notifyDataSetChanged();
-//        }
+
     }
 
     @Override
@@ -409,8 +355,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void onStopScan() {
-        stopAnimation();
-//        tvIsSearching.setVisibility(View.INVISIBLE);
         LogUtils.e("--kaadas--onStopScan()");
 
         if (mDevices == null || mDevices.size()==0){
@@ -423,7 +367,6 @@ public class WifiLockAddNewScanBLEActivity extends BaseActivity<ISearchDeviceVie
 
     @Override
     public void onScanFailed(Throwable throwable) {
-        stopAnimation();
         ToastUtils.showShort(getString(R.string.scan_fail) + HttpUtils.httpProtocolErrorCode(this, throwable));
     }
 

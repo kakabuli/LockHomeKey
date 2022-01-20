@@ -16,7 +16,9 @@ import com.kaadas.lock.mvp.mvpbase.BaseAddToApplicationActivity;
 import com.kaadas.lock.utils.GpsUtil;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.WifiUtils;
-import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.kaadas.lock.utils.XXPermissionsFacade;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,12 +33,10 @@ public class WifiLockAddFirstActivity extends BaseAddToApplicationActivity {
     Button buttonNext;
     @BindView(R.id.help)
     ImageView help;
-    final RxPermissions rxPermissions = new RxPermissions(this);
     @BindView(R.id.head)
     TextView head;
     @BindView(R.id.notice)
     TextView notice;
-    private Disposable permissionDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,17 +44,12 @@ public class WifiLockAddFirstActivity extends BaseAddToApplicationActivity {
         setContentView(R.layout.wifi_lock_add_first);
         ButterKnife.bind(this);
         //获取权限  定位权限
-        permissionDisposable = rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-                        // All requested permissions are granted
-                    } else {
-                        // At least one permission is denied
-                        Toast.makeText(this, getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
-
-                    }
-                });
+        XXPermissionsFacade.get().withLocationPermission().request(this, new XXPermissionsFacade.PermissionCallback() {
+            @Override
+            public void onDenied(List<String> permissions, boolean never) {
+                Toast.makeText(MyApplication.getInstance(), getString(R.string.granted_local_please_open_wifi), Toast.LENGTH_SHORT).show();
+            }
+        });
         //打开wifi
         WifiUtils wifiUtils = WifiUtils.getInstance(MyApplication.getInstance());
         if (!wifiUtils.isWifiEnable()) {

@@ -26,6 +26,8 @@ import com.kaadas.lock.fragment.record.WifiVideoLockAlarmRecordFragment;
 import com.kaadas.lock.mvp.mvpbase.BaseActivity;
 import com.kaadas.lock.mvp.presenter.wifilock.videolock.WifiVideoLockRecordPresenter;
 import com.kaadas.lock.mvp.view.wifilock.IWifiLockVideoRecordView;
+import com.kaadas.lock.publiclibrary.bean.WifiLockInfo;
+import com.kaadas.lock.utils.BleLockUtils;
 import com.kaadas.lock.utils.KeyConstants;
 import com.kaadas.lock.utils.LogUtils;
 
@@ -59,6 +61,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
     private boolean isVideoLock = false;
     private List<Fragment> fragments = new ArrayList<>();
     private FragmentPagerAdapter adapter;
+    private boolean isVisitorEnable = false;//是否显示访客一栏
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +76,10 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
         tvVistorRecord.setOnClickListener(this);
         wifiSn = getIntent().getStringExtra(KeyConstants.WIFI_SN);
 //        initFragment();
+        WifiLockInfo wifiLockInfoBySn = MyApplication.getInstance().getWifiLockInfoBySn(wifiSn);
+        if(wifiLockInfoBySn != null && BleLockUtils.isSupportVisitorPassword(wifiLockInfoBySn.getFunctionSet())){
+            isVisitorEnable = true;
+        }
 
     }
 
@@ -97,6 +104,12 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                 openRecordFragment = new WifiLockOpenRecordFragment();
                 openRecordFragment.setArguments(bundle);
                 fragments.add(openRecordFragment);
+                if(isVisitorEnable){
+                    if(vistorRecordFragment == null)
+                        vistorRecordFragment = new WifiLockVistorRecordFragment();
+                    vistorRecordFragment.setArguments(bundle);
+                    fragments.add(vistorRecordFragment);
+                }
                 alarmRecordFragment = new WifiLockAlarmRecordFragment();
                 alarmRecordFragment.setArguments(bundle);
                 fragments.add(alarmRecordFragment);
@@ -146,46 +159,13 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
 
             @Override
             public void onPageSelected(int position) {
-                if(isVideoLock){
-                    if(position == 0){
-                        tvOpenLockRecord.setBackgroundResource(R.drawable.retangle_1f96f7_22);
-                        tvOpenLockRecord.setTextColor(getResources().getColor(R.color.white));
-                        tvVistorRecord.setBackgroundResource(0);
-                        tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setBackgroundResource(0);
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
-                    }else if(position == 1){
-                        tvOpenLockRecord.setBackgroundResource(0);
-                        tvOpenLockRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setBackgroundResource(0);
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvVistorRecord.setBackgroundResource(R.drawable.retangle_1f96f7_22);
-                        tvVistorRecord.setTextColor(getResources().getColor(R.color.white));
-                    }else{
-                        tvOpenLockRecord.setBackgroundResource(0);
-                        tvOpenLockRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvVistorRecord.setBackgroundResource(0);
-                        tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setBackgroundResource(R.drawable.retangle_1f96f7_22);
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.white));
-                    }
+                if(isVideoLock || isVisitorEnable){
+                    setPageSelected(position);
                 }else{
                     if(position == 0){
-                        tvOpenLockRecord.setBackgroundResource(R.drawable.retangle_1f96f7_22);
-                        tvOpenLockRecord.setTextColor(getResources().getColor(R.color.white));
-                        tvVistorRecord.setBackgroundResource(0);
-                        tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setBackgroundResource(0);
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
+                        setPageSelected(0);
                     }else{
-                        tvOpenLockRecord.setBackgroundResource(0);
-                        tvOpenLockRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvVistorRecord.setBackgroundResource(0);
-                        tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
-                        tvWarnInformation.setBackgroundResource(R.drawable.retangle_1f96f7_22);
-                        tvWarnInformation.setTextColor(getResources().getColor(R.color.white));
+                        setPageSelected(2);
                     }
                 }
             }
@@ -197,6 +177,32 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
         });
     }
 
+    private void setPageSelected(int position){
+        if(position == 0){
+            tvOpenLockRecord.setBackgroundResource(R.drawable.retangle_1f96f7_22);
+            tvOpenLockRecord.setTextColor(getResources().getColor(R.color.white));
+            tvVistorRecord.setBackgroundResource(0);
+            tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvWarnInformation.setBackgroundResource(0);
+            tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
+        }else if(position == 1){
+            tvOpenLockRecord.setBackgroundResource(0);
+            tvOpenLockRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvWarnInformation.setBackgroundResource(0);
+            tvWarnInformation.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvVistorRecord.setBackgroundResource(R.drawable.retangle_1f96f7_22);
+            tvVistorRecord.setTextColor(getResources().getColor(R.color.white));
+        }else{
+            tvOpenLockRecord.setBackgroundResource(0);
+            tvOpenLockRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvVistorRecord.setBackgroundResource(0);
+            tvVistorRecord.setTextColor(getResources().getColor(R.color.c1F96F7));
+            tvWarnInformation.setBackgroundResource(R.drawable.retangle_1f96f7_22);
+            tvWarnInformation.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -205,7 +211,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
             tvVistorRecord.setVisibility(View.VISIBLE);
             isVideoLock = true;
         }else{
-            tvVistorRecord.setVisibility(View.GONE);
+            tvVistorRecord.setVisibility(isVisitorEnable ? View.VISIBLE : View.GONE);
             isVideoLock = false;
         }
     }
@@ -218,7 +224,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
             tvVistorRecord.setVisibility(View.VISIBLE);
             isVideoLock = true;
         }else{
-            tvVistorRecord.setVisibility(View.GONE);
+            tvVistorRecord.setVisibility(isVisitorEnable ? View.VISIBLE : View.GONE);
             isVideoLock = false;
         }
         initView();
@@ -325,7 +331,7 @@ public class WifiLockRecordActivity extends BaseActivity<IWifiLockVideoRecordVie
                     }
                 }
                 fragmentTransaction.commit();*/
-                if(isVideoLock){
+                if(isVideoLock || isVisitorEnable){
                     viewPager.setCurrentItem(2);
                 }else{
                     viewPager.setCurrentItem(1);

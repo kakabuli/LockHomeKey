@@ -1,6 +1,7 @@
 package com.kaadas.lock.publiclibrary.http.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
@@ -287,7 +288,7 @@ public class HttpUtils<T> {
         return errorMsg;
     }
 
-    public static String httpProtocolErrorCode(Activity activity, Throwable e) {
+    public static String httpProtocolErrorCode(Context activity, Throwable e) {
         String errorMsg = "";
         if (e instanceof IOException) {
             /** 没有网络 */

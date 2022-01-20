@@ -3,8 +3,6 @@ package com.kaadas.lock.activity.device.wifilock.newadd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -99,6 +97,8 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         animation.setFillAfter(false);//设置为true，动画转化结束后被应用
 
         changeState(1);
+
+        mPresenter.listenConnectState();
     }
 
     private void totalTimeOut(){
@@ -122,12 +122,6 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
     protected WifiLockBleToWifiSetUpPresenter<WifiLockBleToWifiSetUpPresenter> createPresent() {
         return new WifiLockBleToWifiSetUpPresenter<>();
     }
-    private void onBindSuccess() {
-//        startActivity(new Intent(this, WifiLockAddNewBindSuccesssActivity.class));
-    }
-    private void onBindFailed() {
-//        startActivity(new Intent(this, WifiLockAddNewBindFailedActivity.class));
-    }
 
     @OnClick({R.id.back, R.id.help})
     public void onClick(View view) {
@@ -146,21 +140,16 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
         byte[] bSsid = new byte[42];
         byte[] bPwd = new byte[70];
         System.arraycopy(sPassword.getBytes(), 0, bPwd, 0, sPassword.getBytes().length);
-//            bPwd = sPassword.getBytes();
         String wifiName = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_NAME, "");
         if (sSsid.equals(wifiName)) {
             String pwdByteString = (String) SPUtils.get(KeyConstants.WIFI_LOCK_CONNECT_ORIGINAL_DATA, "");
-//                  bSsid = Rsa.hex2byte2(pwdByteString);
             System.arraycopy(Rsa.hex2byte2(pwdByteString), 0, bSsid, 0, Rsa.hex2byte2(pwdByteString).length);
         } else {
-//                  bSsid = sSsid.getBytes();
             System.arraycopy(sSsid.getBytes(), 0, bSsid, 0, sSsid.getBytes().length);
         }
         mPresenter.listenConnectState();
         mPresenter.listenerCharacterNotify();
         mPresenter.sendSSIDAndPWD(bSsid, bPwd);
-//      }
-//    };
     }
     private Thread secondThread = new Thread() {
         @Override
@@ -173,26 +162,6 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
         }
     };
-    private void onWiFIAndPWDError() {
-        AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
-                WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", "Wi-Fi账号或密码输错已超过5次", getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
-                    @Override
-                    public void left() {
-//                        onError(socketManager, -5);
-                    }
-                    @Override
-                    public void right() {
-//                        onError(socketManager, -5);
-                    }
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                    }
-                    @Override
-                    public void afterTextChanged(String toString) {
-                    }
-                });
-    }
 
     /**
      * @param socketManager
@@ -384,8 +353,8 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                 @Override
                 public void run() {
 
-                    AlertDialogUtil.getInstance().singleButtonNoTitleDialogNoLine(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "Wi-Fi账号或密码输错已超过5次",
-                            getString(R.string.hao_de), "#1F96F7", new AlertDialogUtil.ClickListener() {
+                    AlertDialogUtil.getInstance().singleButtonNoTitleDialogNoLine(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, getString(R.string.wifi_input_error_5_times),
+                            getString(R.string.query), "#1F96F7", new AlertDialogUtil.ClickListener() {
                                 @Override
                                 public void left() {
                                 }
@@ -398,7 +367,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                                     } else {
                                         MyApplication.getInstance().getBleService().release();
                                     }
-                                    Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddBLEFailedActivity.class);
+                                    Intent intent = new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -452,18 +421,12 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
     @Override
     public void onSendFailed() {
-//        Toast.makeText(this, R.string.bind_failed+"--5", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-//        startActivity(intent);
+
     }
 
     @Override
     public void onReceiverFailed() {
-//        Toast.makeText(this, R.string.bind_failed+"--6", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(this, WifiLockAddNewBindFailedActivity.class);
-//        intent.putExtra(KeyConstants.WIFI_LOCK_SETUP_IS_AP, true);
-//        startActivity(intent);
+
     }
 
     @Override
@@ -473,8 +436,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
     @Override
     public void onDeviceStateChange(boolean isConnected) {
-
-        /*if (!isConnected) {
+        if (!isConnected) {
             AlertDialogUtil.getInstance().noEditSingleCanNotDismissButtonDialog(
                     WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, "", getString(R.string.ble_break_authenticate), getString(R.string.confirm), new AlertDialogUtil.ClickListener() {
                         @Override
@@ -483,7 +445,7 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
 
                         @Override
                         public void right() {
-                            startActivity(new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddBLEFailedActivity.class));
+                            startActivity(new Intent(WifiLockAddNewBLEWIFICSwitchCheckWifiActivity.this, WifiLockAddNewBindFailedActivity.class));
                             finish();
                         }
 
@@ -495,13 +457,12 @@ public class WifiLockAddNewBLEWIFICSwitchCheckWifiActivity extends BaseActivity<
                         public void afterTextChanged(String toString) {
                         }
                     });
-        }*/
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        thread.interrupt();
         secondThread.interrupt();
         LogUtils.e("--kaadas--onDestroy");
 

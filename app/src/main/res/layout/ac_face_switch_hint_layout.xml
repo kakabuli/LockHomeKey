@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <include layout="@layout/head"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/dp_32"
+        android:paddingTop="@dimen/dp_35"
+        android:background="@color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:text="@string/face_recognition_switch_title_open" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_12"
+            android:layout_marginTop="@dimen/dp_16"
+            android:lineSpacingExtra="@dimen/dp_8"
+            android:textColor="@color/c999999"
+            android:text="@string/face_recognition_switch_hint_open" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/dp_48"
+            android:text="@string/face_recognition_switch_title_close" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_12"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/c999999"
+            android:lineSpacingExtra="@dimen/dp_8"
+            android:text="@string/face_recognition_switch_hint_close" />
+    </LinearLayout>
+
+
+</LinearLayout>
